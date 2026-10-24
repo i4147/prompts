@@ -1,0 +1,7 @@
+- use pathlib and parallel processing
+- the script should accept multiple dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- create prettier style output
+  (report stats for every file)
+  use relpath in output

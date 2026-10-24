@@ -1,0 +1,38 @@
+Create a Python 3 command-line script that processes css files in parallel and reports the size
+difference after stripping comments.
+**Purpose:**
+Given one or more file or directory paths, locate every css file, remove all comments from each file's
+content using a concrete syntax tree parser, and report per-file and total size
+statistics, showing how many bytes comment removal saves.
+**Module header:**
+Use only the standard library plus two third-party components:
+`tree_sitter_css` and `tree_sitter`
+
+
+**Main logic
+ - Accept one or more paths from `sys.argv[1:]`
+   If none are given, print a usage message to stderr and exit with a nonzero status. 
+ - For each argument, if it is a file ending in `.css`, include it; 
+   if it is a directory, recursively collect all `*.css` files beneath it.
+   Skip or warn about nonexistent paths.
+   Deduplicate and sort the collected list. 
+ - If no css files are found, print a message saying so and exit cleanly. 
+ - Use `multiprocessing.Pool(_WORKERS)` with `imap_unordered` (or equivalent) to process files concurrently, and display progress as results arrive.
+ - Print each file's name left-aligned/padded to `_NAME_WIDTH` characters, followed by the original size, the new size, and the bytes saved (formatted with `fsz`). Truncate or handle names longer than the width gracefully. 
+ - Track and print totals at the end: number of files processed, number of errors, total original size, total new size, total saved, and the elapsed time measured with `time.perf_counter()` (or `time.time()`) formatted to a sensible precision. 
+ - Ensure the pool is properly closed and joined (use a `with` block or explicit `close()`/`join()`), and that the process works correctly under the `spawn`/`fork` start methods, meaning all worker functions must be defined at module top level. 
+
+**Edge cases to handle:** 
+- Empty files (should produce zero savings and not crash). 
+- Files with no comments (returned unchanged). 
+- Comments at the very start of a line, after values, and multiple consecutive comments. 
+- Files that are not valid UTF-8 (report as an error for that file, don't crash). 
+- Nonexistent paths and unreadable files. 
+- Symlinks and hidden directories may be followed or skipped; document the choice in a comment. 
+- Keep the code free of unnecessary dependencies and avoid recursion depth issues.
+
+**Style:** 
+Use type hints throughout (including `# type: ignore[import-untyped]`
+on the tree-sitter imports), concise docstrings, and a clean, flat module
+structure.
+Output only the complete type annotated script, no comments, no docstring

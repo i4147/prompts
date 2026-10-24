@@ -1,0 +1,37 @@
+You are an expert Python developer. I need you to write a Python CLI script that recursively scans a directory for Python files containing "invalid escape sequences" and automatically fixes them by converting the offending string literals into raw strings. 
+Please adhere strictly to the following technical specifications, environment constraints, and structural requirements:
+### 1. Environment & Imports
+- The script is running in a Termux environment on Android. Start the file with the exact shebang: `#!/data/data/com.termux/usr/bin/python3.14`
+- Use the following exact imports: `argparse`, `concurrent.futures`, `os`, `tokenize`, `warnings`, `pathlib.Path`, `get_pyfiles_iter` from a local module `dh`, and `walk_files` from `fastwalk`.
+### 2. Core Detection Logic (`process_file` function)
+- The function should take `file_path: Path` and `auto_fix: bool=True`.
+- Read the file content as bytes (`read_bytes()`).
+- Use `compile()` inside a `warnings.catch_warnings(record=True)` block (with `simplefilter("always", SyntaxWarning)`).
+- Catch both `SyntaxError` (for hard errors in newer Python versions) and `SyntaxWarning` (for deprecation warnings).
+- Only flag issues if the error/warning message contains the exact phrase "invalid escape sequence".
+- Return a dictionary with keys: `path`, `has_issues`, `fixed`, and `messages`.
+### 3. Core Fixing Logic (Inside `process_file`)
+- If `has_issues` is True and `auto_fix` is True, use the `tokenize` module to fix the file. **Do not use regex.**
+- Open the file in `rb` mode and use `tokenize.tokenize()`.
+- Iterate through the tokens. When you find a `tokenize.STRING`:
+  - Extract the string prefix (e.g., `f`, `b`, `u`, `r`, or combinations like `fr`).
+  - Extract the actual string content.
+  - If the string contains a backslash (`\`) and the prefix does not already contain `r` (case-insensitive):
+    - Test compile the string with a temporary `r` prefix added to the *existing* prefix (e.g., `f"..."` becomes `rf"..."`) inside a warning-catching block to ensure it actually resolves the invalid escape sequence.
+    - If it resolves it, replace the token's string with the new raw string format and mark the file as modified.
+- Use `tokenize.untokenize()` to reconstruct the file and write it back as bytes (`write_bytes()`).
+- Wrap the fixing logic in a try/except block to catch any tokenization errors.
+### 4. CLI & Main Execution Flow
+- Use `argparse` to create a CLI. Include an `-a` / `--auto-fix` flag (store_true) to enable automatic fixing.
+- In the `main()` function, get the current working directory.
+- Use `fastwalk.walk_files(cwd)` to iterate through files.
+- Filter for files ending in `.py`.
+- For each file, print exactly: `f'processing {path.name}'` and call `process_file(path)`.
+### 5. Required Commented-Out Legacy Code
+To show the refactoring history of the script, you MUST include the following specific blocks of code as **comments** (do not execute them, just comment them out exactly as described):
+- In `main()`, comment out the old file gathering logic using `dh.get_pyfiles(cwd)` and the logic to exclude the script's own path.
+- In `main()`, comment out a `concurrent.futures.ProcessPoolExecutor` block that was previously used to map `check_and_fix_file` across multiple CPU cores, including the logic that printed the `[🔧 FIXED]` or `[⚠️  ISSUE]` emojis, the summary counts, and the final `print("=" * 42)` summary block.
+### 6. Output Formatting
+- Provide only the complete, runnable Python code.
+- Ensure type hinting is used where appropriate (e.g., `-> dict`, `file_path: Path`).
+- Ensure all file I/O operations handle exceptions gracefully.

@@ -1,0 +1,14 @@
+write a python script to extract top level entities from python files in . recursively
+- save results in output/(func,const,classes) sub dirs (every entity to a separate file)
+- use pathlib and parallel processing
+- the script should accept multiple dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- create prettier style output
+  (report stats for every file)
+  use rel-path in output
+- extract overall imports to output/{Path.cwd().name}_imports.py
+  every entity file should have its required imports too
+- save unique entities
+- provide final code without comments & doc strings
+- validate every entity file with ast.parse before writing to file

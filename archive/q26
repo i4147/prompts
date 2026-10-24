@@ -1,0 +1,15 @@
+You are an expert python developer.
+generate a complete robust python
+script that renames html files in current dir by title
+- use pathlib
+- use mp(apply_async) with 8 workers
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- rename files only when -a(--apply) flag is given, normal run is dryrun
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

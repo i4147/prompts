@@ -1,0 +1,17 @@
+You are an expert python developer.
+generate a complete robust python
+script to strip comments of given html,css,js,ts files using tree-sitter
+- html file may have inlined js,css too. script should clean them too
+- use pathlib
+-use mp(apply_async) with 8 workers
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- python version=3.12
+- report number of comments removed for changed files
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

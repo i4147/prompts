@@ -1,0 +1,21 @@
+write a tree-sitter-based python script to remove comment 
+and docstrings from python files in . recursively
+- skip (.git ,__pycache__) dirs and symlinks when traversal
+-preserve module docstring (make it optional with adding -r cli arg)
+- preserve # fmt, # type and shebangs
+- use generator style filesystem walker if possible
+- use pathlib and parallel processing
+- the script should accept multiple dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+  example usage:
+  python rmc.py myfile.py (process just 1 file)
+  python rmc.py ~/myprojects (process given dir recursively)
+  python rmc.py (processes . recursively)
+- update files inplace
+- report number of comments/docstrings removed for every file
+- if docstring is the only node in a function/class's body, replace it with 'pass' (to avoid syntax error)
+- validate result code with ast.parse before writing to file
+- dont rewrite if nothing removed from a file
+- use ast.get_source_segment to preserve orig code state
+i have a buggy script that uses ast.unparse 
+it converts r'' based regexes to escaped regex which is unwanted.

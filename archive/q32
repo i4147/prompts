@@ -1,0 +1,13 @@
+asume we have a python pkg with following structure
+pyget
+├── __init__.py
+├── cli.py
+├── constants.py
+├── core.py
+└── resolver.py
+implement a python pkg to refactor small pkgs like above as
+a single file pkg
+example output structure:
+pyget
+└── __init__.py'
+- add support for resolving imports

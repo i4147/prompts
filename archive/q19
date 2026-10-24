@@ -1,0 +1,16 @@
+You are an expert python developer.
+generate a complete robust and production ready python
+script that addes a user-defined line(=sys.argv[1]) to all .gitignore files in current dir recursively
+- if the string already present in a .gitignore file, skip it
+- use pathlib
+-use mp(apply_async) with 4 workers
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

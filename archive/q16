@@ -1,0 +1,46 @@
+write a python script to run 'ty' via subprocess on python files in . recursively
+and add output of ty (if any issues found) to end of corresponding file in  commented out format
+- ty cant detect editable installed pkgs, so ignore this case espacially my custum module named dh
+example:
+[bin] $ ty check yap.py                   
+error[unresolved-import]: Cannot resolve i
+mported module `dh`                       
+  --> yap.py:10:6                         
+   |                                      
+10 | from dh import cprint, format_time, f
+sz, get_pyfiles, mpf3                     
+   |      ^^
+info: Searched in the following paths duri
+ng module resolution:
+info:   1. /data/data/com.termux/files/hom
+e/.local/lib/python3.14/site-packages (ext
+ra search path specified on the CLI or in 
+your config file)
+info:   2. /data/data/com.termux/files/usr
+/lib/python3.14/site-packages (extra searc
+h path specified on the CLI or in your con
+fig file)
+info:   3. /data/data/com.termux/files/hom
+e/bin (first-party code)
+info:   4. vendored://stdlib (stdlib types
+hed stubs vendored by ty)
+info: make sure your Python environment is
+ properly configured: https://docs.astral.
+sh/ty/modules/#python-environment
+Found 1 diagnostic
+- use pathlib and parallel processing with joblib(workets=4)
+  actually use my custom module for that which also resolves cant puckle Path errors
+   -> from dh import mpf3
+       usage: results=mpf3(process_file, files)
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+-report stats for every file
+  use relpath in output
+- python version=3.12
+- consider:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

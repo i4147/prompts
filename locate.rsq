@@ -1,0 +1,76 @@
+# Reimplement Linux `locate` in Rust
+
+## Naming (HARD)
+- Binary name MUST be exactly `locate` — no `-rs`/`-rust`/`-impl` suffixes in
+  `[[bin]] name`, on-disk file, help text, or errors.
+- Multiple reference binaries (e.g. `updatedb`+`locate`) → one `[[bin]]` each, exact names.
+- `--help` / `--version` / error messages must match the reference **byte-for-byte**.
+- CLI surface must match reference: short+long options, `-oVAL`, `--opt=VAL`,
+  `--opt VAL`, grouped `-abc`, repeated `-e a -e b`, `--` terminator.
+
+## Flags (HARD)
+- Implement **every** flag the reference accepts; no silent drops, no no-ops.
+- Unimplementable flags → list them with one-line reasons in your initial reply
+  and in README "Unsupported flags" section. Any flag not listed MUST work.
+- Every supported flag gets ≥1 unit test + ≥1 integration test, tracked in
+  `tests/matrix.toml`.
+
+## Constraints
+- Rust 2021, `[dependencies]` empty, `#![forbid(unsafe_code)]`.
+- **No process spawning** in impl (`Command`, `fork`/`exec*`, `posix_spawn`). Tests
+  may use `Command` only for differential testing against the real binary.
+- No shelling out to the real command or to `find`/`grep`/`sed`/`sort`/`xargs`.
+- Any added crate must be justified in the initial reply before use.
+
+## Functional requirements (FILL IN)
+{{FILL_IN: input sources, byte-exact output, exit-code mapping, error semantics,
+edge cases.}}
+
+## Compatibility & robustness (always)
+- Exit-code table in README (0/1/2/other); each code exercised by an integration test.
+- Golden files for `--help`, `--version`, and one error message per error class.
+- SIGPIPE: `locate ... | head -1` exits with reference code, no panic/no stderr.
+- Pathological filenames: newline, control bytes, non-UTF-8 (`\xff\xfe`), ~255-byte
+  names, paths near `PATH_MAX`. Byte-preserve output.
+- `ulimit -v 262144` on 1M files must not OOM; peak RSS O(1) in input size
+  (`make bench-mem` reports via `/usr/bin/time -v`).
+- FD count in `/proc/<pid>/fd` stable across 10k iterations.
+
+## Testing (always)
+- `scripts/difftest.sh`: runs your binary and reference on same fixture, diffs
+  stdout/stderr/exit byte-for-byte, ≥20 cases covering every flag + error class.
+  Skips cleanly if reference absent.
+- `scripts/grade.sh`: one-command self-grader that runs difftest and prints pass/fail.
+- `tests/matrix.toml` + test asserting every listed flag has ≥1 passing test.
+- `tests/fixtures/sanity/` (read-only, do not modify): empty dir; file with `\xff`
+  in name; file with newline in name; symlink loop; dir with 10k files. Tests must
+  cover all five.
+
+## Quality (always)
+- `src/lib.rs` (core) + one `src/bin/{{BIN}}.rs` per binary. Core unit-testable
+  without spawning.
+- `///` on public items; `cargo build --release` clean with `-D warnings`;
+  `cargo clippy -- -D warnings` clean; `cargo test` green.
+- No panics on malformed input; errors → stderr, non-zero exit.
+- Each integration test uses a fresh `tempfile::tempdir` and `chdir`s in; no
+  order- or `$HOME`-dependence.
+
+## Deliverables
+1. Source tree, `Cargo.toml` with exact `[[bin]] name`, empty `[dependencies]`.
+2. `README.md`: design, supported-flags table, Unsupported flags, exit-code table,
+   deviations, build/run/test.
+3. `scripts/demo.sh`: builds fixture, runs `./target/release/locate`, ≥5
+   invocations with expected output.
+4. `scripts/difftest.sh`, `scripts/grade.sh`, `tests/matrix.toml`.
+5. Final message: what shipped, every omitted flag + reason, crates used + why,
+   known limits.
+
+## Known pitfalls (FILL IN, 5–8 items)
+{{FILL_IN: concrete traps — byte sequences, flag combos, fs edge cases, signals,
+locale.}}
+
+## Reporting back first
+Reply with: (1) reference version + where its flag list came from, (2) flags you
+will implement, (3) flags you will NOT implement + reasons, (4) crates + reasons,
+(5) infeasible briefs, (6) confirmation the binary will be named exactly `locate`.
+Then code.

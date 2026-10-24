@@ -1,0 +1,56 @@
+Write a self-contained prompt that instructs an AI coding agent to build a
+Python command-line tool with the following specification: The tool generates
+`setup.py` files for Python projects based on each project's `pyproject.toml`.
+It must be runnable as a script with a Termux-style shebang line for Android
+(`/data/data/com.termux/files/usr/bin/env python3`) and should use only the
+standard library, targeting Python 3.11 or newer because it relies on the
+built-in `tomllib` module.
+Command-line interface: the script accepts zero or more project directory names
+as positional arguments, a flag `-a` (or equivalent long form) that processes
+every project found under the current working directory, and a `--force` flag
+that permits overwriting existing `setup.py` files.
+With no arguments, it processes the current directory as a single project.
+Running `-a` together with named projects, or combining `--force` with specific
+projects, must work as described in the usage examples.
+Invalid or missing project paths should be reported without aborting the whole
+run.
+Core behavior: for each project directory, read `pyproject.toml` and determine
+the PEP 517 build backend from the `[build-system]` table's `build-backend` key.
+Handle parsing errors gracefully (malformed TOML, missing file, missing or
+unreadable table) and record them as results rather than crashing.
+Classify the outcome into three categories: 1.
+Setuptools backend (for example `setuptools.build_meta` or variants that begin
+with `setuptools`): write a minimal `setup.py` that consists of a short
+docstring stating it is a compatibility shim whose metadata lives in
+`pyproject.toml`, an import of `setup` from `setuptools`, and a bare `setup()`
+call. 2.
+Any other identified non-setuptools backend (for example Hatchling, Flit,
+Poetry, Maturin, PDM, Meson): write a `setup.py` containing only an
+informational docstring explaining that the project uses a non-setuptools
+backend, that `pyproject.toml` is authoritative, and that the file is not a
+functional build script.
+Do not emit a setuptools shim in this case. 3.
+Backend undeterminable (no build-system table, no backend key, or empty value):
+write an informational docstring telling the reader to inspect `pyproject.toml`
+before choosing a build configuration.
+Do not overwrite an existing `setup.py` unless `--force` is given; instead
+record it as skipped with an explanatory detail.
+Each project's result should be a small immutable record holding the project
+path, a status string, and an optional detail message.
+Use `pathlib` for all path handling and write files with UTF-8 encoding.
+Concurrency: read backends and process projects concurrently using a thread pool
+from `concurrent.futures`, collecting results and then printing a summary.
+Keep file writes deterministic and avoid race conditions between projects.
+Use `os` where needed for directory scanning, and `sys` for exit codes and
+stderr messages.
+Discovery with `-a`: scan immediate subdirectories of the current directory and
+include those that contain a `pyproject.toml`; ignore hidden directories and
+ones without that file.
+Print a concise per-project status line and a final count summary, and exit with
+a nonzero code if any project errored (but not merely for skips).
+Output requirements: include a module docstring with the usage examples, `from
+__future__ import annotations` at the top, type hints throughout, and a `main()`
+function guarded by `if __name__ == "__main__":`.
+Keep the code clean, idiomatic, and consistent in naming and comment density
+with the rest of the project.
+Provide the complete file as the deliverable. ---

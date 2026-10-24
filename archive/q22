@@ -1,0 +1,89 @@
+# these are my thoughts about automating a file process functions over a list of files or paths
+  some parts are sudo code, i just wrote them to not forget to include them
+i have a rust based python lib named fastwalk with some fs walker functions like this one
+fn walk_files(path: String, follow_links: Option<bool>) -> PyResult<Vec<String>> {
+    let follow = follow_links.unwrap_or(false);
+    let walker = jwalk::WalkDir::new(&path).follow_links(follow);
+    let mut results = Vec::new();
+    for entry in walker {
+        match entry {
+            Ok(e) => {
+                if e.file_type().is_file() {
+                    results.push(e.path().to_string_lossy().to_string());
+                }
+            }
+            Err(e) => {
+                return Err(PyOSError::new_err(format!(
+                    "Error walking directory: {}",
+                    e
+                )));
+            }
+        }
+    }
+    Ok(results)
+}
+this is my first src, i updated it, now it accepts (str|Path) and returns List(Path)
+def mpf3(func,items):
+    p=pool(8)
+    pending=deque()
+    for item in items:
+        pending.append(p.apply_async(func,(f),))
+        if len(pending>16: # 8 or 16 ? and why?
+            pending.popleft.get()
+    while pending:
+#         popleft til it ends
+    pool.close()
+    pool.join()       
+# todo        
+implement these functions using fastwalk:
+from fastwalj import walk_files
+def should_skip(p):
+    skip_dirs={'.git','__pycache__'}
+    pparts=set(p.parts)
+    return p.is_symlink() or pparts.disjoints(skip_dirs)
+def get_files(src_dir:str|Path,ext:list[str]|None=None)-> list[Path]:
+    # this is example ,yours may be different
+    out=[]
+    for path in walk_files(src_dir):
+        if should_skip(path): continue
+        if it is a file and ext is given and p.suffix in ext: append to out
+and a generator version
+def get_files_iter(src_dir:str|Path,ext:list[str]|None=None)-> Generator[Path]:
+     sth like above but yields from walk_files(src_dir)
+next step: i wanna use these functions to handle user inputs
+for example when a script should accept one or more files/dirs as input and support glob (*.py,~/bin,...)
+example snippet :
+def walk_paths(paths: list[str | Path]) -> Generator[Path, None, None]:
+    for path_str in paths:
+        path = Path(path_str)
+        if path.is_file():
+            yield path
+        elif path.is_dir():
+            yield from walk_files(path)
+# todo : add glob support and a non_iter version
+and in main func:
+def main():
+    from dh import get_files,mpf3 # multiprocessing func
+    cwd = Path.cwd()
+    args = sys.argv[1:]
+    files = []
+    if args:
+        for arg in args:
+            p = Path(arg)
+            if p.is_file():
+                files.append(p)
+            elif p.is_dir():
+                files.extend(get_files(p))
+    else:
+        files = get_files(cwd)
+    if len(files) == 1:
+        process_file(files[0])
+        sys.exit(1)
+    mpf3(process_file, files)
+# todo i wanna make this main function
+ a reusable template so that i can use later
+ for example suppose i wanna create a file converter 
+ i just have to implement a process_file(fpath) and use main func template to handle inputs
+ pass process_file and list of fikes to my parallel_runner
+ #in all conditions i asume, if no input provided, script should process . recursively
+ # help me build a template main func that handles inputs and runs mpf3 over inputs

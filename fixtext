@@ -1,0 +1,16 @@
+asume we had a py fioe like this
+import os
+import sys
+def test(a):
+    return a*5
+def main():
+    testZ7)
+    return 0
+if __name__=='__main__':
+    main()
+but by any reason we lost endlines
+and got this
+import osimport sysdef test(a):    return a*5def main():    testZ7)    return 0if __name__=='__main__':    main()
+
+write a python script to reformat this file 
+so that it can be parsable

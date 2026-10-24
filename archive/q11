@@ -1,0 +1,1 @@
+write a python script to report pkg_resources usage in python files in . recursively -use pathlib and parallel processing -add -a(--autofix) cli arg to optionally fix the detected usage -python version=3.12.12 -pkg_resources is deprecated in python3.14 -use 8 as default max_workers

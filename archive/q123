@@ -1,0 +1,1 @@
+i accedently renamed files 8n a folder full of .whl by running a script, write a python script to rename .whl files to their orig std names, dont overwrite existing files and because renaming make a wheel file useless, create a subdir abd move one of file with same name, there, report if 2 version of 1 pkg exists,answer in english,use pathlib

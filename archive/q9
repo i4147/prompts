@@ -1,0 +1,13 @@
+write a python script to extract entities from .py files in . recursivel
+- use libcst==3.23.0
+- use pathlib and parallel processing
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- python version=3.12
+example output structure
+output
+ -func
+ -classes
+ -const
+and inside each subdir a separate file for every entity

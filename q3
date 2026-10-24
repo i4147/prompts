@@ -1,0 +1,68 @@
+you are a professional python programmer
+write a python script to strip comments from non-oropramming lang files (like requirements.txt) that use # as comment char (see below)
+- script must accept multiple files/dirs as input,if no input, process current dir recursively
+- use pathlib, and mp.pool.imap_unordeted with 8 workers
+  dont invoke mp if input is a single file
+- skip symlinks, and commonskipdirs like .git
+- update files inplace
+- report bytes reduced for every file(numbers in green), use relpath if files, example output:
+f1.txt    34
+requirements.txt    563
+...
+- report an overal space freed at the end
+--------
+you can freely process these file groups:
+ zsh, ksh, fish, csh/tcsh
+· Makefile, Dockerfile, .env files
+· awk, sed scripts
+· Tcl
+· Expect
+· INI
+· Apache/Nginx configs
+· systemd unit files
+· git config, gitignore, gitattributes
+· requirements.txt, pip.conf, setup.cfg
+· crontab
+· .editorconfig
+· .npmrc, .pylintrc, many dotfiles
+· Puppet, Ansible (YAML-based)
+· .desktop files
+
+-you should skip any of following Programming languages that use # as comment char
+· YAML
+· TOML
+· Python
+· Ruby
+· Perl
+· R
+· Julia
+· Elixir
+· Crystal
+· Nim
+· PowerShell
+· PHP 
+· CoffeeScript
+· Haxe
+· Wolfram/Mathematica
+· LaTeX
+· FORTRAN
+· GDScript
+· Hy, Clojure
+· Markdown
+· reStructuredText
+· AsciiDoc
+· SPARQL, Turtle
+· Cypher
+· GraphQL
+· TOML, YAML, JSON5, JSONC, HJSON
+· CSV
+· properties files (Java .properties, ...)
+· Assembly
+· GAS (GNU assembler)
+· Verilog/VHDL
+· SystemVerilog
+· VimL
+· SQL
+· MySQL
+
+return full type-annotated code, no comments, no docstrings

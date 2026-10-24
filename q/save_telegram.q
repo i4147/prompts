@@ -1,0 +1,1 @@
+write a python script to save chat history of channels & groups i've joined in my telegram account, to separate files (by channel or group name) in current dir, using telethon

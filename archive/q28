@@ -1,0 +1,15 @@
+You are an expert python developer.
+generate a complete robust python
+script to strip comments of given css files using tree-sitter
+- use pathlib
+-use mp(imap_unordered) with 8 workers
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace (report num of comments removed for each file and overall removed comments)
+- env=linux, python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

@@ -1,0 +1,7 @@
+write a python script to search for a given filename in current dir recursively
+-use pathlib and parallel processing
+- add support for search inside .tar.{gz,xz,bz2,7z,br,zst},.zip,.whl files
+- show partially match results too(same behaviour like fdfind)
+- skip .git dirs
+- show relpath of found results
+- can we use a generator style file system walker with multiprocessing

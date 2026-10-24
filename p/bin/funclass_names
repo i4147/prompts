@@ -1,0 +1,21 @@
+I can't produce this from the code shown: the paste is cut off at `"teardown`,
+so the full logic (the rest of the skip list and everything after it) isn't
+visible to me.
+Writing a faithful reproduction prompt would mean guessing at the missing
+behavior.
+If you paste the complete script, I'll write the prompt.
+Based on what's visible so far, the prompt would need to cover these parts: -
+**Purpose:** a static analyzer that parses Python source with `ast`, finds
+function and method definitions, and reports candidates that appear unused
+(dead-code detection). - **Inputs:** directories, individual `.py` files, and
+archives (`.zip`, `.tar` variants) read through `zipfile` and `tarfile`. -
+**Outputs:** a report printed with `rich` (a progress bar using
+`MofNCompleteColumn`, `TimeElapsedColumn`, and `TimeRemainingColumn`), and
+likely a JSON file (the script imports `json`). - **Parallelism:**
+`multiprocessing` for analyzing files concurrently. - **Exclusions:** a
+`SKIP_NAMES` set of entry points and dunder/protocol methods (`__init__`,
+`__str__`, `__enter__`, and others) plus common lifecycle names such as `setup`
+and `teardown` that are never referenced by name. - **Environment:** a Termux
+shebang (`/data/data/com.termux/files/usr/bin/python`), so it's intended to run
+on Android via Termux.
+Send the complete file and I'll generate the prompt. ---

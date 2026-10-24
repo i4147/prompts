@@ -1,0 +1,14 @@
+Write a self-contained Python 3.12 script for
+Linux/Termux armv8l: pathlib; skip symlinks/.git;
+Pool 8(imapu); argparse files/dirs (default cwd);
+full type hints; no comments & no docstrings (just module docstring);
+loguru; fail loud, no simulation.
+Prioritize speed, streaming memory, robustness, clarity, features.
+Main guard, no TODOs/placeholders.
+Output full annotated code block.
+task:
+convert archive files found in current dir recursively
+to .tar.br, search for .tar.[gz,xz,zst,7z,lz4,bz2] 
+if .zip found extract to a temp subdir first, then compress it with tar and remove created temp dir, then send .tar to brotli
+use 11 as default quality for brotli,unless .tar filesize>10mb, then use quality=3
+if successfull, remove orig 

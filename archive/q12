@@ -1,0 +1,7 @@
+im using python3.14 and pkg_resources is deprecated , write a python script to check python files in . recursively and report pkg_resources module usage in them
+-add -a(--auto-fix) cli arg to optionally fix the files (replace pkg_resources with appropriate modern replacement)
+-in case the replacement unavailable report the issue
+-log any error with loguru
+-validate result code with ast.parse before writing
+-update files inplace
+-use pathlib and parallel processing with joblib (workers=4)

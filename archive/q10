@@ -1,0 +1,102 @@
+provide nvim config with these plugins based on lazy.vim for python programming
+Comment.nvim
+LuaSnip
+aerial.nvim
+alabaster.nvim
+arctic
+ashen.nvim
+asyncrun.vim
+blink.cmp
+blink.compat
+bufferline.nvim
+catppuccin
+citruszest.nvim
+cmp-buffer
+cmp-cmdline
+cmp-nvim-lsp
+cmp-nvim-ultisnips
+cmp-omni
+cmp-path
+colorful-menu.nvim
+conform.nvim
+diffs.nvim
+diffview.nvim
+dropbar.nvim
+edge
+ember
+everforest
+fidget.nvim
+friendly-snippets
+github-theme
+gitlinker.nvim
+gitsigns.nvim
+glance.nvim
+gruvbox-material
+hop.nvim
+indent-blankline.nvim
+iswap.nvim
+jellybeans.nvim
+kanso.nvim
+lake-dweller.nvim
+lazy.nvim
+lazydev.nvim
+live-command.nvim
+lualine.nvim
+lush.nvim
+makurai-nvim
+mason-lspconfig.nvim
+material.nvim
+melange-nvim
+mini.icons
+mini.indentscope
+modus-themes.nvim
+nightfox.nvim
+nvim-autopairs
+nvim-bqf
+nvim-cmp
+nvim-colorizer.lua
+nvim-dap
+nvim-dap-python
+nvim-dap-ui
+nvim-hlslens
+nvim-lightbulb
+nvim-lspconfig
+nvim-nio
+nvim-notify
+nvim-tree.lua
+nvim-treesitter
+nvim-treesitter-textobjects
+nvim-ufo
+nvim-web-devicons
+onedark.nvim
+onedarkpro.nvim
+opencode.nvim
+oxocarbon.nvim
+plenary.nvim
+promise-async
+quicker.nvim
+render-markdown.nvim
+sonokai
+statuscol.nvim
+telescope-fzf-native.nvim
+telescope-symbols.nvim
+telescope.nvim
+thorn.nvim
+vague.nvim
+venv-selector.nvim
+vim-flog
+vim-illuminate
+vim-matchup
+which-key.nvim
+yanky.nvim
+- add format-on-save for python files
+-use popular github nvim config repos 
+and gists to produce a separate file
+(per plugin) config for nvim with lazy.vim,
+add ruff,pyright and debugpy via mason ,
+set leader key to space and leader+f to 
+format with ruff, leader+ff to fix 
+errors with ruff, leader+w to save 
+and leader +q to exit, optimized for
+python programming and mocha theme
+example nvim config tree

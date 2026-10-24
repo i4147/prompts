@@ -1,0 +1,68 @@
+def runcmd(
+    cmd: list[str], run_silently: bool = False, show_output: bool = True, timeout: float | None = None
+) -> tuple[int, str, str]:
+    import subprocess
+    import sys
+
+    if not cmd:
+        msg = "cmd must be a non-empty list (e.g., ['ls', '-l'])"
+        raise ValueError(msg)
+
+    def fail(code: int, msg: str) -> tuple[int, str, str]:
+        if show_output and not run_silently:
+            print(msg, file=sys.stderr)
+        return (code, "", msg)
+
+    try:
+        if run_silently:
+            result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=timeout)
+            return (result.returncode, "", "")
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        if show_output:
+            if result.stdout:
+                sys.stdout.write(result.stdout)
+                sys.stdout.flush()
+            if result.stderr:
+                sys.stderr.write(result.stderr)
+                sys.stderr.flush()
+        return (result.returncode, result.stdout, result.stderr)
+    except FileNotFoundError:
+        return fail(127, f"Command not found: '{cmd[0]}'")
+    except PermissionError:
+        return fail(126, f"Permission denied: '{cmd[0]}'")
+    except subprocess.TimeoutExpired:
+        return fail(124, f"Command timed out after {timeout}s: {' '.join(cmd)}")
+    except Exception as e:
+        return fail(1, f"Unexpected error running '{cmd[0]}': {e}")
+
+in above code when we set show_output=True
+but stream dont contain any valid utf-8 string
+try to clean it using following code
+
+def clean_response(text: str) -> str:
+    text = ANSI_RE.sub("", text)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    m = re.search(r"^\s*Received\s*:", text, re.MULTILINE | re.IGNORECASE)
+    if m:
+        after = text[m.end() :]
+        after = after.split("\n", 1)[1] if "\n" in after else ""
+        after = re.sub(r"^\s*\n+", "", after)
+        text = after
+    text = re.sub(
+        r"^\s*(?:SuperAgent|felo|feli)\b.*$",
+        "",
+        text,
+        flags=re.MULTILINE | re.IGNORECASE,
+    )
+    text = FENCE_RE.sub("", text)
+    text = SHELL_PROMPT_RE.sub("", text)
+    text = PREAMBLE_RE.sub("", text)
+    text = LIVEDOC_RE.sub("", text)
+    text = text.strip()
+    if not text:
+        return ""
+    if "\n" not in text:
+        parts = re.split(r"(?<=[.!?])\s+", text)
+        text = "\n".join(p.strip() for p in parts if p.strip())
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text

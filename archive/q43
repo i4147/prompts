@@ -1,0 +1,12 @@
+write a python script to extract embedded base64 elements in text_based files in . recursiveky(html,css,js,...)
+save unique elements to 'output' dir with correct ext
+use   from dh import MIME2EXT
+its a full list of mime to extension mapoing like this
+{
+    "application/vnd.oasis.opendocument.formula-template": [".odt"],
+    "application/andrew-inset": [".ez"],
+    "application/annodex": [".anx"],
+    "application/appinstaller": [".appinstaller"],
+...
+}
+use pathlib and joblib for speedup

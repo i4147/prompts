@@ -1,0 +1,40 @@
+Role: You are an expert Python developer.
+Task: Generate a complete, robust Python script that strips comments and docstrings from Python files.
+Requirements
+Backend Support
+ * Make libcst optional via a -b, --backend CLI argument
+ * Other backend options: tree-sitter and ast
+File Handling
+ * Support Python files without extensions
+ * Use pathlib for all filesystem traversal
+ * Accept multiple files/directories as input
+ * If no input is provided, recursively process files in the current directory
+Preservation Rules
+ * Preserve shebangs, module docstrings, # type comments, and # fmt comments (dont add any other)
+ * If a docstring is the only node in a function/class body, replace it with `pass` to avoid syntax errors
+Validation
+ * Validate the resulting code before writing to file — it must be valid Python
+Concurrency
+ * Use mp.imap_unordered with a fixed pool of 8 workers(no --worker cli arg needed)
+Logging
+ * Log any errors using loguru
+CLI Behavior (default: remove inline comments only)
+Flag Behavior -c, --comments Remove all comments except shebangs, # type, and # fmt 
+              -d, --docstring Remove all docstrings except module docstring 
+              -a, --all Remove all comments and docstrings, even preserved ones
+              -t, --type Remove type annotations
+              -x equals to -a and -t ( remove all comments & docstrings & type-annotations) with this diffetence that nothing will be written to file,
+                 i'm in termux & im gonna use this flag to copy stripped code to clipboard using termux-clipboard-set command (to send code to an ai agent (less tokens))
+                 how to copy to clipboard
+                 after producing final_code, do this
+                 subprocess.run(['termux-clipboard-set',final_code])
+
+Implementation Considerations
+ * Speed / performance
+ * Code clarity / maintainability
+ * Memory efficiency
+ * Production-ready robustness
+ * Feature set (streaming, adaptive, edge cases)
+Environment
+ * Python version: 3.14
+Output: Return the full type-annotated code

@@ -1,0 +1,3 @@
+Advanced Font Converter Script using fonttools and pathlib.
+Supports multi-worker parallel conversion via multiprocessing and
+concurrent.futures (Python 3.14).

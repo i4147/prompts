@@ -1,0 +1,41 @@
+i have installed following tree_sitter python libraries
+ts=tree_sitter
+ts-0.26.0
+ts_bash-0.25.1
+ts_c-0.23.5
+ts_cpp-0.23.4
+ts_css-0.25.0
+ts_go-0.25.0
+ts_html-0.23.2
+ts_javascript-0.23.1
+ts_json-0.24.8
+ts_llvm-1.1.0
+ts_lua-0.3.0
+ts_markdown-0.2.3
+ts_php-0.24.2
+ts_query-0.5.0
+ts_regex-0.25.0
+ts_ruby-0.23.1
+ts_rust-0.24.2
+ts_sqlite3-0.1.0
+ts_toml-0.7.0
+ts_typescript-0.23.2
+ts_vim-0.5.0
+ts_vimdoc-3.0.1
+ts_xml-0.7.0
+ts_zsh-0.63.4
+write a python script to strip comments of files in current dir recurdively inplace,based on libraries that i have installed
+- use pathlib, preferably a generator style filesystem walker
+-use mp.imap_unordered for procesding multiple files(optionally changable to (map,starmap,apply_async,apply,imap by --pool-method flag,default is imap_unordered,if not specified)
+- update files inplace (create .bak file with -b/--backup flag)
+- dhow bytes reduced for processed files
+- validate result code before writing to file
+- preserve sensitive comments for every lang
+- report overall space freed
+- skip symlinks, and common skip_dirs like .git
+- log any errors with loguru
+- follow thede 3 rules in design:
+  1. Focus on idiomatic Python (Pythonic code), performance optimization, memory efficiency, and clean architecture.
+  2. When applicable, prefer modern Python features (e.g., structural pattern matching, advanced typing/generics, context managers, asyncio, and decorators).
+  3. Address edge cases, concurrency risks, and complexity (Big O) if relevant to the problem.
+return full annotated code,no comments,no dovstrings

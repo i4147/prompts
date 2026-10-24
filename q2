@@ -1,0 +1,6 @@
+im using python3.14 in termux armv8l 32bit
+i have trouble installing rust backend python libs that use maturin
+i installed maturin and rust via (pkg i rust maturin)
+maturin biulds .so library file but fails st building wheel, coz it says android is unsupported
+any workaround
+

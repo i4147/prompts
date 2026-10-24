@@ -1,0 +1,12 @@
+i will share some python scripts with you.
+Refactor given script with the following changes:
+1. Bug fixes: Fix any issues that would cause type checkers to complain (missing imports, wrong signatures, Optional handling, etc.).
+2. Type annotations: Add complete type hints to all functions, methods, class attributes, arguments, return types, module-level constants, and variables where missing. Ensure the code passes a strict type checker (e.g., mypy/pyright).
+3. Path handling: Replace all os.path usage with pathlib.if exists and possible
+4. migrate from stdlib logging to loguru, if presents in given code
+5. migrate from concurrent.future to multiprocessing, if used in code
+  use mp.pool.imap_unordered with fixed 4 workers
+6. add main guard if missing  
+ensure result code is  clezn, robust, production ready and follows best practices
+Return the fully refactored type-annotated script,no comments,no docstrings
+first script is:

@@ -1,0 +1,1 @@
+which ai chatbits have free tier and we can use them via python code(if we have api key), with examples

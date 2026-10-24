@@ -1,0 +1,48 @@
+Role: Expert Python developer.
+
+Task: Produce a complete, robust, production-ready Python 3.14 script that strips comments, docstrings, and type annotations from Python source files. Return the full annotated code as a single code block.
+
+## Functional Requirements
+
+1. **Backends** (selectable via `-b/--backend`, default `libcst`):
+   - `libcst` (optional dependency)
+   - `tree-sitter`
+   - `ast`
+2. **File discovery**:
+   - Accept multiple file and directory arguments.
+   - If no arguments are provided, recursively process files in the current directory.
+   - Support Python files without a `.py` extension (detect by shebang or by attempting to parse).
+3. **Preservation rules (default):**
+   - Shebang line (`#!...`)
+   - Module-level docstring
+   - `# type:` and `# fmt:` comments
+4. **Docstring-only bodies**: If a function or class body consists solely of a docstring, replace it with `pass` to preserve syntax.
+5. **Validation**: Parse the transformed source before writing; only write if the result is valid Python.
+
+## CLI Behavior
+
+| Flag | Effect |
+|------|--------|
+| *(none)* | Remove inline comments only |
+| `-c, --comments` | Remove all comments except shebang, `# type:`, `# fmt:` |
+| `-d, --docstring` | Remove all docstrings except the module docstring |
+| `-a, --all` | Remove all comments and docstrings, including preserved shebang, module docstring, `# type:`, `# fmt:` |
+| `-t, --type` | Remove type annotations |
+| `-b, --backend {libcst,tree-sitter,ast}` | Select parsing backend |
+
+## Implementation Constraints
+
+- **Python version:** 3.14
+- **Paths:** use `pathlib` exclusively
+- **Concurrency:** `multiprocessing.Pool.apply_async` with a fixed pool of 8 workers
+- **Logging:** use `loguru` for all error reporting
+- **Quality goals** (weigh all of these):
+  - Speed / performance
+  - Code clarity and maintainability
+  - Memory efficiency (avoid loading unnecessary data)
+  - Production-ready robustness (handle malformed files, encoding errors, permissions)
+  - Feature set breadth (edge cases, adaptive behavior, streaming where sensible)
+
+## Deliverable
+
+Return the **full annotated code** (comments explaining non-obvious decisions), self-contained, importable, and runnable as a CLI.

@@ -1,0 +1,12 @@
+write a python script to compile a .c or .cpp file
+example usage:
+python mkc.py file.c
+python mkc.py file.cpp
+if input is .c file, script should run
+clang <fname> -o <fname without extension(which is .c)>
+via subprocess
+if input is .cpp file, script should run
+clang++ <fname> -o <fname without extension(which is .cpp)>
+via subprocess
+if compile successful, run (strip <output>)
+input=sys.argv[1]

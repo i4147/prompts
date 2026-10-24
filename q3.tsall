@@ -1,0 +1,8 @@
+fot python lang, if docstring is the only node in a function/class body, replace it with `pass` to avoid syntax error
+-add support for files without extensions (detect by shebang)
+-make diff output colorful
+-show relpath of files in output plus bytes reduced from content of that file(numbers in green), example output:
+file1.py     34
+file2.sh    542
+...
+report an overal space freed at the end

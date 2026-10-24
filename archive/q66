@@ -1,0 +1,14 @@
+- suppose i installed all treesitter parsers that exists
+for filetypes, write a python script to remove comments of files in current dir based on file extension found in current dir,recursively
+- use pathlib
+-use mp(apply_async) with fixed 8 workers (don't crate -w/----workers(or sth like that) cli arg
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

@@ -1,0 +1,1 @@
+Build a single HTML file that uses Pyodide (CDN is fine) to run real Python. If something is impossible, say so explicitly instead of simulating it."

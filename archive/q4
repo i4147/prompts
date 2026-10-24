@@ -1,0 +1,10 @@
+implement a python pkg for working with archive files
+- required formats .zip .whl .tar.{xz,gz,bz2,br(brotli),zst,7z,lz4,snappy(via cramjam)}
+and .x, .gz, .bz2, .br, .zst, .7z, .lz4, .snappy, .tar
+_ use streaming compression/decompredsion for every lib available
+- functions for compress and decompress
+- utility to calc ratio, space freed
+- function for validating an archive health
+- add args for compression level, threads(for zstd)
+- no shutil lib
+-function to convert archive type 

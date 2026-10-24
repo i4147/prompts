@@ -1,0 +1,5 @@
+write a robust python script to detect file extension mismatch in .  recursively
+-add -a(--autofix) cli arg to optionally fix the found mismatches. 
+-use pathlib and parallel processing
+-use any 3rdparty lib needed
+-update filenames inplace

@@ -1,0 +1,52 @@
+"""Efficient multiprocessing file-processing template using Pool.imap_unordered."""
+import argparse
+from collections.abc import Iterator
+from multiprocessing import Pool
+from pathlib import Path
+from typing import Final
+from loguru import logger
+NUM_WORKERS: Final[int] = 8
+def process_file(file_path: Path) -> str:
+    try:
+        file_size: int = file_path.stat().st_size
+        return f"Successfully processed {file_path} ({file_size} bytes)"
+    except Exception as error:
+        logger.error(f"Worker failed on {file_path}: {error}")
+        raise error
+def generate_paths(targets: list[str]) -> Iterator[Path]:
+    for target in targets:
+        target_path: Path = Path(target).resolve(strict=True)
+        if target_path.is_file():
+            if not target_path.is_symlink():
+                yield target_path
+        elif target_path.is_dir():
+            yield from (
+                p
+                for p in target_path.rglob("*")
+                if not p.is_symlink()
+                and ".git" not in p.parts
+                and p.is_file()
+            )
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Parallel file processor optimized for Linux armv8l."
+    )
+    parser.add_argument(
+        "paths",
+        type=str,
+        nargs="*",
+        default=["."],
+        help="Target files or directories to process (default: current working directory).",
+    )
+    args = parser.parse_args()
+    logger.info("Initializing path discovery...")
+    path_stream: Iterator[Path] = generate_paths(args.paths)
+    logger.info(f"Spawning multiprocessing Pool with {NUM_WORKERS} workers...")
+    with Pool(processes=NUM_WORKERS) as pool:
+        results: Iterator[str] = pool.imap_unordered(
+            process_file, path_stream, chunksize=16
+        )
+        for result in results:
+            print(result)
+if __name__ == "__main__":
+    main()

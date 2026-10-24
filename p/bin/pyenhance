@@ -1,0 +1,9 @@
+pyenhance: fix common problems in Python source files, in place.
+Fixes (select with --select, disable 'is' with --no-is): regex escaped regex
+literals ("\\d+") passed to re.* or assigned to *pattern*/*regex* names -> raw
+(r"\d+") escape invalid escape sequences ("\d", "\s") -> doubled backslashes
+(identical runtime value) bytes non-ASCII characters inside bytes literals
+(SyntaxError) -> \xHH escapes is `x is "lit"` / `x is 3` (SyntaxWarning) -> `x
+== "lit"` / `x == 3` Every rewrite is validated (compiles, AST unchanged apart
+from the intended fixes) before anything touches disk.
+Edits are byte-level, so formatting is preserved.

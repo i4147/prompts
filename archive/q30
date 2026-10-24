@@ -1,0 +1,19 @@
+You are an expert python developer.
+generate a complete robust python
+script to shift a given srt file by amount.
+inputs: fname = sys.argv[1] amount of shift in seconds=sys.argv[2] -> maybe +or- int
+example usage:python shiftsrt.py file1.srt +12
+python shiftsrt.py file3.srt -3
+- use pathlib
+-use mp(apply_async) with 4 workers when processing multiple files
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process .srt files in current dir recursively)
+- update files inplace
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)
+- use utf8 as default encoding,if failed try latin1 and windows encodings

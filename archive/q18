@@ -1,0 +1,13 @@
+write a complete python script that processes html, css files in . recursively and make them standalone without local or remote assets deoendency. this process involve downloading remote assets and embedding local assets(if found) as base64 and inline them -use pathlib and mp for speedup -- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+-report stats for every file
+  use relpath in output pteferablly colorful output
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)
+-log sny error or missing assets with loguru -ignore remote image files (no download,no repirt)

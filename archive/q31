@@ -1,0 +1,18 @@
+You are an expert python developer.
+i have some python files in . that use concurrent.futures.(thread or process)poolexecuter appriach
+for parallelism
+generate a complete robust python
+script to convert them to multiprocessing.pool.apply_async with 8 workers as fixed workers
+- use pathlib
+-use mp(imap_unordered) with 8 workers to process multiple files
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace only when -a (--apply) flag is give,
+normal run just process and shows diff(dryrun)
+- python version=3.12
+- consider following factors in implementation:
+    Speed / performance
+    Code clarity / maintainability
+    Memory efficiency
+    Production-ready robustness
+    Feature set (streaming, adaptive, edge cases)

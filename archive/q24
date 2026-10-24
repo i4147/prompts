@@ -1,0 +1,2 @@
+im inside shell.cloud.google.com
+utomate the process of creating a new project , setting it as default project (name=mytt147app004) and creating a new gemini api-key and saving its value to .env in current dir. by creating a bash script for it. show the api-key on screen for copying too.

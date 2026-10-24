@@ -1,0 +1,10 @@
+write a treesitter based python script to safely remove comments (single line, multiline,inline) from files in current dir recursively
+-use pathlib and parallel processing
+-target formats=.py .c .cpp .js .jsx.css .html .rs .lua .h .hpp 
+- the script should accept multiple files/dirs as input
+  (if no input is provided, the script should process files in current dir recursively)
+- update files inplace
+-report stats for every file
+  use relpath in output
+- python version=3.12
+-ts==0.26.0 tsp==0.25.0 other ts language python libraries are asumed to be latest til july 2026

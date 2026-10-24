@@ -1,0 +1,12 @@
+write a python script to extract embedded (as base64) png,svg,jpg,jpeg,webp,css,js ekements
+in css,html,htm,js files in . recursively
+for png files, run my custom script pngq via subprocess, and embed result png(my script updates inplace) again to its original place,
+for jpg,jpeg files run jpegoptim via subprocess and embed again to its orig place
+for webp images run my custon script to_jpg that converts it to jpg and do process explained above for jpg files and remove orig webp
+for svg files run svgo via subprocess and embed again
+for js files run my custom ter_ser script and embed again
+for css files run my custom ccss script and embed again
+all my scripts update input files inplace
+- report overalk space freed
+-use pathlib and parallel processing wirh joblib (workers=4)
+- log any errors with loguru

@@ -1,0 +1,19 @@
+# CONTEXT
+
+## Environment & Runtime
+- **Python Version:** Python 3.10+
+- **OS Target:** Cross-platform (Linux, macOS, Windows)
+- **Dependencies:** Standard library preferred unless third-party packages are specified.
+
+## Coding Conventions & Guidelines
+- **Filesystem Traversal:** Prefer `pathlib.Path` for all path manipulations, file reads/writes, and directory traversals over `os` or `os.path`.
+- **Type Annotations:** Include explicit type hints for all function parameters and return values.
+- **Code Style:** Strictly adhere to PEP 8. Use clear, descriptive variable names in `snake_case` and class names in `PascalCase`.
+- **Error Handling:** Use explicit, narrow exception handling with informative error messages. Avoid broad `except:` or `except Exception:` blocks unless logging and re-raising.
+- **Logging:** Use Python's built-in `logging` module for operational outputs instead of `print()` statements.
+- **Documentation:** Provide concise Google-style docstrings for functions, classes, and methods.
+- **Entry Point:** Always wrap main script execution in an `if __name__ == "__main__":` guard.
+
+---
+
+# TASK
