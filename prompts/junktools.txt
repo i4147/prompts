@@ -1,0 +1,22 @@
+Write a Python script that scans a user-specified directory tree and identifies
+files and folders that are considered junk, temporary, cache, or
+platform-specific clutter, then reports or removes them safely.
+The tool should accept a target path from the command line along with options
+that control whether it runs as a dry run (listing only), whether it actually
+deletes items, and whether it should be verbose or produce a summary.
+It should recognize common categories of clutter across operating systems,
+including Windows system and executable artifacts, macOS metadata and disk image
+files, and common development cache folders and file suffixes such as compiled
+bytecode, logs, and backup files.
+It should also skip or protect important directories such as version control
+folders and configuration or system-like directories from being touched.
+The script should walk the directory structure efficiently, handle large trees
+gracefully, and optionally use parallel processing to speed up scanning.
+It should report the total count and human-readable total size of the clutter
+found, grouped by category when helpful, and print a clear summary at the end.
+Before deleting anything it should ask for confirmation unless a non-interactive
+flag is provided.
+It must handle permission errors, missing paths, and symbolic links without
+crashing, and it should never follow symlinks outside the target root.
+The output should be a readable console report, with the exit status indicating
+success, invalid input, or errors encountered during the operation. ---

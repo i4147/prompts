@@ -1,0 +1,23 @@
+Write a Python script that converts compiled gettext translation files (.mo)
+back into editable source translation files (.po), using the external msgunfmt
+tool from the GNU gettext suite.
+The script should be a command-line tool that accepts one or more paths to .mo
+files, or a directory to scan for .mo files, and produces a .po file alongside
+each input with the same base name.
+Before doing any work, it should verify that msgunfmt is installed and available
+on the system, and exit with a clear error message if it is missing.
+For each input file, the tool should: - Check that the file exists and has the
+correct .mo extension, printing a clear warning or error and skipping invalid
+inputs without stopping the entire run. - Run the conversion, write the output
+in UTF-8 encoding, and confirm that the generated .po file is not empty; treat
+an empty result or a conversion failure as an error for that file. - Optionally
+remove the original .mo file after a successful conversion, controlled by a
+command-line flag. - Support a verbose mode that reports progress and detailed
+information about each step.
+The tool should print a concise summary at the end showing how many files were
+converted successfully, how many failed, and how many were skipped.
+It should return a non-zero exit status if any file failed, and zero when all
+inputs succeeded or were skipped.
+Handle keyboard interruption and unexpected errors gracefully with informative
+messages rather than raw stack traces, and ensure that a partially written
+output file is cleaned up when a conversion fails. ---

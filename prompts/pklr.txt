@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line utility for inspecting and
+converting serialized Python data files.
+The tool should accept a path to a binary serialized data file (such as a pickle
+file), load its contents safely, and convert the data into a human-readable JSON
+representation.
+It should handle objects that are not natively JSON-serializable by converting
+them into readable string or structured forms, so that nested collections like
+lists, tuples, dictionaries, and sets are all rendered sensibly without
+crashing.
+The tool should validate its input before processing: it must report a clear
+error message and exit with a non-zero status if the file does not exist or
+cannot be read or deserialized.
+It should warn the user when the file extension is not the expected one, but
+only when verbose output is requested.
+Successful conversions should print or write the resulting JSON with indentation
+for readability, and the user should be able to choose whether the output goes
+to the console or to a file.
+The script should support multiple subcommands through a command-line interface,
+with the JSON conversion as the primary operation and room for additional
+inspection commands in the same tool.
+Users should be able to pass options such as the input path, an optional output
+destination, and a verbosity flag.
+Include a help message describing each command and option, and ensure the
+program returns meaningful exit codes for success and each category of failure.
+---

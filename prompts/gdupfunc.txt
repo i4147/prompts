@@ -1,0 +1,29 @@
+Write a Python script that scans a project directory tree for Python source
+files and reports how consistently they use type annotations.
+The tool should accept a root directory path as its main input, along with
+optional settings for additional directory names to skip and a minimum size
+threshold so that trivially small files are ignored.
+By default it should skip common non-source folders such as version control
+metadata, virtual environments, caches, build artifacts, and dependency
+directories.
+For each qualifying Python file, the script should parse the source safely,
+determine whether the file contains any type annotations on function parameters,
+return values, or variadic arguments (for both regular and async functions), and
+classify the file as annotated or unannotated.
+Files that cannot be parsed due to syntax errors should be recorded as skipped
+with a reason rather than causing the whole run to fail.
+Files that are too small to be meaningful should also be excluded from the
+statistics.
+The script should process files efficiently, potentially in parallel for large
+projects, and produce a summary report containing the total number of files
+analyzed, how many are annotated versus unannotated, the overall annotation
+coverage percentage, and a list of the unannotated files with their relative
+paths.
+It should support a machine-readable JSON output option in addition to a
+human-readable console output, and it should write its results to stdout or to a
+specified output file.
+The command-line interface should provide clear help text, validate that the
+provided path exists and is a directory, and return a non-zero exit code on
+invalid input or unrecoverable errors.
+Include a quiet mode that suppresses progress messages and a verbose mode that
+lists every analyzed file with its status. ---

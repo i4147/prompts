@@ -1,0 +1,45 @@
+Create a dependency-free, best-effort HTML and Vue single-file-component formatter module in Python,
+intended to live inside a formatter package
+(importing `Options` from a sibling `..api` module that defines formatting settings such as
+`use_tabs` and `tab_width`).
+The script's purpose is to reformat HTML/Vue markup similarly in spirit to Prettier's HTML output,
+without relying on any external HTML parsing or formatting libraries.
+It should work by: 1.
+Implementing a small hand-written tokenizer (`_tokenize`) that scans the raw input string
+and produces a flat list of event dictionaries describing the document structure.
+Each event should have a `type` field
+(one of: `doctype`, `comment`, `comment-inline`, `start`, `end`, `text`, `raw`, `decl`) plus
+relevant data such as `raw` content, tag `name`, parsed `attrs`,
+and a `selfclosing` flag for self-closing tags.
+2. Using a stack-based printer/renderer that consumes these tokens and decides indentation
+and line-breaking: block-level elements should be placed on their own indented lines
+(one per nesting level, using either tabs or spaces based on `Options.use_tabs`/`tab_width`),
+while inline elements
+and surrounding text should stay grouped together on the same line to avoid introducing unwanted
+whitespace changes in rendered inline content. **Key inputs/outputs:** - Input:
+a string containing HTML or Vue template markup,
+plus an `Options` object controlling indentation style (tabs vs. spaces, tab width). - Output:
+a reformatted/pretty-printed string of the same markup with consistent indentation
+and block/inline layout. **Notable behavior requirements:** - Content inside `<pre>`, `<script>`,
+and `<style>` tags must be preserved verbatim (byte-for-byte),
+since reformatting these would break code or whitespace-sensitive content. `<template>`
+and `<textarea>` should also be treated as raw/verbatim blocks internally
+(tracked via a `RAW_BLOCKS` set). - Doctype declarations, HTML comments,
+and CDATA sections must be preserved as-is
+but re-indented to match their position in the tree. - Void elements
+(e.g. `<br>`, `<img>`, `<hr>`, `<input>`, `<meta>`, `<link>`, `<area>`, `<base>`, `<col>`,
+`<embed>`, `<param>`, `<source>`, `<track>`, `<wbr>`) must never be given a closing tag,
+even if the source contains one. - A predefined set of inline-level HTML tags
+(e.g. `a`, `span`, `b`, `i`, `em`, `strong`, `code`, `label`, `button`, `select`, `option`,
+`textarea`, `img`, `input`,
+etc.) must be treated as inline so that text flows naturally around them instead of each being
+forced onto its own line. - The module should use Python's built-in `re` module for any pattern
+matching needed during tokenization,
+and must not import any third-party dependencies. - Include a module-level docstring explaining that
+this is a best-effort,
+dependency-free HTML/Vue formatter using a hand-written tokenizer
+and stack-based block/inline printer, noting the special handling of `pre`/`script`/`style` content,
+doctype/comment/CDATA preservation,
+and void-element handling. - Provide a helper function (e.g. `_indent(options, level)`) that returns
+the proper indentation string for a given nesting level,
+based on whether tabs or spaces (and how many spaces) are configured in `Options`.

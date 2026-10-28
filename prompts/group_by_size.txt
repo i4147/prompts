@@ -1,0 +1,32 @@
+Write a Python script that organizes the subdirectories of the current working
+directory into a fixed number of balanced group folders based on their total
+size.
+The script should accept a single command-line argument specifying how many
+groups (parts) to create, with a sensible default and validation for invalid
+values.
+Behavior requirements: - Scan only the immediate subdirectories of the current
+working directory, ignoring regular files and any existing folders whose names
+begin with "group_" so that repeated runs do not reorganize previous output. -
+For each candidate subdirectory, compute its total size by recursively summing
+the sizes of all files it contains, tolerating permission errors or files that
+disappear mid-scan by skipping them rather than crashing. - Report to the user
+how many subdirectories were found and, for each one, its name and size in
+megabytes with two decimal places.
+If no qualifying subdirectories exist, print a clear message and exit
+gracefully. - Distribute the subdirectories across the requested number of
+groups so that the combined sizes of the groups are as close to equal as
+possible.
+A greedy strategy that assigns the largest remaining directory to the currently
+lightest group is an acceptable approach, but the outcome should be a balanced
+split. - Create each group as a new folder named with the "group_" prefix
+followed by its index, and move each assigned subdirectory into its group
+folder.
+Handle the case where the requested number of groups exceeds the number of
+subdirectories gracefully (for example, by creating only as many groups as
+needed or warning the user). - Print a summary after the operation showing each
+group's folder name, the directories it received, and its total size in
+megabytes. - Handle errors such as permission problems or name collisions during
+moves with informative messages, continuing with the remaining work where safely
+possible rather than aborting the entire run. - The script should be runnable
+directly from the command line and should not require any input beyond its
+arguments. ---

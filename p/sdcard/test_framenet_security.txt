@@ -1,0 +1,16 @@
+Regression tests for path traversal in FramenetCorpusReader (CWE-22 / CWE-59). ``doc()``,
+``frame_by_name()`` and ``_lu_file()`` interpolate a caller-
+or corpus-supplied name into an XML file path that is then read via ``XMLCorpusView``.
+A ``..`` sequence, an absolute path,
+or a Windows drive/UNC prefix in that name must be rejected *before* any file is opened,
+while a legitimate name must still resolve
+and read correctly through ``self.abspath()`` (the ``nltk.pathsec`` sandbox).
+Paths are built with ``os.path.join`` / ``os.pardir`` so the tests behave the same on POSIX
+and Windows.
+A separate class of tests below covers a symlink planted inside the corpus subdirectory itself
+(``frame/``, ``lu/`` or ``fulltext/``).
+Its own name contains no separator or ``..``,
+so it passes ``_reject_unsafe_path_component`` cleanly;
+only resolving the path with ``Path.resolve()``
+and checking it against the corpus root (what ``_validate_in_root`` / ``validate_path`` do)
+catches this.

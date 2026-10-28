@@ -1,0 +1,26 @@
+Write a a Telegram account and extract URLs/links shared in a specific channel's messages.
+Requirements and behavior: 1. **Authentication/Setup**:
+- Define placeholder variables for `api_id`, `api_hash`,
+and `phone` number (to be filled in by the user with their own Telegram API credentials obtained
+from my.telegram.org). - Define a `channel_username` variding the handle/username of the target.
+2. **URL Matching**:
+- Define a regular expression pattern capable of matching `http://` and `https://` URLs,
+including common URL characters
+(letters, digits, special characters like `$-_@.&+`, `!*(),`,
+and percent-encoded characters like `%XX`).
+3. **Core Function** (`extract_links`):
+   - Create a `TelegramClient` instance using a session name (e.g., "session_name"),
+   along with the `api_id`
+   and `api_hash`. - Use the client as a context manager (`with client:`) to handle connection/login
+   automatically. - Resolve the target channel entity using `client.get_entity(channel_username)`. -
+   Iterate over the most recent messages in the channel
+   (e.g., limit of 100messages() that contains textex pattern to find all UR found in a message,
+   print the message's ID, followed by each extracted link indented/listed below it.
+   4. **Entry Point**: - Wrap the execution in a `if __name__ == "__main__":` block that calls
+   `extract_links()`.
+5. **Dependencies**: The script relies on the `telethon` library
+   (specifically `telethon.sync` for synchronous usage) and Python's built-in `re` module.
+   6.
+**Output**: Console/terminal output only,
+printing message IDs and their associated extracted URLs in a simple,
+readable list format grouped by message.

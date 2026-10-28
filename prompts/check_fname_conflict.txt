@@ -1,0 +1,27 @@
+Write a Python script that scans the current working directory and reports which
+Python files depend on third-party packages that are not listed in a known
+requirements file.
+The script should read a pip-style list of installed or required package names
+from a fixed location on the device, normalize the package names (ignoring
+version specifiers, comments, and blank lines, treating hyphens and underscores
+as equivalent and comparing case-insensitively), and build a set of known
+third-party packages.
+If that file is missing, the script should warn the user on the error stream and
+continue, skipping the third-party comparison.
+The script should also determine which modules are part of the standard library
+so they can be excluded from the dependency check, and it should warn if the
+running Python version does not provide the standard library module list.
+Its main job is to recursively examine the Python source files in the target
+directory, identify the top-level modules each file imports, and classify each
+import as standard library, locally defined, or third-party.
+It should then report the imports that are neither standard library nor covered
+by the known package list, giving the user a clear summary of potentially
+missing dependencies, along with the file names where they occur.
+The output should be human-readable, using short status messages with
+emoji-style prefixes to show progress (for example, announcing the directory
+being scanned and the number of entries loaded), and it should end with a
+concise summary of findings.
+The script should handle unreadable or non-UTF-8 files gracefully without
+crashing, skip hidden and virtual-environment directories where appropriate, and
+exit with a clear, meaningful status code indicating whether any unlisted
+third-party dependencies were found. ---

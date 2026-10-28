@@ -1,0 +1,1 @@
+Simple version - retrieve license contents and save unique lines to uniq.txt

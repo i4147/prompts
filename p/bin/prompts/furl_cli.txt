@@ -1,0 +1,23 @@
+Write a Python library that provides easy, object-oriented manipulation of URLs.
+It should let a developer parse a URL string into a mutable object,
+read and modify each component
+(scheme, username, password, host, port, path segments, query parameters, and fragment),
+and then serialize the result back into a correctly encoded URL string.
+The tool should support adding, removing, updating,
+and reordering query parameters while preserving duplicate keys and their order,
+and it should handle percent-encoding and decoding automatically.
+It should provide path operations such as joining, appending, and normalizing segments,
+including resolving relative paths and dot segments.
+It should also support comparing URLs for equivalence, copying and deep-copying URL objects,
+and creating modified copies without altering the original.
+Include sensible defaults for well-known schemes,
+such as recognizing standard ports for common protocols and omitting them from the output
+when they are the default.
+Accept both string and structured inputs when constructing a URL, and raise clear,
+descriptive errors for malformed input.
+The design should be extensible so that the behavior for each URL component can be customized,
+and it should include a readable string representation
+and a way to convert the object to a plain dictionary.
+Include a comprehensive set of usage examples and tests demonstrating parsing, modification,
+serialization, and edge cases such as empty query values, IPv6 hosts, international domain names,
+and unusual schemes. ---

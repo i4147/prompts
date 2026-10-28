@@ -1,0 +1,29 @@
+Write a Python script that analyzes a collection of Python source files, detects
+duplicate or near-duplicate code, and reports the results.
+The tool should accept a directory path (or a set of archive files) as input and
+recursively discover Python source files, including Python files packed inside
+common compressed or archived formats such as zip, tar (with gzip, bzip2, xz, or
+zstandard compression), and single-file compressed streams.
+It should extract archives safely into temporary locations and clean up
+afterward.
+The script should parse each Python file's structure so that comparisons are
+based on code meaning rather than raw text alone, falling back gracefully to a
+simpler text-based comparison when a richer syntax-aware parser is unavailable.
+It should normalize away insignificant differences such as comments, whitespace,
+formatting, and identifier naming where appropriate, so that copies of the same
+logic are recognized even when they have been slightly edited.
+The tool should use hashing to efficiently group identical or equivalent code
+blocks across files, and optionally flag similar blocks using a similarity
+threshold.
+It should be able to run its analysis in parallel across multiple CPU cores for
+large inputs and produce a clear summary report listing duplicate groups, the
+files and line ranges involved, and aggregate statistics such as total
+duplicated lines and percentage of the codebase affected.
+Provide a command-line interface with options for the input path, output format
+(plain text, JSON, or CSV), minimum block size, similarity threshold, number of
+worker processes, and an optional output file destination.
+Use robust logging for progress and errors, handle unreadable or malformed files
+gracefully without stopping the whole run, and ensure that writing results to
+disk is done safely, including creating parent directories as needed.
+The final output should be deterministic so that repeated runs on the same input
+produce identical reports. ---

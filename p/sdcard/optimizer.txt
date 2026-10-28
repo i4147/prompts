@@ -1,0 +1,8 @@
+I notice you asked me to produce a prompt describing Python code,
+but no actual code was included in your message
+(the code block appears empty after the constant definitions were cut off).
+Could you please share the complete code?
+Once I have the full script, I'll analyze its purpose, inputs/outputs,
+and notable behaviors
+(like the SVG/XML processing, numeric rounding, color handling, base64/URL encoding utilities,
+etc. that I can see hints of) to craft an accurate prompt for an AI agent to reproduce it. ---

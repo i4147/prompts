@@ -1,0 +1,13 @@
+Write a Python script that takes a single word from the user and renders it as
+large block-style ASCII art in the terminal, using a five-row, letter-by-letter
+font built from solid block characters.
+The script should accept the word as a command-line argument or interactive
+input, convert it to uppercase, and print each character as a multi-line glyph
+arranged side by side so the full word reads horizontally.
+Characters without a defined glyph (such as digits, spaces, or punctuation)
+should be handled gracefully, for example by skipping them or rendering a blank
+or placeholder glyph of consistent width.
+The output should be clean, aligned, and easy to read in a standard terminal,
+with each letter's glyph having the same height so the rows line up correctly.
+Include a simple main entry point that prints the result, and handle empty input
+with a friendly message instead of an error. ---

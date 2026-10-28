@@ -16,16 +16,13 @@
 //! If the file does not start with the magic, it is read as newline-separated
 //! paths. This makes hand-built fixtures and `find`-style lists usable, but it
 //! cannot represent paths containing `\n`.
-
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Cursor, ErrorKind, Read, Write};
 use std::path::Path;
-
 /// Magic prefix of the native format.
 pub const MAGIC: &[u8; 8] = b"RSLOCATE";
 /// Native format version.
 pub const VERSION: u8 = 1;
-
 fn read_full<R: Read>(r: &mut R, buf: &mut [u8]) -> io::Result<usize> {
     let mut n = 0;
     while n < buf.len() {
@@ -38,7 +35,6 @@ fn read_full<R: Read>(r: &mut R, buf: &mut [u8]) -> io::Result<usize> {
     }
     Ok(n)
 }
-
 fn read_exact_or_eof<R: Read>(r: &mut R, buf: &mut [u8]) -> io::Result<bool> {
     let n = read_full(r, buf)?;
     if n == 0 {
@@ -49,19 +45,16 @@ fn read_exact_or_eof<R: Read>(r: &mut R, buf: &mut [u8]) -> io::Result<bool> {
         Err(io::Error::new(ErrorKind::UnexpectedEof, "truncated record"))
     }
 }
-
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Format {
     Native,
     Plain,
 }
-
 /// Streaming reader over a locate database.
 pub struct DbReader {
     inner: BufReader<Box<dyn Read>>,
     format: Format,
 }
-
 impl DbReader {
     /// Open `path`. `whole_file` reads the entire database into memory first
     /// (the `-m` strategy); the default streams.
@@ -75,7 +68,6 @@ impl DbReader {
             Format::Plain
         };
         let prefix = magic[..n].to_vec();
-
         let source: Box<dyn Read> = if whole_file {
             let mut all = prefix;
             f.read_to_end(&mut all)?;
@@ -83,7 +75,6 @@ impl DbReader {
         } else {
             Box::new(Cursor::new(prefix).chain(f))
         };
-
         let mut inner = BufReader::new(source);
         if format == Format::Native {
             let mut v = [0u8; 1];
@@ -97,7 +88,6 @@ impl DbReader {
         }
         Ok(Self { inner, format })
     }
-
     /// Read the next path into `out`. Returns `false` at end of database.
     pub fn next_entry(&mut self, out: &mut Vec<u8>) -> io::Result<bool> {
         out.clear();
@@ -125,6 +115,5 @@ impl DbReader {
         }
     }
 }
-
 /// Buffered writer for the native format.
 pub struct DbWriter

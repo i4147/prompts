@@ -1,0 +1,85 @@
+Prompt a Python developer agent to build a lightweight,
+cross-platform filesystem watcher module intended for use inside a debugger/IDE backend
+(similar to PyDev's internal file-watching utility).
+The script should not rely on third-party packages (no watchdog, no pyinotify)
+and must work using only the standard library plus access to two internal helper modules:
+`_pydev_bundle.pydev_log` (for logging)
+and `_pydev_bundle._pydev_saved_modules`
+(which stores references to "clean" versions of standard modules such as `os`, `threading`, `time`,
+etc., saved before user code could monkey-patch them).
+Core purpose: - Continuously poll one
+or more directory trees (and/or individual files) for changes
+(file/directory added, modified, or deleted) and report these changes via a callback,
+without using OS-level file system event APIs
+â€” purely by periodically rescanning directories with `os.scandir`
+and comparing modification times (`mtime`) against previously recorded state.
+Key requirements and structure to implement: 1.
+Define an `IntEnum`-like `Change` class
+(with a fallback plain class if `enum.IntEnum` is unavailable, e.g., on very old Python) with three
+members: `added`, `modified`, `deleted` (values 1, 2, 3).
+2. Define a `_SingleVisitInfo` helper class that tracks state for a single full scan pass:
+a counter, a set of visited directories (to avoid revisiting/looping, e.g., due to symlinks),
+a dict mapping file path -> last known mtime,
+and a timestamp of the last time the thread yielded via sleep.
+3. Define a `_PathWatcher` class representing a watcher for one root path
+(which can be a directory or a single file):
+- Constructor takes the root path,
+an `accept_directory` filter callback (decides whether to recurse into a given subdirectory),
+an `accept_file` filter callback (decides whether to track a given file),
+a shared `_SingleVisitInfo` instance, a maximum recursion depth (`max_recursion_level`),
+and an optional `sleep_time` used to throttle scanning (default 0.0). - Implements `__eq__`,
+`__ne__`, and `__hash__` based solely on the root path,
+so watchers for the same path are considered equal/hashable (useful for dedup in sets/dicts). - On
+construction, performs an initial scan (via a `_check` method) using a no-op change callback
+and an empty "old mtime" baseline,
+effectively just recording the current state without reporting anything as changed
+(so the first scan doesn't flood the caller with "added" events). - Implements a `_check_dir` method
+that recursively walks a directory using `os.scandir`, respecting `max_recursion_level`,
+skipping directories already visited in this pass (to guard against cycles),
+applying `accept_directory`/`accept_file` filters,
+updating `single_visit_info.visited_dirs` and `file_to_mtime`,
+and invoking the `append_change` callback with `Change.added` / `Change.modified` / `Change.deleted`
+as appropriate by comparing current state to `old_file_to_mtime`.
+It should periodically call `time.sleep(sleep_time)` based on elapsed time since `last_sleep_time`
+(using `sleep_at_elapsed` as the threshold) to avoid hogging the CPU/GIL during large scans,
+and should be resilient to errors from inaccessible files/directories
+(e.g., permission errors, race conditions where a file disappears mid-scan),
+typically by wrapping filesystem calls in try/except
+and logging via `pydev_log`. - Likely also implements a `_check` method
+(used both internally and externally) that performs a full pass:
+if the root path is a directory, calls `_check_dir`;
+if it's a single file, checks that file's mtime directly;
+detects deleted files/dirs (present in `old_file_to_mtime` but missing in the new scan)
+and reports them as `Change.deleted`.
+4. Build on top of `_PathWatcher` a higher-level watcher manager/class
+(e.g., something like `PyDevdFileWatcher` or similar) that:
+- Maintains a collection of `_PathWatcher` instances (one per watched root path/pattern),
+supporting adding new paths to watch
+(with their own accept-directory/accept-file filters and recursion limits)
+and possibly removing/replacing them. - Runs the polling loop
+(potentially in a background thread using the "saved" `threading`/`time` modules from
+`_pydev_saved_modules` to avoid interference from user-patched modules) at a configurable interval,
+repeatedly invoking `_check` on all registered `_PathWatcher`s with a shared `_SingleVisitInfo`
+and a callback that reports detected changes (added/modified/deleted) back to the caller,
+typically including the changed file/directory path
+and the `Change` type. - Uses `basename` (from `os.path`)
+where appropriate (e.g., for filtering by filename patterns)
+and `sys` for any platform/version checks
+or stderr output. - Logs relevant diagnostic information using `pydev_log`
+(e.g., start/stop of watching, errors encountered, number of changes found).
+Notable behavior to preserve:
+- The watcher must gracefully handle inaccessible
+or disappearing files/directories without crashing
+(robust error handling throughout the scanning code). - Must avoid infinite loops on directory
+structures with symlink cycles via the `visited_dirs` tracking. - Must throttle itself
+(via `sleep_time`/`sleep_at_elapsed`) so continuous scanning does not consume excessive CPU
+or starve other threads,
+especially important since this runs inside a live debugger process alongside the user's program. -
+The initial scan of any newly added path should not report pre-existing files as "added"
+â€” only subsequent scans should report genuine changes relative to the previous scan's recorded
+mtimes. - Should work on Python 2
+and Python 3 (hence the `IntEnum` fallback and careful import style),
+and should not introduce any external dependencies beyond the standard library
+and the internal `_pydev_bundle` helpers.
+Output a single, self-contained Python module implementing this functionality,
+matching the structure and behavior described above. ---

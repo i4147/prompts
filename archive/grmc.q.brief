@@ -1,12 +1,10 @@
 Act as an expert Python developer. Write a production-ready Python 3.14 script that strips comments, docstrings, and type annotations from Python files, output as a single annotated code block.
-
 **Core requirements:**
 - Use `libcst` as default backend; support `-b/--backend` with `libcst`, `tree-sitter`, `ast`
 - Handle Python files without extensions
 - Preserve by default: shebang, module docstring, `# type:` and `# fmt:` comments
 - Replace docstring-only function/class bodies with `pass`
 - Validate output is parseable Python before writing
-
 **CLI flags:**
 - (no flag) → strip inline comments only
 - `-c/--comments` → strip all comments except shebang, `# type:`, `# fmt:`
@@ -14,7 +12,6 @@ Act as an expert Python developer. Write a production-ready Python 3.14 script t
 - `-a/--all` → strip everything (comments, docstrings, shebangs, `# type:`, `# fmt:`)
 - `-t/--type` → strip type annotations
 - Accept multiple files/dirs; default to current dir recursively if none given
-
 **Implementation constraints:**
 - `pathlib` for paths; `multiprocessing.Pool.apply_async` with fixed 8 workers
 - `loguru` for error logging

@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line bulk find-and-replace
+refactoring tool for a project directory.
+It takes two arguments from the command line: the text to search for and the
+replacement text.
+If the wrong number of arguments is supplied, it should print a brief usage
+message showing the expected format and exit with a non-zero status.
+Starting from the current working directory, the script should recursively walk
+through all files and folders in the project tree.
+For every readable text file, it should replace every occurrence of the search
+text with the replacement text, saving the file in UTF-8 encoding.
+Files that cannot be decoded as text, or that the script lacks permission to
+read or write, should be skipped silently without stopping the overall process.
+In addition to updating file contents, the script should rename files and
+directories whose names contain the search text, substituting the replacement
+text in the name.
+Renaming should be performed carefully: if a target name already exists, the
+script must not overwrite it, and should instead print a clear message telling
+the user to resolve the conflict manually and leave that item unchanged.
+Any unexpected error during a rename should be handled gracefully so the script
+continues processing the remaining items.
+Processing order should be safe for a tree being modified while it is traversed,
+so that renaming a directory does not break the processing of its children.
+The script should produce no output for successful routine replacements beyond
+what is needed for conflict warnings and errors, and should be designed to run
+cleanly on Windows, macOS, and Linux. ---

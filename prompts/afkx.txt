@@ -1,0 +1,33 @@
+Write a Python script that scans a Python project (or a single Python file, or
+an archive containing Python files) and detects unused imports, reporting them
+and optionally removing them automatically.
+The tool should accept a file or directory path as input and recursively
+discover Python source files, skipping common non-source directories such as
+virtual environments, caches, and version-control folders.
+It should analyze each file to identify imported names that are never referenced
+in the code, taking into account aliased imports, `from` imports, wildcard-style
+cases, and names used only in type annotations or `__all__` exports, which
+should not be flagged as unused.
+For each file, the tool should produce a per-file result that includes the list
+of unused imports, a unified diff showing what a fix would change, and any error
+encountered while parsing or processing that file.
+Files that cannot be parsed should be reported gracefully without stopping the
+whole run.
+Provide a command-line interface that supports a dry-run mode (report only, no
+changes), an apply mode that rewrites files in place with the unused imports
+removed while preserving the rest of the code's formatting and comments as much
+as possible, and an option to create backups before modifying files.
+Allow users to control output verbosity, disable colored output (automatically
+detect when the terminal does not support it), and choose between human-readable
+text and machine-readable JSON output.
+Processing of multiple files should be able to run concurrently to improve speed
+on large projects, with a configurable number of workers.
+The tool should also be able to read archived inputs such as zip and tar files,
+analyzing the Python files inside them without extracting them to disk
+permanently, and should handle optional compression formats gracefully when
+their supporting libraries are not installed.
+The script should exit with a meaningful status code: zero when no unused
+imports are found, a non-zero code when unused imports are reported in dry-run
+mode, and a distinct code when errors occurred.
+It should print a concise summary at the end including counts of files scanned,
+files with issues, total unused imports found, and files modified. ---

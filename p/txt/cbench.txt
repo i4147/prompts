@@ -1,0 +1,8 @@
+Compression benchmark with level sweeps and sorted JSON reporting.
+Usage: python cbench.py <file_or_folder> [options] Options:
+--runs N Timing runs per (algo, level) (default: 3) --sweep Sweep all default levels per algorithm
+--algorithms A,B,...
+Substring filter on algorithm name --no-decompress Skip decompression benchmark --json OUT.json
+Write JSON report (default: bench_report.json) --quiet Suppress per-row console table --sort KEY
+ratio | throughput | compress_time | decompress_time | size (default: ratio, best-first) --ascending
+Reverse sort direction

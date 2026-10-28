@@ -1,0 +1,1 @@
+Corpus reader for the XML version of the British National Corpus.

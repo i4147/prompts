@@ -1,0 +1,6 @@
+set default asyncio policy to be compatible with tornado.
+Tornado 6 (at least) is not compatible with the default asyncio implementation on Windows Pick the
+older SelectorEventLoopPolicy on Windows if the known-incompatible default policy is in use.
+FIXME: if/when tornado supports the defaults in asyncio,
+remove and bump tornado requirement for py38 borrowed from ipykernel:
+https://github.com/ipython/ipykernel/pull/456

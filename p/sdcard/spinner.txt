@@ -1,0 +1,31 @@
+Write a Python class named `Spinner` that extends a `View` base class,
+implementing a wrapper for a Termux:GUI Spinner widget (a dropdown selection UI element) within the
+`termuxgui` library ecosystem.
+The module should import `Optional`, `List`, and `Literal` from the `typing` module,
+as well as `Activity` from `termuxgui.activity` and `View` from `termuxgui.view`.
+The `Spinner` class should include a docstring stating "This represents a Spinner." **Constructor
+(`__init__`)**: - Parameters:
+`activity` (an `Activity` instance, required),
+`parent` (an optional `View` instance, default `None`),
+and `visibility` (an optional value restricted to `Literal[0, 1, 2]`, default `None`). - Build a
+dictionary `args` containing the key `"aid"` set to `activity.aid`
+and the key `"visibility"` set to the `visibility` parameter. - If `parent` is not `None`,
+add a `"parent"` key to `args` set to `parent.id`. - Call the parent `View.__init__` method,
+passing `self`, `activity`,
+and the result of `activity.c.send_read_msg(...)`
+— a call that sends a message with `"method": "createSpinner"` and `"params": args`,
+and returns a response (presumably containing the new view's ID) used to initialize the base `View`.
+**Method `setlist(self, list: List[str])`**: - Docstring:
+"Sets the list of items displayed in the Spinner." - Sends a message via `self.a.c.send_msg(...)`
+with `"method": "setList"` and `"params"` containing `"aid": self.a.aid`, `"id": self.id`,
+and `"list": list`. - No return value. **Method `selectitem(self, item: int)`**: - Docstring:
+"Sets the selected item of the Spinner." - Sends a message via `self.a.c.send_msg(...)` with
+`"method": "selectItem"` and `"params"` containing `"aid": self.a.aid`, `"id": self.id`,
+and `"item": item`.
+- No return value.
+The code should follow the conventions of the existing `termuxgui` Python binding
+(e.g., `self.a` refers to the associated `Activity`,
+`self.a.c` refers to the communication/connection object used to send JSON-RPC-like messages to the
+Termux:GUI backend, and `self.id` refers to the view's assigned ID).
+Preserve exact method names, parameter names, message method strings,
+and parameter key names as specified above. ---

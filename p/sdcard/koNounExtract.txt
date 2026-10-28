@@ -1,0 +1,30 @@
+Design a Python script for the "SmiToText" project that generates a MeCab user dictionary CSV file
+from a Korean noun word list, intended for Korean morphological analysis/tokenization.
+The script should define a class named `koNounExtract` with the following characteristics:
+- In its constructor,
+it should instantiate a `Util` helper class (from `SmiToText.util.util`)
+and a `koLastCharCheck` helper class (from `SmiToText.wordcheck.koLastCharCheck`),
+and use the `Util` instance to resolve the root directory path of the `SmiToText.SmiToText` package.
+- It should expose a method `dictGenerate(self, sentence)` that takes a single Korean word/noun as
+input and is responsible for producing a single formatted line suitable for a MeCab user dictionary
+entry (e.g., encoding features such as part-of-speech tag
+and whether the word ends in a syllable with a final consonant/batchim,
+using the `koLastCharCheck` hel returning that formatted line as a string (`mecabDictLine`).
+The script should also include a `__main__` execution block that: 1.
+Creates instances of `Util` and `koNounExtract`.
+2. Resolves the root path of the `Smi` package
+and builds a data directory path pointing to `dataokenizerData`.
+3. Defines an input filename `국어_명사_초성포함단어제거.txt`
+(a Korean noun list with words containing only initial consonants removed)
+and an output filename `국어_명사_초성포함단어제거_mecabUserDict.csv`, both located in that data directory.
+4. Opens the input file for reading and the output file for writing, both using UTF-8 encoding.
+5. Iterates line by line over the input file, stripping whitespace from each word,
+tracking a line counter, and breaking the loop when an empty line (end of file) is reached.
+6. For each non-empty word, calls `dictGenerate` on it to produce a MeCab dictionary line,
+and prints that line to the console
+(the actual file-writing line is present but commented out, so output is only printed,
+not persisted, in this version).
+7. After processing all lines,
+prints the total number of lines processed and closes both the input and output file handles.
+Include the standard `# -*- coding: utf-8 -*-` encoding declaration at the top of the file,
+and use the `re` and `os` modules as needed for text processing and file path handling. ---

@@ -1,0 +1,39 @@
+Write a prompt for a Python module that is part of a document-parsing library,
+responsible for handling plain-text-like file formats that should be read verbatim without complex
+structural parsing.
+The module should: - Define parser functions for three categories of file extensions,
+each registered via a `register` decorator (imported from a sibling `registry` module) that maps a
+list of file extensions to a format name:
+1. `.txt`, `.log`, `.text` → registered under format name `"text"` 2. `.csv`,
+`.tsv` → registered under format name `"csv"` 3. `.sql`, `.ini`, `.cfg`,
+`.conf` → registered under format name `"config"` - Each parser function takes a `Path` object as
+input and returns a `Document` object (imported from a sibling `model` module, along with `Block`).
+- For plain text files (`.txt`, `.log`, `.text`):
+read the file's text content using a shared `read_text` utility
+(imported from a local `_util` module),
+split it into paragraphs using a shared `split_paragraphs` utility (also from `_util`),
+and produce one `Block` of kind `"paragraph"` per paragraph.
+Return a `Document` with `format="text"`, the list of blocks,
+and metadata containing the file's size in bytes (via `path.stat().st_size`). - For CSV/TSV files
+(`.csv`, `.tsv`): determine the delimiter based on the file extension
+(tab for `.tsv`, comma for `.csv`), read the file content with `read_text`,
+parse it using Python's built-in `csv.reader` (via an in-memory `io.StringIO` stream),
+and collect all rows into a list.
+Build a simple Markdown-style table string by joining each row's cells with `" | "`
+and wrapping each line with leading/trailing pipes.
+Produce a single `Block` of kind `"table"` containing this Markdown text,
+with a `meta` dict holding the raw `rows` list and the `delimiter` used.
+Return a `Document` with `format="csv"`, the single block,
+and metadata containing the row count. - For config/script-like files
+(`.sql`, `.ini`, `.cfg`, `.conf`):
+read the text, filter out blank/whitespace-only lines while preserving order,
+join the remaining lines back together,
+and produce a single `Block` of kind `"code"` containing that joined text,
+with `meta` indicating the `language` (derived from the file extension without the leading dot).
+Return a `Document` with `format="config"`
+and the single block (no extra metadata needed). - Include a module-level docstring stating that
+`.txt .log .csv .tsv .sql .ini .cfg .conf` files are read verbatim. - Each function should have a
+concise docstring describing its specific one-line-per-block
+or one-block-per-file behavior. - Use `from __future__ import annotations`
+and only the necessary imports
+(`csv`, `io`, `pathlib.Path`, plus the relative imports mentioned above). ---

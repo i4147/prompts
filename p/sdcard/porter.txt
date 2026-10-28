@@ -1,0 +1,8 @@
+Porter Stemmer This is the Porter stemming algorithm.
+It follows the algorithm presented in Porter, M. "An algorithm for suffix stripping."
+Program 14.3 (1980):
+130-137. with some optional deviations that can be turned on
+or off with the `mode` argument to the constructor.
+Martin Porter, the algorithm's inventor,
+maintains a web page about the algorithm at https://www.tartarus.org/~martin/PorterStemmer/
+which includes another Python implementation and other implementations in many languages.

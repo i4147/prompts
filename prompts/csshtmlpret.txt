@@ -1,0 +1,18 @@
+Write a Python script that acts as a command-line tool for scanning a set of web
+or text files to extract and analyze CSS property references.
+The tool should accept a directory or file path as input (along with optional
+arguments such as the number of parallel workers and output format), traverse
+the target location to locate relevant files, and parse their contents to
+identify CSS property names and related style declarations.
+It should cross-check the discovered properties against a built-in reference
+list of known CSS properties, then report which properties are recognized, which
+are unknown or unsupported, and how frequently each appears.
+Results should be presented as a clear summary printed to the console and
+optionally saved to an output file in a readable structured format.
+The tool should use parallel processing to speed up scanning of large numbers of
+files, handle missing optional dependencies gracefully with a helpful message,
+skip unreadable or malformed files without crashing, and report the total
+elapsed run time at completion.
+Include clear command-line help text describing all options, and ensure the
+script is robust, well-organized, and easy to extend with additional property
+lists or output formats. ---

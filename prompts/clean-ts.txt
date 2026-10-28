@@ -1,0 +1,35 @@
+Write a Python script that acts as a command-line tool for minifying TypeScript
+and TSX source files in a directory tree, removing comments and unnecessary
+whitespace while preserving the exact runtime behavior of the code.
+The tool should accept a source path (a single file or a directory) and an
+optional output location, then recursively discover all TypeScript (.ts) and TSX
+(.tsx) files, skipping common non-source directories such as version control
+folders, virtual environments, dependency folders, IDE settings folders, and
+build output folders.
+For each discovered file, it should parse the code into a syntax tree so that
+comments are identified structurally rather than with fragile text matching, and
+it should remove only comment content while keeping string literals, template
+literals, regular expressions, and JSX text intact.
+Key behaviors to include: - If a file contains syntax errors according to the
+parser, it must not be written out as broken output; the tool should report the
+failure for that file and leave the original untouched or skip it, while
+continuing with the remaining files. - Empty files should be handled gracefully
+and passed through unchanged. - Processing of many files should be parallelized
+across available CPU cores to keep large projects fast. - Original file
+encodings and byte content should be respected; the tool should work on raw
+bytes and preserve line endings where they matter. - When writing to a separate
+output directory, the original directory structure should be mirrored.
+When minifying in place, the user should be protected from accidental data loss,
+for example through a dry-run mode or a diff preview. - Optionally support a
+secondary JavaScript-level minification pass if an optional external minifier
+library is installed, and degrade gracefully with a clear message if it is not
+available. - Provide a summary at the end reporting how many files were
+processed, skipped, and failed, along with the total size reduction in bytes or
+percentage. - Include a verbose option that shows a unified diff of changes for
+individual files, and a quiet option that suppresses normal output while still
+reporting errors. - Exit with a non-zero status code if any file failed to
+process, and a zero status code otherwise. - Handle invalid paths, permission
+errors, and unreadable files with clear, user-friendly error messages rather
+than crashing.
+The output should be a robust, well-documented, production-quality command-line
+utility with a helpful usage message and sensible defaults. ---

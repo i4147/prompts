@@ -1,0 +1,20 @@
+Write a Python module that defines a `GridLayout` class representing a grid layout view for a
+Termux:GUI application, built on top of the `termuxgui` library.
+The class should: - Inherit from both a custom `ViewGroup` base class
+(from `termuxgui.oo.viewgroup`)
+and the native `tg.GridLayout` class (from `termuxgui`). - Include a class-level docstring
+describing it as representing a GridLayout. - Implement an `__init__` method accepting:
+- `activity`: an `Activity` instance that the grid layout belongs to. - `rows`:
+an integer specifying the number of rows in the grid. - `cols`:
+an integer specifying the number of columns in the grid. - `parent`:
+an optional `ViewGroup` instance representing the parent view (defaults to `None`). - `visibility`:
+an optional literal value restricted to `0`, `1`, or `2`,
+representing the view's visibility state (defaults to `None`). - Use proper type hints
+(`Optional`, `Literal`) for all parameters,
+importing them from the `typing` module. - Import `termuxgui as tg`
+and import `Activity` from `termuxgui.activity`. - In the constructor body,
+explicitly call `tg.GridLayout.__init__` with `activity`, `rows`, `cols`, `parent`,
+and `visibility` to initialize the native grid layout,
+then call `ViewGroup.__init__` with `activity`, `self.id`,
+and `parent` to initialize the custom view group wrapper.
+No additional methods, logic, or behavior beyond this initialization should be included. ---

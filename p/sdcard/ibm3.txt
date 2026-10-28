@@ -1,0 +1,40 @@
+Translation model that considers how a word can be aligned to multiple words in another language.
+IBM Model 3 improves on Model 2 by directly modeling the phenomenon
+where a word in one language may be translated into zero or more words in another.
+This is expressed by the fertility probability, n(phi | source word).
+If a source word translates into more than one word,
+it is possible to generate sentences that have the same alignment in multiple ways.
+This is modeled by a distortion step.
+The distortion probability, d(j|i,l,m), predicts a target word position,
+given its aligned source word's position.
+The distortion probability replaces the alignment probability of Model 2.
+The fertility probability is not applicable for NULL.
+Target words that align to NULL are assumed to be distributed uniformly in the target sentence.
+The existence of these words is modeled by p1,
+the probability that a target word produced by a real source word requires another target word that
+is produced by NULL.
+The EM algorithm used in Model 3 is: :E step:
+In the training data, collect counts,
+weighted by prior probabilities. - (a) count how many times a source language word is translated
+into a target language word - (b) count how many times a particular position in the target sentence
+is aligned to a particular position in the source sentence - (c) count how many times a source word
+is aligned to phi number of target words - (d) count how many times NULL is aligned to a target word
+:M step: Estimate new probabilities based on the counts from the E step
+Because there are too many possible alignments, only the most probable ones are considered.
+First, the best alignment is determined using prior probabilities.
+Then, a hill climbing approach is used to find other good candidates.
+Notations --------- :i:
+Position in the source sentence Valid values are 0 (for NULL), 1, 2, ...,
+length of source sentence :j:
+Position in the target sentence Valid values are 1, 2, ..., length of target sentence :l:
+Number of words in the source sentence, excluding NULL :m:
+Number of words in the target sentence :s: A word in the source language :t:
+A word in the target language :phi:
+Fertility, the number of target words produced by a source word :p1:
+Probability that a target word produced by a source word is accompanied by another target word that
+is aligned to NULL :p0: 1 - p1 References ---------- Philipp Koehn.
+2010. Statistical Machine Translation.
+Cambridge University Press, New York.
+Peter E Brown, Stephen A. Della Pietra, Vincent J. Della Pietra, and Robert L. Mercer.
+1993. The Mathematics of Statistical Machine Translation: Parameter Estimation.
+Computational Linguistics, 19 (2), 263-311.

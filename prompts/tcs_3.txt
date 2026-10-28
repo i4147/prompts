@@ -1,0 +1,36 @@
+Write a Python command-line tool that takes a source file path and produces a
+compact, copy-ready version of its contents, either for the whole file, a chosen
+line range, or an explicit list of selected lines.
+The tool should be usable from a terminal and should copy its result to the
+system clipboard when possible.
+Inputs and invocation: - The first argument is the path to a file.
+An optional start line and end line (1-based, inclusive; end defaults to the
+last line) may follow to select a range. - Alternatively, a selection mode flag
+lets the user list one or more specific line numbers, which must be output in
+the order given. - If arguments are missing or invalid, print a short usage
+message that shows both invocation forms and explains the range and selection
+behavior, then exit with a non-zero status.
+Errors should be reported clearly to the standard error stream.
+Core behavior: - When a Python file is processed without a range, its code
+should be compressed: remove unnecessary whitespace, comments, and docstrings
+where safe, shorten identifiers that are local to functions or classes into
+minimal unique names while avoiding collisions with built-in names, keywords,
+and names used elsewhere, and produce output that remains functionally
+equivalent and valid Python. - When a range or selection is given for a Python
+file, compress that excerpt only if it parses as valid Python on its own;
+otherwise copy the selected lines exactly as they appear. - Non-Python files are
+copied as-is, with the requested lines or range extracted. - Preserve the
+relative order of lines for ranges, and respect the exact order for explicit
+selections. - Validate that line numbers are within the file's bounds and that
+start is not greater than end.
+Output: - Print the resulting text to standard output and, when a clipboard
+utility is available on the current operating system, also copy it to the
+clipboard.
+Report a short status message on the standard error stream indicating how many
+lines or characters were processed and whether the clipboard copy succeeded.
+Failure to access the clipboard must not crash the tool.
+Quality expectations: - The tool should be robust to empty files, files with
+syntax errors, unreadable paths, and encoding issues, and should handle each
+case with a clear message rather than a traceback. - Keep the program
+self-contained, cross-platform where practical, and organized so the behavior is
+easy to test. ---

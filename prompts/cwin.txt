@@ -1,0 +1,23 @@
+Write a Python script that scans a user-specified directory tree and reports the
+total size of cross-platform system and junk files that are commonly created by
+macOS and Windows, so the user can see how much space these clutter files
+occupy.
+The tool should accept a root folder path from the command line (defaulting to
+the current directory), walk through all nested files and folders, and identify
+items whose names match a built-in list of known macOS artifacts (such as
+metadata and cache files like .DS_Store, AppleDouble resource forks, Spotlight
+and Trash folders, and Apple-specific hidden entries) and Windows artifacts
+(such as executable and library files, installer and shortcut files, Thumbs.db,
+desktop.ini, and recycle bin folders).
+Support wildcard-style matching for patterns like extensions and prefixes, and
+treat directories matching these patterns appropriately.
+The script should produce a clear, human-readable summary listing the matched
+items with their paths and sizes, a total reclaimable size, and counts grouped
+by category or platform.
+Include a dry-run mode that only reports findings, and an optional mode that
+deletes the matched items after explicit user confirmation.
+Handle permission errors, broken symlinks, and unreadable paths gracefully by
+logging them and continuing.
+Sizes should be formatted in readable units (bytes, KB, MB, GB).
+The tool should exit with a meaningful status code indicating success, invalid
+input, or errors encountered, and provide helpful usage/help output. ---

@@ -1,0 +1,21 @@
+Write a Python module that defines an `ImageView` class for a Termux:GUI object-oriented wrapper
+library, built on top of the `termuxgui` package.
+Requirements: - Import `Optional` and `Literal` from the `typing` module,
+import the `termuxgui` package as `tg`,
+and import the `View` base class from `termuxgui.oo.view`. - Define a class `ImageView` that
+inherits from both `View` and `tg.ImageView`,
+representing an ImageView widget in the Termux:GUI framework.
+Include a short docstring describing it as "This represents an ImageView." - The class must
+implement an `__init__` method with the following signature and behavior: - Parameters:
+`activity` (of type `tg.Activity`, required), `parent` (an `Optional[View]`, default `None`),
+and `visibility` (an `Optional[Literal[0, 1, 2]]`, default `None`). - Inside `__init__`,
+first call `tg.ImageView.__init__(self, activity, parent, visibility)` to initialize the underlying
+native ImageView with the given activity, parent,
+and visibility. - Then call `View.__init__(self, activity, self.id, parent)` to initialize the
+`View` base class using the activity,
+the `id` attribute that was set by the native `ImageView` initialization,
+and the parent. - Preserve the exact order of initialization
+(native ImageView first, then the View base class),
+since the `View` initializer depends on `self.id` being already set by the `ImageView` initializer.
+- Keep the code minimal, with correct type hints matching the signature described above,
+and no additional methods, attributes, or logic beyond what is described. ---

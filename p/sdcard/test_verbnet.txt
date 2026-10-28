@@ -1,0 +1,3 @@
+Unit tests for VerbnetCorpusReader,
+covering version support (2.1, 3.2, 3.3)
+and the longid/shortid bug fix for dash-style numeric identifiers.

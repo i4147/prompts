@@ -1,0 +1,39 @@
+Write a prompt for an AI coding agent to generate a Python script with the following specifications:
+Create a Python module for a Korean noun extraction tool as part of a text-processing library called
+"SmiToText".
+The script should: **Purpose:** Build a class-based utility that extracts Korean nouns from input
+sentences by leveraging multiple Korean morphological analyzers (KoNLPy taggers),
+combining their outputs to improve noun extraction coverage
+and accuracy. **Main structure:** - Include standard imports:
+`argparse`, `os`, `re`, `date` (from `datetime`) - Import Korean NLP taggers from `konlpy.tag`:
+`Hannanum`, `Kkma`, `Komoran`,
+`Okt` - Import a custom `mecab` tokenizer module
+and an `nltkSentTokenizer` from internal package paths `SmiToText.tokenizer.mecab`
+and `SmiToText.tokenizer.nltk` - Add a Korean-language module docstring/comment noting that the tool
+uses Komoran, Kkma, and Twitter (Okt) analyzers for noun extraction **Class design:** - Define a
+class named `extractNoun` with an empty `__init__` constructor - Implement a method
+`findKoNoun(self, sentence)` that:
+- Takes a single Korean sentence string as input - Maintains a `set` called `nounSet` to collect
+unique noun candidates (to avoid duplicates) - Includes commented-out (disabled) code blocks showing
+how `Hannanum`, `Kkma`,
+and `Komoran` analyzers *could* be used to extract nouns via their `.nouns()` method
+and update `nounSet`,
+but leaves them inactive - Actively uses `Okt` (instantiated as `twitter`) to extract nouns via
+`twitter.nouns(sentence)`
+and merges results into `nounSet` - Actively uses the custom `mecab.nouns(sentence)` function,
+splits its string output by spaces into a list, filters out empty strings,
+and merges the resulting tokens into `nounSet` - Initializes two empty lists,
+`norm_noun` and `exception_noun`,
+intended to separate "normal" nouns from "exception" nouns - Iterates over each noun candidate in
+`nounSet`; for nouns longer than 1 character, checks for embedded digits using a regex (`\d+`);
+if no digits are found,
+performs cleanup by replacing bracket characters `]`
+and `[` with newline characters ` ` (as a placeholder/partial cleaning step for malformed tokens)
+**Notable behavior/style:** - The method is left incomplete
+(no return statement or final classification logic shown),
+reflecting a work-in-progress noun-cleaning routine
+- Preserve the mix of active and commented-out analyzer calls exactly as structured,
+  since this reflects intentional experimentation with different KoNLPy backends - Use UTF-8
+  encoding declaration at the top of the file (`# -*- coding: utf-8 -*-`) - Keep variable naming
+  conventions consistent with the original camelCase-ish style
+  (e.g., `nounSet`, `mecabSentence`, `kkmaNoun`, `komaranNoun`) ---

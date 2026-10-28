@@ -1,0 +1,26 @@
+Create a Python command-line script that analyzes word frequency in a text file
+while filtering out common stopwords. **Purpose:** The script reads a text file specified by the
+user, extracts lowercase alphabetic words, removes stopwords loaded from an external file,
+counts word occurrences,
+and prints the most frequent words. **Main Inputs:** - A single command-line argument:
+the path to the text file to analyze. - A fixed external stopwords file located at
+`/sdcard/data/stopwords`, loaded at script startup.
+Each non-empty line (trimmed and lowercased) that doesn't start with `#` is treated as a stopword.
+**Main Outputs:** - Prints up to the top 50 most common words (that are not stopwords)
+and their occurrence counts, but only includes words that appear more than once. - Output format:
+each line shows the word left-aligned in a 15-character-wide field,
+followed by its count (e.g., `example 3`). **Notable Behavior:** - Word extraction uses a regex to
+find sequences of 3 or more lowercase letters (`[a-z]{3,}`) after lowercasing the entire text;
+this naturally excludes numbers, punctuation,
+and words shorter than 3 letters. - Both the input text file
+and the stopwords file are read with UTF-8 encoding (for the main text)
+and errors are ignored (`errors="ignore"`) to avoid crashing on malformed/non-UTF-8 bytes. -
+Stopwords are stored
+and checked via a set-like structure (converted to a list) for membership testing. - The input file
+path argument is stripped of whitespace before being used. - Uses `collections.Counter` to tally
+word frequencies and its `.most_common(50)` method to get the top results. - The script is
+structured with a `main()` function and is invoked via `raise SystemExit(main())`,
+following a standard CLI script pattern. - No external dependencies beyond the Python standard
+library (`re`, `sys`, `collections.Counter`, `pathlib.Path`). - No command-line argument
+validation/error handling is performed beyond what Python raises natively
+(e.g., `IndexError` if no argument is given).

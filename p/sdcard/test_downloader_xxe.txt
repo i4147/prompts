@@ -1,0 +1,3 @@
+Tests for XML Entity Expansion (XXE) protection in nltk.downloader.
+Verifies that defusedxml blocks Billion Laughs (XML bomb) payloads
+when parsing the package index from a remote URL.

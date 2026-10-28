@@ -1,0 +1,15 @@
+Regression tests for symlink-following arbitrary file write in the downloader (CWE-59).
+``Downloader._download_package`` writes the package body to
+``os.path.join(download_dir, info.filename)``
+(``info.filename`` is taken from the package index and is attacker-controllable).
+A containment check guards against ``../`` traversal,
+but a purely *lexical* check is bypassed by a symlink that already exists *inside* ``download_dir``
+and points outside it:
+the target is lexically contained,
+yet ``open()`` / ``os.replace()`` follow the link and write outside the download directory.
+The check must therefore be symlink-aware:
+it resolves the deepest existing ancestor of the real write targets before comparing,
+so a planted symlink cannot redirect the write out of ``download_dir``.
+These tests pin that behaviour
+and also assert that legitimate downloads (including into a download dir that is itself a symlink)
+keep working.

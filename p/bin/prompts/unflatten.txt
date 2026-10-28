@@ -1,0 +1,3 @@
+unflatten.py - restore flattened shell/heredoc/Python transcripts.
+Usage: python unflatten.py flattened.txt -o restored.sh python unflatten.py flattened.txt -o
+restored.sh --extract out_dir cat flattened.txt | python unflatten.py > restored.sh

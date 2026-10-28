@@ -1,0 +1,16 @@
+Write a Python script that imports a predefined collection of Python keywords named `PY_KEYWORDS`
+(aliased as `pk`) from a local module called `dh`.
+The script should iterate over every keyword in this collection
+and print each one on its own line to standard output.
+Main input: the `PY_KEYWORDS` collection sourced from the `dh` module
+(no user-provided input or command-line arguments are required).
+Main output: a plain-text listing printed to the console, with one keyword per line,
+in the order they appear in the `PY_KEYWORDS` collection.
+Notable behavior: - The script assumes the `dh` module is available in the Python path
+and exposes an iterable named `PY_KEYWORDS`. - The import uses an alias (`pk`) for brevity
+when referencing the collection. - The loop performs no filtering, sorting,
+or transformation—it simply prints each element exactly as stored in the source collection. - There
+is no error handling for a missing module, missing attribute, or empty collection;
+the script will raise an exception if `dh`
+or `PY_KEYWORDS` is unavailable. - The script has no return value
+or output format other than the sequential console print statements. ---

@@ -1,0 +1,24 @@
+Write a Python script that acts as a network diagnostic and public IP lookup
+utility.
+The tool should determine the machine's public IP address by querying several
+independent external IP-echo services, falling back to the next service whenever
+one is unreachable, slow, or returns an unexpected response, and reporting the
+first valid result.
+It should be robust to network failures, use short timeouts, and never crash on
+partial connectivity.
+Beyond the public IP lookup, the script should support a broader set of local
+and remote connectivity checks that a user can run from the command line.
+It should accept optional arguments to select which checks to run, specify
+target hosts or ports, control timeouts and concurrency, and choose an output
+format (human-readable colored console output with a plain-text fallback when
+color support is unavailable, or machine-readable JSON).
+Checks that can run independently should execute concurrently with a bounded
+number of workers, and the final report should summarize each check with a clear
+success or failure status, measured latency where relevant, and any error
+message encountered.
+The script should gracefully handle missing optional dependencies by degrading
+its output styling rather than failing, validate all user-supplied input with
+helpful error messages, return a non-zero exit code if any requested check
+fails, and optionally write the full report to a file with a timestamp.
+Keep the design modular so each diagnostic is self-contained and easy to extend,
+and include concise help text describing every option. ---

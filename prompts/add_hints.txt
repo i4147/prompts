@@ -1,0 +1,30 @@
+Write a Python script that acts as an automated type-annotation assistant for
+existing Python source files.
+The tool should take a path to a Python file (or a directory of Python files) as
+input and produce type-annotated versions of the code without changing its
+runtime behavior.
+It should work by analyzing the source's syntax tree to find function
+parameters, return positions, and variables that lack type hints, then infer
+likely types from several signals: literal values assigned or passed as
+defaults, common naming conventions (for example, names like "count", "index",
+or "verbose" suggesting integers or booleans), and simple usage patterns within
+the code.
+Where a type can be confidently inferred, the tool should add the annotation;
+where it cannot, it should leave the code alone rather than guess wildly.
+The script should preserve the original formatting, comments, and layout as much
+as possible so that the diff between the original and the annotated output is
+minimal and easy to review.
+It should ensure any needed type imports (such as those from the typing module)
+are added to the file automatically and only when required.
+Provide a command-line interface that accepts the target path and options such
+as a dry-run mode that prints a unified diff of proposed changes without writing
+files, a verbose mode that explains each inferred annotation, a flag to write
+changes in place, and an option to write results to a separate output location.
+When writing in place, the tool should keep a backup of the original file.
+It should handle errors gracefully, skipping files that fail to parse and
+reporting a summary at the end listing how many files were processed, modified,
+and skipped, along with any problems encountered.
+The script should be robust to common Python constructs including nested
+functions, class methods, decorators, and async functions, and it should never
+introduce syntax errors into the output.
+Include a clear help message describing usage and options. ---

@@ -1,0 +1,19 @@
+Living-audit regression tests for the parser / grammar unbounded-work DoS cluster
+(GHSA-ff5c-cp5c-9wjf umbrella; sibling of RecursiveDescentParser, CVE-2026-12876).
+This file records the WHOLE audited candidate set, not only the exploitable ones:
+* The *exploitable* sinks
+(ShiftReduceParser, CFG.chomsky_normal_form's unit-rule removal, NonprojectiveDependencyParser,
+ViterbiParser, generate()) each HUNG on a tiny crafted input on the unpatched code
+-- reproduced out-of-process with a hard kill.
+Each now has a bound
+(a wall-clock ``max_time``, an algorithmic cycle guard, or an operation budget);
+the tests assert it is bounded (raises quickly)
+and that benign inputs are unaffected. * The *already-bounded* parsers checked in the same sweep
+(ChartParser, ProjectiveDependencyParser, ProbabilisticNonprojectiveParser) are kept here as
+explicit BENIGN cases:
+the test documents WHY each is safe and will fail if a future change removes the existing guard
+or turns a polynomial path exponential.
+RecursiveDescentParser (the seed of this cluster) has its own file,
+``test_recursivedescent_dos.py``.
+Bounds are monkeypatched/short so the suite stays fast;
+payloads are sized so the unpatched blow-up cannot finish inside the window.

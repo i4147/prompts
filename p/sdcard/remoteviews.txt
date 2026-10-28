@@ -1,0 +1,44 @@
+Write a Python module that defines a `RemoteViews` class for building
+and managing "remote" UI layouts via Termux:GUI,
+intended for use cases like custom notifications or home screen widgets,
+where the UI must be described remotely rather than created directly in the app's own window.
+The class should be constructed with a `Connection` object (from `termuxgui.connection`).
+On initialization, it must call the GUI connection's synchronous read method (`send_read_msg`) with
+method `"createRemoteLayout"` to create a new remote layout on the Termux:GUI side,
+and store the returned remote layout id (`rid`) as an instance attribute.
+Implement `__eq__` so that a `RemoteViews` instance can be compared either against a plain integer
+(compared to `self.rid`)
+or against another `RemoteViews` instance (compared by `self.rid == other.rid`).
+Implement a `delete()` method that sends a fire-and-forget message (`send_msg`) with method
+`"deleteRemoteLayout"` and params containing the `rid`,
+to destroy this remote layout and free its resources.
+Implement methods to add child views to the remote layout,
+each returning an integer view id (or -1 if creation failed),
+which can be used in later calls to reference/manipulate that view:
+- `addFrameLayout(parent: Optional[int] = None) -> int`:
+Creates a FrameLayout inside the remote layout.
+Build a params dict starting with `{"rid": self.rid}`,
+optionally add `"parent"` if a parent view id is given,
+then call `send_read_msg` with method `"addRemoteFrameLayout"` and these params,
+returning the result. -
+`addLinearLayout(parent: Optional[int] = None, vertical: Optional[bool] = None) -> int`:
+Creates a LinearLayout inside the remote layout.
+Build a params dict starting with `{"rid": self.rid}`,
+optionally add `"vertical"` (orientation flag) and `"parent"` if provided,
+then call `send_read_msg` with method `"addRemoteLinearLayout"` and these params,
+returning the result.
+Both "add" methods should follow the same pattern:
+only include optional keys in the params dict when their corresponding argument is not `None`,
+always include the layout's `rid`, and delegate the actual remote call to `self.c.send_read_msg`.
+Include necessary imports at the top:
+`base64`, and `Optional`, `Literal`, `Union` from `typing`,
+along with importing `Connection` from `termuxgui.connection`
+(even if not all are used yet,
+keep them for consistency with the rest of the Termux:GUI Python bindings
+and future extension of this class with more view types and properties).
+Add a class-level docstring explaining that `RemoteViews` represents a remote layout usable for
+custom notifications or widgets,
+and method-level docstrings describing what each method creates/returns/deletes,
+matching the style of concise one-to-two sentence docstrings describing behavior and return values
+(including the "-1 if it could not be created" case for view-adding methods).
+---

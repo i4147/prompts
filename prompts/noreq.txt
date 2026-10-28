@@ -1,0 +1,30 @@
+Write a Python script that validates whether a given file is an intact, usable
+software archive.
+The script should accept a file path as input and return a clear true/false
+resultive is valid and uncorrupted.
+Requirements: - **Purpose:** Determine if a file is a healthy archive before it
+is used by other tooling (for example, before installation, extraction, or
+deployment).
+It should catch missing files, empty files, unreadable files, and corrupted
+contents. - **Supported formats:** Handle common Python-related and general
+archive types, including ZIP-based archives (such as standard zip files and
+Python wheel packages) and tar archives in plain, gzip-compressed, and
+xz-compressed variants.
+Recognize formats primarily by file name or extension. - **Validation
+behavior:** - Reject paths that do not exist, are not regular files, or have
+zero size. - For zip-based formats, verify that the archive opens correctly and
+that its internal entries pass an integrity check. - For tar-based formats,
+verify that the archive can be opened with the appropriate compression mode and
+that its contents can be read without errors. - Treat any unrecognized extension
+as invalid or unsupported in a consistent, documented way. - **Error handling:**
+The script must never crash on bad input.
+Corrupt files, bad archive headers, missing files, permission problems, and
+unexpected exceptions should all result in a clean "invalid" outcome rather than
+an uncaught error. - **Inputs:** A single file path (string or path-like
+object). - **Outputs:** A boolean result (valid or invalid).
+Optionally provide a short human-readable reason for failures when run from the
+command line. - **Usability:** Make it usable both as an importable function for
+other Python code and as a standalone command-line tool that accepts one or more
+file paths and prints the result for each, with a meaningful exit status. -
+**Code quality:** Keep the solution robust, readable, and free of side effects.
+Temporary resources, if used, must be cleaned up automatically. ---

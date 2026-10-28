@@ -1,0 +1,35 @@
+Write a Python module that defines an `EditText` class providing an object-oriented wrapper for a
+Termux:GUI edit text (text input) widget, built on top of the `termuxgui` (`tg`) library.
+Requirements: - Import `Optional` and `Literal` from the `typing` module,
+import the `termuxgui` package as `tg`,
+and import the `View` class from a local module `termuxgui.oo.view`. - Define a class named
+`EditText` that inherits from both `View` and `tg.EditText`,
+combining the custom `View` wrapper behavior with the native Termux:GUI
+`ionality. - Include a docstring on the class stating:
+"This represents an EditText." - Implement an `__init__` method with the following parameters:
+- `activity`: a `tg.Activity` instance (required, no default),
+representing the parent activity. - `text`:
+a `str` (required, no default), the initial text content of the edit field. - `parent`:
+an `Optional[View]` defaulting to `None`,
+representing an optional parent view/container. - `singleline`:
+a `bool` defaulting to `False`,
+controlling whether the field restricts input to a single line. - `line`:
+a `bool` defaulting to `True`, controlling whether an underline is shown. - `blockinput`:
+a `bool` defaulting to `False`, controlling whether user input is blocked. - `inputtype`:
+a `Literal` type restricted to one of the following string values:
+`"text"`, `"textMultiLine"`, `"phone"`, `"date"`, `"time"`, `"datetime"`, `"number"`,
+`"numberDecimal"`, `"numberPassword"`, `"numberSigned"`, `"numberDecimalSigned"`,
+`"textEmailAddress"`, `"textPassword"`, defaulting to `"text"`,
+specifying the keyboard/input mode of the field. - `visibility`:
+an `Optional[Literal[0, 1, 2]]` defaulting to `None`,
+controlling the initial visibility state of the view. - Inside `__init__`,
+first call `tg.EditText.__init__` passing `self`, `activity`, `text`, `parent`, `singleline`,
+`line`, `blockinput`, `inputtype`,
+and `visibility` (in that order, as positional arguments) to properly initialize the native widget.
+- Then call `View.__init__` passing `self`, `activity`, `self.id`,
+and `parent` to initialize the custom view wrapper layer using the `id` assigned by the native
+widget initialization. - Do not implement any other methods;
+the class should rely on inherited behavior from both parent classes for all other functionality.
+- Preserve exact parameter names, order, type annotations, and default values as described,
+  since this class is meant to integrate consistently with a broader `termuxgui.oo` wrapper
+  framework where each GUI widget is wrapped in a similar dual-inheritance pattern. ---

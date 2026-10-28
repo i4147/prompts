@@ -1,0 +1,9 @@
+Regression tests for catastrophic backtracking in XMLCorpusView (CWE-1333). ``_VALID_XML_RE``
+validates each fragment read by ``XMLCorpusView``.
+Its comment, CDATA and doctype alternatives used to be able to span their own terminators,
+so a fragment ending in an unterminated piece made the ``( ... )* \Z`` structure re-partition the
+input exponentially.
+Each alternative is now pinned to its first terminator, making validation linear.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun,
+so a regression to an exponential regex cannot keep burning CPU for the rest of the suite.

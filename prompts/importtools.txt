@@ -1,0 +1,32 @@
+Write a Python script that scans a directory tree for Python source files and
+reports which ones appear to be legacy Python 2 code, with an option to
+automatically rewrite them for Python 3 compatibility and to fix their shebang
+lines for a specific target environment.
+The tool should accept a root path (file or directory) as its main input, along
+with options that control behavior such as the number of parallel workers, a
+confidence threshold for classifying a file as Python 2, whether to apply fixes
+in place, and whether to produce a dry-run preview instead of modifying
+anything.
+It should skip common non-source directories (version control folders, virtual
+environments, build artifacts, caches) during traversal.
+For each candidate file, the script should analyze the source structurally
+rather than relying solely on simple text matching, identifying Python
+2-specific constructs such as print statements, legacy exception syntax,
+old-style octal literals, backtick repr, `unicode`/`long`/`xrange`-style
+builtins, legacy import patterns, and similar indicators.
+It should compute a score or confidence level for each file, compare it against
+the threshold, and clearly separate Python 2 files, Python 3 files, and files
+that cannot be parsed.
+When fixing is enabled, the script should attempt to convert detected Python 2
+code to Python 3 equivalents, preserve the original file contents in a backup or
+otherwise guarantee recoverability, verify that the resulting code is
+syntactically valid before writing it, and skip any file whose conversion fails.
+It should also be able to normalize the first line of files to a configurable
+shebang, inserting one when missing and leaving other content intact.
+Output should be a clear human-readable report summarizing each file's
+classification, score, actions taken, and any errors, plus summary totals at the
+end.
+Processing should be parallelized across multiple worker processes, handle
+per-file errors gracefully without aborting the whole run, and exit with a
+meaningful status code reflecting whether problems were found.
+Include helpful command-line help text describing every option. ---

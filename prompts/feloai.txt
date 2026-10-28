@@ -1,0 +1,26 @@
+Write a Python script that acts as a logging wrapper around an external Node.js
+command-line tool.
+The script should accept arbitrary command-line arguments from the user, forward
+them unchanged to the external tool, run it as a subprocess, and faithfully
+relay its exit status.
+Every invocation must be recorded in a separate, uniquely named plain-text log
+file stored in a dedicated directory under the user's home folder (created
+automatically if it does not exist).
+Each log file should begin with a clear header containing the start timestamp,
+the current working directory, and the exact arguments that were passed,
+followed by a clearly marked output section where the tool's standard output and
+standard error are captured as they are produced.
+When the run finishes, the log should be closed with a footer that records the
+end timestamp and the process exit code.
+File names must be unique even when multiple runs occur within the same moment,
+using a timestamp-based naming scheme with a collision-avoidance suffix.
+The script should display the path of the log file it created so the user can
+find it, and should propagate the external tool's exit code as its own so it can
+be used reliably in shell scripts and pipelines.
+Handle common failure cases gracefully, such as the external tool being missing
+or not executable, by reporting a clear error message and returning a non-zero
+exit code.
+All text should be written and read using UTF-8 encoding.
+The script should target a Termux environment on Android but remain readable and
+maintainable, with the path to the external tool defined as a configurable
+constant at the top of the script. ---

@@ -1,0 +1,65 @@
+Write a prompt for an AI coding agent to generate a comprehensive **pytest** test suite
+(a single test module) that exercises a file/directory utility library named `dh`
+(imported from a local module `dh.py` located in the same directory as the test file,
+added to `sys.path` dynamically via `Path(__file__).parent`).
+The prompt should specify the following: **Purpose**:
+Produce a Python test file
+(using `pytest`, `unittest.mock`, `tempfile`, `pathlib.Path`, `os`, `time`, `io.StringIO`,
+and `sys`) that thoroughly tests a wide collection of filesystem-related helper functions
+and internal helper classes exported by the `dh` module.
+The test suite should validate correctness, edge cases, and error handling for utilities covering:
+reading file lines (including via mmap), getting file extensions, listing directories,
+computing file age, listing installed Python packages, detecting MIME types,
+generating random filenames, detecting image files, path containment checks (`is_within`),
+filename/path normalization, dictionary reversal,
+human-readable file size formatting (`fsz`/`gsze`), safe file deletion,
+recursive file collection
+(`get_filez`, `get_files`, `get_files_scandir`, `get_files_iter_config`, `walk_files`, `walkfiles`,
+`walk_paths`), generating unique file paths to avoid collisions, time formatting,
+running shell commands (`runcmd`), writing text files (plain and atomic writes), skip-pattern logic,
+appending text, diffing/removing lines between file versions, restoring from `.bak` backup files,
+checking for empty files, filtering non-binary and Python-only files,
+detecting text vs binary files (including a low-level binary-chunk check helper),
+walking directory trees breadth-first and in configurable ways,
+calculating directory sizes (including per-extension breakdowns), copying and moving directories,
+detecting Python files by extension/content,
+generating structured reports (`ReportGenerator`/`ReportItem`),
+and removing blank lines from text. **Inputs**: The test module itself has no external inputs;
+it is self-contained and uses `tempfile` directories/files,
+in-memory mocks (`Mock`, `MagicMock`, `patch`),
+and `StringIO` to simulate file system state
+and I/O rather than depending on real external resources. **Outputs**:
+The script's "output" is the test module itself
+— a set of `pytest` test classes/functions
+(e.g., grouped into classes like `TestFileReader`
+and similarly named classes for each functional area) with descriptive docstrings,
+that can be run via `pytest` to validate the `dh` module.
+No production logic should be included — only test code, fixtures,
+setup/teardown using `tempfile.TemporaryDirectory`/`tempfile.NamedTemporaryFile`,
+and assertions. **Notable behavior/requirements to include**:
+- Insert the parent directory of the test file into `sys.path` before importing `dh`,
+so the module under test is resolved relative to the test file's location,
+not the working directory. - Import every public function
+and every internal/private class (prefixed with `_`) listed from `dh` explicitly by name
+(e.g., `_FileReader`, `_ExtensionAnalyzer`, `_FileAgeCalculator`, `_FileSizeFormatter`,
+`_DirectoryWalker`, `_UniquePathFinder`, `_TimeFormatter`, `_CommandRunner`, `_FileCollector`,
+`_BFSFileWalker`, `_ConfigurableFileWalker`, `_DirSizeCalculator`, `_DirectoryCopier`,
+`_DirectoryMover`, `_PythonFileChecker`, `_PythonFileFinder`, `_PathWalker`, `_FileProcessor`,
+`_TextFileDeterminer`, `_SizeByExtensionCalculator`, `_check_binary_chunk`),
+plus data/config classes `FileWalkerConfig`, `ReportGenerator`,
+and `ReportItem`. - Organize tests into logically named classes per feature area
+(reading, extension analysis, age calculation, package listing, MIME detection, filename generation,
+image detection, path utilities, normalization, dict reversal, size formatting, safe deletion,
+file collection/walking variants, unique path resolution, time formatting, command execution,
+text file writing/atomic writing, skip logic, text appending, diffing/restoring backups,
+emptiness checks, text/binary detection, directory copy/move, directory size calculation,
+Python file detection, report generation, and blank-line removal),
+starting with a `TestFileReader` class
+whose first method is `test_read_lines_simple_file` demonstrating reading lines from a simple temp
+file and asserting the returned content. - Use real temporary files/directories for
+filesystem-dependent behaviors
+and mocking/patching for behaviors that depend on external systems
+(e.g., installed packages, MIME libraries, shell command execution) to keep tests fast,
+deterministic, and isolated. - Include `from __future__ import annotations` at the top of the file.
+- Ensure the test file can be run standalone with `pytest`
+and does not require any command-line arguments or external configuration. ---

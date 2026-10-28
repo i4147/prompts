@@ -1,0 +1,1 @@
+A module for interfacing with the HunPos open-source POS-tagger.

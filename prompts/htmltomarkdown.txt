@@ -1,0 +1,21 @@
+Write a Python script that converts HTML content into a clean, structured
+plain-text or Markdown representation.
+The tool should accept an HTML document or fragment as input (from a string,
+file, or standard input) and produce a readable output that preserves the
+essential document structure: headings, paragraphs, lists, links, emphasis, and
+code blocks, while stripping scripts, styles, and other non-content markup.
+It should correctly handle self-closing and void elements, decode HTML entities,
+and normalize whitespace so the output is tidy and easy to read.
+Where the input contains code blocks, the tool should retain their contents
+verbatim and, when a language hint is present in the markup (for example a class
+name indicating a programming language), tag the block with that language,
+validating the hint against a supported set of known language identifiers.
+The script should be robust to malformed or partially closed HTML, never crash
+on unexpected tags, and report clear errors for unreadable input.
+It should expose its behavior through a simple command-line interface that lets
+the user choose the input source, the output destination, and the output format,
+and it should also be usable as an importable module with a clean programmatic
+function that returns the converted text.
+Include basic documentation and sensible defaults, and keep the design modular
+so that the conversion rules for individual element types can be extended
+easily. ---

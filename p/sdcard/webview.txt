@@ -1,0 +1,24 @@
+Write a Python script that uses the `termuxgui` library to demonstrate basic WebView functionality
+within a Termux:GUI Activity.
+The script should: - Establish a connection to the Termux:GUI service using `tg.Connection()` as a
+context manager. - Create a new `tg.Activity` tied to that connection. - Create a `tg.WebView`
+widget attached to the activity. - Set the WebView's content directly to a simple inline HTML string
+(containing an `<h1>` heading "Hello HTML" and a paragraph) using the WebView's method for setting
+raw HTML data. - Pause execution for 3 seconds (using `time.sleep`) so the initial HTML content is
+visible. - Load an external web page by navigating the WebView to "https://www.google.com" via its
+URI-loading method. - Pause execution for another 3 seconds to allow the page to load
+and be visible. - Enable JavaScript execution on the WebView (allow JavaScript). - Execute a
+JavaScript snippet in the loaded page context that replaces the page body's inner HTML with new
+content showing an `<h1>` heading "Hello JS"
+and a paragraph noting it was set via JavaScript. - Enter an event loop that listens for events from
+the Termux:GUI connection, and when a destroy event is received with its "finishing" value true,
+exit the program cleanly using `sys.exit()`.
+The purpose of the script is to showcase how to create a WebView widget in a Termux:GUI app,
+set static HTML content, navigate to an external URL, enable JavaScript,
+and dynamically modify the loaded page's DOM via JavaScript evaluation
+— all while properly handling the activity lifecycle
+(listening for destroy/finish events to terminate the script).
+There are no external inputs;
+the only "output" is the visible UI behavior inside the Termux:GUI activity
+(the WebView transitioning from inline HTML to the Google homepage, then to JS-modified content),
+and the program's exit when the activity is finished/destroyed. ---

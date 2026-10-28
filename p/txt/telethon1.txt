@@ -1,0 +1,29 @@
+Write a Python script that connects to the Telegram API (using the Telethon library) to extract
+and display URLs/links shared in messages from a specific public Telegram channel.
+Key requirements and behavior: 1. **Environment configuration**:
+Load Telegram API credentials (`TELEGRAM_API_ID` and `TELEGRAM_API_HASH`) from a `.env` file located
+in the same directory as the script, using `python-dotenv`.
+If either credential is missing or invalid,
+raise a `ValueError` with a clear message indicating the required environment variables.
+2. **Target channel**: Hardcode the target channel username as a constant (e.g., `@ClashTVMap`).
+3. **Link extraction logic**:
+Define a regular expression pattern capable of matching `http://` and `https://` URLs,
+including special characters and percent-encoded characters commonly found in URLs.
+4. **Core function**: Implement a function (e.g., `extract_links`) that:
+- Creates a `TelegramClient` session (using a local session file, e.g., `"session_name"`)
+authenticated with the API ID
+and hash. - Uses the client as a context manager to connect to Telegram. - Resolves the target
+channel entity from its username. - Iterates over the most recent messages in the channel
+(e.g., the last 100 messages). - For each message that contattern to find all URLs within any links
+are found in a message,
+prints the message ID followed by each extracted link on its own indented line.
+5. **Imports**: Include standard library imports
+(`os`, `re`, `asyncio`, `pathlib.Path`, `datetime`), `dotenv.load_dotenv`,
+and Telethon imports (`TelegramClient`, and `MessageEntityTextUrl` from `telethon.tl.types`),
+even if not all are strictly required by the core logic.
+6. **Entry point**: Use the standard `if __name__ == "__main__":` guard to call the extraction
+function when the script is run directly.
+7. **No command-line arguments or external configuration beyond the `.env` file**
+— the channel name and message limit should be fixed values within the script.
+The script's primary input is the `.env` file with Telegram API credentials;
+its output is console/stdout text listing message IDs and any URLs found within each message's text.

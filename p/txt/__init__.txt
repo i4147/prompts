@@ -1,0 +1,2 @@
+reqmaker - Offline requirements.txt generator.
+Use the CLI: reqmaker --stdlib reqmaker/stdlib --mapping reqmaker/mapping

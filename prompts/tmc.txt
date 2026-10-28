@@ -1,0 +1,4 @@
+Strip Python comments/docstrings recursively, updating files atomically.
+Requires Python 3.14 for cf.interpreter; other backends work on 3.11+.
+Install: python -m pip install tree-sitter tree-sitter-python Optional: python
+-m pip install joblib

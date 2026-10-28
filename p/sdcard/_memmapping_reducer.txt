@@ -1,0 +1,1 @@
+Reducer using memory mapping for numpy arrays

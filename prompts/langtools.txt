@@ -1,0 +1,30 @@
+Write a Python script that scans a directory tree for text-based files, detects
+which ones contain Chinese (Han) text, and organizes or reports on them.
+The tool should accept a root folder path and options controlling whether
+matching files are moved to a target folder or only listed, and it should
+support a recursive scan with a sensible default for skipping hidden or system
+directories.
+It should only consider plain-text file types commonly used for code,
+configuration, markup, and documentation, and it should ignore binary or
+unreadable files gracefully without crashing.
+For each candidate file, the script should attempt to decode the content using
+several common encodings in a prioritized order, then determine whether the text
+contains a meaningful amount of Chinese characters, counting characters across
+the standard CJK Unified Ideograph blocks and their extensions.
+Where optional language-detection libraries are available, the script may use
+them to improve accuracy, but it must still work correctly when they are not
+installed.
+Outputs should include: moving files that contain Chinese into a designated
+folder while preserving their relative directory structure to avoid name
+collisions; writing a report (such as a CSV) listing each scanned file with its
+detected encoding, Chinese character count or ratio, and the action taken; and
+writing a separate list of files judged to be non-Chinese or not confidently
+classified.
+The script should support a dry-run mode that reports planned actions without
+modifying the filesystem, and it should display clear progress information on
+the console that can be turned off.
+Handle file conflicts, permission errors, and invalid paths with informative
+messages and a summary of totals at the end.
+Provide a command-line interface with sensible defaults for the target folder
+and output file names, and make the code robust, well-documented, and safe to
+run. ---

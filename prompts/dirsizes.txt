@@ -1,0 +1,23 @@
+Write a Python script that scans a userports the items with the largest total
+disk footprint.
+The user should be able to provide the root directory to analyze, choose how
+many top results to display (defaulting to 10), and optionally list one or more
+directories or files to exclude from the scan.
+The tool should compute the size of each file and aggregate sizes so that both
+individual files and directories are ranked by how much space they consume,
+including the contents of all their subdirectories.
+The results should be presented as a clear, readable ranked list showing each
+item's path and its human-readable size (for example, using units such as B, KB,
+MB, GB, and so on), with the largest items shown first.
+Handle common edge cases gracefully: skip or report unreadable paths and
+permission errors without crashing, ignore broken symbolic links or handle them
+sensibly, and validate that the target directory exists and is actually a
+directory, printing a helpful error message and exiting with a non-zero status
+when it does not.
+Provide a command-line interface with clear help text describing each option.
+The output should include visual progress or status feedback during the scan so
+the user knows the tool is working on large directory trees, and the script
+should report how long the scan took.
+Keep the tool efficient enough to handle very large directory structures, and
+produce a clean, well-formatted terminal output that is easy to read at a
+glance. ---

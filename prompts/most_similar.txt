@@ -1,0 +1,34 @@
+Write a Python script that analyzes a collection of Python source files and
+identifies groups of files that are structurally or functionally similar,
+regardless of superficial differences such as formatting, comments, docstrings,
+variable names, or type annotations.
+The tool should accept one or more file or directory paths from the command
+line, recursively discover Python files while skipping common non-source
+directories (version control folders, virtual environments, caches, IDE
+metadata, and similar), and produce a report of near-duplicate or clone pairs or
+clusters.
+Key requirements: - **Input:** Command-line arguments specifying target files or
+directories, along with options to tune sensitivity, such as a minimum
+similarity threshold, and an option to control output verbosity or format.
+The tool should handle unreadable or syntactically invalid files gracefully,
+reporting them without crashing. - **Normalization:** Before comparing, the tool
+should canonicalize each file's syntax tree so that cosmetic differences do not
+affect the result.
+Remove or ignore docstrings, str annotations, and normalize identifiers so that
+renamed variables and functions still match.
+Preserve the structural logic of the code. - **Comparison:** Compute a fuzzy
+similarity fingerprint for each normalized representation and compare
+fingerprints across all file pairs.
+Also compute exact content hashes so that byte-identical or normalized-identical
+files are detected precisely and reported separately from fuzzy matches. -
+**Output:** Print a human-readable summary listing each detected group or pair
+with filearity scores, sorted by similarity.
+Use terminal color for readability when output is an interactive terminal, and
+disable color otherwise.
+Optionally support a machine-readable output format. - **Exit behavior:** Return
+a non-zero exit status when duplicates or clones above the threshold are found,
+so the tool can be used in continuous integration pipelines. - **Robustness:**
+Handle large numbers of files efficiently, avoid comparing a file with itself,
+and report clearly when required optional dependencies are missing.
+The tool should be a single, self-contained, command-line program with clear
+usage help and sensible defaults. ---

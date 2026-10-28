@@ -1,0 +1,32 @@
+Write a Python script that acts as an interactive terminal-based disk usage
+analyzer, similar to the classic ncdu utility.
+The tool should scan a directory tree (defaulting to the current directory, with
+an optional path argument) and present the results in a full-screen,
+keyboard-navigable text interface that lets the user browse folders and see how
+much space each file and subdirectory consumes, sorted by size with proportional
+usage indicators.
+Key requirements: - Accept command-line options for the target path, verbosity
+level (controlling log detail), an optional log file destination, and a flag to
+display the version.
+Logging should go to stderr by default or to a file when requested, with
+timestamps, levels, and process names in each log line. - Scan the filesystem in
+parallel using a pool of worker processes so large trees are traversed quickly,
+and gather per-entry sizes, counts of files and directories, and file type
+information.
+Handle permission errors, broken symlinks, and unreadable entries gracefully
+without crashing, recording them as errors the user can see. - Avoid following
+symbolic links into loops and optionally stay within a single filesystem. -
+Provide an interactive curses-based interface where the user can move the
+selection up and down, enter a directory, go back to the parent, change the sort
+order (by name, size, or item count), toggle the display of hidden files,
+refresh or rescan, and quit.
+Display a header with the current path and total size, a list of entries with
+size, percentage bar relative to the parent, and name, plus a footer with key
+help and status messages. - Gracefully adapt to terminal resizing and small
+terminal sizes, and restore the terminal cleanly on exit or interruption
+(including Ctrl+C). - Optionally support a non-interactive mode that prints a
+summarized report or JSON export of the scanned tree to standard output or a
+file, suitable for scripting. - Use structured, human-readable size formatting
+(bytes through terabytes) throughout the interface and output. - Log meaningful
+progress and error events at appropriate levels, and exit with a nonzero status
+code on fatal errors such as an invalid path. ---

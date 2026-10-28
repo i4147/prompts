@@ -1,0 +1,29 @@
+HuggingFace datasets integration for NLTK.
+Provides a PathPointer subclass that reads directly from the HuggingFace datasets cache,
+and a ``download()`` function that populates that cache.
+Usage:: import nltk nltk.download('stopwords', hf=True) # download to HF cache
+nltk.corpus.stopwords.words('portuguese') # HF fallback if not in ~/nltk_data
+nltk.corpus.stopwords.words('portuguese', hf=True) # HF cache directly Registry schema
+--------------- Each entry in ``REGISTRY`` must declare:
+``repo`` (str) HuggingFace dataset repo id,
+e.g. ``"nltk-data-hub/stopwords"``. ``split`` (str) HF split name to load, e.g. ``"stopwords"``,
+``"train"``. ``structure`` (str) How the corpus is organised on HF:
+``"multi_config"`` One HF config per NLTK fileid.
+No assumption about what that dimension represents (language, category, author, etc.). ``fileid`` →
+config name. ``"flat"`` Single config, flat table.
+A ``fileid_column`` value is used to select rows for a given fileid. ``"single"`` Single config,
+no sub-selection.
+The whole split is the corpus. ``content_type`` (str) How rows are serialised to the byte/text
+stream NLTK readers expect: ``"word_list"`` Each row is one entry; ``text_column`` holds the string.
+Serialised as one entry per line. ``"raw_text"`` Rows have a ``text_column`` with full
+document text.
+When a fileid is given, rows are filtered by ``fileid_column``.
+Serialised as the raw text string.
+(Add new types here as more corpora are onboarded.) ``cache_probe`` (str) A single parquet path
+inside the repo used to detect whether the corpus has already been downloaded locally.
+No network request is made;
+``huggingface_hub.try_to_load_from_cache`` inspects the local filesystem only.
+Optional keys (required by certain content types):
+``text_column`` column that holds the main text / word value. ``fileid_column`` column that
+identifies which NLTK fileid a row belongs to. ``label_column`` column for classification labels
+(future use).

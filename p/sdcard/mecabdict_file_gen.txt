@@ -1,0 +1,30 @@
+Write a Python command-line script that generates a Mecab dictionary file from an input word list
+file, intended for Korean NLP preprocessing using the SmiToText library.
+The script should: - Import
+and use the `mecabDictGenerate` class from `SmiToText.mecab.mecabDictGenerate`. - Define a function
+`mecabdict_file_gen(input, output, posTag="NNG", kind="")` that instantiates `mecabDictGenerate`
+and calls its method `mecab_dict_gen_from_file(input, output, posTag=posTag, kind=kind)` to perform
+the actual dictionary generation.
+- Use `argparse` to build a command-line interface with the description "Mecab Dict Generator"
+  and the following arguments: - `--input` (string, required):
+path to the input file containing words to generate the dictionary from. - `--output`
+(string, required): path to the output file
+where the generated Mecab dictionary will be written. - `--posTag`
+(string, optional, default `"NNG"`):
+the part-of-speech tag to assign to the entries (e.g., `NNG`, `VV`, etc.). - `--kind`
+(string, optional, default `""`):
+an optional descriptive label/category for the dictionary entries. - In the
+`if __name__ == "__main__":` block:
+- Parse the arguments. - Validate that `args.input` is not empty/falsy;
+if invalid, print `"input file is invalid!"`
+and exit with status code 1. - Validate that `args.output` is not empty/falsy;
+if invalid, print `"output file is invalid!"` and exit with status code 1. - Convert `input`,
+`output`, `posTag`, and `kind` to strings. - Call `mecabdict_file_gen(input, output, posTag, kind)`
+with the parsed values. - Include the necessary imports at the top:
+`argparse`, `mecabDictGenerate` from `SmiToText.mecab.mecabDictGenerate`, `os`, `re`,
+and `sys` (even if some are not directly used in the logic,
+keep them imported as in a typical utility script of this kind).
+The overall purpose is to provide a simple CLI tool that wraps the `mecabDictGenerate` class to let
+users generate custom Mecab morphological analyzer dictionary entries from a plain text input file,
+specifying a part-of-speech tag and an optional category/kind label,
+and writing the result to a specified output file. ---

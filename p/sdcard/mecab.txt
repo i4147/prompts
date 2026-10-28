@@ -1,0 +1,28 @@
+Write a Python script that performs Korean morphological analysis using the MeCab library with the
+mecab-ko-dic dictionary (loaded from "/usr/local/lib/mecab/dic/mecab-ko-dic").
+The script should initialize a global MeCab Tagger instance using this dictionary path,
+and define two functions: 1. `mecabTokenizer(sentence, DEBUG=False)`:
+Takes an input string, converts it to lowercase, and runs it through MeCab's morphological parser.
+It should split the parser output by newlines,
+then for each line split by tab character to separate the surface form from its feature tags.
+It should skip the "EOS" marker and any empty tokens,
+collecting all valid morpheme surface forms (using a deep copy when appending) into a list.
+Finally, it should join the collected morphemes into a single space-separated string and return it.
+If DEBUG is True, it should print the input sentence wrapped with lines of 100 asterisks before
+processing, for logging/debugging purposes.
+If the input sentence (after stripping whitespace) is empty,
+skip the parsing step and return an empty joined string.
+2. `nouns(sentence, DEBUG=False)`:
+Behaves identically to `mecabTokenizer`,
+except it filters tokens to keep only nouns
+— specifically those
+whose part-of-speech tag (the second tab-separated field in MeCab's output) starts with "NN"
+(e.g., NNG, NNP).
+It also lowercases the input, supports the same DEBUG printing behavior,
+handles the empty-sentence case the same way,
+and returns the filtered morphemes joined into a single space-separated string.
+Include the necessary imports (`copy` and `MeCab`),
+use UTF-8 source encoding declaration at the top of the file,
+and keep the Korean inline comments explaining each step
+(e.g., noting that EOS markers and whitespace are removed,
+and that the parsed morphemes are rejoined into a sentence using a space delimiter). ---

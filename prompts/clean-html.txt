@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line minifier for web source files
+within a project directory.
+It should recursively scan a given directory (and accept a target path as
+input), loc JavaScript files, and produce minified versions of them while
+preserving their functional behavior.
+The tool should skip common non-source or generated directories such as version
+control folders, virtual environments, dependency folders, IDE settings, and
+build outputs.
+Key requirements: - Accept command-line arguments for the source directory and
+an optional output directory.
+If an output directory is provided, write minified results there while mirroring
+the original folder structure; otherwise, minify files in place or in a clearly
+defined way that the user can control. - Support HTML, CSS, and JavaScript
+files.
+For HTML, remove comments and minify embedded CSS and JavaScript blocks; for CSS
+and JavaScript, strip comments and unnecessary whitespace safely, so that the
+output remains valid and functionally identical. - Use a robust parsing approach
+so that comments and embedded code are identified accurately, avoiding
+corruption of string literals, regular expressions, URLs, and special content
+inside scripts and styles. - Handle empty files gracefully by passing them
+through unchanged. - Process files in parallel to take advantage of multiple CPU
+cores, and report progress or a summary of results at the end. - Optionally
+support an option to show a diff or size-reduction report (original vs. minified
+byte counts and percentage saved) so users can verify the effect. - If an
+optional HTML minification library is available, use it for additional HTML
+compression; if it is not installed, the tool should still work with its core
+functionality. - Fail gracefully on unreadable or unparsable files: log a clear
+warning or error for the file, continue processing the rest, and return a
+non-zero exit code if any failures occurred. - Provide clear help text for all
+command-line options and print helpful messages for invalid paths or missing
+dependencies. ---

@@ -1,0 +1,86 @@
+# Task: Reimplement the Linux `{{COMMAND}}` command in Rust
+## Objective
+Implement a faithful, working reimplementation of the Linux `{{COMMAND}}` command
+(target: {{REFERENCE_IMPL_AND_VERSION, e.g. "GNU coreutils 9.4" or "mlocate 0.26"}})
+in Rust, on Linux.
+## Naming and CLI contract (HARD)
+- The produced binary MUST be named exactly `{{COMMAND}}` — same string as the
+  original command. No `-rs`, `-rust`, `-py`, `-python`, `-impl`, or any other
+  suffix in:
+    - the `[[bin]] name` in `Cargo.toml`,
+    - the on-disk binary name,
+    - usage/help text (`Usage: {{COMMAND}} [OPTION]...`),
+    - error messages.
+- If the original ships multiple binaries (e.g. `mlocate` → `updatedb` + `locate`,
+  coreutils → separate tools), produce one `[[bin]]` per original binary, each with
+  the exact original name.
+- The CLI surface MUST match the original: subcommand/argument grammar, option names
+  (short and long), option-argument forms (`-e PATTERN`, `--regexp=PATTERN`, `-ePATTERN`
+  where the original accepts the attached form), and `--help` / `--version` behavior.
+- Flag spellings and grouping must match: `-abc` must be accepted wherever the
+  original accepts grouped short flags.
+## Flags — ALL of them (HARD)
+- Enumerate every flag the reference version accepts for the target binaries
+  (from `--help`, the man page, and the info manual).
+- Implement **every** flag whose behavior is achievable under the hard constraints
+  below. Do not silently drop flags; do not stub them to no-ops; do not "implement
+  the popular ones."
+- If a specific flag is genuinely unimplementable under the constraints (e.g. needs
+  root, needs a kernel interface unavailable in std, needs a third-party crate you
+  are forbidden from using), then in your initial reply you MUST list each such flag
+  with a one-line justification, and reproduce that list in `README.md` under
+  "Unsupported flags". Any flag not on that list is expected to work correctly.
+- For each implemented flag, at least one unit test and one integration-test
+  invocation that exercises it.
+## Hard constraints (apply always)
+- Language: Rust, stable, edition 2021.
+- Third-party crates: **target zero**. Use only `std`. If a crate is genuinely
+  unavoidable, STOP and justify it in your initial reply before adding it. Dev-
+  dependencies for tests are permitted but must be called out.
+- **No process spawning in the implementation.** `std::process::Command`,
+  `libc::fork`/`exec*`, `posix_spawn`, and equivalents are forbidden in library
+  or binary code. You may use `Command` inside `#[cfg(test)]` code ONLY for
+  differential testing against the real reference binary.
+- No shelling out to the real command, to `find`/`grep`/`sed`/`awk`/`sort`/`xargs`,
+  or to any external helper that would trivially solve the task.
+- `#![forbid(unsafe_code)]` at crate root unless the task genuinely requires it —
+  in which case justify every `unsafe` block in the README.
+## Functional requirements (FILL IN — per-command section)
+{{FILL_IN: input sources, output format (byte-exact), exit-code mapping,
+error semantics (abort vs continue, stderr format), and edge cases that MUST be
+handled correctly. Prefer bulleted lists over prose. Call out anything easy to
+get subtly wrong.}}
+## Quality bar (apply always)
+- Single crate with `src/lib.rs` (core logic, public API) + one `src/bin/{{BIN}}.rs`
+  per original binary. Core logic must be unit-testable without spawning processes.
+- `///` doc comments on all public items.
+- Unit tests: happy path, every flag, every documented error path.
+- Integration test under `tests/` that runs the real binary end-to-end against a
+  fixture tree.
+- A differential test (optional but strongly encouraged) that, when the reference
+  binary is present on the machine, runs both on the same fixture and diffs output
+  and exit code.
+- `cargo build --release` clean with `-D warnings`; `cargo clippy -- -D warnings` clean.
+- `cargo test` passes.
+- No panics on malformed input — return `Result` / `ExitCode`; errors to stderr.
+## Deliverables (apply always)
+1. Full source tree; `Cargo.toml` with `[[bin]] name = "{{COMMAND}}"` (exact).
+2. `README.md`: design overview, supported flags (complete table), **Unsupported
+   flags** section (may be empty; must exist), **deviations from reference
+   behavior**, build/run/test instructions.
+3. `scripts/demo.sh` (or a `Makefile` target) that builds a synthetic fixture,
+   invokes the built binary by its exact name `./target/release/{{COMMAND}}`, and
+   shows 5+ representative invocations covering multiple flags with expected output.
+4. Final message: what you implemented, every omitted flag with reason, any crates
+   used and why, known limitations.
+## Known pitfalls to handle (FILL IN — usually 5–8 items)
+{{FILL_IN: command-specific traps. Be concrete — byte sequences, flag combinations,
+filesystem edge cases, buffer sizes, signal handling, locale, etc.}}
+## Reporting back (before you write any code)
+Reply with:
+  1. The reference version you are targeting and where you got its flag list.
+  2. The complete list of flags you will implement.
+  3. The list of flags you will NOT implement, with one-line reasons.
+  4. Any crate you intend to use and why.
+  5. Anything in this brief you believe is infeasible under the constraints.
+Then proceed.

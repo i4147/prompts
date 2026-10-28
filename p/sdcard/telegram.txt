@@ -1,0 +1,4 @@
+Sends updates to a Telegram bot.
+Usage: >>> from tqdm.contrib.telegram import tqdm,
+trange >>> for i in trange(10, token='{token}', chat_id='{chat_id}'):
+... ... ![screenshot](https://tqdm.github.io/img/screenshot-telegram.gif)

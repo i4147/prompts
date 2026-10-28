@@ -1,0 +1,29 @@
+I need to see valid Python code to generate an appropriate prompt.
+However, the code you provided contains a truncated/incomplete base64-encoded image blob
+and uses the `termuxgui` module without showing the complete logic
+(window creation, widget setup, event handling, etc.) beyond the import statements
+and base64 decoding start.
+Based on what is visible—imports of `base64`, `sys`, and `termuxgui as tg`,
+and a `base64.standard_b64decode()` call on an embedded PNG image string—here is the prompt
+describing the script's purpose and behavior:
+--- Create a Python script that builds a native-looking Android GUI application using the Termux:GUI
+plugin via the `termuxgui` (imported as `tg`) library.
+The script should connect to the Termux:GUI service, create an application window,
+and display an icon or logo image that is embedded directly in the source code as a base64-encoded
+PNG string (rather than loaded from an external file).
+The script must decode this base64 string back into raw PNG binary data using
+`base64.standard_b64decode()` before rendering it.
+Use the `sys` module for any command-line argument handling, exit codes,
+or error/output stream management as needed.
+The script's main input is the embedded base64 image data
+(no external files or user-provided arguments are required to run it),
+and its main output is a rendered GUI window/activity on an Android device (via Termux:GUI) that
+displays the decoded image,
+along with any supporting layout widgets (such as a container, image view, or linear layout) needed
+to properly position and display it.
+Include proper setup of the GUI connection
+and activity lifecycle
+(creating the connection to `tg.Connection()`, creating an `Activity`, building the view hierarchy,
+and setting the image bitmap from the decoded bytes),
+and ensure the script keeps the GUI event loop running so the window remains visible and responsive
+until the user closes it or the script is terminated. ---

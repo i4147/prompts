@@ -1,0 +1,33 @@
+Write a Python script that analyzes a collection of Python source files (and
+optionally archives containing them) to detect duplicate or near-duplicate code,
+and produces a consolidated report describing which files are identical, which
+share substantial structure, and where the duplicated logic lives.
+The tool should accept a directory path or a list of file and archive paths as
+input.
+It should be able to read Python files directly, and also look inside common
+archive formats (such as zip, tar and its compressed variants, and single-file
+compressed formats like gzip, bzip2, xz, zstandard, and brotli), extracting and
+processing any Python sources they contain using temporary storage that is
+cleaned up afterward.
+Unreadable or malformed files should be logged as warnings or errors without
+stopping the overall run.
+For each Python source, the script should first identify exact duplicates by
+comparing content fingerprints, then go further by parsing the code into a
+structural representation so that differences in names, whitespace, comments, or
+formatting do not hide similarity.
+Where parsing is unavailable or fails, it should fall back gracefully to a
+simpler text-based comparison.
+The script should group related files and functions into clusters, estimate a
+similarity score for each pair or group, and let the user set a minimum
+similarity threshold.
+The script should support parallel processing to handle large repositories
+efficiently, and should show progress and log its activity clearly.
+The output should be a human-readable summary listing duplicate groups,
+similarity scores, and the locations (file paths, archive member names, and line
+ranges where practical) of each duplicated block, optionally exportable to a
+structured machine-readable format such as JSON.
+Provide a command-line interface with options for the target path, similarity
+threshold, output file, number of worker processes, and whether to include
+archive contents.
+The script should exit with a meaningful status code indicating whether
+duplicates were found. ---

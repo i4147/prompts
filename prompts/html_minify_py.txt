@@ -1,0 +1,20 @@
+Write a Python script that minifies HTML documents to reduce their file size
+while preserving how the page renders and behaves.
+The tool should accept raw HTML as input (either a full document or an HTML
+fragment) and return a compact, equivalent HTML string.
+It should be configurable so the user can toggle individual optimizations:
+stripping comments, collapsing redundant whitespace between tags, removing
+attributes that have empty values and carry no meaning, optionally removing tags
+that browsers can infer (such as certain closing or wrapper tags), and
+optionally minifying embedded CSS and JavaScript blocks.
+Whitespace and content inside sensitive elements such as preformatted text, text
+areas, code samples, and script or style blocks must be left intact so that
+their behavior is never altered.
+The script should handle malformed or partial HTML gracefully by falling back to
+fragment parsing when a full document parse fails.
+It should be usable both as a reusable component within other programs and as a
+command-line tool that processes one or more HTML files, writing minified output
+to new files or to standard output, and reporting the size reduction achieved
+for each file.
+Include sensible defaults that prioritize safety, and make clear error messages
+available when input files are missing or unreadable. ---

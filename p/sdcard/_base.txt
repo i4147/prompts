@@ -1,0 +1,1 @@
+Shared base classes for all mini-game board widgets and dialogs.

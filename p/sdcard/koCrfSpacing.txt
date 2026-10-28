@@ -1,0 +1,35 @@
+Create a Python script that implements a Korean word-spacing correction module using CRF
+(Conditional Random Fields), built on the `pycrfsuite` library.
+The module should be encapsulated in a class named `koCrfSpacing`,
+which depends on a `Util` helper class imported from `SmiToText.util.util`.
+The script's core purpose is to convert raw Korean text into a character-level tagged corpus format
+(and back), where each character is labeled as either "B" (beginning of a word/token)
+or "I" (inside a word/token) based on spacing,
+so that a CRF model can later learn and predict correct spacing boundaries in Korean sentences.
+Key functionality to include: 1. **`raw2corpus(raw_path, corpus_path)`**:
+Reads a raw text file (UTF-8 encoded, one sentence per line).
+For each non-empty line:
+- Normalize consecutive spaces into a single space
+and strip leading/trailing whitespace. - Iterate through each character,
+tagging it as `B` if it's the first character of the line
+or if the previous character was a space (indicating the start of a new word),
+and `I` otherwise (continuation of a word).
+Skip space characters themselves
+when producing tags. - Join the tagged characters (format `"char/TAG"`) with spaces to form a tagged
+sentence line. - Write all tagged sentence lines to the output corpus file, joined by newlines.
+2. **`corpus2raw(corpus_path, raw_path)`**:
+   Reads the tagged corpus file
+   and reconstructs the original raw sentences by reversing the tagging process:
+   - Split each corpus line into `"char/TAG"` tokens. - Reconstruct text by inserting a space before
+   any character tagged `B` (except possibly the first token),
+   and no space before characters tagged `I`. - Write the reconstructed raw sentences back to the
+   output file, joined by newlines.
+Notes on behavior: - All file I/O should use `codecs.open` with UTF-8 encoding to properly handle
+Korean text. - Use Python's `re` module for whitespace normalization
+(collapsing multiple spaces into one) via regex substitution. - The class should support
+`from __future__ import unicode_literals, print_function` for Python 2/3 compatibility. - The design
+anticipates this corpus format being used as training/input data for a CRF-based sequence tagging
+model (via `pycrfsuite`) to automatically perform Korean word segmentation/spacing correction on
+unspaced or incorrectly spaced text. - Include appropriate exception handling (e.g., try/except)
+when parsing `"word/tag"` pairs during corpus-to-raw conversion,
+to gracefully handle malformed or unexpected tokens. ---

@@ -1,0 +1,42 @@
+Write a Python module intended to serve as a custom PEP 517 build backend wrapper
+(e.g., named something like `_backend.py`) that extends `setuptools.build_meta` to support
+bootstrapping a Rust toolchain for packages using maturin as their build backend.
+Purpose: - When a package uses maturin to build (compile) a Rust-based Python extension,
+but the target platform/environment has no prebuilt maturin binary available,
+Rust must be compiled from source.
+This requires a Rust toolchain (`cargo`) to be present. - This module enables "bootstrapping" Rust
+installation into a cache directory automatically during the build process if the user doesn't
+already have Rust installed,
+by declaring an extra build dependency (`puccinialin`) only
+when it's actually needed. - Since requiring this bootstrapping dependency unconditionally would add
+unnecessary overhead/dependencies for users who already have Rust installed,
+the module should dynamically check for the presence of `cargo`
+and only request the extra dependency if it's missing.
+Requirements: 1.
+Include a module-level docstring explaining the purpose:
+supporting Rust installation before compiling (bootstrapping) maturin,
+that this is only needed when maturin binaries aren't available for the platform,
+that installing rust happens in a cache directory if not already present,
+and that the dynamic dependency is only requested when cargo is missing.
+Reference the setuptools documentation on dynamic build dependencies:
+https://setuptools.pypa.io/en/stable/build_meta.html#dynamic-build-dependencies-and-other-build-meta-tweaks
+2.
+Use `from __future__ import annotations` for forward-compatible type annotations.
+3. Import `os`, `shutil`, and `Any` from `typing`.
+4. Re-export everything from `setuptools.build_meta` via a wildcard import
+(suppress the unresolved-reference/linter warning for this with an appropriate inline comment,
+and use `# noqa:F403` to suppress the flake8 unused-wildcard-import warning).
+5. Define two functions that override/extend the standard PEP 517 hooks:
+- `get_requires_for_build_wheel(config_settings: dict[str, Any] | None = None) -> list[str]` -
+`get_requires_for_build_sdist(config_settings: dict[str, Any] | None = None) -> list[str]` 6.
+Each function's logic: - Check an environment variable `MATURIN_NO_INSTALL_RUST`
+— if it is set (truthy), skip the Rust bootstrapping logic entirely. - Otherwise,
+  check whether `cargo` is available on the system PATH using `shutil.which("cargo")`. - If
+  `MATURIN_NO_INSTALL_RUST` is not set AND `cargo` is not found,
+  return a list containing the single dependency string `"puccinialin>=0.1,<0.2"`. - Otherwise,
+  return an empty list.
+  7.
+Both functions should have identical logic
+(independent implementations, not calling a shared helper), each with their own conditional check.
+The final output should be a small, self-contained Python file with no additional CLI, no classes,
+and no extra helper functions beyond what's described above. ---

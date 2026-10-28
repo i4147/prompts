@@ -1,0 +1,17 @@
+Write a Python script that uses the `termuxgui` library to display an image in a Picture-in-Picture
+(PIP) window on Android via Termux:GUI.
+Requirements: - Import `termuxgui` (as `tg`), `sys`, `time`,
+and `io`. - Read the image file path from the first command-line argument (`sys.argv[1]`)
+and load its binary content using `io.open` in `"rb"` mode. - Open a connection to the Termux:GUI
+plugin using `tg.Connection()` as a context manager. - Create an `Activity` using
+`tg.Activity(c, pip=True)` so that the activity launches directly in Picture-in-Picture mode. -
+Create an `ImageView` (`tg.ImageView(a)`) attached to the activity to display the image. - Set the
+loaded image bytes onto the `ImageView` using its `setimage()` method. - After setting the image,
+call `time.sleep(5)` to keep the activity alive for 5 seconds so the image remains visible before
+the script exits.
+The script takes exactly one input: the path to an image file passed as a command-line argument.
+It produces no textual output;
+its effect is purely visual
+— showing the specified image in a small floating PIP window for a few seconds.
+Keep the code minimal and straightforward, without additional error handling, logging,
+or configuration options beyond what's described. ---

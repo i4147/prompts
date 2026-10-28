@@ -1,0 +1,18 @@
+Write a Python script that converts an audio file from M4A format to MP3 format
+using the external FFmpeg tool.
+The script should accept an input file path and an optional audio bitrate
+(defaulting to 64 kbps), and produce an MP3 file in the same directory as the
+input, with the same base name and a ".mp3" extension.
+Before converting, it should verify that the input file exists and exit with a
+clear error message if it does not.
+If the input file lacks an ".m4a" extension, it should display a warning but
+still attempt the conversion.
+During the process, it should report the input path, output path, and chosen
+bitrate to the user, stream the conversion tool's output to the console, and
+confirm success when the conversion completes.
+After conversion, it should compare the file sizes of the original and converted
+files and report them in megabytes so the user can see the size difference.
+Handle conversion failures gracefully by surfacing a meaningful error message
+rather than crashing with an unhandled exception.
+The script should be runnable from the command line, taking the input file as a
+required argument and the bitrate as an optional argument. ---

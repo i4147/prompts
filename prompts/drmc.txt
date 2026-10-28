@@ -1,0 +1,21 @@
+Write a Python script that acts as a command-line tool for stripping comments
+and docstrings from Python source files in a project, while keeping the code
+valid and runnable.
+The tool should accept one or more file or directory paths, recursively discover
+Python files (skipping common cache, version-control, virtual-environment, and
+build-artifact directories), and process them in parallel for speed.
+For each file, it should read the source using several fallback text encodings,
+remove comments and docstrings safely (preserving code structure and any content
+that must remain, such as the shebang line and encoding declarations), and
+verify that the resulting code still parses correctly before writing anything.
+The tool should support a dry-run mode that reports what would change, including
+a colored, human-readable diff and per-file statistics such as bytes removed,
+comments removed, and docstrings removed, without modifying files.
+It should also offer an option to create backups or write results to an output
+location, and it should produce a concise summary at the end with totals, the
+number of files changed, errors encountered, and elapsed time.
+Errors on individual files must not stop the overall run; they should be logged
+clearly and reported in the summary.
+Logging should use a structured logging library, and the command-line interface
+should provide clear help text and a non-zero exit status when failures occur.
+---

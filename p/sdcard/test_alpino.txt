@@ -1,0 +1,13 @@
+Regression tests for the quadratic-backtracking ReDoS in NLTK's Alpino corpus reader
+(``nltk.corpus.reader.bracket_parse.AlpinoCorpusReader._normalize``) -- CWE-1333.
+The node-normalization helper turned each Alpino ``<node ...>`` element into s-expression notation
+with substitutions that chained several lazy ``.*?`` groups hunting for trailing literals
+(``pos="``, ``word="``, ``/>``).
+On a single long ``<node ...`` line that contained the early anchors
+but never the trailing literals,
+every lazy group rescanned the rest of the line
+and the engine redistributed the match across the groups -- O(n^2) in the line length.
+The public ``words()``/``tagged_words()``/``tagged_sents()``/``parsed_sents()`` entry points reach
+this helper, so a crafted Alpino file could pin a CPU core.
+Each ``<node>`` is now parsed by extracting its attributes in a single linear scan;
+ordinary corpora are read identically.

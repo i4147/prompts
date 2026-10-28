@@ -1,0 +1,38 @@
+Write a prompt for an AI coding agent to generate a Python module that implements a `Dictionary`
+class for a spell-checking tool,
+built on top of a `Trie` data structure imported from a local `.trie` module.
+The module should: - Use `from __future__ import annotations` and import `Path` from `pathlib`
+and `Iterable` from `typing`. - Define a module-level constant `DEFAULT_WORDS` as a large multi-line
+string of common English words plus programming/tech-related terms
+(e.g., language names, file formats, tools like git/npm/pip),
+split into a list of words using `.split()`. - Define a `Dictionary` class with a docstring
+describing it as a spell-checking dictionary backed by a Trie,
+supporting custom words and dictionary files.
+The `Dictionary` class must implement:
+1. `__init__(self, words: Iterable[str] = (), dictionary_files:
+Iterable[str | Path] = (), use_defaults:
+bool = True) -> None`:
+- Initializes an internal `Trie` instance. - If `use_defaults` is True,
+inserts each non-empty word from `DEFAULT_WORDS` into the trie after normalizing it. - Adds any
+custom `words` passed in via an `add_words` method. - Loads any dictionary files passed in via
+`dictionary_files` by calling a `load_file` method for each filename
+(supporting both `str` and `Path` types).
+2. A `normalize` static method that takes a word string, strips whitespace,
+and converts it to lowercase,
+returning the normalized form used consistently for storage and lookup.
+3. An `add_words(self, words: Iterable[str]) -> None` method that normalizes
+and inserts each word from the given iterable into the trie
+(skipping empty/whitespace-only entries).
+Also include (even though not shown in the snippet,
+they are implied by usage and should be implemented consistently with the class's purpose):
+- A `load_file` method that reads words from a dictionary file
+(one word per line or whitespace-separated), normalizes them, and inserts them into the trie,
+handling both `str` and `Path` file paths. - Any additional helper methods reasonably expected for a
+spell-checking dictionary,
+such as checking whether a word exists in the trie (lookup) using the same normalization,
+while keeping the Trie-related logic itself in the separate `.trie` module
+(only import and use `Trie` here, do not redefine it).
+Ensure the code is clean, type-annotated, idiomatic Python,
+and consistent with the style and structure shown (e.g., docstrings, static methods where
+appropriate, use of the `normalize` method before any trie insertion or lookup).
+---

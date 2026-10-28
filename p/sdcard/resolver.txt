@@ -1,0 +1,35 @@
+Write a Python module that implements a `DependencyResolver` class for recursively resolving Python
+package dependencies using data from a PyPI-style package downloader.
+Requirements: - Use `from __future__ import annotations` for annotation support.
+- Import `Requirement` from the `packaging.requirements` module to parse dependency specifier
+  strings. - Import a `Downloader` class from a local `.core` module,
+  which provides a method `get_package_info(package, version)` that returns package metadata
+  (expected to be a dict with an `"info"` key containing a `"requires_dist"` list of
+  dependency strings).
+Class: `DependencyResolver` - Constructor `__init__(self, downloader: Downloader)`:
+stores the given `downloader` instance as an attribute,
+and initializes an empty `set[str]` attribute `resolved` to track already-resolved package names. -
+Method `resolve(self, package: str, version: str | None = None, max_depth: int = 3) -> set[str]`:
+- Recursively resolves and collects the names of a package
+and all its transitive dependencies into `self.resolved`, returning that set. - Base case:
+if `max_depth` reaches 0, or the package is already in `self.resolved`,
+return `self.resolved` immediately without further processing
+(this also prevents infinite recursion on circular dependencies). - Otherwise,
+add `package` to `self.resolved`. - Call `self.downloader.get_package_info(package, version)` to
+fetch package metadata;
+extract the `requires_dist` list from `info["info"]` (default to empty list if missing/None). - If
+fetching package info raises any exception,
+catch it and return `self.resolved` as-is (stop resolving further for this branch). - For each
+dependency string in the requirements list,
+parse it using `Requirement` to extract the dependency's package name,
+then recursively call `self.resolve()` on that name with `max_depth` decremented by 1
+(version not passed, defaults to `None`).
+Wrap each parse/recursive call in a try/except that silently ignores any exception for that
+individual requirement and continues with the next one. - Return `self.resolved` at the end.
+Add a module-level docstring: `"""Dependency resolver."""`.
+The purpose of the script is to take a root package name (and optional version),
+query an external downloader/metadata source for its dependency list,
+and recursively walk the dependency tree up to a configurable depth,
+collecting all unique package names encountered
+(ignoring version constraints/extras in the resolved set,
+and silently skipping any packages or requirement strings that fail to resolve or parse). ---

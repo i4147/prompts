@@ -1,0 +1,30 @@
+Write a Python script that scans a directory tree for TOML configuration files
+and strips all comments from them while preserving the rest of each file's
+content exactly.
+The tool should accept a root directory path as input (defaulting to the current
+directory) and recursively discover all TOML files beneath it, skipping common
+non-source directories such as version control folders, virtual environments,
+dependency folders, IDE settings folders, and build output folders.
+The script should parse each TOML file with a syntax-aware approach so that
+comment markers appearing inside string values are never mistaken for comments.
+Files that are empty should be left untouched.
+Files that contain syntax errors should be left unmodified and reported as
+skipped rather than corrupted.
+Provide a dry-run mode that shows a unified diff of the changes that would be
+made without writing anything, and an apply mode that rewrites the files in
+place.
+Before overwriting any file, create a backup copy so the original can be
+recovered.
+Report a clear summary at the end listing how many files were processed,
+modified, unchanged, and skipped, along with any errors encountered.
+Use parallel processing so that large numbers of files are handled efficiently,
+with the number of workers defaulting to the number of available CPU cores and
+being adjustable from the command line.
+Ensure that comment removal also cleans up the resulting blank lines sensibly so
+the output stays readable, and that line endings and file encoding are
+preserved.
+The command-line interface should support specifying the target path, choosing
+between dry-run and apply modes, setting the worker count, and optionally
+excluding additional directories by name.
+Print helpful progress and error messages, and return a nonzero exit status if
+any file failed to process. ---

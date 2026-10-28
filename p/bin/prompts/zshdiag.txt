@@ -1,0 +1,22 @@
+Write a Python script that scans a user's Zsh shell configuration and reports every alias
+and function they have defined, helping them find duplicates and conflicts.
+The tool should locate the main Zsh startup file in the user's home directory,
+along with any additional `.zsh` files in a custom configuration folder
+and within an Oh My Zsh installation,
+and treat them all as a single set of configuration sources without listing the same file twice.
+The script should read each file tolerantly,
+so that unreadable files or files with unexpected encoding are skipped
+or handled gracefully without stopping the scan.
+It should recognize both common styles of alias definition (with or without quotes around the name)
+and both common styles of function definition (the keyword form and the parenthesized form),
+recording the line number and source file for each occurrence.
+Once collected, the script should group the definitions by name and identify any alias
+or function that is defined more than once,
+reporting each name along with every location where it appears.
+Its output should be a clear,
+human-readable report that summarizes the total number of aliases and functions found,
+lists the duplicated ones with their file paths and line numbers,
+and highlights potential conflicts.
+If no duplicates exist, it should say so explicitly.
+The script should run as a standalone command-line tool with no required arguments,
+complete quickly on typical configurations, and exit cleanly with an appropriate status code. ---

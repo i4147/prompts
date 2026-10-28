@@ -1,0 +1,3 @@
+Usage: neg [options] -i FILE -o FILE Options:
+--regex_patterns FILE [default: resources/patterns/regex_patterns.yml] --ngrex_patterns FILE
+[default: resources/patterns/ngrex_patterns.yml] --overwrite --sort_anns -o FILE -i FILE

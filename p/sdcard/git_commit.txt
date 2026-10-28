@@ -1,0 +1,39 @@
+Write a Python script that defines
+and prints (or constructs) the usage/help text for a `git commit`-like command-line tool,
+mimicking the standard `git commit` help output. **Purpose:** The script should represent the
+command-line interface specification for a `commit` subcommand,
+similar to what `git commit -h` displays.
+It should output a formatted usage string that documents the command's syntax
+and all its supported options,
+organized into logical groups. **Main structure/content:** - A usage line:
+`usage: git commit [options] [--] [<filepattern>...]` - A general options section with:
+- `-h, --help` - `-q, --quiet` (suppress summary after successful commit) - `-v, --verbose`
+(show diff in commit message template) - A "Commit message options" section containing options such
+as: - `-F, --file <file>` (read message from file) - `--author <author>`
+(override author for commit) - `--date <date>` (override date for commit) -
+`-m, --message <message>` (commit message) - `-c, --reedit-message <commit>`
+(reuse and edit message from specified commit) - `-C, --reuse-message <commit>`
+(reuse message from specified commit) - `--fixup <commit>`
+(use autosquash formatted message to fixup specified commit) - `--squash <commit>`
+(use autosquash formatted message to squash specified commit) - `--reset-author`
+(the commit is authored by me now; used with -C/-c/--amend) - `-s, --signoff` (add Signed-off-by:) -
+`-t, --template <file>` (use specified template file) - `-e, --edit` (force edit of commit message)
+- `--cleanup <default>` (how to strip spaces and #comments from message) - `--status`
+(include status in commit message template) - A "Commit contents options" section containing options
+such as: - `-a, --all` (commit all changed files) - `-i, --include`
+(add specified files to index for commit) - `--interactive` (interactively add files) - `-o, --only`
+(commit only specified files) - `-n, --no-verify` (bypass pre-commit hook) - `--dry-run`
+(show what would be committed) - `--short` (show stat) **Output:** The script should output this
+content as a single formatted multi-line string (e.g., assigned to a variable or printed to stdout),
+preserving the exact indentation, alignment, and spacing shown in standard Git help text,
+so that flags are left-aligned and their descriptions are aligned in a consistent column,
+with options wrapping to a new indented line
+when the flag plus argument placeholder is too long to fit before the description column. **Notable
+behavior:** - This is purely a static text/documentation construct
+(no actual argument parsing logic is required)
+— it's meant to represent the help/usage text structure for a CLI tool definition
+(e.g., as used in a `cmdtable`/`table` metadata structure for a Mercurial-style
+or custom CLI wrapping Git commands). - Preserve exact wording, option ordering, grouping headers,
+and inline parenthetical notes (such as the `-C-c/--amend` reference) exactly as given. - No
+external dependencies are required;
+the script should be self-contained and simply define/output this help text. ---

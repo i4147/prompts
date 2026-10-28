@@ -1,0 +1,22 @@
+Write a Python compatibility shim module that provides a consistent interface for accessing the
+`importlib.metadata` functionality across different Python versions.
+The script's purpose is to abstract away the difference between Python versions regarding the
+availability of the `importlib.metadata` module:
+- It must check the running Python version using `sys.version_info`. - If the Python version is 3.8
+or higher (`>= (3, 8)`),
+it should import the standard library module `importlib.metadata`
+and alias it as `importlib_metadata`. - If the Python version is lower than 3.8,
+it should instead import the third-party backport package `importlib_metadata`
+(which must be installed as a dependency for older Python versions),
+keeping the same alias `importlib_metadata`.
+Inputs/Outputs: - There are no function inputs or runtime outputs;
+this is a pure import-resolution module. - The only "output" is the exposed name
+`importlib_metadata`,
+which other modules can import from this shim to use metadata APIs regardless of the Python
+version in use.
+Notable behavior: - The module must define `__all__ = ("importlib_metadata",)` to explicitly declare
+that `importlib_metadata` is the single public export of this module. - The import logic must rely
+on `sys.version_info` comparison with the tuple `(3, 8)` to branch between the standard library
+and backport package.
+- The code should be minimal, dependency-resolution only, with no additional logic, classes,
+  or functions beyond the conditional import. ---

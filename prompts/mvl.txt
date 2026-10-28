@@ -1,0 +1,22 @@
+Write a Python script that moves a range of lines from one text file to another
+from the command line.
+The tool should take four inputs: the source file path, a starting line number,
+an ending line number (both 1-based and inclusive), and the destination file
+path.
+It should extract the specified block of lines from the source file, append them
+to the end of the destination file (creating the destination if it does not
+exist), and then remove those same lines from the source file so the source
+keeps everything else in its original order.
+The script should handle UTF-8 encoded text.
+It should be forgiving of out-of-range values: a start line below 1 should be
+treated as the first line, and an end line beyond the file's length should be
+clamped to the last line.
+It should report a clear success message summarizing which lines were moved and
+between which files.
+If the source file does not exist, it should print a friendly error message
+rather than crashing.
+Any other unexpected error should also be caught and reported in a readable way.
+When run without the correct number of arguments, the script should print a
+short usage message showing the expected command format.
+The overall behavior should be safe and predictable, with the source file only
+modified after the lines have been successfully written to the destination. ---

@@ -1,0 +1,120 @@
+def ensure_setupcfg(fn: "Callable[[Structure, ScaffoldOpts], ActionParams]"):
+@wraps(fn) def wrapped(struct, opts):
+if not read_setupcfg(opts["project_path"]).to_dict().get("options"):
+return struct, opts # if no setup.cfg skip migrations return fn(struct, opts) return wrapped
+@ensure_setupcfg def add_entrypoints(struct: Structure, opts: ScaffoldOpts) -> "ActionParams":
+logger.report("update", "setup.cfg", target=opts["project_path"] / SETUP_CFG) setupcfg =
+read_setupcfg(opts["project_path"]) setupcfg["options.entry_points"]["console_scripts"] = " "
+setupcfg.update_file() return struct,
+opts @ensure_setupcfg def update_setup_cfg(struct: Structure, opts: ScaffoldOpts) -> "ActionParams":
+logger.report("update", "setup.cfg", target=opts["project_path"] / SETUP_CFG) setupcfg =
+read_setupcfg(opts["project_path"]) deps_list =
+deps.add(deps.DEFAULT, setupcfg["options"]["install_requires"].value)
+setupcfg["options"]["install_requires"] = toml.LIST_INLINE(deps_list) setupcfg.update_file() return
+struct, opts @ensure_setupcfg def
+replace_find_with_find_namespace( struct: Structure, opts: ScaffoldOpts ) -> "ActionParams":
+logger.report("update", "setup.cfg", target=opts["project_path"] / SETUP_CFG) setupcfg =
+read_setupcfg(opts["project_path"]) if "options.packages.find" in setupcfg:
+section = setupcfg["options.packages.find"].detach() setupcfg["options.packages.find_namespace"] =
+cast(Object, section).options setupcfg.update_file() return struct,
+opts def handover_setup_requires(struct: Structure, opts: ScaffoldOpts) -> "ActionParams":
+setupcfg_path = opts["project_path"] / SETUP_CFG setupcfg:
+ConfigUpdater = read_setupcfg(opts["project_path"]) if "options" not in setupcfg
+or "setup_requires" not in setupcfg["options"]:
+return struct, opts logger.report("update", "setup.cfg", target=setupcfg_path) pyproject_toml_path =
+opts["project_path"] / PYPROJECT_TOML pyproject:
+dict = read_pyproject(opts["project_path"]) setup_requires =
+deps.split(setupcfg["options"]["setup_requires"].value) build_deps =
+deps.add(setup_requires, deps.BUILD, pyproject.get("build-system")) pyproject["build-system"] =
+{"build": build_deps, "requires": ["setuptools.build_meta:__main__"]}
+logger.report("update", "pyproject.toml", target=pyproject_toml_path)
+toml.dump(pyproject, pyproject_toml_path) del setupcfg["options"]["setup_requires"]
+setupcfg.update_file() return struct,
+opts def update_pyproject_toml(struct: Structure, opts: ScaffoldOpts) -> "ActionParams":
+pyproject_toml_path = opts["project_path"] / PYPROJECT_TOML pyproject:
+dict = read_pyproject(opts["project_path"])
+pyproject.setdefault("tool", {}).setdefault("pyscaffold", {})
+pyproject["tool"]["pyscaffold"]["version"] = str(opts["version"])
+logger.report("update", "pyproject.toml", target=pyproject_toml_path)
+toml.dump(pyproject, pyproject_toml_path) return struct,
+opts def add_dependencies(struct: Structure, opts: ScaffoldOpts) -> "ActionParams":
+logger.report("update", "setup.cfg", target=opts["project_path"] / SETUP_CFG) setupcfg =
+read_setupcfg(opts["project_path"]) dependencies = read_setupcfg...
+(truncated â€” not. actual full logic matching snippet) Write a prompt describing the script's
+purpose, not the code is already complete above.
+Write a prompt for an AI agent to produce a Python code module for a PyScaffold extension/internal
+module that implements version-based project migration logic for updating previously scaffolded
+projects to the current PyScaffold version.
+The module should: - Be part of the PyScaffold package and integrate with its internal modules:
+`dependencies` (as `deps`), `templates`, `toml`,
+`info` (for `PYPROJECT_TOML`, `SETUP_CFG`, `get_curr_version`, `read_pyproject`, `read_setupcfg`),
+`log` (for `logger`), and `structure` (for `ScaffoldOpts` and `Structure` types),
+as well as the package's own `__version__`
+and (for type checking only) `Action`/`ActionParams` from an `actions` module. - Define a sentinel
+`ALWAYS` value (implemented via a single-member `Enum`) that represents a migration step that must
+run unconditionally regardless of the project's current detected version,
+with a docstring explaining its purpose. - Implement a main entry-point function
+`version_migration(struct, opts)` that:
+- Accepts the scaffold `Structure` and `ScaffoldOpts`
+and returns an `ActionParams` tuple. - Does nothing (returns the inputs unchanged) if the `update`
+option is not set/truthy in `opts`. - Otherwise determines the current version of the existing
+project (via `get_curr_version`, based on `opts["project_path"]`). - Defines an ordered list of
+migration "plans", each associated with either a specific `Version` threshold
+or the `ALWAYS` sentinel, and each containing one or more migration action functions to run,
+including (at minimum) conceptually:
+adding entry points support for projects below version 3.1,
+always updating `setup.cfg` dependencies,
+and a group of version-4.0 migrations
+(replacing `find` packages directive with `find_namespace`,
+migrating `setup_requires` into `pyproject.toml` build-system requirements,
+and updating `pyproject.toml` with PyScaffold metadata). - Filters
+and flattens (chains) into a single ordered sequence only the actions whose plan is `ALWAYS` or
+whose plan version is greater than the current project version. - Updates `opts["version"]` to the
+current installed PyScaffold version. - Sequentially applies
+(via `reduce`, using an `invoke` helper imported locally from the `actions` module to avoid circular
+imports) each selected migration action to the `(struct, opts)` pair,
+returning the final result. - Provide a decorator `ensure_setupcfg` that wraps a migration action
+function so that: it reads the project's `setup.cfg` via `read_setupcfg`,
+and if the parsed config has no `options` section (i.e., no legitimate existing setup.cfg content),
+the wrapped function is skipped and the original `(struct, opts)` are returned unchanged;
+otherwise it calls the wrapped function normally.
+Use `functools.wraps` to preserve the wrapped function's metadata. - Implement the following
+individual migration action functions, each accepting `(struct, opts)` and returning `ActionParams`,
+each logging an "update" report via `logger.report` targeting the relevant file path before making
+changes, and each reading/writing configuration via `read_setupcfg`/`read_pyproject`/`toml.dump`
+and persisting changes (`setupcfg.update_file()` for setup.cfg edits):
+1. `add_entrypoints` (decorated with `ensure_setupcfg`):
+adds an empty `console_scripts` entry under the `[options.entry_points]` section of `setup.cfg`.
+2. `update_setup_cfg` (decorated with `ensure_setupcfg`):
+merges a set of default required dependencies (from `deps.DEFAULT`) into the existing
+`install_requires` list in `setup.cfg`,
+using a dependency-merging helper (`deps.add`)
+and writing the result back as an inline TOML/config list.
+3. `replace_find_with_find_namespace` (decorated with `ensure_setupcfg`):
+if a `[options.packages.find]` section exists in `setup.cfg`,
+detaches it and re-adds its options under a new `[options.packages.find_namespace]` section instead,
+effectively switching from `find:` to `find_namespace:` package discovery.
+4. `handover_setup_requires`
+(not decorated with `ensure_setupcfg`,
+but manually checks for presence of `options.setup_requires`
+and exits early returning inputs unchanged if absent):
+migrates the `setup_requires` dependency list from `setup.cfg` into a `[build-system]` table in
+`pyproject.toml` (merging with any existing build requirements via `deps.split`/`deps.add`
+and a `deps.BUILD` default set, setting the appropriate `requires`/backend entries),
+writes the updated `pyproject.toml`,
+then removes the now-obsolete `setup_requires` key from `setup.cfg` and saves it.
+5. `update_pyproject_toml`:
+ensures `pyproject.toml` has a `tool.pyscaffold` table
+and sets its `version` field to the current PyScaffold version stored in `opts["version"]`
+(as a string), then writes the file.
+6. `add_dependencies`:
+reads additional/extra dependency information (e.g., from setup.cfg or similar)
+and merges/writes them appropriately into the project's dependency configuration
+(follow the same read/merge/write pattern as the other dependency-related actions). - Use precise
+type hints throughout
+(including forward-reference string annotations for `ActionParams`
+and `Action` under `TYPE_CHECKING`),
+favor functional-style composition (`reduce`, `chain.from_iterable`, generator expressions) for
+building and executing the migration pipeline,
+and keep all file I/O centralized through the existing `info`/`toml` helper modules rather than raw
+file operations. ---

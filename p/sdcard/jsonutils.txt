@@ -1,0 +1,41 @@
+Write a prompt for an AI coding agent that will generate a standalone Python module
+(no external dependencies, usable both as an importable library and as a CLI/stdin-stdout script)
+implementing utilities for flattening and working with nested JSON-like data structures.
+The module should include: 1.
+A helper function that checks whether a list of numbers forms a consecutive sequence
+(each element is exactly one greater than the previous).
+2. An internal key-construction helper that builds a new composite key for a flattened dictionary:
+given a previous key, a separator string, a new key (which can be an int or str),
+and an optional "replace_separators" string, it should
+(a) optionally replace occurrences of the separator character inside the new key with a substitute
+    string, and (b) join the previous key and the new key using the separator,
+    returning just the new key if there is no previous key yet.
+    3.
+A main `flatten` function that takes a nested dictionary
+and recursively flattens it into a single-level dictionary with composite keys built using
+the separator.
+It must support: - A configurable separator string (default "_"). - An optional set/collection of
+root-level keys to ignore (only skipped when they appear at the top level, not in nested levels). -
+An optional "replace_separators" value,
+so that if a nested key itself contains the separator character,
+that character gets replaced to avoid ambiguity in the resulting flattened key. - Proper handling of
+empty dicts/lists/falsy values
+(store them as-is under the current key rather than recursing further). - Recursion into nested
+dictionaries, building up composite keys at each level. - Recursion into lists/iterables,
+using the index as part of the key. - Type validation:
+raise an exception if the input is not a dict,
+or if the separator is not a string. - Returning an empty dict immediately if the input
+dictionary is empty.
+4. Use of standard library utilities such as `itertools` (e.g., `itertools.pairwise`),
+`copy.deepcopy`, `math.isnan`, and `re` for any needed pattern handling,
+plus `json` and `sys.stdin`/`sys.stdout` for reading input data and writing output,
+implying the script should also support reading a JSON object from standard input, flattening it,
+and printing/writing the resulting flattened JSON to standard output.
+5. Clean, type-hinted function signatures
+(using `int | str` style unions and `from __future__ import annotations`),
+with descriptive internal docstrings/comments explaining the flattening algorithm,
+key construction logic,
+and edge cases (e.g., non-consecutive numeric keys, empty containers, ignored root keys,
+separator collisions).
+The output should be a single self-contained Python file implementing this flattening utility,
+ready to run or import. ---

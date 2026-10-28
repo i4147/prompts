@@ -1,0 +1,28 @@
+Write a Python script that demonstrates filename manipulation using regular expressions
+and a custom utility function.
+The script should: 1.
+Import the `re` module for regular expression operations
+and import a function called `unique_path` from a local module named `dh`.
+2. Define a sample filename string variable (e.g., `c = "f_1_2_3.py"`) representing a file with
+multiple numeric suffixes separated by underscores before the file extension.
+3. Use `re.sub` with the pattern `r"(_\d+)+"` to strip out all trailing underscore-number groups
+(one or more occurrences of an underscore followed by digits) from the filename,
+producing a cleaned-up version of the name (e.g., transforming "f_1_2_3.py" into "f.py").
+Store the result in a new variable and print it.
+4. Pass the original filename to the `unique_path` function (imported from `dh`) to generate a
+unique, non-colliding version of the path/filename
+— presumably by checking for existing files and appending a counter or similar suffix if needed.
+Store the result in another variable and print it.
+Notable behavior/assumptions:
+- The script assumes a local module `dh` exists and exports a `unique_path(path)` function
+whose exact implementation is external to this script
+(its purpose is to return a filesystem path that avoids naming collisions, e.g.,
+by incrementing a numeric suffix if the given path already exists). - The regex is specifically
+designed to remove one
+or more `_<digits>` groups anywhere they appear consecutively in the string
+(commonly used to strip versioning/numbering suffixes from filenames before the extension). - The
+script is simple, linear, and procedural:
+no functions, classes, error handling,
+or command-line arguments are involved
+— it just performs the two transformations and prints both results sequentially for demonstration
+or debugging purposes. ---

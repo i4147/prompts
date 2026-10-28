@@ -1,0 +1,42 @@
+Write a Python script that performs a selective,
+one-way backup of local files to a specific Google Drive folder using the PyDrive2 library.
+The script's purpose is to upload only new,
+allowed-type files from a local directory to Google Drive,
+skipping files that are already present in the cloud
+or that don't match a set of allowed file extensions.
+Main inputs: - A local folder path (constant, e.g. LOCAL_FOLDER)
+whose files will be scanned for backup. - A target Google Drive folder ID
+(constant, e.g. GDRIVE_PARENT_ID) representing the destination parent folder. - A set/list of
+allowed file extensions (constant, e.g. ALLOWED_EXTENSIONS) used to filter
+which files are eligible for upload. - Google OAuth credentials handled via PyDrive2's local
+webserver authentication flow (GoogleAuth.LocalWebserverAuth()).
+Main outputs: - Files from the local folder that are new
+and have an allowed extension get uploaded to the specified Google Drive folder. - Console log
+messages reporting progress and status for each file, using descriptive prefixes/emojis:
+- Skipped due to filtered/disallowed extension. - Skipped
+because the file already exists in the cloud folder (same title). - Uploading in progress notice. -
+Success confirmation after upload. - Failure message including the exception details if the upload
+errors out. - An early exit with a message if the local folder does not exist.
+Notable behavior/requirements: 1.
+Authenticate with Google Drive using PyDrive2's GoogleAuth and LocalWebserverAuth(),
+then create a GoogleDrive client instance.
+2. Implement a helper function that queries the Google Drive API for all non-trashed files
+whose parent is the given folder ID,
+and returns a set of their titles (filenames) for fast existence lookup.
+3. Implement a main backup function that: - Checks whether the local folder exists;
+if not, print an error message
+and return without doing anything. - Retrieves the set of existing filenames already in the target
+Drive folder. - Iterates over all entries in the local folder,
+skipping subdirectories (only top-level files are processed). - For each file,
+extracts its extension (case-insensitive)
+and skips it if the extension is not in the allowed extensions set. - Skips the file if its name
+already exists among the files in the Drive folder (to avoid duplicate uploads). - Otherwise,
+creates a new Google Drive file object with the same title, sets its parent to the target folder ID,
+sets its local content from the file path,
+and uploads it. - Wraps the upload logic in a try/except block to catch
+and report any errors per file without stopping the overall process.
+4. The script should run the backup function automatically
+when executed as the main module (i.e., under `if __name__ == "__main__":`).
+5. Use clear, user-friendly console output with status emojis
+(⏳ for skipped due to extension, 🔄 for skipped due to already existing, 🚀 for upload starting,
+✅ for success, ❌ for failure) to make the backup process easy to follow in the terminal. ---

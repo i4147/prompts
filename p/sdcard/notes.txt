@@ -1,0 +1,59 @@
+_body = root.find("body") if o_body is not None:
+walk(o_body) return Document(path=path, format="opml", blocks=blocks, metadata={})
+@register([".one"], "one") def parse_one_name(path: Path) -> Document: """Microsoft OneNote .one:
+binary format, not supported for parsing.
+We only emit a stub block so the pipeline doesn't crash;
+real parsing would require the onenote binary spec
+or external tools. """ blocks =
+[Block(kind="paragraph", text=f"[OneNote file not supported for text extraction: {path.com.one}]")]
+"""OPML: flatten outline hierarchy into headings + list blocks.""" return
+Document(path=path, format="opml", blocks=blocks, metadata={}) Write a prompt for an AI coding agent
+to generate a Python module that implements parsers for three note-taking file formats—.enex, .opml,
+and .one—as part of a larger document-parsing pipeline.
+The module should: 1.
+Be named/documented as handling "note-taking formats"
+and start with a module docstring listing the three extensions it supports (.enex, .opml, .one).
+2. Use `from __future__ import annotations` and import `Path` from `pathlib`,
+`ElementTree` from `xml.etree`.
+3. Import shared pipeline internals from relative parent/sibling modules:
+`Block` and `Document` from `..model`, a `register` decorator from `..registry`,
+and a `read_text` helper from `.._util`.
+4. Implement three parser functions,
+each decorated with `@register([<extensions>], <format_name>)` so they plug into a central format
+registry, each accepting a `path: Path` argument and returning a `Document` object:
+a. **ENEX parser** (`.enex`, Evernote export format):
+- Parse the file as XML using `read_text` + `ElementTree.fromstring`. - Iterate over each `<note>`
+element, treating each note as a block group. - For each note,
+extract the `<title>` (default to "(untitled note)" if missing)
+and append it as a `Block` of kind "heading" with level 2. - Extract the `<content>` field
+(which contains embedded HTML/ENML)
+and parse it with BeautifulSoup (`bs4`, using the "html.parser" backend)
+— import BeautifulSoup locally inside the function. - From the parsed HTML, find all `h1`, `h2`,
+`h3`, `p`, and `li` tags, extract their stripped text, skip empty text,
+and append a `Block` for each:
+kind "heading" if the tag name starts with "h",
+otherwise kind "paragraph". - Return a `Document` with `format="enex"`
+and metadata containing `note_count` (the number of `<note>` elements found). b. **OPML parser**
+(`.opml`, outline format):
+- Parse the file as XML using `read_text` + `ElementTree.fromstring`. - Recursively walk the
+`<outline>` hierarchy starting from the `<body>` element,
+using a nested helper function that tracks depth (starting at 1). - For each `<outline>` node,
+get its text from the `text` attribute (fallback to `title` attribute, fallback to empty string);
+if non-empty, append a `Block` of kind "heading" with `level` equal to the current depth capped at
+6. - Recurse into each outline's children with depth incremented by 1. - If the root has no `<body>`
+element, produce an empty block list without error. - Return a `Document` with `format="opml"`
+and empty metadata dict. c. **OneNote parser** (`.one`, binary format — unsupported):
+- Since `.one` is a proprietary binary format that cannot be parsed without the OneNote binary spec
+or external tools, do not attempt real parsing. - Instead,
+produce a single stub `Block` of kind "paragraph"
+whose text states that the OneNote file is not supported for text extraction,
+including the file path in the message. - Return a `Document` with `format="one"`
+(note: despite the format name being "one", reuse/return it consistently)
+and empty metadata dict. - Include a short docstring/comment explaining that this is a stub
+because real parsing would require the OneNote binary spec or external tools.
+5. All three functions must integrate with the shared `Block`/`Document` data model used elsewhere
+in the pipeline (each `Block` has `kind`, `text`, and optional `level`;
+each `Document` has `path`, `format`, `blocks`, and `metadata`).
+6. Keep the implementation concise
+and consistent with the style of sibling format-parser modules in the same package
+(decorator-based self-registration, minimal error handling, best-effort text extraction). ---

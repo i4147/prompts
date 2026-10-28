@@ -1,0 +1,7 @@
+Tests for nltk.internals binary discovery (untrusted-search-path hardening). ``find_binary`` must
+not return a current-working-directory-relative executable
+when the caller did not supply an explicit ``path_to_bin``:
+such a path would be run relative to the CWD,
+so a planted ``./<name>/<name>`` could hijack the tool (CWE-426 / CWE-427).
+A trusted absolute match (env var / searchpath / ``which``)
+or an explicit ``path_to_bin`` is still honored.

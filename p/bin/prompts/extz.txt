@@ -1,0 +1,4 @@
+Scan a project directory and report file extensions by count/size.
+Terminal report is always produced;
+pass -p/--pie-chart to also save a matplotlib pie chart as extinfo.png.
+Stdlib-only by default. matplotlib is imported lazily and only required when --pie-chart is used.

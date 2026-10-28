@@ -1,0 +1,1 @@
+Read-only FastAPI UI for an existing report; no file mutation endpoints.

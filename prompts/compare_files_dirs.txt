@@ -1,0 +1,32 @@
+Write a Python script that compares two file system locations (individual files
+or directory trees) and reports how they differ, supporting both a quick check
+and a detailed content-level comparison.
+The script should accept two paths as command-line inputs, expand environment
+variables and user home shorthands, and resolve them to absolute locations
+before comparing.
+When both inputs are files, it should determine whether they are identical and,
+if they differ, show a unified-style textual diff of their contents, handling
+text files with a configurable or automatically detected encoding and gracefully
+falling back when a file cannot be read as text.
+When both inputs are directories, it should walk the full tree recursively,
+identify files present only on one side, files present on both sides with
+differing content, and files that match, and report these categories clearly.
+Content comparison should be based on a cryptographic checksum computed inamed
+chunks so that very large files can be handled without excessive memory use,
+with a fast metadata-based pre-check available as an optional shortcut.
+The script should support options that allow the user to control the output: a
+summary-only mode, a verbose mode that prints per-file details, a mode that
+shows diffs for changed text a configurable number of contextit or exclude
+certain paths or file patterns.
+It may optionally synchronize or copy differences from one side to the other,
+but only when explicitly requested by a flag, and it should require confirmation
+or a dry-run preview before making any changes.
+Output should be human-readable by default, with clear section headers and
+counts of identical, changed, and unique files, and it should exit with a
+non-zero status code when differences are found so it can be used in scripts and
+CI pipelines.
+Errors such as missing paths, permission problems, or unreadable files should be
+reported to the user without crashing the entire run, and the script should
+provide helpful usage text.
+Optional colored terminal output should be used if a styling helper is
+available, falling back to plain printing otherwise. ---

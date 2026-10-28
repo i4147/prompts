@@ -1,0 +1,7 @@
+Author : Pushpender (github.com/Technowlogy-Pushpender) 1.
+Registry Check 2.
+Processes and Files Check 3.
+MAC check 4.
+Memory Check 5.
+Communication Channel Check: 6.
+Other Hardware Check: ======================== Less Ram : < 1 GB Hard Disk: < 80 GB

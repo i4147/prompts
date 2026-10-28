@@ -1,0 +1,18 @@
+Write a Python script that recursively walks a given directory (or accepts a
+single file path) and collects every file it finds, skipping entries that match
+a configurable set of exclusion rules and avoiding repeated traversal of the
+same directory through symbolic links or duplicate paths.
+For each eligible file, the script should determine how to process it based on
+its file type, with particular handling for C source files, where it should
+invoke an external C compiler toolchain to analyze or compile the file and
+report the outcome.
+The script should accept a root path as input, handle the case where the path
+does not exist by returning a clear failure result without crashing, and produce
+a per-file summary indicating success or failure along with any relevant
+diagnostic output.
+It should rely on helper utilities for file-size measurement, size formatting,
+memory-related metrics, and skip-rule evaluation, which the implementation may
+define or assume are provided.
+The overall behavior should be robust to unadable directories and malformed
+paths, and should present results in a readable, aggregated form at the end of
+the run. ---

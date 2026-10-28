@@ -1,0 +1,3 @@
+Extract entities (functions, classes, constants) from Python files recursively.
+Saves each entity as a separate .py file with its full source code.
+Processes files in parallel and updates them in-place.

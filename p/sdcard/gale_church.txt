@@ -1,0 +1,3 @@
+A port of the Gale-Church Aligner.
+Gale & Church (1993),
+A Program for Aligning Sentences in Bilingual Corpora. https://aclweb.org/anthology/J93-1004.pdf

@@ -1,0 +1,13 @@
+Regression tests for the untrusted-search-path fix in the Boxer wrapper. ``Boxer`` resolves its
+external ``candc`` / ``boxer`` executables with ``nltk.internals.find_binary``
+and then runs them with ``subprocess.Popen``. ``find_binary`` also matches a binary relative to the
+current working directory:
+* a relative ``bin_dir`` (e.g. ".") yields ``./candc`` (a path with a separator),
+  and * even the default ``bin_dir=None`` matches a ``candc/candc`` directory in the CWD
+  (``find_file_iter`` joins the name with itself).
+Either way the resolved path contains a separator,
+so ``Popen`` runs it directly from the CWD without consulting ``$PATH``
+-- an attacker who can plant a ``candc``/``boxer`` file there gets code execution (CWE-426/CWE-427).
+The wrapper now requires the resolved binary to be an *absolute* path,
+so a CWD-relative result is refused.
+An absolute ``bin_dir`` (or ``CANDC`` env var, or a ``$PATH`` lookup) keeps working.

@@ -1,0 +1,7 @@
+auto_git_push CLI Run: python -m auto_git_push ... or after install:
+auto-git-push [--dry-run] [--no-precommit] [--verbose] Features:
+- Detect git repo root - Merge ~/.gitignore_global into .gitignore if missing - Fast black execution
+(single call) - Accurate python detection (py_compile + shebang) - Multiprocessing for detection -
+Skip work for clean repos - Stage, commit (timestamped),
+push to current branch with upstream detection - Skip commit if only whitespace changes - Pre-commit
+integration (optional) - Config via ~/.auto_git_config.json

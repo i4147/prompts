@@ -1,0 +1,1 @@
+Tests for common methods of IBM translation models

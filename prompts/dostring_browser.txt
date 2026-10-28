@@ -1,0 +1,27 @@
+Write a Python script that acts as an interactive terminal viewer for Markdown
+documents.
+The tool should accept one or more Markdown file paths from the command line and
+render them with rich formatting in the terminal, one "page" of content at a
+time, so the user can read long documents comfortably without leaving the
+console.
+Core behavior: - Take a list of Markdown files as input; if none are given, the
+tool should report a clear usage error or display a helpful message instead of
+failing silently. - Split each document into screen-sized pages based on the
+current terminal dimensions, so that content fits the visible area and can be
+paged through naturally. - Present rendered Markdown (headings, lists, code
+blocks, emphasis, tables, and similar elements) with attractive, readable
+styling in the terminal. - Provide keyboard-driven navigation: advance and go
+back by page, jump to the first or last page, move between multiple files in the
+order they were supplied, and quit at any time using common quit keys.
+Support a range of familiar key bindings (including arrow keys, space, and
+vim-style letters) where the environment allows, and degrade gracefully to
+simple line-based input when raw keyboard reading is unavailable. - Display a
+status indicator showing the current file name, page position, and navigation
+hints. - Handle edge cases robustly: missing or unreadable files, empty
+documents, very small terminals, and unexpected key presses should not crash the
+program.
+Exit cleanly and restore the terminal state on quit or interruption. - Keep the
+user experience responsive and the terminal output clean, with no leftover
+artifacts after exiting.
+The script should be a single self-contained command-line utility that
+prioritizes a smooth, distraction-free reading experience. ---

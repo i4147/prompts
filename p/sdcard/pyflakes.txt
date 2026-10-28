@@ -1,0 +1,46 @@
+Write a Python module that integrates pyflakes with flake8 by implementing a custom flake8
+plugin/checker class (commonly named `FlakesChecker`) wrapping pyflakes' `Checker`.
+The script should: 1. **Purpose**:
+Bridge pyflakes error/message classes to flake8-compatible error codes,
+and provide a flake8 plugin entry point that runs pyflakes checks on Python source code
+and yields results in the format flake8 expects
+(line number, column, message string with code, and the checker class itself).
+2. **Imports/Dependencies**: Use `os`, `typing.List`, `pyflakes.checker`, and `flake8.utils`.
+3. **Code mapping dictionary**:
+Define a module-level dictionary (e.g. `FLAKE8_PYFLAKES_CODES`) that maps every pyflakes message
+class name (as string keys, e.g. `"UnusedImport"`, `"ImportShadowedByLoopVar"`, `"ImportStarUsed"`,
+`"LateFutureImport"`, `"ImportStarUsage"`, `"ImportStarNotPermitted"`, `"FutureFeatureNotDefined"`,
+all the `PercentFormat*` variants, `StringDotFormat*` variants, `FStringMissingPlaceholders`,
+`MultiValueRepeatedKeyLiteral`, `MultiValueRepeatedKeyVariable`,
+`TooManyExpressionsInStarredAssignment`, `TwoStarredExpressions`, `AssertTuple`, `IsLiteral`,
+`InvalidPrintSyntax`, `IfTuple`, `BreakOutsideLoop`, `ContinueOutsideLoop`, `ContinueInFinally`,
+`YieldOutsideFunction`, `ReturnWithArgsInsideGenerator`, `ReturnOutsideFunction`,
+`DefaultExceptNotLast`, `DoctestSyntaxError`,
+and any other standard pyflakes message classes) to their corresponding flake8-style error code
+strings (e.g. `"F401"`, `"F402"`, ... through the `F5xx`, `F6xx`, `F7xx`,
+`F8xx` series used for redefinition, unused variable, undefined name, etc.).
+4. **Checker class**: Implement a class (e.g. `FlakesChecker`) that:
+- Defines flake8 plugin metadata attributes such as `name`
+and `version`. - Accepts a parsed AST tree
+and filename in its constructor. - Internally runs pyflakes' `Checker` against the tree,
+applying any relevant builtins/config
+(e.g. reading extra builtins from an environment variable or flake8 options). - Implements a `run()`
+generator method that iterates over the messages collected by pyflakes,
+looks up each message's class name in the code mapping dictionary to get the flake8 code,
+and yields a tuple of `(line_number, column_offset, "<code> <message text>", type(self))` for each
+finding so flake8 can report it in its standard output format. - Handles syntax errors raised during
+AST compilation/parsing by catching them
+and yielding an appropriate flake8-formatted error (e.g. using `E999` or similar) with the relevant
+file, line, and column information.
+5. **Utility behavior**:
+Use `flake8.utils` helpers (e.g. for normalizing paths or parsing comma-separated option strings)
+where appropriate, such as when parsing a list of additional builtin names from configuration.
+6. **Output format**:
+Ensure every yielded message follows flake8's expected `(row, column, text, check)` tuple
+convention, with `text` prefixed by the mapped pyflakes-to-flake8 code
+(e.g. `"F401 'os' imported but unused"`).
+The final code should be self-contained, correctly structured as an importable flake8 plugin module,
+and consistent with how flake8 plugins are registered via setuptools entry points
+(though the entry point registration itself may be
+omitted from the script, the class should be compatible with that mechanism).
+---

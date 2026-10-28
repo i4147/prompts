@@ -1,0 +1,43 @@
+Write a Python module for the python-apt library that implements text-based (CLI) progress reporting
+classes, mirroring the output style of APT's native C++ command-line tools.
+The module should provide: 1.
+A private gettext-based translation helper function that wraps `apt_pkg.gettext`,
+first attempting translation with the default domain
+and falling back to the "apt" translation domain if no translation is found.
+2. A `TextProgress` base class that:
+- Accepts an optional file-like output object in its constructor
+(defaulting to `sys.stdout` if none is provided),
+and tracks the current terminal/line width internally. - Provides an internal method to write status
+messages using a carriage return (so lines overwrite in place),
+padding the output with spaces to clear any leftover characters from a previously longer line,
+with an option to update/maximize the tracked width
+and an option to control whether a trailing newline is written.
+3. An `OpProgress` class that subclasses both `apt.progress.base.OpProgress` and `TextProgress`,
+rendering generic operation progress (e.g., "Reading database...
+45%") as a single updating line,
+and printing a final completion message when the operation finishes.
+4. An `AcquireProgress` class that subclasses both `apt.progress.base.AcquireProgress`
+and `TextProgress`, implementing:
+- Handling of terminal resize signals (e.g., `SIGWINCH`) where the platform supports it,
+to keep the tracked line width in sync with the actual terminal size. - Prompting the user to
+confirm media/disc changes before continuing a fetch. - Reporting per-item status such as "Hit",
+"Get", "Ign", and "Err" messages, including URI, description,
+and size information. - Showing live fetch progress
+(current/total items, percentage, download speed, and estimated time remaining). - Printing a final
+summary after the fetch completes, including total size fetched, elapsed time, and average speed,
+along with any warnings or error messages encountered.
+5. A `CdromProgress` class that subclasses both `apt.progress.base.CdromProgress`
+and `TextProgress`, handling CD-ROM/disc workflows such as prompting the user to insert a disc,
+reporting scanning/mounting progress,
+and asking for confirmation before unmounting or repeating scans.
+Notable behavior and constraints:
+- All user-facing strings should be passed through the translation helper for internationalization.
+- The module must restrict its public API via `__all__` to exactly `AcquireProgress`,
+`CdromProgress`, and `OpProgress`
+(the `TextProgress` base class and the translation helper remain private/internal). - Signal
+handling for terminal resize should be applied defensively
+(e.g., only if the signal is available on the current platform) so the module remains portable
+across operating systems that lack that signal. - Output should default to standard output
+but must support redirection to any provided text file-like object,
+consistent across all progress classes. - Line-updating output must avoid leaving visual artifacts
+from previous, longer lines when a new, shorter line is written to the same terminal row. ---

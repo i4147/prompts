@@ -1,0 +1,40 @@
+Write a prompt (in English) describing this Python script so that an AI coding agent could
+regenerate it.
+The prompt should state: - The script's purpose:
+a demonstration/example program showcasing the capabilities of a `fileutils` library for file
+and folder hashing, hash comparison, and progressive hashing,
+run inside a temporary working directory. - It imports `FileHasher`, `FolderHasher`,
+`HashComparator`, `ProgressiveFileHasher`, `HashAlgorithm`, `quick_hash`,
+and `get_available_algorithms` from a module named `fileutils`. - Main behavior/flow: 1.
+Print the list of available hash algorithms via `get_available_algorithms()`.
+2. Create a temporary directory (using `tempfile.TemporaryDirectory`) to act as a sandbox,
+and print its path.
+3. Inside the temp directory, generate 3 sample text files named `test_file_0.txt`,
+`test_file_1.txt`, `test_file_2.txt`,
+each containing 100 repeated lines of distinct content (e.g., `"Content of test file {i} " * 100`).
+4. Create a `duplicate_file.txt` that is a byte-for-byte copy of `test_file_0.txt`,
+and add it to the list of test files.
+5. Demonstrate single-file hashing:
+instantiate `FileHasher` with `HashAlgorithm.SHA256`,
+compute and print a truncated (first 16 characters) hash for each test file, labeled by filename.
+6. Verify and print whether the original file
+and its duplicate produce the same hash (boolean comparison).
+7. Demonstrate the `quick_hash` convenience function by computing an MD5 hash
+(passed as a string `"md5"`) of the first test file and printing the result.
+8. Begin a folder hashing demonstration section
+(introduced with a printed header `"=== Folder Hashing Examples ==="`) that uses `FolderHasher` to
+hash the contents of the temporary folder
+(the code is cut off at this point, so the agent should continue in a similar style:
+e.g., instantiate `FolderHasher`, compute a hash for the whole folder, print results,
+and could further demonstrate `HashComparator` for comparing files/folders
+and `ProgressiveFileHasher` for chunked/streaming hashing of large files). - Output style:
+the script prints section headers
+(e.g., `"=== File Hashing Examples ==="`, `"=== Quick Hash Utilities ==="`,
+`"=== Folder Hashing Examples ==="`) and informative labeled print statements showing filenames
+and computed hash values (often truncated) to clearly demonstrate each feature step by step. -
+Structure: all demonstration logic is wrapped in a `main()` function,
+intended to be run as a script (implying a `if __name__ == "__main__": main()` guard). - Notable
+behavior: uses `tempfile.TemporaryDirectory()` as a context manager so all test files are
+automatically cleaned up after the script finishes;
+file content is deterministic/generated programmatically rather than relying on external files,
+making the example self-contained and reproducible. ---

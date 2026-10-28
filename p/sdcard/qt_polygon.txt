@@ -1,0 +1,1 @@
+Native Qt widget for displaying collections of two-dimensional polygons.

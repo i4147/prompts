@@ -1,0 +1,17 @@
+Rename a Python project (folder + module + all text references).
+Usage: python rename-project.py <path/to/project-folder> <new-name> [--dry-run]
+[--diff] Example: python rename-project.py ./autocall mylib python
+rename-project.py ./autocall mylib --dry-run python rename-project.py ./autocall
+mylib --diff --dry-run Options: --dry-run Do not write any files or rename
+anything, just report. --diff Show a unified diff of every file whose content
+changes.
+What it does ------------ 1.
+Replaces references to the old name inside text files (.py, .toml, .cfg, .md,
+.rst, .json, .yaml, ...) using a word-boundary, case-insensitive match.
+The *style* of the matched token is preserved: autocall -> mylib Autocall ->
+Mylib AUTOCALL -> MYLIB 2.
+Renames any matching file / folder inside the project (e.g. the `autocall.py`
+module becomes `mylib.py`).
+Innermost items are renamed first so nested names never clash. 3.
+Renames the top-level project folder itself.
+The old name is inferred from the basename of the folder you point at.

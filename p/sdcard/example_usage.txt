@@ -1,0 +1,48 @@
+Write a prompt (not code) that instructs an AI coding agent to generate a Python
+demonstration/example script showcasing the usage of a custom "fileutils" package.
+The prompt should specify the following requirements: **Purpose**:
+Create a self-contained example script that demonstrates the core functionality of a "fileutils"
+package by exercising its main classes in a realistic, runnable sequence,
+printing clear status messages for each operation. **Setup requirements**:
+- Attempt to import the following classes from a local/custom module named `fileutils`:
+`FileHandler`, `FolderHandler`, `FileOperations`, `FileSearch`, `FileCompressor`,
+`FileValidator`. - Wrap the import in a try/except block;
+on success print a confirmation message (e.g., "✓ Successfully imported fileutils package"),
+and on failure print an error message including the exception
+and exit the program immediately (exit code 1). - Use Python's `tempfile.TemporaryDirectory()` as a
+context manager so all demonstration files/folders are created in an isolated temporary directory
+that is automatically cleaned up, and print the path of this working directory. - Import `os`,
+`tempfile`, and `datetime`/`timedelta` from the `datetime` module at the top,
+since the script should involve file timestamps/dates. **Structure**:
+Organize the script into a `main()` function
+(invoked via the standard `if __name__ == "__main__":` guard),
+with the body divided into clearly labeled sections using printed headers like `"
+=== FileHandler Examples ==="`, `"
+===
+FolderHandler Examples
+==="`, and similarly for `FileOperations`, `FileSearch`, `FileCompressor`, and `FileValidator`.
+Each section should demonstrate several representative methods of that class. **FileHandler
+section** should demonstrate:
+constructing a handler for a file path, writing text content to it,
+reading text content back (print a truncated preview), getting the file size in human-readable form,
+getting the file extension, getting the file name,
+and getting the parent directory
+— each result printed with a "✓" prefixed confirmation message. **FolderHandler section** should
+demonstrate: constructing a handler for a folder path, creating the folder,
+programmatically creating a few sample files inside it
+(e.g., using a loop to create 3 text files with simple content via `FileHandler`),
+and listing/retrieving the files in that folder
+— each step printed with a "✓" prefixed confirmation message. **Additional sections**
+(to be included similarly, continuing the pattern) should cover: - `FileOperations`:
+operations such as copying, moving, renaming, or deleting files/folders. - `FileSearch`:
+searching for files by name pattern, extension,
+or content within the temporary directory. - `FileCompressor`:
+compressing files/folders into an archive and extracting/decompressing them. - `FileValidator`:
+validating file properties such as existence, type, size constraints,
+or extension whitelist checks. **Style/behavior notes**:
+- All output should be informative console print statements marking successful completion of each
+demonstrated operation,
+consistently prefixed with "✓" (and "✗" for failures/errors if applicable). - The script should be
+fully runnable end-to-end as a demonstration/smoke-test of the fileutils package's API surface,
+not a unit test suite. - Keep all file/folder operations scoped within the temporary directory so
+the script leaves no residual files on the system after execution. ---

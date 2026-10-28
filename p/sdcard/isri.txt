@@ -1,0 +1,14 @@
+ISRI Arabic Stemmer The algorithm for this stemmer is described in:
+Taghva, K., Elkoury, R., and Coombs, J. 2005.
+Arabic Stemming without a root dictionary.
+Information Science Research Institute.
+University of Nevada, Las Vegas, USA.
+The Information Science Research Institute’s (ISRI) Arabic stemmer shares many features with the
+Khoja stemmer.
+However, the main difference is that ISRI stemmer does not use root dictionary.
+Also, if a root is not found, ISRI stemmer returned normalized form,
+rather than returning the original unmodified word.
+Additional adjustments were made to improve the algorithm: 1- Adding 60 stop words.
+2- Adding the pattern (تفاعيل) to ISRI pattern set.
+3- The step 2 in the original algorithm was normalizing all hamza.
+This step is discarded because it increases the word ambiguities and changes the original root.

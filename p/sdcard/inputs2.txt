@@ -1,0 +1,32 @@
+Write a Python script that uses the `termuxgui` library to create a simple Termux:GUI dialog-style
+activity demonstrating various input widgets.
+Requirements: 1. **Setup**:
+Open a `termuxgui.Connection`,
+then create a dialog `Activity` using that connection (`dialog=True`).
+2. **Layout**: Add a `LinearLayout` as the root container for the activity.
+3. **Widgets to include, all added to the layout**:
+- A `TextView` with the text "Input Demo",
+with its text size set to 30
+and a margin of 5. - A `Switch` labeled "Switch" (displays label on the left, toggle on the right).
+- A `ToggleButton` (acts like a button but has an on/off state; no custom text). - A `RadioGroup`
+containing three `RadioButton` widgets labeled "Radio 1", "Radio 2",
+and "Radio 3" (store them in a list so their checked state can be identified later).
+Only one radio button in the group can be selected at a time. - A `Spinner` (dropdown) populated
+with a list of three string options: "Option 1", "Option 2", "Option 3", set via `setlist`.
+4. **Event loop**: Iterate over `c.events()` to handle GUI events:
+- On a `destroy` event where `ev.value["finishing"]` is true,
+exit the program via `sys.exit()`. - On a `click` event matching the `Switch`'s id,
+print the switch's checked state (`ev.value["set"]`). - On a `click` event matching the
+`ToggleButton`'s id,
+print its checked state (`ev.value["set"]`). - Handle the `RadioGroup`'s selection event
+(emitted when a radio button in the group is selected)
+— print or determine
+which `RadioButton` from the list was selected based on the event data. -
+(Optionally also handle the `Spinner`'s selection event to print the chosen option from the
+string list.)
+5. **Style/behavior notes**:
+- Use inline comments explaining what each widget type does
+(e.g., Switch vs ToggleButton vs RadioGroup vs Spinner behavior),
+matching the explanatory tone of typical termuxgui example scripts. - Use the `with` statement for
+the connection to ensure proper cleanup. - Keep the code minimal and demonstrative,
+suitable as a basic input-widgets example for the termuxgui library. ---

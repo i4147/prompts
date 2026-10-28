@@ -1,0 +1,21 @@
+Write a Python script designed to run under Termux
+(using the shebang `#!/data/data/com.termux/files/usr/bin/python`) that generates a plain-text list
+of file extensions.
+The script should: - Import `BIN_EXT`
+and `TXT_EXT` collections (lists/iterables of file extension strings) from a local module named
+`dh`. - Import `sys`
+and `Path` from `pathlib` (even if `Path` is not directly used, keep the import for consistency). -
+Define a `main()` function that:
+- Creates an empty list called `extz`. - Iterates over all items in `BIN_EXT`
+and appends each one to `extz`. - Iterates over all items in `TXT_EXT`
+and appends each one to `extz`. - Opens a file named `extz` (in the current working directory) in
+write mode. - Writes each extension from `extz` to the file,
+one per line (each entry followed by a newline character). - Use the standard
+`if __name__ == "__main__": sys.exit(main())` entry point pattern so the script can be run directly
+and returns an appropriate exit status.
+The purpose of the script is to merge two predefined sets of extensions
+(binary file extensions and text file extensions, sourced from the `dh` module) into a single
+combined list, then persist that combined list to a local output file named `extz`,
+with no return value or console output expected — the only side
+effect is the creation/overwriting of the `extz` file in the current directory.
+---

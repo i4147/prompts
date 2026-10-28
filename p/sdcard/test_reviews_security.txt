@@ -1,0 +1,9 @@
+Regression tests for ReDoS in ReviewsCorpusReader (CWE-1333).
+The ``FEATURES`` regex extracts ``feature[+N]`` annotations from each review line.
+With an unbounded feature label, ``re.findall`` rescans a long bracket-less line quadratically,
+so a crafted corpus line can hang the reader.
+The label length is now bounded, making extraction linear.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun,
+so a regression to a quadratic regex cannot keep burning CPU for the rest of the suite,
+and any exception in the worker is propagated back to the assertions instead of being swallowed.

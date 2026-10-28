@@ -1,0 +1,23 @@
+Write a Python script that backs up the installed third-party packages from the
+current Python environment's site-packages directory into a persistent cloud
+storage location, designed to run in a Google Colab notebook environment.
+The script should: - Mount the user's Google Drive so that the output location
+persists beyond the session. - Create a destination folder in the mounted Drive
+(creating any missing parent folders) to hold the exported packages. - Scan the
+top level of the site-packages directory and skip packages that manage the
+environment itself, specifically anything whose name begins with "setuptools" or
+"pip". - For individual files found at the top level (such as standalone modules
+or metadata files), copy them as-is into the destination folder while preserving
+their timestamps. - For each package directory found, compress its entire
+contents into a single ZIP archive named after the directory, using deflate
+compression.
+Include all files recursively, but exclude compiled Python bytecode files
+(.pyc).
+Store paths inside each archive relative to the site-packages root so the
+archive can be restored correctly. - Track and report how many files were copied
+and how many directories were archived. - Print a clear success message when the
+export completes, followed by a summary line showing the site-packages location
+that was exported and the counts of copied files and archived directories.
+Keep the script simple, robust, and self-contained, with clear console output
+and sensible handling of the case where the destination already contains earlier
+exports (overwriting matching names is acceptable). ---

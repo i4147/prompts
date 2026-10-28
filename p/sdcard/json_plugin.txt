@@ -1,0 +1,20 @@
+Write a Python script that defines a function named `format(text, opts)` for formatting code/text
+input, with the following behavior: - **Purpose**: Attempt to pretty-print the input `text` as JSON;
+if that fails, fall back to beautifying it as JavaScript/generic code using the `jsbeautifier`
+library. - **Inputs**: - `text` (str): the raw text/code content to be formatted. - `opts` (dict):
+formatting options, where the key `"tabWidth"` specifies the indentation size
+(default to `2` if not provided). - **Output**: Returns a formatted string.
+- If `text` is valid JSON,
+  it is parsed with `json.loads`
+  and re-serialized with `json.dumps` using the indentation from `opts["tabWidth"]` (default 2),
+  `ensure_ascii=False` (to preserve non-ASCII characters),
+  and a trailing newline character appended to the result. - If `text` is not valid JSON
+  (i.e., `json.loads` raises an exception), fall back to using `jsbeautifier`:
+  create default beautifier options via `jsbeautifier.default_options()`,
+  set `indent_size` to the value from `opts["tabWidth"]` (default 2),
+  and return the result of `jsbeautifier.beautify(text, b)`. - **Notable behavior**:
+  - Use a broad `try/except` (catching all exceptions) around the JSON parsing/serialization step so
+  that any failure (invalid JSON, parsing errors, etc.) triggers the fallback path instead of
+  raising an error. - Import both `json`
+  and `jsbeautifier` modules at the top of the script. - The function should be self-contained
+  and not require any additional helper functions. ---

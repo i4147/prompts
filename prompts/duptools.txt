@@ -1,0 +1,34 @@
+Write a Python script that scans one or more directory trees to find duplicate
+files and lets the user safely deduplicate them.
+The tool should work in a staged, progressively more expensive manner: first
+group files by size, then refine candidate groups using a cheap partial hash of
+the file head, then confirm true duplicates with a full-content hash, using
+multithreaded processing to keep scanning fast on large trees.
+Where optional high-performance or fuzzy-matching libraries are available, the
+script should make use of them, but it must still function fully using only the
+standard library.
+Key requirements: - **Inputs**: One or more root directories to scan, plus
+options for excluding directory names (with sensible default exclusions such as
+version control and cache folders), a worker count for parallelism, minimum file
+size thresholds, and an option to choose the hashing strategy or
+fuzzy/similarity mode. - **Outputs**: A human-readable report of duplicate
+groups (showing paths, sizes, and reclaimable space), and optionally a
+machine-readable JSON report.
+Progress feedback should be shown during long operations, with a graceful
+fallback when no progress-bar library is installed. - **Actions**: A dry-run
+mode that only reports what would change by default.
+When actions are enabled, the tool should be able to remove duplicates while
+keeping one canonical copy, or move duplicates into a stash directory instead of
+deleting them, so that the operation is reversible.
+Replacing duplicates with symbolic links to the kept copy should also be
+supported, with a manifest file recording every change so it can be audited or
+undone later. - **Safety**: Never act on files without explicit user intent;
+confirm or require a flag before destructive operations; handle permission
+errors, broken links, files disappearing mid-scan, and cross-device situations
+gracefully without crashing; avoid following symbolic links into unexpected
+locations during scanning. - **Behavior**: Deterministic choice of which copy to
+keep (for example, the first-encountered or shortest path), clear logging of
+each decision, a summary of total files scanned, groups found, and space that
+could be saved, and a non-zero exit code on fatal errors. - **Interface**: A
+clear command-line interface with help text, sensible defaults, and validation
+of arguments. ---

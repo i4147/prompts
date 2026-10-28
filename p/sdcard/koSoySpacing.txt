@@ -1,0 +1,39 @@
+Create a Python class named `koSoySpacing` that demonstrates loading
+and using a pre-trained Korean word-spacing correction model based on the `soyspacing` library
+(`soyspacing.countbase.CountSpace` and `RuleDict`).
+The script should also import a custom `Util` class from `SmiToText.util.util` for path resolution,
+and the `os` module for file path handling.
+The class should have: 1.
+An `__init__` method that instantiates the `Util` helper class
+and stores it as an instance attribute.
+2. A `train` method that accepts a `filename` parameter
+(even if not actively used to load a specific corpus in this demonstration)
+and performs the following: - Define spacing-correction hyperparameters:
+`verbose=False`, `min_count=10`, `force_abs_threshold=0.3`, `nonspace_threshold=-0.3`,
+`space_threshold=0.3`. - Instantiate a `CountSpace` model. - Use the `Util` instance to resolve the
+root path of the `SmiToText.SmiToText` package. - Build a corpus file path pointing to
+`data/koDetokenizerData/ko_law_common_space.txt` under the root path
+(using `os.path.sep` for cross-platform path joining),
+even though it's not used in the load path
+(leave the training lines commented out as reference/documentation showing how one would train
+and save a model with `model.train(corpus_fname)`
+and `model.save_model(model_fname, json_format=False)`). - Build a model file path pointing to
+`kosoy-models/soyspacing.model` under the root path. - Load the pre-trained model from that path
+using `model.load_model(model_fname, json_format=False)`. - Define a sample Korean legal-domain test
+sentence (containing commas and formal legal language, e.g.,
+about committee members' fees
+and decision issuance obligations) as a reference string with proper spacing already included.
+Include a couple of commented-out alternative example sentences as well. - Create a "messed up"
+input version of the sentence by removing all spaces (`sent.replace(" ", "")`). - Call
+`model.correct()` twice on the space-removed input:
+once with all the hyperparameters explicitly passed
+(`doc`, `verbose`, `force_abs_threshold`, `nonspace_threshold`, `space_threshold`, `min_count`),
+capturing the corrected sentence and tags;
+and once calling it with just the input string and default parameters,
+again capturing the corrected sentence and tags. - Print the original reference sentence
+and the first corrected output (from the call with explicit parameters) to the console for
+comparison.
+The purpose of this script is to illustrate how to load a previously trained Korean
+spacing-correction model
+and apply it to restore proper spacing in a Korean sentence that has had all whitespace stripped
+out, comparing the correction result against the original correctly-spaced sentence. ---

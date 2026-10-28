@@ -1,0 +1,24 @@
+tree2fs — recreate a directory tree from a `tree`-style listing (text file)
+or from a screenshot of one (OCR).
+TEXT INPUT Feed it the output of `tree` (Unicode or ASCII box-drawing) saved to a file.
+Supported details: - optional root line:
+".", "./", or a directory name (e.g. "src") - "├── name" / "└── name" entries;
+the indent width may be anything consistent (2, 4, 8 chars, tabs, ...)
+— depth comes from the marker column's rank,
+not from dividing the column index by 4 - a subtree pasted without its root line is handled
+(its top-level entries become direct children of the base directory) - trailing "/" marks a
+directory (as printed by `tree -F`) - `tree -F` suffixes (* @ = |) are stripped from names
+(--keep-suffix keeps them) - "# ..." comments and "N directories, M files" footers are ignored;
+names starting with "#" are treated as comments IMAGE INPUT A screenshot of such a listing is OCR'd
+(rapidocr-onnxruntime by default, pytesseract as fallback).
+OCR engines drop the box-drawing glyphs,
+so the "├──"/"└──" markers are located in the pixels themselves (their dash runs)
+and each name's depth comes from its marker's column rank;
+the OCR text column is used as a fallback.
+Small or dark-mode screenshots are preprocessed automatically.
+DIRECTORY vs FILE An entry is a directory when:
+its name ends with "/", or it has children listed below it.
+Otherwise it is created as a file.
+A directory that has no children listed (an empty directory) is indistinguishable from a file in
+`tree` output — that is the only remaining ambiguous case.
+By default such entries become files; pass --assume-dir to make them directories.

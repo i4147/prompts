@@ -1,0 +1,2 @@
+Tests for json_prettifier.
+Run with: pytest test_json_prettifier.py -v

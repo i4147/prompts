@@ -1,0 +1,17 @@
+Regression tests for uncaught crashes on a single malformed line in the CoNLL
+and CMUdict corpus readers (CWE-20 / improper input validation).
+These readers split or index a corpus line without validating its shape,
+so one bad line raised an uncaught exception out of a standard public reader method
+and aborted iteration over the *whole* corpus:
+* ``conll.py`` ``chunked_words``/``chunked_sents``
+-- ``chunk_tag.split("-")`` unpacked into two names,
+crashing on a tag with no ``-`` (and on a chunk type that legitimately contains a ``-``). *
+``conll.py`` ``parsed_sents`` and ``srl_spans`` -- ``tag.split("*")`` unpacked into two names,
+crashing on a tag with no ``*``. * ``cmudict.py`` ``entries``/``dict``/``words``
+-- ``pieces[0]`` on a blank / whitespace-only line raised ``IndexError``.
+These back the registered ``conll2000``/``conll2002``/``cmudict`` corpora,
+so the standard read path is affected.
+The readers now fail with a clear,
+catchable ``ValueError`` on a genuinely malformed tag
+(matching the reader's existing "Inconsistent number of columns" error),
+tolerate chunk types that contain a hyphen, and skip blank CMUdict lines instead of crashing.

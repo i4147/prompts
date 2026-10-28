@@ -1,0 +1,22 @@
+Write a Python script that acts as a command-line tool for commenting out a
+specified range of lines in a source file.
+The tool should accept three arguments: the path to a file, a starting line
+number, and an ending line number.
+It must validate its inputs and exit with a clear error message when arguments
+are missing, when line numbers are not valid integers, when line numbers are out
+of order or less than 1, or when the file does not exist.
+Once the inputs are validated, the tool should determine the correct single-line
+comment syntax based on the file's extension, supporting common languages such
+as Python, shell scripts, YAML, Ruby, JavaScript, TypeScript, C, C++, Java, and
+Go, and falling back to a hash-style comment for unrecognized extensions.
+Each line within the requested inclusive range should be prefixed with the
+appropriate comment marker while preserving the original indentation and the
+rest of the line content.
+The modified content should be written back to the same file, and the tool
+should report a concise success message indicating how many lines were
+commented.
+For HTML and CSS files, the tool should handle their comment conventions
+appropriately so that the resulting file remains syntactically valid.
+The tool should be robust to files with varying encodings where reasonable,
+avoid altering lines outside the requested range, and keep the implementation
+clean, readable, and easy to run from a terminal. ---

@@ -1,0 +1,36 @@
+Write a Python command-line utility script with the following purpose and behavior:
+directory for all Python (`.py`) files
+and inject an `import <module_name>` statement (or a shebang plus default imports) into each file,
+modifying them in place. **Main inputs**: - A single command-line argument:
+the name of the module to import (e.g., `sys.argv[1]`),
+stored as `modname`. - The current working directory (`Path.cwd()`) serves as the root for
+recursively discovering `.py` files,
+using the `fastwalk` library's `walk_files` function to walk the directory tree. **Main outputs**:
+- No return value or printed report of results,
+but the script modifies matching `.py` files directly on disk (overwriting them with new content). -
+For each file processed,
+print a status message to stdout in the form `processing {filepath}`. **Notable behavior/logic**: 1.
+Define a module-level constant shebang line:
+`#!/data/data/com.termux/files/usr/bin/python\n` (a Termux-specific Python interpreter path).
+2. Implement a `process_file(fp, module_name)` function that:
+- Skips the file silently if it doesn't exist
+or is a symlink. - Reads all lines of the file using UTF-8 encoding. - If the first line of the file
+already starts with `#!` (i.e., has a shebang), preserve that shebang line,
+then insert a new line `import {module_name}` right after it,
+followed by the rest of the original file content. - Otherwise (no shebang present),
+prepend the Termux shebang line followed by a line containing `import regex as re\nimport os\n`,
+then append the entire original file content after that. - Write the resulting lines back to the
+same file path, overwriting it (UTF-8 encoding).
+3. Implement a `main()` function that:
+- Gets the current working directory. - Reads the module name from the first command-line argument.
+- Uses `walk_files` from the `fastwalk` package to traverse the current directory recursively,
+collecting all regular files (not symlinks/directories)
+whose suffix is `.py` into a list. - Calls `process_file` on each collected `.py` file,
+passing the module name.
+4. Use the standard `if __name__ == "__main__": raise SystemExit(main())` entry point pattern.
+5. Import `sys` and `pathlib.Path` at the top of the script,
+plus the external dependency `fastwalk` (specifically its `walk_files` function).
+The script is intended to be run from the command line like `script.py <module_name>`,
+and it has side effects of mutating every `.py` file found recursively under the current directory
+by adding an import statement
+(and possibly a Termux-specific shebang line with additional default imports) to each one.

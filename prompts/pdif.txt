@@ -1,0 +1,14 @@
+Write a Python script that compares two text files given as command-line
+arguments and reports how their contents differ at the line level.
+The script should read both files using UTF-8 encoding, treat each line as a
+unit with trailing newline characters ignored, and determine which lines in the
+first file do not appear anywhere in the second file and vice versa.
+It should report the total line count of each file, the number of lines the two
+files have in common, and the count of lines unique to each file, along with the
+specific line numbers (1-based) of those unique lines.
+The script should handle a missing file gracefully by printing a clear error
+message to the user instead of crashing, and it should validate that the correct
+number of arguments has been supplied, printing brief usage instructions
+otherwise.
+The output should be clear, human-readable, and organized so a user can quickly
+see what differs between the two files. ---

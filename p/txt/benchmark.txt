@@ -1,0 +1,1 @@
+Benchmark prime generation methods: iterative, recursive, trampolining, generator.

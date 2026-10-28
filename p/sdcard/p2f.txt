@@ -1,0 +1,61 @@
+Produce a Python module that implements a Persian-to-Finglish
+(Persian written using Latin/English letters) transliteration engine,
+intended to be part of a package (uses a relative import `.version` for `__version__`).
+Describe the following requirements for the generated script:
+**Purpose:** Convert Persian (Farsi) text into Finglish (Latin-alphabet phonetic transliteration),
+handling word segmentation, punctuation, numerals,
+and ambiguous pronunciations via word-frequency-based disambiguation. **Setup / resource loading:**
+- Define a regex `sep_regex` that matches common separator/punctuation characters
+(spaces, dashes, underscores,
+and other symbols like
+`!@#%$^&*()[]{}/:;"|,./?\``). - Define sets of Persian letters (`PERSIAN_LETTERS`)
+and Persian digit characters (`PERSIAN_DIGITS`). - Implement `get_portable_filename(filename)` that
+resolves a filename to an absolute path relative to the current module's directory
+(using `__file__`), so bundled resource files can be loaded regardless of the working directory. -
+Implement `load_conversion_file(filename)` that reads a resource file via `get_portable_filename`,
+skips blank lines and lines starting with `#`, splits each remaining line on whitespace,
+and returns a dictionary mapping the first token on each line to the list of remaining tokens
+(used for letter-to-Finglish conversion rules). - At import time,
+print progress messages
+("Loading converters...", "Loading persian word list...", "Loading dictionary...")
+and load three conversion rule files — `p2f-beginning.txt`, `p2f-middle.txt`,
+`p2f-ending.txt` — into dictionaries named `beginning`, `middle`, `ending`,
+representing how a Persian letter should be transliterated depending on whether it appears at the
+start, middle, or end of a word. - Load a Persian word-frequency file (`persian-word-freq.txt`) into
+a dictionary `word_freq` mapping each word to its integer frequency count,
+used later to pick the most likely/common transliteration
+when multiple candidates exist. - Load a direct Persian-to-Finglish dictionary file
+(`p2f-dict.txt`, space-separated key and rest-of-line value) into a dictionary `dictionary`,
+used as an override/lookup table for words with known,
+fixed or exceptional transliterations. **Core transliteration logic:** - Implement an internal
+per-word conversion function (e.g. `p2f_word_internal`) that takes the sequence of letters of a word
+and the original word string, and builds up possible Finglish transliteration(s) letter by letter:
+- For the first letter:
+choose rules from `beginning` if it's the only letter in the word,
+otherwise also use `beginning` rules
+but for a multi-letter start. - For subsequent interior letters,
+use `middle` rules. - For the final letter,
+use `ending` rules. - Since Persian letters can map to multiple possible Latin letter combinations
+(vowels are often ambiguous/omitted in Persian script),
+the function should generate multiple candidate Finglish strings
+(e.g. via `itertools.product` over the possible conversions per letter) rather than a single fixed
+output. **Expected overall behavior (to be completed consistently with the above setup) for the rest
+of the module:** - A higher-level per-word function should:
+check the direct `dictionary` first for an exact/known transliteration;
+if not found, generate the candidate Finglish variants using the internal letter-based function,
+then use `word_freq` to rank/select the most statistically common real Persian/Finglish pairing if
+ambiguity exists, falling back to a reasonable default if the word is unknown. - A full-text
+conversion function should split input text on `sep_regex`
+(preserving or reinserting the separators/punctuation in the output),
+detect and pass through non-Persian tokens (such as numbers, Persian digits, or already-Latin text)
+unchanged or appropriately converted,
+process each Persian word/token through the word-level transliteration logic,
+and reassemble the final Finglish string with original spacing/punctuation preserved. - The module
+should expose its functionality so it can be imported
+and used by other parts of the package (e.g., a `p2f(text)`-style public function),
+and should rely on the package's `__version__` from `.version`.
+Include appropriate docstrings/comments explaining the resource file formats
+(whitespace-separated letter-to-conversion mapping rules, space-separated word/frequency pairs,
+and space-separated word/transliteration dictionary entries),
+and ensure the code gracefully handles Persian text mixed with punctuation, whitespace,
+Latin characters, and digits. ---

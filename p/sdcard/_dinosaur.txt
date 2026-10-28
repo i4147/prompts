@@ -1,0 +1,1 @@
+Minimal Chrome-style dinosaur game dialog.

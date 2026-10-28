@@ -1,0 +1,28 @@
+Write a Python module that provides gitignore-style file-exclusion functionality for a
+file-processing tool (e.g., a code formatter or file-walker), using the `pathspec` library.
+Requirements: 1.
+Create a class `IgnoreManager`:
+- Constructor `__init__(self, base: Path, patterns: list[str])` that:
+- Resolves and stores `base` as an absolute path. - Builds a `pathspec.PathSpec` object from the
+given list of glob patterns using the `"gitwildmatch"` syntax (git-style ignore patterns). - Method
+`is_ignored(self, p: Path) -> bool` that:
+- Attempts to resolve `p`
+and compute its path relative to `base`. - If `p` is not inside `base` (raises `ValueError`),
+falls back to using `p` as-is. - Returns `True`/`False` based on whether the relative path matches
+any pattern in the spec, using `match_file`.
+2. Create a factory function
+`load_ignore(base: Path, ignore_path: Path | None = None) -> IgnoreManager`:
+- Builds a list of ignore patterns by reading from one or more candidate files:
+- If `ignore_path` is explicitly provided, use only that file as the candidate. - Otherwise,
+use two default candidates in order:
+`base / ".pyprettierignore"` and `base / ".gitignore"`. - For each candidate file that exists,
+read its lines, strip whitespace,
+and include only non-empty lines that don't start with `#` (comment lines),
+appending them to the patterns list. - Always append a fixed set of default ignore patterns to the
+list: `.git`, `node_modules`, `__pycache__`, `dist`,
+`build`. - Construct and return an `IgnoreManager` instance initialized with `base`
+and the combined patterns list.
+Use `pathlib.Path` for all path handling
+and the `pathspec` third-party library for gitignore-pattern matching.
+The code should be concise, with type hints on all function/method signatures.
+---

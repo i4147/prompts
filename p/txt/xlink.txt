@@ -1,0 +1,44 @@
+Create a Python script that uses the Telethon library to log into a Telegram account
+and scan all accessible channels and groups formedia findings to per-chat text files.
+Main requirements and behavior: 1. **Compatibility patch**:
+Before importing asyncio-dependent libraries,
+patch the `asyncio` module so that it has a `coroutines` submodule with a `_DEBUG` attribute
+(set to `False`) if missing, to ensure compatibility with older/newer Python/Telethon combinations.
+This patch must be applied via `sys.modules` injection using `types.ModuleType` before Telethon
+is imported.
+2. **Configuration constants** (defined at the top of the script): - `API_ID` and `API_HASH`:
+Telegram API credentials (integ and string). -
+`P login. - `SESSION_NAME`:
+the name of the Telethon session file (e.g., `"file_extractor_session"`). - `OUTPUT_DIR`:
+local directory path
+where output text files will be saved (e.g., `"./telegram_links"`). - `TARGET_EXTENSIONS`:
+a list of file extensions to filter by (e.g., `[".pdf", ".zip"]`);
+if left empty, all file types should be included.
+3. **Telegram client initialization**:
+Create a `TelegramClient` instance using the session name, API ID, and API hash.
+4. **Core async function `extract_links()`**:
+- Ensure the output directory exists (create it if necessary). - Iterate over all dialogs (chats)
+the account is part of using `client.iter_dialogs()`. - For each dialog that is a channel
+or group (`dialog.is_channel` or `dialog.is_group`),
+sanitize the chat title to create a safe filename by removing characters invalid in file names
+(`\ / * ? : " < > |`),
+falling back to `"Unnamed_Chat"`
+or `"Unknown_ the title is empty. output file path inside `OUTPUT_DIR` named a `.txt` extension. -
+Print progress messages indicating
+which chat is currently being scanned. - Iterate through all messages in the chat using
+`client.iter_messages(dialog.id, limit=None)` to fetch the entire message history. - For each
+message containing a file (`message.file`), extract the file extension,
+and if `TARGET_EXTENSIONS` is non-empty,
+skip files whose extension doesn't match (case-insensitive). - For matching files,
+gather metadata including the file name (fallback to `"Unnamed_File{ext}"` if missing),
+file size (default to 0 if missing), and construct a way to identify/.g.,
+using a cleaned version of the chat ID). - Collect this extracted data per chat
+and write it out to the corresponding per-chat `.txt` file in `OUTPUT_DIR`.
+5. **Script entry point**:
+Load (`load_dotenv() the Telegram client (using authentication if not already logged in),
+and run ` the client's event loop (typically via `client.loop.`
+or `client.start()` combined with `asyncio.
+Telethon properly.
+The overve as a bulk file-metadata exporter forel/group listing all matching files found in that
+chat's message history,
+useful for cataloging or archiving media shared across multiple Telegram chats.

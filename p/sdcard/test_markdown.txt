@@ -1,0 +1,11 @@
+Regression tests for the quadratic-time DoS in NLTK's Markdown corpus reader
+(``nltk.corpus.reader.markdown.CategorizedMarkdownCorpusReader.blockquote_reader``
+and the identical ``list_reader``) -- CWE-407.
+Both readers located each top-level block by calling ``tokens.index(...)`` twice per block over the
+full flat token list produced for the whole document -- an O(n) scan per block,
+i.e. O(n^2) when the document is made of many top-level blockquotes/lists.
+The public ``blockquotes()``/``lists()`` entry points reach these readers,
+so extracting blockquotes/lists from untrusted Markdown could be driven into seconds-to-minutes of
+CPU with a small crafted document.
+Each block's open/close index is now found with linear scans of the token list;
+ordinary corpora read identically.

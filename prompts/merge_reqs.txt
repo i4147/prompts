@@ -1,0 +1,31 @@
+Write a Python script that scans a project directory (or a set of given Python
+source files and archives) to determine which third-party packages the code
+depends on, and produces a pip requirements list for them.
+The tool should be a command-line utility that accepts a target path, optional
+flags to control behavior, and writes its results to a requirements file,
+defaulting to a predefined location if no output path is given.
+Key behaviors to implement: - Discover Python source files recursively under the
+target path, skipping common version control, virtual environment, cache, build,
+and dependency directories by default, with the ability to add or override
+ignored names via command-line options. - Also inspect the contents of common
+Python archive formats (zip, wheel, tar variants) without fully extracting them
+to disk, reading only the Python source they contain. - Parse each Python file
+safely (without executing it) to collect all imported module names, handling
+both plain and from-style imports, and ignore relative imports and the standard
+library modules. - Map imported module names to their likely pip distribution
+names where they differ, and let the user supply additional mappings or
+exclusions through options or a configuration file. - Use a cache file keyed by
+file content hashes so that unchanged files are not re-parsed on subsequent
+runs; provide an option to bypass or clear the cache. - Process files in
+parallel where it is beneficial, with a sensible default worker count that the
+user can override, and show a progress indicator when available, falling back
+gracefully if optional libraries are missing. - Optionally verify which
+candidate packages are actually installed or resolvable in the current
+environment, and optionally pin installed versions in the output. - Produce a
+deduplicated, sorted list of requirements, with an optional dry-run mode that
+prints results to the console instead of writing a file, and an optional verbose
+mode that reports per-file findings and skipped items. - Handle unreadable
+files, syntax errors, and corrupt archives gracefully by logging a warning and
+continuing rather than aborting. - Print a concise summary at the end (number of
+files scanned, packages found, output location), and return a meaningful exit
+status for success and failure cases. ---

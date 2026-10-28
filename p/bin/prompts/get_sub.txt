@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line tool for automatically finding
+and downloading subtitle files for local video files.
+The tool should accept one or more video file paths or a directory to scan,
+and for each video it should infer the title, season, episode,
+and related metadata from the filename,
+then query online subtitle sources to locate matching subtitles in the requested language(s).
+It should support selecting the desired language(s) via command-line options,
+choose the best-matching subtitle
+when several candidates exist
+(preferring releases that match the video's release group, resolution, or source where possible),
+and save the downloaded subtitle next to the video file using a sensible naming convention that
+matches the video's base name.
+The tool should handle subtitles delivered inside compressed archives (zip, rar, 7z),
+extracting the subtitle file and discarding the archive,
+and it should recognize and skip videos that already have subtitles in the target language
+unless the user forces an overwrite.
+It should support a dry-run
+or preview mode that reports what would be downloaded without writing files,
+a quiet/verbose logging option, and graceful handling of network errors, rate limiting,
+and missing results, with retries and clear per-file status summaries at the end.
+It should also be able to recurse into subdirectories, filter out non-video files and sample clips,
+and optionally convert or normalize subtitle encodings to UTF-8.
+The tool should exit with a meaningful status code reflecting overall success, partial failure,
+or total failure, and print a readable summary table of results to the terminal sized to the current
+console width. ---

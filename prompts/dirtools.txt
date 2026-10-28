@@ -1,0 +1,27 @@
+Write a Python script that analyzes a directory tree and reports disk usage
+statistics in a human-readable form.
+The tool should accept a target directory path (defaulting to the current
+working directory) along with command-line options that control how the analysis
+is performed, such as whether to descend into subdirectories, whether to include
+hidden files and folders, and which file or folder names to exclude from
+consideration.
+The script should walk the specified directory and gather information about
+every regular file it finds, skipping symbolic links and any entries that cannot
+be accessed without error.
+It should compute the total size of each directory, aggregate file sizes by file
+extension or type, and identify the largest files and folders.
+Sizes must be presented in a compact, human-friendly format using decimal units
+(bytes, kilobytes, megabytes, gigabytes, terabytes) with negative values handled
+gracefully.
+The output should be a readable text report printed to standard output that
+includes a summary of total files and total size, a ranked list of the largest
+directories, a breakdown of usage by file type, and a list of the top N largest
+individual files, where N is configurable from the command line.
+The report should be well aligned and easy to scan, and the script should also
+support an option to limit how many levels deep directory totals are displayed.
+Error handling should be robust: missing paths, permission problems, and invalid
+arguments should produce clear, concise messages on standard error and a
+non-zero exit status rather than a traceback.
+The script should be runnable directly from the command line, include a help
+message describing all options, and be organized so that the core analysis logic
+can be reused independently of the command-line interface. ---

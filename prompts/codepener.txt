@@ -1,0 +1,20 @@
+Write a Python script that takes a raw HTML body fragment saved in a file and
+wraps it into a complete, standalone HTML5 document ready for use as a
+CodePen-style project.
+The script should read the input file (UTF-8), handling missing-file and read
+errors gracefully with clear console messages and a failure indication.
+It should derive a readable page title from the input file's name by default
+(replacing hyphens with spaces and capitalizing words), while allowing the user
+to supply a custom title.
+The generated document must include the proper document declaration, language
+and character encoding metadata, a responsive viewport setting, and links to
+external stylesheet and script files named style.css and script.js, with the
+original fragment placed inside the body.
+The script should accept the input path, an optional output path, and an
+optional title from the command line, and by default write the result to a new
+file alongside the input (or to the specified output path).
+On success it should report where the output was saved; on failure it should
+exit with a non-zero status.
+Keep the tool dependency-free, well-structured, and usable both as a
+command-line utility and as an importable module with a reusable conversion
+function. ---

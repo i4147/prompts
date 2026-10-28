@@ -1,0 +1,34 @@
+Write a Python script that acts as a universal data-conversion utility: it takes
+a single input data file in one of several common formats and converts it into a
+target format chosen by the user, with the output written to a file path the
+user specifies.
+Requirements: - Accept the input file path and the desired output format (or
+output file path, from which the target format is inferred) from the command
+line, with clear help text and sensible error messages for missing or invalid
+arguments. - Automatically recognize the input format from the file extension,
+and also detect SQLite databases by inspecting the file's header bytes rather
+than relying solely on the extension. - Support reading these input formats:
+SQLite databases (where a specific table can be selected, and the first or only
+table is used by default), JSON Lines / NDJSON, standard JSON, CSV, TSV, Python
+pickle files containing tabular data, Parquet, and Excel workbooks (.xlsx and
+.xls). - Support writing to these target formats: SQLite database (with a chosen
+table name), JSON Lines, JSON, CSV, TSV, pickle, Parquet, and Excel.
+Target format names should be accepted with or without a leading dot and in any
+letter case, and common aliases (such as "sqlite3", "pq", "pkl", "xls") should
+be recognized. - Treat the data as a tabular structure (rows and columns)
+internally, so that any supported input can be converted to any supported
+output.
+Preserve column names and the row order, and handle missing values gracefully
+when writing formats that represent nulls differently. - For JSON input, handle
+both an array of objects and nested structures sensibly, flattening where needed
+to produce a table. - Allow an optional table name for SQLite input or output,
+and default to a reasonable table name when none is given. - Provide an option
+to overwrite an existing output file; otherwise, refuse to clobber existing
+files and report a clear error. - Report progress and a concise success summary
+to the user, including the number of rows and columns converted and the output
+location, and exit with a nonzero status code on any failure. - Reject
+unsupported extensions and unsupported target formats with a descriptive error
+that lists the supported options. - Keep the script self-contained, runnable as
+a command-line tool, and robust against unreadable or corrupted input files,
+returning helpful diagnostics rather than raw tracebacks for expected error
+conditions. ---

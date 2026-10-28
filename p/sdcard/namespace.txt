@@ -1,0 +1,53 @@
+Write a prompt that would instruct an AI coding agent to generate this Python module.
+Output only the prompt text. --- Create a Python module that implements a "Namespace" extension for
+a project scaffolding tool (such as PyScaffold),
+designed to support placing a generated Python package inside a namespace package
+(e.g., `com.company` style namespaces).
+The module should include: 1. **Imports**:
+Standard library imports (`os`, `pathlib.Path`, `typing.List`/`cast`),
+plus relative imports from the parent package for `Action`, `ActionParams`, `ScaffoldOpts`,
+`Structure` (from an `actions` module), `InvalidIdentifier` (from an `exceptions` module),
+`chdir` and `move` (from a `file_system` module),
+`is_valid_identifier` (from an `identification` module), `logger` (from a `log` module),
+`remove` (from an `operations` module),
+and `Extension`/`store_with` from the current extensions package.
+2. **A `Namespace` class** extending `Extension` with:
+- An `augment_cli(self, parser)` method that adds a CLI flag (using `self.flag` and `self.name`) to
+argparse, defaulting to `None`, using a custom `store_with(self)` action,
+with metavar `"NS1[.NS2]"`,
+and help text explaining it puts the project inside a namespace package (default: no namespace).
+It should return `self` for chaining. - An `activate(self, actions: List[Action]) -> List[Action]`
+method that registers three actions into the pipeline:
+- `enforce_namespace_options`,
+registered to run after the action named `"get_default_options"`. - `add_namespace`,
+registered to run before the action named `"version_migration"`. - `move_old_package`,
+registered to run after the action named `"create_structure"`, and returned as the final result.
+3. **A helper function `prepare_namespace(namespace_str: str) -> List[str]`** that:
+   - Splits a dot-separated namespace string (e.g., `"com.company"`) into individual namespace
+   parts, or returns an empty list if the input is empty/falsy. - Validates each part using
+   `is_valid_identifier`,
+   raising `InvalidIdentifier` with a descriptive message
+   (`"{namespace} is not a valid namespace package."`) if invalid. - Returns a cumulative list of
+   dotted namespace prefixes, e.g., for `"com.company"` it should return `["com", "com.company"]`.
+   4. **An action function `enforce_namespace_options(struct:
+Structure, opts: ScaffoldOpts) ->
+ActionParams`** that:
+- Ensures `opts["namespace"]` defaults to an empty string if not already set. - If
+`opts["namespace"]` is truthy,
+computes `opts["ns_list"]` using `prepare_namespace` on `opts["namespace"]`. - Returns the
+(possibly modified) `struct` and `opts` as an `ActionParams` tuple.
+Note: the code shown is incomplete/truncated at the end of `enforce_namespace_options`;
+the agent should complete this function sensibly
+and also implement the remaining referenced functions (`add_namespace` and `move_old_package`)
+consistent with their usage in `activate`:
+- `add_namespace(struct, opts)` should restructure the generated project `Structure` so that the
+package is nested inside the namespace directories derived from `opts["ns_list"]`
+(creating `__init__.py` files for each namespace level as needed),
+updating `opts` (e.g., a qualified package name reflecting the namespace) as appropriate. -
+`move_old_package(struct, opts)` should, after the structure is physically created on disk,
+use `chdir`, `move`,
+and `remove` (and `os`/`Path` as needed) to relocate/clean up any old package directory on the
+filesystem so it matches the new namespace layout, logging relevant actions via `logger`.
+Ensure the code follows the same style, type hints,
+and docstring/comment conventions typical of PyScaffold's extension modules,
+and that all imports listed above are used appropriately. ---

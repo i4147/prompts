@@ -1,0 +1,23 @@
+Write a Python script that compiles Python source files into bytecode, accepting
+one or more file or directory paths from the command line and processing every
+Python file found within them.
+The tool should skip symbolic links, nonexistent paths, and anything inside
+version-control metadata folders, and it should recurse into directories to find
+all Python source files.
+For each source file, the script should generate compiled bytecode output, with
+configurable options to control optimization level, whether to produce
+legacy-style compiled files placed alongside the sources, and whether to delete
+the original source file after compilation.
+When legacy-style output is enabled, any previously existing compiled file for
+the same source should be removed before recompiling.
+The script should also set a cache location environment variable so that
+bytecode caches are stored in a dedicated directory.
+Command-line flags should allow the user to toggle these options (for example,
+enabling legacy output, removing originals, and setting the optimization level)
+and should be parsed before the paths are processed.
+Provide clear usage help when arguments are missing or invalid, and report which
+files were processed or skipped along with any errors encountered, without
+stopping the entire run when a single file fails.
+The script should be self-contained as a command-line utility, use sensible
+defaults (no source removal, standard non-legacy output, optimization level
+zero), and exit with a nonzero status code if any fatal error occurs. ---

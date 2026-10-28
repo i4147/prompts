@@ -1,0 +1,26 @@
+Write a Python script that cleans up raw terminal or text output captured from a
+command-line session, removing terminal control noise so the result is readable
+plain text.
+The script should accept a text input (from a file path or standard input) and
+write theard output or to an output file.
+Key behaviors to include: - Strip terminal escape sequences, such as ANSI color
+codes and cursor-movement commands, from the input. - Normalize line endings so
+that Windows-style and old Mac-style line breaks become consistent newlines. -
+Process backspace characters so that each one erases the character before it, as
+a terminal would display it. - Remove null bytes and other non-printable control
+characters, while preserving ordinary tabs and newlines. - Collapse runs of
+excessive blank lines into a single blank line, trim trailing whitespace from
+every line, and ensure the output ends with exactly one trailing newline. -
+Provide a second, more specialized cleaning mode that handles email-style or
+log-style content: it should locate a header line beginning with "Received:"
+(case-insensitive, allowing leading whitespace), discard that header line and
+any blank lines immediately following it, and otherwise apply the same
+terminal-noise cleanup. - Allow the user to choose which cleaning mode to apply
+via a command-line option, with the general mode as the default. - Handle
+missing input files, unreadable content, and encoding problems gracefully with
+clear error messages and a non-zero exit status. - Be robust to very large
+inputs and to input that contains no matching patterns, returning the text
+unchanged where no cleaning applies.
+Keep the script self-contained, well-structured, and documented with a brief
+usage description that explains the available options and examples of typical
+invocation. ---

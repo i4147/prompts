@@ -1,0 +1,46 @@
+Create a Python script that implements a Korean word-spacing correction module based on CRFsuite
+(Conditional Random Fields), designed as part of a larger NLP toolkit (e.g., "SmiToText").
+The script should define a class `koPyCrfsuitSpacing` that wraps a CRF-based model for detecting
+and correcting spacing errors in Korean text.
+It should rely on external helper classes/utilities imported from a spacing utility module,
+specifically: - `CharacterFeatureTransformer`
+– converts characters into CRF-compatible feature representations. - `Sentence`
+– represents and manages sentence-level data for spacing correction. - `TemplateGenerator`
+– generates feature templates used during CRF training. - `Util`
+– a general utility helper class from the toolkit.
+It should also use the `pycrfsuite` library for training and tagging,
+and `pprint` and `os` for debugging/file handling.
+Key requirements for the `koPyCrfsuitSpacing` class: 1. **Constructor (`__init__`)**:
+- Accepts parameters:
+`to_feature` (a feature extraction function/object),
+`tagger` (an optional pre-loaded or path-based CRF tagger), `verbose` (boolean flag for logging),
+`feature_vocabulary` (optional vocabulary constraint for features),
+`feature_minfreq` (minimum feature frequency threshold, default 0),
+`max_iterations` (training iteration cap, default 100),
+`l1_cost` (L1 regularization coefficient, default 0),
+and `l2_cost` (L2 regularization coefficient, default 1.0). - Initializes an internal `Sentence`
+instance. - Builds a `params` dictionary for CRFsuite training containing `feature.minfreq`,
+`max_iterations`, `c1`, and `c2`,
+ensuring each value is clamped to a sane minimum (non-negative, and at least 1 for iterations). - If
+`tagger` is provided as a string (intended to be a file path),
+attempt to load the tagger via a `load_tagger` method;
+catch and print any exception, resetting `tagger` to `None` on failure.
+2. **Callable behavior (`__call__`)**:
+- Allows an instance of the class to be called directly on a sentence,
+delegating to a `correct` method that performs spacing correction on the input text.
+3. **Training data loader (`train_file_load`)**:
+- Accepts a file path/name as input. - Reads the file line by line using UTF-8 encoding. - For each
+line: strips newline characters
+and collapses any double spaces into single spaces. - Appends each cleaned line to a `train_dataset`
+list. - Every 10th line (when the zero-based line index modulo 100 equals 9),
+prints a progress message indicating how many lines have been read so far. - Returns
+or builds the `train_dataset` list as the loaded training corpus.
+Note that `load_tagger` and `correct` methods are referenced
+but not fully implemented in this excerpt
+— assume they will load a `pycrfsuite.Tagger` from a model file
+and apply CRF tagging plus post-processing logic to reconstruct correctly spaced Korean sentences
+from predicted labels, respectively.
+The code should be structured for integration with other spacing-related utilities
+(feature templates, character-level feature extraction) in the same package,
+following clean object-oriented design suitable for extension
+(e.g., adding `train`, `save`, and `evaluate` methods later). ---

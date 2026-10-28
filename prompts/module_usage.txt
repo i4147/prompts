@@ -1,0 +1,29 @@
+Write a Python script that analyzes a directory of Python command-line tools and
+produces a usage report showing which third-party packages and modules are
+imported most often across those scripts.
+The tool should accept a target package name (defaulting to a common short name
+such as "dh"), a directory to scan (defaulting to a standard user bin folder),
+and an output file path for a plain-text report (defaulting to a file in the
+user's home directory).
+It should recursively or non-recursively discover Python scripts, safely parse
+each one without executing it, and identify every usage of the target package,
+including module imports, attribute accesses, and function calls, while
+tolerating files that cannot be parsed.
+The report should summarize total scripts scanned, how many use the target
+package, and frequency counts for each function, submodule, or attribute used
+from that package, sorted by popularity and limited to a configurable top-N
+number of entries.
+Distinguish between standard library modules and third-party modules when
+describing other imports, using a built-in list of common standard library names
+as a fallback when the runtime environment cannot supply that information.
+Optionally, the tool should generate a bar chart image of the most-used items,
+saved to a configurable directory with a timestamped filename, and apply a named
+plotting style if available, falling back gracefully when the plotting library
+or style is unavailable.
+Provide a command-line interface with clearly documented options for every
+setting, sensible defaults, helpful error messages for missing directories or
+invalid arguments, and a concise console summary upon completion that points to
+the generated report and chart paths.
+The script should be a single self-contained file, use only the standard library
+plus optional charting support, and handle all file-system and parsing errors
+gracefully without crashing. ---

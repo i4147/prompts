@@ -1,0 +1,10 @@
+Write a Python script that converts a WAV audio file into an MP3 audio file using the
+`pymp3` library.
+Requirements: - Import the `pymp3` module. - Use the `encode_mp3` function provided by `pymp3` to
+perform the conversion. - The input should be a WAV file named "input.wav" located in the working
+directory. - The output should be an MP3 file named "output.mp3" written to the working directory. -
+The script should be minimal,
+calling the encoding function with the input file path as the first argument
+and the output file path as the second argument, with no additional logic, error handling,
+or command-line argument parsing. - Do not print any messages or return any values;
+the script's only effect should be creating the "output.mp3" file from "input.wav". ---

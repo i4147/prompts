@@ -1,0 +1,31 @@
+Build a Python automation script that connects to Telegram
+(using Telethon and credentials loaded from a local .env file via python-dotenv,
+specifically TELEGRAM_API_ID and TELEGRAM_API_HASH)
+and scrapes a specific public channel
+(default targetClashTVMap, a Clash of Clans base-sharing channel) for base-layout links in the
+format "https://link.clashofclans.com/...".
+The script should: 1.
+Load environment variables from a ".env" file located in the same directory as the script,
+and raise a clear ValueError if TELEGRAM_API_ID or TELEGRAM_API_HASH are missing or invalid.
+2. Define a regex pattern to detect Clash of Clans base links
+(both plain text URLs and URLs hidden inside Telegram message text-entities, i.e.,
+MessageEntityextU message.
+3. Maintain-known/ous Clash of Clans 20 channel usernames) that can reference/raping
+oric.level(url: str) ->
+str` that parses a base link to extract the Town Hall level from a query parameter pattern like
+"id=TH<number>:", returning a string like "TH13", or "Unknown" if no match is found.
+5. Implement a function `generate_html(links: list, source_channel: str) -> str` that:
+- Groups the collected links by their extracted Town Hall level.
+Town Hall groups ing., numerically descending orascending,
+with "Unknces a complled stand source channel name generation timestamp,
+and links organized into sections per Town Hall level, with clickable links for each base.
+6. Use `asyncio` and Telethon's `TelegramClient` to asynchronously connect to Telegram,
+iterate through recent messages in the target channel,
+extract matching links from both plain message text and text-url entities, deduplicate them,
+and pass the resulting list to `generate_html`.
+7. Write the generated HTML output to a file (e.g., with a timestamped or fixed filename) so it can
+be opened in a browser as a simple report/dashboard of categorized base links.
+Notable behavior to preserve:
+graceful handling of missing credentials, deduplication of links,
+grouping/sorting logic by Town Hall level,
+and generation of a self-contained HTML report string rather than just printing raw links.

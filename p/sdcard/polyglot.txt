@@ -1,0 +1,58 @@
+Write a prompt for an AI coding agent to generate a Python 3 command-line toolkit for
+"polyglot"-style NLP resource management and text embedding/analysis,
+implemented as a single module.
+The script should: Purpose:
+- Act as a comprehensive CLI utility to download, manage,
+and use language resources
+(embeddings, morphology, named entity recognition, sentiment lexicons, part-of-speech data,
+transliteration, tokenization, etc.) for multiple languages,
+built on top of libraries such as `morfessor`, `pycld2` (language detection),
+`icu` (Unicode text boundary breaking), `numpy`, and `loguru` for logging.
+Main inputs/outputs: - Input:
+command-line arguments specifying operations
+(e.g., download resources, list available languages/tasks, detect language of a text, tokenize,
+show embeddings, train/apply morphological analyzer, lookup sentiment/polarity,
+perform transliteration, named entity extraction) plus language codes, file paths,
+and task names. - Input:
+local or remote resource archives (tar.bz2/gz, zip) containing pretrained models/data organized by
+language code and task,
+with a local resource cache directory (default under the user's home directory)
+and a manifest/index describing available downloads per language/task,
+fetched over HTTPS when not cached locally. - Output:
+depending on the invoked subcommand — printed tables/lists of supported languages and tasks,
+downloaded and extracted resource files placed into the local cache, tokenized text,
+detected language codes with confidence, nearest-neighbor words or embedding vectors,
+sentiment scores/polarity labels, transliterated text,
+or extracted named entities — printed to stdout or saved to files.
+Notable behavior and implementation details to include:
+- Version/author/email module metadata constants,
+a `WORKERS` constant controlling multiprocessing parallelism (using `multiprocessing`),
+and a configurable `data_path` list (defaulting to the user's home directory) used to locate/cache
+downloaded resources. - A `LOGFORMAT` string configured for `loguru` logging with timestamp, level,
+filename, line number, and message,
+and overall use of `loguru.logger` for status/progress/error messages throughout. - A helper
+`_open(file_, mode="r")` function that transparently opens plain files
+or transparently extracts/opens the first member of `.bz2`/`.gz` tar archives,
+accepting either a path (`str`/`Path`)
+or an already-open file-like object (pass-through). - A `_print(text)` thin wrapper around `print`
+used for output (to ease testing/mocking). - A `pretty_list(items, cols=3)` helper that formats an
+iterable of items into a nicely aligned multi-column text table (fixed column width ~24 chars) for
+console display, useful for listing languages/tasks/resources. - Use of `argparse.ArgumentParser` to
+build a CLI with subcommands/options for the various operations described above. - Downloading via
+`urllib.request.urlopen`/`http.client.HTTPSConnection`, handling `URLError`/`HTTPError`,
+and extracting downloaded archives via `tarfile`/`zipfile`,
+writing to temporary files via `NamedTemporaryFile` before moving into place,
+and setting appropriate file permissions via `stat`/`os`. - Use of `pycld2` for language detection,
+`icu.BreakIterator`/`icu.Locale` for locale-aware word/sentence tokenization,
+`morfessor` for unsupervised morphological segmentation (training/loading models),
+and `numpy`/`pickle`/`json` for loading and querying word embedding vectors
+and associated vocabularies/counters (`collections.Counter`, `collections.defaultdict`). - Caching
+of parsed/loaded resources via `functools.lru_cache`
+or similar memoization so repeated lookups (e.g., embeddings, morphology models) within a session
+are fast. - Graceful handling of broken pipes (`signal(SIGPIPE, SIG_DFL)`) so piping output to tools
+like `head`/`grep` doesn't raise errors. - Designed to be imported as a library
+(exposing functions/classes for language detection, tokenization, embeddings lookup,
+sentiment lookup, transliteration,
+NER) as well as run as a standalone CLI script
+(`if __name__ == "__main__":` entry point invoking the argument parser
+and dispatching to the selected subcommand/function). ---

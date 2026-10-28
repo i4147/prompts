@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line tool for downloading Python
+packages and their dependencies for offline or cross-platform use.
+The tool should accept one or more package requirements (including version
+specifiers and extras) as input, along with options that let the user choose a
+target platform, Python version, interpreter implementation, and a package index
+source (such as the official PyPI mirror or a regional mirror, with the option
+to supply a custom index URL).
+It should resolve the requested packages and their transitive dependencies,
+respecting the environment markers and version constraints declared by each
+package, and select the most suitable distribution files (wheels preferred,
+source archives as a fallback) that are compatible with the specified target
+environment.
+The script should discover available distribution files by reading the package
+index, parse filenames and metadata to determine compatibility tags and
+versions, and handle both wheel and source archive formats (including zip and
+tar-based archives).
+It should download the chosen files into a designated output directory, skipping
+files that already exist and are verified intact, and verify downloaded
+artifacts against any published hashes when available.
+Where a source distribution must be used, the script should be able to extract
+it, read its declared dependencies, and build or inspect it as needed to
+continue resolution.
+Provide clear error messages for invalid requirements, unreachable indexes,
+unsupported platforms, and missing distributions, and allow the user to control
+verbosity.
+The tool should be usable both as an importable module exposing its core classes
+and a download function, and as a standalone command-line program with a main
+entry point.
+Prioritize robustness, deterministic output for identical inputs, and a clean
+separation between index discovery, compatibility selection, downloading, and
+dependency resolution. ---

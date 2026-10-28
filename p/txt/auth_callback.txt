@@ -1,0 +1,7 @@
+Example of using callback-based authentication with dulwich HTTP client.
+This example demonstrates how to use the new callback-based authentication feature to handle HTTP
+and proxy authentication dynamically.
+Note: Dulwich currently supports 'basic'
+and 'anyauth' proxy authentication methods via the http.proxyAuthMethod git config option
+or the GIT_HTTP_PROXY_AUTHMETHOD environment variable.
+Other methods like 'digest', 'negotiate', and 'ntlm' will raise NotImplementedError.

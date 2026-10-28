@@ -1,0 +1,6 @@
+Simple example demonstrating merge driver usage in dulwich.
+This example: 1.
+Creates a test repository with .gitattributes 2.
+Implements a JSON merge driver 3.
+Creates two branches with conflicting JSON changes 4.
+Merges one commit into another using the custom driver

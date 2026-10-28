@@ -1,0 +1,3 @@
+Scan recursively supplied files
+and directories for non-English text using a selectable language-detection backend,
+print matches immediately, and optionally save matching relative paths to noneng.txt.

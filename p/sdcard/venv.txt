@@ -1,0 +1,73 @@
+[Tool: generate_document] Title:
+AI Agent Prompt - Venv Extension Script Write a prompt for an AI coding agent to generate a Python
+module that implements a `Venv` extension class for an extensible project-scaffolding framework
+(in the style of PyScaffold), located inside a package's `extensions` subpackage.
+The prompt should instruct the agent to produce code with the following purpose, inputs/outputs,
+and behavior: **Purpose**:
+Implement an extension that, when enabled via a CLI flag,
+automatically creates a Python virtual environment (default directory name `.venv`) as part of the
+project scaffolding process,
+and optionally installs specified packages into that virtual environment,
+then prints/logs follow-up instructions for the user. **Class requirements**:
+- A class `Venv` subclassing `Extension` (imported from the local `extensions` package `__init__`).
+- Class attribute `persist = False`. - Method `augment_cli(self, parser: argparse.ArgumentParser)`:
+- Registers the extension's own flag (`self.flag`) on the parser using `action=store_with(self)`,
+`nargs="?"`, `const=DEFAULT`, `default=argparse.SUPPRESS`, `type=Path`,
+and `help=self.help_text.format(DEFAULT=DEFAULT)`
+‚Äî so the flag can be used alone (defaulting to `.venv`)
+or with an explicit path. - Registers a second argument `--venv-install` with
+`action=store_with(self)`, `nargs="+"`, `default=argparse.SUPPRESS`, `metavar="PACKAGE"`,
+and help text explaining that one
+or more packages can be listed
+(with optional dependency version ranges like in a `requirements.txt` file) to be installed into the
+created venv, noting that users should quote entries to avoid shell interference. - Returns `self`
+to allow method chaining. - Method `activate(self, actions: List[Action]) -> List[Action]`:
+- Registers a `run` action to be inserted after the `"init_git"` action. - Registers an
+`install_packages` action to be inserted after the `run` action
+(using `get_id(run)` to reference it). - Registers a third "instruct" action
+(that reports/logs next-step guidance to the user) to be inserted after the `install_packages`
+action (using `get_id(install_packages)`). - Returns the updated actions list. **Module-level
+constant**: - `DEFAULT: PathLike = ".venv"` with a docstring describing it as the default directory
+name for the collocated virtual environment to be created. **Module-level action functions**
+(each following the `Action` signature ‚Äî accepting `(struct: Structure, opts:
+ScaffoldOpts)` and returning a tuple `(Structure, ScaffoldOpts)`): 1. `run(struct, opts)`:
+Checks whether the venv option was provided in `opts`;
+if so, uses a `chdir` context manager to operate in the target project directory,
+resolves the appropriate venv-creation executable/command via `get_executable`/`get_command`
+helpers, invokes it to create the virtual environment at the configured path,
+logs the action via the shared `logger`,
+and wraps the risky call in `contextlib.suppress` to gracefully ignore expected failures if the venv
+tool is unavailable.
+Returns the (possibly unmodified) `struct, opts`.
+2. `install_packages(struct, opts)`:
+If `--venv-install` packages were specified and a venv was successfully created,
+resolves the venv's pip (or equivalent) executable and invokes it to install the given packages,
+logging the installation step.
+Returns `struct, opts` unchanged otherwise.
+3. An "instruct" action function that logs/prints user-facing guidance
+(e.g., how to activate the newly created venv and suggested next steps) without modifying
+`struct` or `opts`.
+Returns `struct, opts`. **Imports to use**
+(relative imports consistent with the larger package structure):
+- `.. import dependencies as deps` -
+`from ..actions import Action, ActionParams, ScaffoldOpts, Structure` -
+`from ..file_system import PathLike, chdir` - `from ..identification import get_id` -
+`from ..log import logger` - `from ..shell import get_command, get_executable` -
+`from . import Extension, store_with` (sibling imports from the local extensions package) - Standard
+library: `argparse`, `contextlib.suppress`, `pathlib.Path`, `typing.List`,
+`typing.Optional` **Notable behavioral/design details to preserve**:
+- Use `argparse.SUPPRESS` as the default for both custom arguments so they only appear in the parsed
+options namespace if the user explicitly supplies them. - Actions are chained into an ordered
+pipeline using string identifiers obtained via `get_id()`,
+and inserted relative to other named/registered actions using the `register` method inherited from
+the `Extension` base class (with `after=...` ordering). - Favor non-fatal error handling:
+wrap potentially failing external command invocations in `contextlib.suppress` for expected
+exceptions, so that missing
+or failing venv/pip tools do not crash the entire scaffolding run. - All logging of created venv
+paths and installed packages should go through the shared `logger`. - The code should be idiomatic
+Python 3, fully typed with type hints, include docstrings for the module, class, constant,
+and each function, and be consistent with an extensible scaffolding framework
+where extensions hook into an ordered pipeline of actions transforming a project `Structure`
+and `ScaffoldOpts`.
+Instruct the agent to output the complete,
+working Python source code implementing all of the above requirements in a single module. ---

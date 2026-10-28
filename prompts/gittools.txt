@@ -1,0 +1,31 @@
+Write a Python script that acts as a batch Git repository maintenance and
+reporting tool.
+It should accept a root directory (or a list of repository paths) as input,
+automatically discover Git repositories within it, and for each repository
+determine its current branch (handling detached HEAD states gracefully), check
+the working tree status, and gather basic synchronization information with the
+configured remote.
+The tool should run these operations concurrently across repositories to keep
+execution fast, enforce sensible timeouts so a hung Git command never blocks the
+whole run, and isolate failures so that one broken repository does not stop the
+others from being processed.
+The script should be runnable from the command line with options such as a
+target path, a flag to limit or skip certain directories, a maximum number of
+parallel workers, and an output format choice (human-readable text or
+machine-readable JSON).
+It should aggregate the results into a clear summary report that lists each
+repository with its branch, cleanliness state, count of uncommitted or untracked
+changes, and whether it is ahead of or behind its upstream, and it should
+highlight repositories that need attention.
+Exit codes should reflect whether any repository had errors or required action.
+Handle edge cases robustly: missing Git installation, non-repository
+directories, nested repositories, repositories without a remote or upstream,
+permission errors, and unexpected command output.
+Provide informative error messages without exposing raw stack traces to the user
+unless a verbose mode is requested.
+Optionally, the tool may support a dry-run mode that reports what would be
+fetched or updated without modifying anything, and it should never make
+destructive changes to repositories by default.
+Include clear help text documenting every option, and keep the code modular,
+readable, and well-documented so it can be extended with additional Git checks
+later. ---

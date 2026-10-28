@@ -1,0 +1,1 @@
+HTML Formatter using Tree-sitter Formats HTML files so every tag starts on a new line.

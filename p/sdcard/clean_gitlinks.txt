@@ -1,0 +1,30 @@
+Write a Python command-line script that cleans
+and normalizes a list of GitHub URLs stored in a text file.
+Requirements: - The script takes a single command-line argument:
+the path to a text file containing one URL per line. - It reads the file
+(using the path from `sys.argv[1]`, stripped of whitespace)
+and overwrites the same file with the processed results (input and output file are the same path). -
+For each line in the file,
+parse it as a URL and determine whether it is a valid GitHub repository URL:
+- The URL's domain (netloc) must be exactly "github.com" (case-insensitive). - The URL path must
+contain at least two non-empty segments,
+which represent the owner and repository name. - If the repository name ends with ".git",
+strip that suffix. - If valid,
+normalize the URL to the canonical form `https://github.com/{owner}/{repo}`
+(discarding any extra path segments, query parameters, fragments, or trailing slashes). -
+Skip/ignore lines that are empty
+or do not match this pattern (return None for them internally). - Collect all normalized URLs into a
+set to automatically remove duplicates. - Sort the unique normalized URLs alphabetically. - Write
+the sorted, deduplicated list back to the same file, one URL per line,
+with a trailing newline at the end of the file. - If the input file does not exist,
+print an error message in the form `Error: {file_path} not found.`
+and exit gracefully without crashing. - After processing,
+print a summary line showing how many total URLs were read
+and how many unique repository URLs were produced,
+e.g. `Processed {count} URLs → {unique_count} unique repos`. - Also print a confirmation line
+showing where the output was written,
+e.g. `Output written to: {file_path}`. - Use only Python standard library modules
+(`sys`, `pathlib.Path`, `urllib.parse.urlparse`),
+include a proper shebang line (`#!/usr/bin/env python3`), use `from __future__ import annotations`,
+and structure the code with a `normalize_github_url(url: str) -> str | None` function
+and a `main()` function guarded by `if __name__ == "__main__":`. ---

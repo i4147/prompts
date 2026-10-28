@@ -1,0 +1,8 @@
+Offline requirements.txt generator.
+Features: - Scans .py, extensionless Python scripts,
+.ipynb notebooks. - Recurses directories. - Supports scanning inside .whl, .zip, .tar.gz,
+.tar.xz. - Excludes imports in stdlib using provided stdlib file. - Resolves package names using
+provided mapping file. - Offline package existence check using /sdcard/pip.txt. - Multiprocessing
+for speed. - --ignore for directories (venv, .git, etc.). - Shows tqdm progress. - Shows
+requirements.txt content at end. - --debug for verbose logging.
+Author: Isaac Onagh

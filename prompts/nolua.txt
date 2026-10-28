@@ -1,0 +1,15 @@
+Write a Python script that scans the immediate subdirectories of the current
+working directory and identifies which ones contain no Lua source files (files
+with a .lua extension, searched recursively).
+For each subdirectory lacking Lua files, the script should report its name in a
+simple list printed to the console.
+Additionally, the script should provide a mode where the Lua-free directories
+are relocated into a fixed Vim plugin location used for auto-loaded plugins (a
+"start" packages folder under a user's Vim configuration directory on
+Termux/Android), creating that destination if it does not already exist, and
+moving each directory there in full, removing the original afterward.
+The script should handle the case where a target with the same name already
+exists gracefully rather than crashing, skip non-directory entries, and produce
+clear, human-readable output describing what it found or moved.
+Keep the script self-contained, robust to missing or unreadable paths, and easy
+to run directly from the command line. ---

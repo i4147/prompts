@@ -1,0 +1,27 @@
+Write a Python script that acts as a command-line tool for automatically adding
+type annotations to an existing Python source file.
+The tool should take a target Python file path as input, along with options that
+control whether changes are applied directly to the file or only previewed.
+It should use a type-inference step based on available type stub information to
+determine annotations for function parameters and return values, then rewrite
+the source so the annotations are inserted while preserving the original
+formatting, comments, and structure as much as possible.
+Key behaviors to include: - Accept a file path (and optionally a directory or
+multiple files) as input via command-line arguments, with a flag to write
+changes in place versus printing a unified diff of the proposed modifications. -
+Run a type-inference pass that produces candidate annotations, then apply them
+to the source code without changing program behavior. - Sanitize any inferred
+annotations that reference private or stub-only modules (such as
+typeshed-internal names) by replacing them with valid runtime-importable
+equivalents, such as the standard typing module, so the resulting file remains
+importable. - Ensure any needed imports (e.g., for type names used in the new
+annotations) are added to the file and that existing imports are preserved. -
+Skip or safely handle files that fail to parse, reporting clear error messages
+without crashing the entire run when processing multiple files. - Report a
+summary at the end, such as the number of files processed, files changed, and
+annotations added. - Use a temporary working area for intermediate processing so
+the original file is never left in a corrupted state if an error occurs mid-run.
+- Exit with a non-zero status code if errors occurred, and zero otherwise.
+The tool should be robust, well-structured, and suitable for use in a developer
+workflow or as a step in a CI pipeline, with clear help text describing all
+options. ---

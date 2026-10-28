@@ -1,0 +1,24 @@
+Write a Python module that implements a minimal stub/placeholder parser plugin named "babel",
+mimicking the interface of a code formatter's parser backend
+(similar to Prettier's Babel parser plugin).
+Requirements: - Use `from __future__ import annotations` at the top. - Define a module-level
+constant `PARSER_NAME` set to the string `"babel"`. - Define `__all__` as a list exporting
+`"PARSER_NAME"`, `"parse"`,
+and `"print"`. - Implement a function `parse(text: str, options: dict | None = None)` that accepts a
+source code string and an optional options dictionary,
+and returns a dictionary representing a minimal AST node.
+The returned dictionary must have the following structure:
+`{"type": "Program", "body": [], "sourceType": "module", "loc": None}`.
+The function should not actually parse the input text;
+it's a stub that always returns this fixed empty Program AST. - Implement a function
+`print(ast: dict, options: dict | None = None) -> str` that accepts an AST dictionary
+and an optional options dictionary, and returns a string.
+This is also a stub that always returns an empty string regardless of input,
+intentionally shadowing the Python built-in `print`. - Both functions should accept
+but ignore the `options` parameter (no validation or processing needed).
+- The module should have no external dependencies and no side effects—just the constant
+  and two stub function definitions. - The purpose is to serve as a placeholder/no-op implementation
+  of a parser plugin interface
+  (with `parse` and `print` entry points plus a `PARSER_NAME` identifier) that can later be replaced
+  with a real implementation,
+  while keeping a consistent API shape for integration with a larger formatting/parsing system. ---

@@ -1,0 +1,43 @@
+Create a Python module that implements a lightweight,
+file-based "package" management
+and session-coordination system called "WithOpen" for use within a working directory.
+The script should expose utilities to:
+- Define package-wide constants including a package name ("WithOpen"),
+number of write copies to keep (3), a corrupt-data marker string,
+hidden control/state file names
+(active package marker, write lock, console tag, control panel, hide-alert flag),
+and tunable limits (max queue length, queue "done" age threshold, active-session age limit). -
+Provide helper functions to:
+- Get the current working directory
+and compute the main package folder path
+(a subdirectory named after the package inside the current working directory). - Get the current
+terminal width (for formatting console output). - Generate a highly random,
+unique numeric session ID by combining the current timestamp,
+platform/OS information (via `platform.uname()`),
+and cryptographically secure random bytes (via `secrets.token_bytes`), hashing them with SHA-256,
+and converting the digest into a large random integer using `secrets.randbelow`. - Clear/wipe the
+terminal screen in a cross-platform way (Windows vs Unix),
+with an optional small delay before clearing
+and a boolean flag to control whether clearing happens at all. - Use only Python standard library
+modules plus an optional `python-dateutil` dependency
+(import `relativedelta` if available,
+otherwise gracefully fall back to `None` without raising an error). - Be structured for a larger
+file-locking / write-redundancy / session-tracking system:
+it should support concepts like writing multiple redundant copies of data,
+detecting/marking corrupted data blocks, tracking an "active" package/session via marker files,
+enforcing a write lock via a lock file,
+and maintaining some kind of task/message queue with size limits
+and expiration ("done" age, "active" age) semantics,
+even though the full implementation of those subsystems is not required beyond the constants
+and helpers shown. - Include `from __future__ import annotations` for forward-compatible type hints,
+and import standard libraries such as `ast`, `errno`, `hashlib`, `os`, `platform`, `random`,
+`secrets`, `shutil`, `subprocess`, `threading`, `time`, `unicodedata`, plus `collections.Counter`,
+`concurrent.futures.ThreadPoolExecutor`/`as_completed`,
+`datetime` (`datetime`, `timezone`, `timedelta`), `glob.glob`,
+and `typing.Optional`/`Union` to support the broader functionality this module is designed to be
+extended with (file hashing, concurrent file operations, date/time calculations, text normalization,
+external process calls, etc.).
+Ensure the generated code matches this structure
+and naming exactly (constant names, function names and signatures as described),
+uses type hints throughout,
+and includes a try/except import guard specifically for `dateutil.relativedelta`. ---

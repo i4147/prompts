@@ -1,0 +1,4 @@
+Fetch GitHub data for the first N users in users.txt into SQLite. pip install
+requests python fetch_github.py # 10 users, default tables python
+fetch_github.py --limit 3 --db preview.sqlite python fetch_github.py
+--with-languages --with-stars Reads GITHUB_TOKEN from ~/.env (or environment).

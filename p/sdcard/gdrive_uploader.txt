@@ -1,0 +1,41 @@
+Write a Python automation script that backs up local files to Google Drive,
+with the following requirements:
+**Purpose:** The script scans a local folder on an Android device (path: `/sdcard/book`)
+and uploads any new files to a specified Google Drive folder,
+skipping files that are not of an allowed type
+or that already exist on the Drive. **Authentication:** Use the `pydrive2` library
+(`GoogleAuth` and `GoogleDrive`) to authenticate via a local webserver OAuth flow
+(`LocalWebserverAuth`),
+returning an authenticated `GoogleDrive` client instance. **Configuration constants:** -
+`LOCAL_FOLDER`: a `Path` object pointing to `/sdcard/book`. - `GDRIVE_PARENT_ID`:
+a placeholder string for the target Google Drive folder ID (e.g., `"YOUR_FOLDER_ID"`). -
+`ALLOWED_EXTENSIONS`:
+a set of permitted file extensions, including `.jpg`, `.jpeg`, `.png`, `.mp4`, `.pdf`, `.tar.xz`,
+`.xz`, `.txt`, `.md`. - `MAX_WORKERS`:
+an integer (4) controlling the thread pool size for concurrent uploads. **Logging:** Configure the
+root logger via `logging.basicConfig` with INFO level, a format showing timestamp, level,
+and message, using `%H:%M:%S` as the time format.
+Use a named logger called `"gdrive-backup"`. **Core functions:** 1. `authenticate()`
+— sets up `GoogleAuth`, performs local webserver authentication,
+and returns a `GoogleDrive` instance.
+2. `get_existing_drive_files(drive, folder_id)`
+— queries the given Drive folder for non-trashed files
+and returns a dictionary mapping file titles to their Drive file IDs,
+using a Drive API query filtered by parent folder and requesting only `id` and `title` fields.
+3. `upload_file(drive, local_path, folder_id)`
+— creates a new Drive file metadata object with the local file's name and the target parent folder,
+sets its content from the local file path, uploads it, and returns the uploaded file's name.
+4. `collect_candidates(existing)` — iterates over entries in the local folder, skipping directories,
+skipping files whose lowercase extension isn't in the allowed set (logged at debug level),
+and skipping files whose name already exists in the `existing` dictionary of Drive files
+(logged at info level as already backed up),
+then returns a list of `Path` objects representing files eligible for upload. **Notable behavior:**
+- The script should be designed to continue beyond `collect_candidates`,
+implying the use of a `ThreadPoolExecutor` (with `MAX_WORKERS` workers)
+and `as_completed` to upload the collected candidate files concurrently,
+logging progress/results
+and handling per-file upload outcomes (success/failure) independently. - The overall design
+emphasizes idempotency (avoiding duplicate uploads by checking existing Drive filenames)
+and filtering by extension before attempting any upload. - Use type hints throughout
+(e.g., `dict[str, str]`, `list[Path]`) and docstring-free,
+concise function definitions consistent with the rest of the code style. ---

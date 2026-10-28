@@ -1,0 +1,38 @@
+Write a Python script using the `termuxgui` library (termux-gui-python-bindings) that demonstrates
+handling of swipe-to-refresh, click, long-click,
+and intercepted back-button events within a Termux:GUI Activity.
+The script should: 1.
+Open a connection to Termux:GUI using `tg.Connection()` as a context manager
+and create a new `tg.Activity` from that connection.
+2. Enable back button interception on the Activity (via `interceptbackbutton(True)`) so that
+pressing the back button generates an event instead of immediately finishing the Activity
+(mention that passing `intercept=True` to the Activity constructor is an alternative way to
+achieve this).
+3. Build the UI hierarchy:
+- A `SwipeRefreshLayout` as the root view of the Activity. - A `LinearLayout` added as the single
+child of the `SwipeRefreshLayout`
+(noting that `SwipeRefreshLayout` can only hold one direct child,
+hence the need for an intermediate layout). - Three `TextView`s added to the `LinearLayout`,
+initialized to display "Refresh: 0", "Clicks: 0", and "Long clicks:
+0" respectively, using counter variables (`refreshes`, `clicks`, `longclicks`) all starting at 0.
+4. Enable click events on the second `TextView` (`sendclickevent(True)`)
+and long-click events on the third `TextView` (`sendlongclickevent(True)`),
+demonstrating that views other than Buttons can emit click/long-click events.
+5. Run an infinite event loop using `c.events()` that:
+- Exits the program via `sys.exit()`
+when a `destroy` event is received with `finishing` set to true. - On a `click` event,
+increments the `clicks` counter
+and updates the second TextView's text accordingly. - On a `longClick` event,
+increments the `longclicks` counter
+and updates the third TextView's text accordingly. - On a `refresh` event
+(triggered by the swipe-to-refresh gesture), increments the `refreshes` counter,
+updates the first TextView's text,
+and calls `ref.setrefreshing(False)` to stop the refresh animation
+and allow the gesture to be triggered again. - Handles back button press events generated due to
+interception (the loop should account for this event type,
+since back presses no longer auto-close the Activity).
+Include inline comments explaining each notable behavior
+(back button interception, single-child constraint of SwipeRefreshLayout,
+enabling click/long-click events on non-Button views, and stopping the refresh animation).
+The output should be a single,
+runnable Python script demonstrating these GUI interaction patterns via the Termux:GUI bindings. ---

@@ -1,0 +1,37 @@
+Write a Python script that acts as a command-line tool for splitting a single
+merged Python source file into multiple separate module files, and conversely
+understands and processes files that were previously merged together with
+per-file header comments.
+The tool should take a merged Python file as input (and an output directory or
+destination as a second input), detect the logical sections of the merged file
+based on embedded "# File: <path>" markers, and recreate the original project
+structure by writing each section to its corresponding path with proper relative
+layout.
+Key requirements: - Accept command-line arguments specifying the input merged
+file, the output location, and optional flags controlling behavior such as
+verbosity, overwriting existing files, and dry-run/preview mode. - Parse the
+merged source safely, identifying each embedded file section by its header
+marker, and reconstruct the individual files with their original content intact.
+- Analyze the Python code structure (imports, top-level function and class
+definitions, and module-level names) so that the tool can determine which
+symbols each reconstructed module defines and uses, and detect cross-module
+dependencies. - Where needed, resolve naming conflicts between modules by
+renaming duplicated top-level symbols consistently across all references, and
+rewrite import statements so the resulting modules reference each other
+correctly. - Distinguish standard library imports, third-party imports, and
+project-local imports, and make sure generated modules include only the imports
+they actually need. - Ensure any executor or process/thread-pool usage and
+multiprocessing-related entry points are preserved correctly, adding a standard
+header block to entry-point scripts when appropriate. - Use a configurable
+number of parallel workers for any per-file processing where it provides a
+benefit, and handle failures per file gracefully without aborting the whole run.
+- Log progress and warnings with a clear, timestamped log format, and report a
+final summary of files created, files skipped, and any errors encountered. -
+Validate that each generated file is syntactically valid Python before writing
+it, and surface clear error messages for malformed input sections. - Exit with a
+meaningful status code: zero on success, non-zero when input is invalid or any
+unrecoverable error occurs. - Suppress noisy library warnings so the console
+output stays clean and readable.
+The tool should be robust, well-structured, and suitable for use on real
+multi-file Python projects that were flattened into one file for sharing or
+review. ---

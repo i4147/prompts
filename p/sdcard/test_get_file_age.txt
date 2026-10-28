@@ -1,0 +1,21 @@
+Write a Python command-line script that reports the age
+(time elapsed since last modification, or similar metric) of one or more files.
+Requirements: - The script imports `get_file_age`
+and `get_files` helper functions from a local module named `dh`. - Main behavior:
+- If command-line arguments are provided (via `sys.argv`),
+treat each argument as a file path to check. - If no arguments are provided,
+default to scanning the directory `/sdcard` recursively
+and collect all files with the `.py` extension using `get_files`. - For each resulting file,
+print a line in the format `<filename> : <file_age>`,
+where `<filename>` is just the file's base name (not the full path),
+and `<file_age>` is obtained by calling `get_file_age` on the file with a flag/parameter requesting
+the result as a human-readable string (string mode) rather than a raw numeric value. - Structure the
+script with a `main()` function containing all logic,
+and guard its execution with the standard `if __name__ == "__main__":` idiom. - Use `pathlib.Path`
+for all file path handling
+(both for the default directory and for converting command-line argument strings into path objects).
+- Inputs: optional list of file paths passed as command-line arguments. - Outputs:
+printed lines to stdout, one per file,
+showing the file name
+and its computed age in string form. - No return value is expected from `main()`;
+the function performs its work via printing and does not need to return anything. ---

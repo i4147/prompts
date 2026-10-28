@@ -1,0 +1,51 @@
+Write a Python module that manages Python package dependency/requirement strings for a
+packaging/build tool (e.g., a setuptools-like project configuration helper).
+The 1.
+Define three module-level constants representing dependency lists: - `BUILD`:
+dependencies required to build the created project (e.g., `"setuptools_scm>=5"`). - `RUNTIME`:
+dependencies required at runtime by the created project
+(e.g., an `importlib-metadata` requirement conditioned on `python_version<"3.8"`). - `ISOLATED`:
+dependencies for isolated builds per PEP 517/518, combining a minimum `setuptools` version,
+a `setuptools_scm[toml]` requirement, and any extra items from `BUILD` beyond the first one.
+Include a docstring noting that the `setuptools` minimum version may be slightly higher than the
+runtime-required version,
+and that `setuptools_scm` needs an optional extra to work with `pyproject.toml`.
+2. Define a compiled regex named `REQ_SPLITTER` that splits a requirement line on semicolons,
+but only when the semicolon is NOT immediately followed (allowing whitespace) by one of the
+environment marker keywords:
+`python`, `platform`, `implementation`, `os`,
+or `sys` followed by `_`
+(to avoid splitting PEP 508 environment markers like `; python_version<"3.8"`).
+This should work in multiline mode
+and include a docstring explaining it's a simplified regex that handles both setup.cfg-style
+requirement specs and PEP 508 requirement strings "good enough".
+3. Implement a function `split(requirements: str) -> List[str]` that:
+- Takes a multi-line string of requirements (as might appear in a setup.cfg or requirements block).
+- Splits it into individual lines,
+then further splits each line using `REQ_SPLITTER`. - Strips whitespace from each resulting
+dependency string. - Filters out empty strings. - Returns a flat list of cleaned-up
+requirement strings.
+4. Implement a function `deduplicate(requirements: Iterable[str]) -> List[str]` that:
+- Removes duplicate requirements based on the underlying package name
+(not the full requirement string),
+using a helper function `attempt_pkg_name`
+(which should be assumed/implemented elsewhere or inline,
+extracting the package name from a requirement string, falling back gracefullyŌĆöe.g.,
+returning the raw stringŌĆöif parsing fails,
+using `packaging.requirements.Requirement`/`InvalidRequirement`). - Preserves the last occurrence's
+full requirement string when duplicates (by package name) exist,
+by building a dict keyed on package name and returning its values in insertion order.
+5. Implement a function `remove(requirements: Iterable[str], to_remove: Iterable[str]) -> List[str]`
+that: - Computes the set of package names (via `attempt_pkg_name`) present in `to_remove`. - Returns
+a new list containing only the requirements from `requirements`
+whose package name is NOT in that removable set.
+6. Implement a function
+`add(requirements: Iterable[str], to_add: Iterable[str] = BUILD) -> List[str]` that appends/merges
+`to_add` into `requirements`,
+ensuring the combined result has no duplicate package names
+(reusing `deduplicate`/`chain` semantics), and returns the resulting list.
+Use type hints throughout (`Iterable`, `List`), import `re`, `itertools.chain`,
+and `packaging.requirements.Requirement`/`InvalidRequirement` for requirement parsing.
+Keep the code concise, well-documented with docstrings on constants and the regex,
+and suitable as a reusable internal utility for a packaging/build backend
+(similar in spirit to setuptools' PEP 517 build backend helpers). ---

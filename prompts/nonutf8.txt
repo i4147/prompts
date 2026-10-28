@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree recursively and reports the
+text encoding of each regular file, flagging files that are not UTF-8 encoded.
+The tool should accept a root directory path from the command line (defaulting
+to the current directory) and an option to apply a fix to the flagged files,
+such as converting their contents to UTF-8 in place.
+Requirements: - Walk the directory tree recursively, skipping version-control
+metadata directories (such as `.git`), symbolic links, and anything that is not
+a regular file. - For each file, determine its encoding by first checking for a
+byte order mark (UTF-8, UTF-16, or UTF-32, in either endianness).
+If no BOM is present, treat files containing null bytes in their initial portion
+as binary and exclude them from encoding analysis.
+For other files, attempt to decode the content by trying UTF-8 first, then
+Windows-1252, then Latin-1, and record the first encoding that succeeds.
+If none succeed, mark the encoding as unknown. - Produce a human-readable report
+listing every file whose detected encoding is not UTF-8, along with its detected
+encoding.
+Clearly indicate files that were skipped as binary or whose encoding could not
+be determined.
+Include a summary of totals at the end, such as the number of files scanned, the
+number of non-UTF-8 files, and the number of skipped or unknown files. - Support
+an apply mode, enabled by a command-line flag, that rewrites each non-UTF-8 text
+file as UTF-8 by decoding it with its detected encoding and re-encoding it.
+Preserve the file's content otherwise, and report which files were converted.
+Do not modify binary files or files with unknown encoding.
+Handle read and write errors gracefully, reporting them per file without
+stopping the entire scan. - Provide clear command-line help text describing the
+tool's purpose, its arguments, and the apply option. - Exit with a success
+status when the scan completes, and use a distinct non-zero status if errors
+occurred during processing. ---

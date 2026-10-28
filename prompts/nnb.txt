@@ -1,0 +1,17 @@
+Write a Python script that operates as a command-line tool for rewriting a text
+file in place so that every line break becomes a literal escaped sequence.
+The script must accept exactly one argument: the path to a UTF-8 encoded text
+file.
+If the argument count is wrong, it should print a brief usage message showing
+how to invoke the tool and exit with a non-zero status code.
+When given a valid file path, the script should read the entire file contents,
+replace each newline character with the two-character sequence backslash
+followed by "n", and write the transformed text back to the same file using
+UTF-8 encoding.
+The result should be a single continuous line with no actual line breaks, where
+all original line breaks are preserved as visible " " text.
+No other characters should be altered.
+The tool should be simple, dependable, and self-contained, relying only on the
+standard library.
+It should run as a standalone program when executed directly, and exit cleanly
+on success. ---

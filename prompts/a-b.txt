@@ -1,0 +1,15 @@
+Write a Python script that takes two text file paths from the command line: a
+target file and a reference file.
+The script should remove from the target file every line that also appears
+(exactly, ignoring trailing newline characters) anywhere in the reference file,
+leaving all other lines untouched and in their original order.
+The target file must be updated in place, and the rewrite should be safe: write
+the filtered result to a temporary location first and then replace the original
+so a failure mid-write does not corrupt the target.
+Read and write all text as UTF-8.
+Preserve the original line endings of the kept lines.
+The script should run as a standalone command-line tool, exit cleanly on
+success, and handle the case where the reference file has no lines or where no
+lines match by simply leaving the target content intact (or unchanged).
+Keep the implementation simple and idiomatic, and do not print anything other
+than what is necessary for errors. ---

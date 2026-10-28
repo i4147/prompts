@@ -1,0 +1,70 @@
+[Tool: think] Params:
+{"content":"The user wants a prompt for an AI agent that can produce the given Python code.
+I just need to analyze the code and write a descriptive prompt.
+No tools needed for generation itself - just output text.
+This is a single, simple task - I should not call manage_outline
+or other tools since it's just writing a prompt description.
+Let me analyze the code.
+The code is a file system traversal/filtering utility:
+- Uses `pathspec` library optionally for gitignore-style pattern matching
+- Has DEFAULT_IGNORE_PATTERNS list for common directories/files to ignore
+  (.git, node_modules, dist, build, venv, caches, lock files, .DS_Store, minified files)
+- FSConfig dataclass: roots (list of paths to scan), include patterns,
+  exclude patterns (defaults to DEFAULT_IGNORE_PATTERNS),
+  extensions (set of file extensions to filter), follow_symlinks bool, respect_gitignore bool,
+  gitignore_file name (default \".gitignore\")
+- PathFilter class: takes FSConfig,
+  builds a pathspec PathSpec from exclude patterns plus gitignore patterns read from each root's
+  .gitignore file if respect_gitignore is True and pathspec is available
+The code is cut off mid-function
+but I need to describe the purpose based on what's visible - this looks like it's part of a file
+scanning/filtering tool, likely for something like a code search tool, context builder for LLMs,
+or directory tree walker that respects .gitignore and custom include/exclude patterns.
+I'll write a comprehensive prompt describing this as a Python module for configurable file-system
+traversal with include/exclude filtering, gitignore support, extension filtering, symlink handling,
+using the pathspec library with graceful fallback if not installed. "} Write a Python module that
+implements a configurable,
+filesystem-scanning utility for selecting files from one or more directory trees,
+intended as a building block for tools like code search, context collection for LLMs,
+or project file indexers.
+Main requirements: 1. **Optional dependency handling**: Attempt to import the `pathspec` library.
+If it is not installed, gracefully fall back (set it to `None`) rather than raising an import error,
+so the rest of the module can still load and degrade functionality instead of crashing.
+2. **Default ignore patterns**:
+Define a module-level constant list of common glob-style ignore patterns
+(e.g. version control folders like `.git`, `.hg`, `.svn`;
+dependency/build folders like `node_modules`, `dist`, `build`, `.venv`, `__pycache__`;
+cache folders like `.mypy_cache`, `.pytest_cache`, `.ruff_cache`, `coverage`;
+minified files `*.min.*`; lockfiles like `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`;
+and OS artifacts like `.DS_Store`).
+These should use `**/` prefixed glob patterns so they match at any directory depth.
+3. **Configuration dataclass (`FSConfig`)**:
+Use Python's `dataclasses` with `slots=True` to define a configuration object holding: - `roots`:
+a list of root `Path` objects to scan (default: current directory `["."]`) - `include`:
+a list of include glob patterns (default: empty list) - `exclude`:
+a list of exclude glob patterns
+(default: a copy of the default ignore patterns list, to avoid mutable shared state) - `extensions`:
+a set of file extensions to filter by (default: empty set) - `follow_symlinks`:
+boolean controlling whether symbolic links should be followed during traversal (default: False) -
+`respect_gitignore`:
+boolean controlling whether `.gitignore` files found under each root should be parsed
+and merged into the exclude rules (default: True) - `gitignore_file`:
+the filename to look for
+when respecting gitignore rules (default: `.gitignore`) Use `field(default_factory=...)`
+appropriately for mutable defaults.
+4. **Path filtering class (`PathFilter`)**:
+Implement a class that takes an `FSConfig` instance and builds a combined pattern matcher:
+- Store the config and lazily build an internal `pathspec.PathSpec` object
+(or `None` if `pathspec` is unavailable) - In a private initialization method,
+start with the configured exclude patterns, and if `respect_gitignore` is enabled,
+iterate over each configured root, check whether a gitignore file exists there,
+and if so read and append its patterns to the combined pattern list before compiling the final
+`PathSpec` - The design should allow the rest of the module (not shown here but implied) to use this
+compiled spec to decide, for each discovered file path,
+whether it should be included or excluded from the final file listing,
+additionally combined with the `include` patterns and `extensions` filter from the config.
+Use type hints throughout (`List`, `Optional`, `Set`, `Iterable` from `typing`),
+include `from __future__ import annotations`, and import standard library modules `os`, `sys`,
+and `Path` from `pathlib` as needed for cross-platform path handling.
+The code should be structured to be extended with actual directory-walking logic that consumes
+`FSConfig` and `PathFilter` to yield a filtered list of file paths. ---

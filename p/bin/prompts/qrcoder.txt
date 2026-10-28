@@ -1,0 +1,19 @@
+Write a Python script that acts as a command-line QR code extractor for image files.
+The tool should accept a single argument: the path to an image file containing one or more QR codes.
+It should open the image, convert it to a format suitable for bar QR decoding if necessary,
+and detect all QR codes present in the image.
+For each detected QR code,
+the script should display a numbered result showing the decoded text content, the code type,
+and the bounding position of the code within the image (left, top, width, and height).
+Results should be printed in a clear, human-readable layout, with a blank line separating entries.
+The script should also return the decoded text values so they could be reused programmatically.
+The tool should validate its input:
+if no argument is provided, or if more than one argument is given,
+it should print a short usage message explaining how to run it and exit.
+If the specified file does not exist, or cannot be opened or decoded as an image,
+the script should exit gracefully with a non-zero status code rather than crashing with an
+unhandled traceback.
+Decoding should handle UTF-8 text payloads properly.
+The script should be written as a self-contained, runnable command-line program
+with a clear entry point, and should be robust, readable, and well-structured.
+---

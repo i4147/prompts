@@ -1,0 +1,22 @@
+Write a Python script that batch-converts HTML files into clean Markdown
+documents.
+The tool should accept one or more input paths, which may be individual HTML
+files or directories to be scanned recursively, and an output location where the
+resulting Markdown files are written, preserving the relative folder structure
+of the source files where applicable.
+Only files with HTML extensions should be processed; any other files encountered
+should be skipped with a clear warning message.
+Before conversion, each HTML document should be sanitized to remove non-content
+material such as scripts, stylesheets, HTML comments, navigation bars, footers,
+sidebars, embedded frames, no-script fallbacks, and form elements, so that the
+final Markdown contains only the primary readable content.
+The script should handle files with varied or imperfect markup gracefully and
+should support reading and writing text with common encodings.
+The tool should offer command-line options for controlling the output directory,
+the degree of parallelism (defaulting to the number of available CPU cores, with
+the option to run sequentially), and whether existing Markdown files may be
+overwritten.
+It should display progress or a summary at the end, reporting how many files
+were converted, skipped, or failed, and it should isolate errors so that a
+failure in one file does not stop the processing of others.
+Exit with a non-zero status code if any conversion fails. ---

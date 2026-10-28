@@ -1,0 +1,4 @@
+Usage: split_section regex [--overwrite] --section-titles FILE -i FILE -o FILE split_section
+medspacy [--overwrite] -i FILE -o FILE Options:
+--section-titles FILE List of section titles [default: .radtext/resources/section_titles.txt] -o
+FILE -i FILE --overwrite

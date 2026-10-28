@@ -1,0 +1,16 @@
+ALINE https://webdocs.cs.ualberta.ca/~kondrak/ Copyright 2002 by Grzegorz Kondrak.
+ALINE is an algorithm for aligning phonetic sequences, described in [1].
+This module is a port of Kondrak's (2002) ALINE.
+It provides functions for phonetic sequence alignment and similarity analysis.
+These are useful in historical linguistics, sociolinguistics and synchronic phonology.
+ALINE has parameters that can be tuned for desired output.
+These parameters are:
+- C_skip, C_sub, C_exp, C_vwl - Salience weights - Segmental features In this implementation,
+some parameters have been changed from their default values as described in [1],
+in order to replicate published results.
+All changes are noted in comments.
+Example usage ------------- # Get optimal alignment of two phonetic sequences
+>>> align('θin', 'tenwis') # doctest: +SKIP [[('θ', 't'), ('i', 'e'), ('n',
+'n'), ('-', 'w'), ('-', 'i'), ('-', 's')]] [1] G. Kondrak.
+Algorithms for Language Reconstruction.
+PhD dissertation, University of Toronto.

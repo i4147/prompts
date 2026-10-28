@@ -1,0 +1,1 @@
+Fallback pure Python implementation of msgpack

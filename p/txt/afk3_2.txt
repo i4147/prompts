@@ -1,0 +1,40 @@
+Write a Python command-line script that detects
+and removes unused import statements from a given Python source file using the `ast` module.
+The script's main purpose is static analysis and cleanup of Python code:
+it parses a target Python file into an Abstract Syntax Tree (AST),
+identifies which imported names (from both `import` and `from ... import` statements) are never
+referenced elsewhere in the code, and removes those unused import statements,
+producing a cleaned version of the source file.
+Main components and behavior: 1. **Unused import detection** (`get_unused_imports` function):
+- Takes a file path as input,
+reads and parses the file into an AST. - Walks the entire AST to collect:
+- All imported names (tracking the alias if one is used via `asname`, otherwise the original name)
+from `ast.Import` and `ast.ImportFrom` nodes,
+mapping each imported name to its defining node. - All names actually used in the code,
+collected from `ast.Name` nodes (variable/function usage) and from `ast.Attribute` nodes
+where the base value is an `ast.Name` (to catch usages like `module.attribute`). - Computes the set
+of imported names that never appear in the used-names set. - Returns both the parsed tree
+and the set of unused import names.
+2. **AST transformation** (`ImportRemover` class, subclassing `ast.NodeTransformer`):
+- Initialized with the set of unused import names. - Overrides `visit_Import`
+and `visit_ImportFrom` to filter out `alias` entries
+whose name matches an unused import. - If filtering removes all aliases from an import statement,
+the entire node is removed (return `None`);
+otherwise the node's `names` list is updated to only the still-needed aliases.
+3. **Cleaning workflow** (`clean_file` function):
+- Takes an input file path and an output file path. - Calls `get_unused_imports` to get the tree
+  and the set of unused imports. - If no unused imports are found,
+  prints a message ("No unused imports found.") and returns without writing anything. - Otherwise,
+  prints which names are being removed (comma-separated). - Applies the `ImportRemover` transformer
+  to the AST and calls `ast.fix_missing_locations` to repair node location metadata after
+  transformation.
+  4. **Command-line interface**:
+  - Use `argparse` to accept an input file path
+  and an output file path as arguments. - The script should be runnable from the command line,
+  invoking the cleaning workflow on the provided arguments
+  (note: the transformed AST should ultimately be converted back to source code,
+  e.g. via `ast.unparse`, and written to the output file).
+Notes on limitations to preserve:
+the detection logic is based on simple name/attribute usage tracking
+and does not handle more complex cases such as names used only in string literals,
+`__all__` exports, conditional imports, or dynamic attribute access.

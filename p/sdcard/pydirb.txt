@@ -1,0 +1,44 @@
+Build a Python 3 command-line directory/file brute-forcing (content discovery) tool for web
+application security testing,
+designed to run on Termux (Android) but portable to any system with Python 3.12
+and aiohttp installed. **Purpose**:
+The script scans a target URL by appending words from a wordlist file to discover hidden
+directories, files, and endpoints, similar in concept to tools like `dirb`, `dirbuster`,
+or `gobuster`.
+It performs concurrent/asynchronous HTTP requests using `aiohttp`
+and `asyncio` to efficiently probe many paths in parallel,
+classifies each response (found, redirect, not found, forbidden, error, timeout, rate limited) based
+on HTTP status codes, and reports results live with a rich,
+color-coded terminal UI. **Key inputs (CLI arguments via argparse)**:
+- Target base URL (required) - Path to a wordlist file (required) - Optional list of file extensions
+to append to each word (e.g. `.php`, `.html`, `.bak`) - Concurrency level
+(number of simultaneous async workers/requests) - Request timeout per request - HTTP method to use
+(GET/HEAD/etc.) - Custom HTTP headers / User-Agent / cookies - Option to follow redirects
+or not - Status codes to treat as "interesting"/include
+or exclude (filtering) - Option to enable/disable SSL verification - Delay/throttle between requests
+(to avoid rate limiting) - Output file path to save discovered results (e.g. JSON or text report) -
+Verbosity/logging level flag **Key outputs/behavior**:
+- Live progress display
+(using `rich` library if available — Progress bar with spinner, bar column,
+time remaining — falling back to plain ANSI-colored text output if `rich` is not installed) showing
+scan progress, requests per second, and number of findings. - For each discovered path,
+prints a formatted line/table row showing the HTTP status code,
+classified result status (FOUND/REDIRECT/NOT_FOUND/FORBIDDEN/ERROR/TIMEOUT/RATE_LIMITED),
+content length, and full URL,
+using distinct colors per status category. - Maintains an internal mapping of HTTP status codes to
+the `ResultStatus` enum (200/204 → FOUND, 301/302/303/307/308 → REDIRECT, 401/403 → FORBIDDEN, etc.)
+to classify results consistently. - Uses dataclasses to represent scan configuration
+and individual results in a structured way. - Handles graceful shutdown on SIGINT/SIGTERM (Ctrl+C)
+by cancelling pending async tasks cleanly and printing a summary before exit. - Detects
+and normalizes URLs (joining base URL with discovered paths using `urljoin`,
+parsing with `urlparse`). - Implements basic rate-limit detection/handling
+and optional retry logic for failed/error requests. - At the end of the scan,
+prints/logs a summary table (using `rich.table.Table` when available) of all findings grouped by
+status, and optionally writes the full results to the specified output file (e.g., JSON format) for
+later reference. - Includes logging configured via the standard `logging` module for
+diagnostic/debug output, with log level controlled by a verbosity flag.
+The code should be self-contained in a single Python script,
+use type hints and `from __future__ import annotations`,
+follow an async/await architecture built around `aiohttp.ClientSession`,
+and gracefully degrade its UI when the optional `rich` dependency is unavailable
+while retaining full ANSI-colored fallback output. ---

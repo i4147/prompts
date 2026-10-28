@@ -1,0 +1,24 @@
+Write a Python script that converts a Gregorian (Western) calendar date supplied
+as year, month, and day into its Persian (Jalali/Solar Hijri) equivalent, and
+presents the result as a single human-readable line.
+The output should include the weekday name, the day of the month, the Persian
+month name, and the Persian year, all written in Persian script with Persian
+(Eastern Arabic-style) digits rather than Western digits.
+The weekday names and month names must be in Persian, with the week starting
+from Saturday in the Persian convention while still correctly identifying the
+actual weekday of the input Gregorian date.
+The core behavior should be a reliable calendar conversion that accounts for
+leap years in both calendars and handles the correct offset between the
+Gregorian and Persian year boundaries, so that dates across the full practical
+range produce accurate results.
+The script should accept a date as input (either via command-line arguments,
+interactive prompts, or a function call, at the implementer's discretion),
+validate that the date is a real calendar date, and provide a clear error
+message for invalid input.
+The conversion logic should be exposed as reusable functions that can be called
+from other code, and the script should also run as a standalone program when
+executed directly, printing the converted date for the current day by default if
+no input is given.
+Include helper functionality for converting Western digits to Persian digits in
+output, and ensure the final formatted output is cleanly spaced and easy to
+read. ---

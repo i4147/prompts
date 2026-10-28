@@ -1,0 +1,13 @@
+Write a Python script that scans the current working directory tree for license
+files and clears their contents.
+The script should identify files whose base name begins with "license"
+(case-insensitive) and whose extension is one of .md, .txt, or .rst, or which
+have no extension at all.
+Symbolic links must be skipped, and only regular files should be considered.
+For each matching file, the script should print its name and extension as it is
+discovered, then report the total number of license files found.
+Finally, every matching file should be overwritten with empty content using
+UTF-8 encoding, effectively truncating the license text while leaving the files
+in place.
+The script should run its main logic only when executed directly as a standalone
+program. ---

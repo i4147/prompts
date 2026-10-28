@@ -1,0 +1,36 @@
+Write a Python script that analyzes a collection of Python source archives and
+packages, extracts the top-level and nested definitions (classes, functions, and
+similar named code entities) from every Python source file found inside them,
+and saves each extracted entity as its own individual file in an organized
+output directory.
+The script should accept one or more input paths pointing to archive files (such
+as wheels, zip files, and various tarball formats including compressed variants)
+or to directories containing such archives or loose Python files.
+It should unpack or read each archive safely, skipping non-Python content, and
+process only files with Python source extensions or extensionless files that are
+plausibly Python code.
+For each Python file, the script should parse the source using a concrete syntax
+tree approach that preserves original formatting, and track each entity's exact
+position in the source so that its original text can be reproduced faithfully,
+including its indentation and surrounding structure.
+Each extracted entity should be recorded with metadata describing its name,
+kind, nesting depth, and the file it originated from.
+The script should write each extracted entity to a file in the output directory,
+using a clear and filesystem-safe naming scheme that avoids collisions, such as
+incorporating the originating package or archive name, the source module path,
+and the entity name.
+It should also produce a summary index or manifest describing all extracted
+entities and their locations.
+Use multiprocessing to parallelize processing across archives or files to take
+advantage of available CPU cores, with a sensible default worker count that can
+be configured.
+The script should be robust: a malformed or unparseable file or a corrupted
+archive must be logged and skipped without halting the entire run.
+It should report progress and a final summary of how many archives, files, and
+entities were processed and how many failures occurred.
+Provide a command-line interface that accepts the input paths, an optional
+output directory, an optional worker count, and an option to control whether
+nested entities (such as methods inside classes) are extracted in addition to
+top-level ones.
+Clean up any temporary extraction directories when processing finishes, even if
+errors occur. ---

@@ -1,0 +1,46 @@
+Write a prompt for an AI coding agent to generate a Python module named `blingfire_compat.py` with
+the following purpose and requirements:
+The module should serve as a pure-Python drop-in replacement for the most commonly used functions of
+the Microsoft BlingFire library,
+implemented using NLTK (for sentence splitting) and sacremoses (for Moses-style word tokenization),
+since BlingFire itself may not be installable/available in some environments.
+Requirements: 1. **Module docstring**:
+Explain that this is a pure-Python compatibility shim for BlingFire's most-used functions,
+built on NLTK and sacremoses, and include install instructions as a comment/docstring:
+`pip install nltk sacremoses` and `python -m nltk.downloader punkt punkt_tab`.
+2. **Imports and setup**:
+- Use `from __future__ import annotations`, `re`, `typing.List`/`Tuple`, `nltk`,
+and `sacremoses.MosesTokenizer`. - Implement a private idempotent bootstrap function
+`_ensure_nltk_data()` that checks for and downloads the `punkt`
+and `punkt_tab` NLTK tokenizer data packages quietly,
+safely catching exceptions
+(e.g., for offline environments where data must already be pre-downloaded) so the import never
+crashes. - Call `_ensure_nltk_data()` once at module load time. - Import `sent_tokenize` from
+`nltk.tokenize` (aliased privately). - Instantiate a module-level `MosesTokenizer` configured for
+English (`lang="en"`),
+and a private helper lambda/function that tokenizes text using this tokenizer with `escape=False` to
+mimic BlingFire's non-escaping tokenization behavior.
+3. **Public API functions** that mirror BlingFire's naming
+and output conventions exactly
+(BlingFire returns plain strings with specific delimiters, not Python lists, for most functions):
+- `text_to_sentences(text: str) -> str`:
+Splits input text into sentences using NLTK's sentence tokenizer,
+returns them joined by `" "` (one sentence per line).
+Return an empty string if input is empty/falsy. - `text_to_sentences_with_ids(text: str) -> str`:
+Same sentence splitting,
+but returns each line formatted as `"sid\tsentence"`
+(sentence index and sentence text separated by a tab), joined by newlines.
+Return an empty string if input is empty/falsy. - Additional BlingFire-compatible functions should
+follow the same pattern
+(word tokenization equivalents such as `text_to_words`, `text_to_words_with_ids`,
+and any other commonly used BlingFire utility functions like getting words with offsets),
+all implemented using the Moses tokenizer helper,
+all returning strings formatted the same way BlingFire would
+(space-separated tokens for word-splitting functions,
+tab-separated id/content pairs where BlingFire does so),
+and all gracefully handling empty/falsy input by returning an empty string.
+4. **General behavior notes**: - All functions must be defensive against empty or None input.
+- Keep the implementation pure-Python with no dependency on the actual BlingFire binary/package. -
+  Preserve exact BlingFire-style output formatting so the module can be used as a true drop-in
+  replacement in existing code that imports `blingfire`.
+Generate the complete, working Python code for this module based on the above specification. ---

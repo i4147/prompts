@@ -1,0 +1,16 @@
+Write a Python module for the Termux:GUI Python bindings that defines a `ViewGroup` class
+representing a generic container view capable of holding child views.
+Requirements: - Import `Activity` from `termuxgui.activity`
+and `View` from `termuxgui.view`. - Define a class `ViewGroup` that inherits from `View`,
+with a class docstring describing it as representing a generic ViewGroup. - Implement
+`__init__(self, activity: Activity, id: int)` that simply calls the parent `View.__init__` with
+`activity` and `id` to initialize the base view. - Implement a method `clearchildren(self)` that
+removes all child Views of this ViewGroup.
+It should have a docstring describing this behavior,
+and it should send a message to the GUI connection via `self.a.c.send_msg(...)`,
+using method name `"deleteChildren"` and params containing `"aid"` set to `self.a.aid`
+and `"id"` set to `self.id`. - No return value is expected from `clearchildren`;
+it performs a side effect by communicating with the Termux:GUI backend to delete all children of
+this view group. - Keep the code minimal,
+matching the style of other View subclasses in this binding library
+(simple wrapper methods that forward calls to the GUI server via `send_msg`). ---

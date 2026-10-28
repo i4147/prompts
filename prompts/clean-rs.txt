@@ -1,0 +1,1 @@
+Strip non-doc comments from Rust source files.

@@ -1,0 +1,19 @@
+Write a Python script that scans every file within the current directory tree
+(including all nested subdirectories) and collects the names of environment
+variables defined in those files.
+An environment variable definition is recognized when a line begins with an
+uppercase name made of letters, digits, and underscores, immediately followed by
+an equals sign (for example, a line in a configuration or .env-style file).
+Read each file as UTF-8 text; if a file cannot be read or decoded, report a
+brief warning that includes the file path and the reason, then continue
+processing the remaining files without stopping.
+Once scanning is complete, gather all unique variable names, sort them
+alphabetically, and write them to a plain text file named env_vars.txt in the
+current directory, with one variable name per line.
+Ensure the output file is written using UTF-8 encoding.
+When finished, print a single summary message to the console stating how many
+unique variable names were found and where the results were saved.
+The script should be self-contained, run from the command line with no required
+arguments, handle empty directories and files with no matches gracefully
+(producing an empty output file and a zero count), and avoid crashing on
+unexpected file system or encoding errors. ---

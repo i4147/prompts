@@ -1,0 +1,9 @@
+Unified GitHub clone/download tool.
+Subcommands: clone Shallow clone through a selectable backend (from g1.py). bare Bare single-branch
+clone with submodules (from gitclone.py). zip Download a repository ZIP archive
+(from ghzip.py, gitzip.py, ziprepo.py).
+Examples: python merged.py clone owner/repo python merged.py clone https://github.com/owner/repo -b
+dulwich --token TOKEN python merged.py bare https://github.com/owner/repo [target-dir] python
+merged.py zip owner/repo python merged.py zip owner/repo -b urllib --no-size-check
+--filename-template "{repo}.zip" --env-file "" python merged.py zip owner/repo -b pygithub --branch
+main --require-token --verbose-output

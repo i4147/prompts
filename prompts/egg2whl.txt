@@ -1,0 +1,23 @@
+Write a Python script that converts an Python egg distribution (an unpacked
+`.egg` directory containing EGG-INFO metadata) into a buildable source project
+by reconstructing a `setup.py` file from the distribution's metadata.
+The script should take the path to the egg root directory as input and produce a
+ready-to-build setup script (written to a temporary or designated working
+location) that preserves the package name, version, and other core metadata read
+from the PKG-INFO file, along with any console or GUI entry points declared in
+an entry_points.txt file, and any dependency or package-data information
+available in the egg's metadata.
+Key requirements: - Read and parse the PKG-INFO metadata file tolerantly,
+handling non-UTF-8 bytes gracefully, and skip gracefully if the file is missing.
+- Generate a valid setuptools-based setup script that uses automatic package
+discovery, includes package data, and marks the package as not zip-safe. -
+Translate entry point definitions into the corresponding setup arguments,
+covering console scripts and other declared groups, and omit the entry point
+section cleanly when none exist. - Produce output in a temporary working
+directory that the user can inspect or build from, and clean up or report paths
+appropriately. - Optionally invoke the standard build tooling on the generated
+project when requested, reporting success or failure with clear messages. -
+Handle missing or malformed inputs with clear, user-friendly error messages
+rather than crashing unexpectedly. - Keep the script self-contained,
+command-line friendly, and well-structured with clear separation of parsing,
+generation, and output steps. ---

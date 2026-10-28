@@ -1,0 +1,13 @@
+Write a Python script that recursively scans the current working directory and
+all of its subdirectories, identifies every folder that is a Git repository
+(contains a `.git` directory), and for each one discards any local uncommitted
+changes to tracked files so the working tree matches the last committed state.
+For each repository processed, the script should print a clear progress message
+showing the repository's path.
+If the operation fails for a particular repository, the script should print a
+warning identifying that repository and continue processing the remaining ones
+without stopping.
+Once all repositories have been handled, the script should print a completion
+message and exit cleanly.
+The script should be self-contained, run from the command line with no required
+arguments, and rely only on the standard library. ---

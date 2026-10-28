@@ -1,0 +1,5 @@
+Strip Python comments/docstrings recursively, updating files atomically.
+AST backend: no third-party dependencies.
+Requires Python 3.14 for cf.interpreter; other backends work on 3.11+.
+Install: python -m pip install tree-sitter tree-sitter-python LibCST backend:
+python -m pip install libcst Optional: python -m pip install joblib

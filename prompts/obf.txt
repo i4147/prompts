@@ -1,0 +1,24 @@
+Write a Python script that acts as a command-line obfuscation tool for shell
+scripts.
+It should accept the path to an input source file, read its full contents, and
+print to standard output a transformed version of that script that is
+functionally equivalent when executed by a POSIX-compatible shell.
+The tool should split the source text into small fixed-size chunks and assign
+each chunk a short, generated variable name drawn from an ever-growing sequence
+of identifiers (single letters first, then letter-plus-"z" combinations, then
+two-letter-plus-"z" combinations).
+Each chunk should be stored as a shell variable assignment, with any single
+quote characters in the chunk escaped so the shell reads them correctly.
+Finally, the tool should emit one shell statement that concatenates the
+referenced variables and evaluates the result, so that the original script runs
+when the output is executed.
+Key requirements: - Input: a path to a text file passed as the first
+command-line argument. - Output: the obfuscated shell script printed to standard
+output, with one assignment per line followed by a single evaluation line. - The
+generated names must be unique and deterministic in order of creation. - The
+chunk size should be a small constant so the output is split into many
+fragments. - The output must preserve the original script's behavior when run by
+a shell, including content containing quotes, newlines, and special characters.
+- Run the transformation only when the script is executed directly, not when it
+is imported as a module. - Keep the implementation simple, self-contained, and
+free of external dependencies. ---

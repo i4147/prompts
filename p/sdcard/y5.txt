@@ -1,0 +1,31 @@
+Write a Python script that provides two utility functions for compressing
+and decompressing raw bytes using multiple compression algorithms,
+selected dynamically via a format string argument.
+Requirements: 1.
+Import the necessary standard and third-party libraries:
+`gzip`, `bz2`, `lzma`, `lz4.frame`, `zstandard`, and `brotli`.
+2. Implement a function `compress(data: bytes, fmt: str) -> bytes` that takes raw byte data
+and a format identifier string, and returns the compressed bytes.
+It must support the following format identifiers,
+dispatching to the corresponding library's compression function:
+- `"gz"` → use `gzip.compress` - `"xz"` → use `lzma.compress` - `"bz2"` → use `bz2.compress` -
+`"lz4"` → use `lz4.frame.compress` - `"zstd"` → create a `zstandard.ZstdCompressor` instance
+and call its `compress` method - `"br"` → use `brotli.compress` - If the format string does not
+match any of the above, raise a `ValueError` with a message in the form:
+`f"Unsupported compression: {fmt}"` 3.
+Implement a mirrored function `decompress(data: bytes, fmt: str) -> bytes` that takes compressed
+byte data and the same format identifier string, and returns the original decompressed bytes.
+It must support the same format identifiers,
+dispatching to the corresponding decompression function:
+- `"gz"` → use `gzip.decompress` - `"xz"` → use `lzma.decompress` - `"bz2"` → use `bz2.decompress` -
+`"lz4"` → use `lz4.frame.decompress` - `"zstd"` → create a `zstandard.ZstdDecompressor` instance
+and call its `decompress` method - `"br"` → use `brotli.decompress` - If the format string does not
+match any of the above, raise a `ValueError` with a message in the form:
+`f"Unsupported compression: {fmt}"` 4.
+Both functions should use an `if/elif/else` chain for dispatching based on the `fmt` string,
+with the final `else` branch raising the `ValueError`.
+5. Do not add extra parameters, default compression levels,
+or additional error handling beyond what is specified.
+Keep the functions minimal
+and focused solely on dispatching to the appropriate compression/decompression library calls based
+on the `fmt` argument. ---

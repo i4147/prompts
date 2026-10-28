@@ -1,0 +1,29 @@
+Write a Python script that removes comments from source code files across many
+programming languages, processing one file or an entire directory tree of files
+and reporting the results.
+The tool should accept a file path or a folder as input.
+When given a folder, it should recursively find all supported source files,
+skipping hidden or irrelevant directories where appropriate.
+For each file, the tool should identify the programming language from its file
+extension and remove only the comments, leaving all executable code, string
+literals, and overall formatting intact.
+Support a broad set of languages, including JavaScript, TypeScript, Ruby, PHP,
+Java, C and C++, C#, Go, Rust, Swift, Kotlin, Scala, Lua, R, and Julia, using a
+syntax-aware parsing approach so that comment markers appearing inside strings
+are not mistakenly removed.
+Processing should be efficient for large projects, ideally making use of
+parallel execution across multiple CPU cores, and it should handle failures
+gracefully: a file that cannot be parsed or processed should be reported with a
+clear error message without stopping the processing of the remaining files.
+Results should be written in a way that allows the user to choose between
+overwriting the original files in place or writing cleaned copies to a separate
+output location while preserving the original directory structure.
+For each file, track and report the number of comments removed, the file size,
+the file type, the processing time, and any error encountered.
+Provide a summary at the end showing total files processed, successes, failures,
+total comments removed, and total time taken.
+The tool should be usable from the command line with clear arguments for the
+input path, an optional output location, and any relevant options, and should
+print helpful progress and error messages.
+Gracefully handle missing dependencies for individual language parsers by
+skipping unsupported languages with a warning rather than crashing. ---

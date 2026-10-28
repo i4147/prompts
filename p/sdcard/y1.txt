@@ -1,0 +1,35 @@
+Write a Python function named `process_zip_archive` that reads an existing ZIP archive,
+applies a custom transformation function to the contents of every file inside it,
+and writes the results into a new ZIP archive,
+preserving the original archive structure (including directory entries).
+Requirements: 1. **Imports**:
+Use the `zipfile` and
+`io 2. **Function signature**: `process_zip_archive(src_path: str, process_func, dst_path:
+str = None)` - `src_path`: path to the source ZIP file to read. - `process_func`:
+a callable that takes the raw bytes content of a file inside the ZIP
+and returns the processed/transformed bytes content. - `dst_path`:
+optional path for the output ZIP file.
+If not provided (i.e., `None`),
+it should default to `src_path` with `.processed` appended as a suffix.
+3. **Behavior**: - Open the source ZIP file in read mode. - Open the destination ZIP file in write
+mode, using `ZIP_DEFLATED` compression. - Iterate over all entries in the source archive
+(using `infolist()`). - For each entry that is **not** a directory (`item.is_dir()` is `False`):
+- Read its raw byte content from the source archive. - Pass the content through `process_func` to
+obtain the transformed content. - Write the transformed content into the destination archive under
+the same `ZipInfo` metadata
+(preserving filename, timestamps, and other attributes via `writestr(item, new_content)`). - For
+each entry that **is** a directory:
+- Write an empty entry to the destination archive with the same `ZipInfo`
+(to preserve the directory structure). - Both the source
+and destination ZIP files must be properly opened
+and closed using context managers (`with` statements),
+ensuring the destination archive is fully written and closed before returning.
+4. **Return value**: The function should return `dst_path`,
+   the path to the newly created processed ZIP archive.
+   5. **Notable behavior**:
+   The function is generic
+   — it does not assume anything about the file contents or the nature of the transformation;
+   `process_func` is a fully pluggable callback supplied by the caller,
+   allowing use cases like text replacement, encoding conversion, compression/encryption,
+   or any other byte-level transformation to be applied uniformly across all files in the
+   archive. ---

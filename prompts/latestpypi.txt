@@ -1,0 +1,16 @@
+Write a Python script that fetches the latest newly published packages from the
+PyPI RSS feed and saves their names to a local text file.
+The tool should retrieve the feed over HTTP with a custom identifying user agent
+and a reasonable network timeout, parse the returned XML, and extract each
+package's name from the feed entries.
+Where possible, the name should be derived from the package's project link; if
+that link is unavailable, fall back to the entry's title, stripping any trailing
+version information.
+Skip entries that yield no usable name.
+The final list of package names, in feed order and one per line, should be
+written to a UTF-8 encoded output file in the current working directory,
+overwriting any previous run.
+Upon completion, the script should print a short confirmation message indicating
+how many package names were saved and where.
+The script should be self-contained, runnable directly from the command line,
+and handle its work without requiring any user input. ---

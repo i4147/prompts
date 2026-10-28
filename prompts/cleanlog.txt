@@ -1,0 +1,22 @@
+Write a Python script that cleans up raw terminal output text so it is readable
+as plain text.
+The tool should accept a text input (from a file or standard input) containing
+terminal-style output and produce a cleaned version written to a file or
+standard output.
+The script should handle the following kinds of noise commonly found in captured
+terminal sessions: - Terminal escape sequences used for colors, cursor movement,
+and other formatting, which should be removed entirely. - Carriage-return based
+overwrites, where a line was redrawn in place (such as progress indicators);
+only the final visible version of each overwritten line should remain. -
+Backspace characters, where a preceding character is meant to be erased; these
+should be resolved so the resulting text reflects what a human would actually
+see. - Stray non-printable control characters that have no meaningful display
+value, which should be stripped while preserving normal whitespace, tabs, and
+line breaks. - Mixed line endings (Windows and Unix style), which should be
+normalized to a consistent format.
+The script should preserve the original content and line structure otherwise,
+avoid corrupting ordinary printable text, and handle large inputs efficiently.
+It should be runnable from the command line, accept a file path or piped input,
+and write results to a specified output file or to the console by default.
+Include brief error handling for missing or unreadable files and provide a clear
+usage message when invoked incorrectly. ---

@@ -1,0 +1,45 @@
+Write a prompt for an AI coding agent to generate a Python script with the following purpose,
+inputs/outputs, and behavior:
+**Purpose:** Build a static-analysis tool that scans Python source files in a project to detect
+unused import statements (both `import x` and `from x import y` forms),
+using Python's `ast` module for parsing rather than regex
+or simple text matching. **Core components to implement:** 1.
+An `ImportInfo` dataclass that stores metadata about each discovered import:
+the imported name, optional alias, starting line/column, ending line number,
+whether it's a `from`-style import, the source module name (for `from` imports),
+and an optional list of names (for grouped imports).
+2. An `ImportAnalyzer` class that subclasses `ast.NodeVisitor` to walk the AST of a parsed
+Python file.
+It must: - Maintain a list of collected `ImportInfo` records,
+a set of names actually used in the code, a set of names defined in the code,
+and a scope stack to track nested scopes (functions/classes/modules). - Implement `visit_Import` to
+handle plain `import module[, module2, ...]` statements,
+extracting the base module name (the part before the first dot) and recording alias,
+line/column position,
+and end line for each imported name. - Implement `visit_ImportFrom` to handle
+`from module import name[, name2, ...]` statements,
+skipping wildcard imports (`from module import *`) and skipping imports
+where the module is `None` (relative imports without a resolvable module),
+while recording the same positional
+and alias metadata plus the source module. - Continue traversal via `generic_visit` so nested nodes
+are still visited. -
+(The analyzer should also implement additional visitor methods, not shown in the excerpt,
+to track name usage throughout the rest of the module — e.g. `Name`, `Attribute`,
+function/class definitions
+— so that imports can later be cross-referenced against actually-used names to determine
+which imports are unused.) **Inputs/Outputs:** - The script should discover Python files to analyze
+via a helper function `get_pyfiles` imported from a local module `dh`. - It should process multiple
+files in parallel using `concurrent.futures.ProcessPoolExecutor` for performance on larger
+codebases. - It should use `pathlib.Path` for file path handling
+and type hints (`Dict`, `List`, `Optional`, `Tuple`) throughout for clarity. - The ultimate output
+should be a report (printed to stdout or returned as a structured result) identifying unused imports
+per file, including their location (line/column) so they can be easily located
+and removed. **Notable behavior/edge cases to handle:** - Dotted imports (`import os.path`) should
+be tracked by their base module name for usage-checking purposes. - Wildcard imports
+(`from module import *`) should be explicitly skipped since their usage can't be statically
+determined. - Relative imports with no resolvable module name should be skipped safely rather than
+causing errors. - The tool should be robust to syntax errors or unreadable files
+when run across many files in a directory tree
+(handle exceptions gracefully per file rather than crashing the whole batch). - Design the analyzer
+so it can be reused/extended to also detect related issues such as duplicate imports
+or imports that could be moved/consolidated, if needed later.

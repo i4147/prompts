@@ -1,0 +1,19 @@
+Write a Python script that recursively scans a given root directory and collects
+the paths of files matching an optional set of extensions, returning them as a
+list for further processing.
+The traversal should be breadth-first, skip version-control and cache
+directories, ignore symbolic links, and gracefully skip any directories that
+cannot be read due to permission or OS errors.
+When an extension filter is provided, the tool should also recognize compressed
+manual-page style files (for example, names ending in a numbered section suffix
+followed by a gzip extension, such as section 1 through 7 man pages) as matches.
+The script should be designed as a reusable utility module: it should expose the
+file-collection capability as a function that accepts a path and an optional
+list of extensions, and it should also support being run from the command line
+to print the discovered files, one per line.
+Where helpful, the tool may also offer a way to decompress gzipped files to a
+temporary location so their contents can be inspected or processed.
+Output should be clean, deterministic in ordering, and free of unhandled
+exceptions for common filesystem problems.
+Include brief docstrings and handle invalid input paths with a clear error
+message. ---

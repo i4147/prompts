@@ -1,0 +1,34 @@
+Write a Python script that cleans up README-style documentation files by
+removing image and badge markup, working across an entire directory of documents
+in parallel.
+The script should accept a target path (a single file or a directory, with an
+option to recurse into subdirectories) and a mode setting that controls how
+aggressively images are stripped.
+In a conservative mode, it should only remove clearly identifiable image
+references and badge-style markup, such as Markdown image links, HTML image tags
+and their wrapping paragraphs or anchors, and reStructuredText image and figure
+directives that point to remote URLs.
+In a smart mode, it should additionally recognize and remove badge rows, linked
+images, and other decorative image constructs commonly found at the top of
+project READMEs, while preserving meaningful content such as diagrams embedded
+in the body text.
+Users should also be able to choose which file types are processed, for example
+Markdown, reStructuredText, and plain text.
+The tool should support a dry-run option that reports what would change without
+writing anything, a backup option that preserves the original file before
+modification, and an option to control the number of worker processes used for
+parallel processing.
+Unchanged files should be left untouched on disk.
+For each processed file, track statistics including the number of removed image
+elements, the file size and line count before and after cleaning, and any error
+encountered.
+Only files that actually change should be rewritten.
+Errors on individual files must not stop the overall run; instead, record them
+and continue with the rest.
+At the end, print a clear summary report covering the total number of files
+scanned, files modified, total images removed, total bytes and lines saved, and
+a list of any files that failed, with the reason.
+Handle encoding issues gracefully (for example by trying common encodings or
+skipping undecodable files with a warning).
+The command-line interface should provide helpful usage text and validate its
+arguments, exiting with a clear error message on invalid input. ---

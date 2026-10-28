@@ -1,0 +1,24 @@
+Write a Python script that recursively scans a directory tree for JPEG images
+(.jpg and .jpeg files, case-insensitive) and losslessly or near-losslessly
+recompresses them to reduce file size, using an external JPEG optimization tool
+available on the system.
+The script should accept a root directory path as input, plus command-line
+options for the target compression quality and a dry-run mode that reports
+potential savings without modifying any files.
+Key behaviors to include: - Skip common version-control, cache, and
+build-artifact directories, as well as any directory named "lazy", and ignore
+symbolic links and non-regular files. - Process images in parallel across
+multiple worker processes to speed up large batches, with the number of workers
+configurable or defaulting to the available CPU count. - For each image, record
+its size before and after optimization, and only replace the original file when
+the optimized result is actually smaller; never leave a corrupted or partially
+written file behind (write to a temporary location and swap atomically where
+possible). - Handle errors gracefully per file: a failure on one image should be
+logged and reported without stopping the overall run. - Verify that the required
+external optimization tool is installed before starting, and exit with a clear
+message if it is missing. - Produce a human-readable summary at the end showing
+the number of files scanned, optimized, skipped, and failed, the total bytes
+saved, and the overall percentage reduction, with per-file results shown in a
+concise, color-coded console output that can be disabled when output is not a
+terminal. - Provide a clear command-line interface with help text, and return a
+non-zero exit code if any files failed to process. ---

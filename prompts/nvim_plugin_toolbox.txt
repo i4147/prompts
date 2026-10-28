@@ -1,0 +1,22 @@
+Write a Python script that scans a Neovim configuration directory and produces a
+report describing which plugin managers and popular Neovim plugins are in use,
+based on pattern matching against the configuration files.
+The tool should accept a path to a config directory (defaulting to the user's
+standard Neovim config location) and optionally an output path or format choice,
+then walk through the relevant configuration source files (such as Lua and
+Vimscript files) while skipping irrelevant directories.
+For each known plugin or plugin manager, it should maintain a set of
+recognizable textual signatures and count how many files and occurrences match,
+recording the file locations where they were found.
+The results should be summarized clearly, showing which tools were detected, how
+strongly each one appears, and where, and then emitted in a human-readable text
+form to the console and optionally as a machine-readable JSON document.
+The script should handle missing or unreadable directories gracefully with
+informative error messages, exit with appropriate status codes, and be robust
+against encoding problems in configuration files.
+It should also support a quiet or verbose mode controlling how much detail is
+printed, and it should avoid false positives where a generic word matches only
+as part of an unrelated identifier by using sensible boundary-aware matching.
+Design the internal organization however you see fit, keeping the tool
+self-contained, easy to extend with new plugin signatures, and runnable from the
+command line. ---

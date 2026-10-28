@@ -1,0 +1,35 @@
+Write a Python script that compares the Python standard library module sets between Python 2
+and Python 3, using module lists provided by the `isort` package
+(`isort.stdlibs.py2` and `isort.stdlibs.py3`) as well as custom module lists
+(`STDLIB` and `STDLIB2`) imported from a local module named `dh`.
+The script should compute several set-like comparisons between the `py2.stdlib`
+and `py3.stdlib` collections and write each result to a separate plain text output file,
+one module name per line: 1. `onlypy2` — modules present in `py2.stdlib` but not in `py3.stdlib`.
+2. `onlypy3` — modules present in `py3.stdlib` but not in `py2.stdlib`.
+3. `2or3` — modules from `py3.stdlib` if it is non-empty,
+otherwise from `py2.stdlib`
+(replicating Python's `or` truthiness behavior on the collection itself, not a true set union).
+4. `2and3`
+— modules from `py3.stdlib` if both `py3.stdlib`
+  and `py2.stdlib` are non-empty
+  (replicating Python's `and` truthiness behavior on the collection itself,
+  not a true set intersection).
+  5. `2a3` — modules present in both `py3.stdlib`
+  and `py2.stdlib` (a true set intersection, computed via a filtered list comprehension).
+  6. `onlypy2o` — modules present in `STDLIB2`
+  but not in `STDLIB` (comparing the custom module lists from `dh` instead of the `isort` ones).
+Each output file should be created with `open(filename, "w")`
+and written using `writelines` with a generator expression that appends a newline (`f"{item} "`)
+after each module name,
+preserving the original iteration order of the source collection
+(no sorting or deduplication beyond what the source collections already provide).
+Additionally, define a module-level set
+or collection named `err` containing a large hardcoded list of known problematic, platform-specific,
+internal, or non-portable module names
+(e.g., names like `_bootlocale`, `_msi`, `_winapi`, `distutils.command.bdist_msi`, `encodings.mbcs`,
+and similar low-level, internal,
+or OS-specific standard library submodules) that should be treated as exceptions, exclusions,
+or special-case entries for further filtering logic in the broader program.
+The script has no command-line arguments and no return value;
+its sole observable behavior is the creation/overwriting of the six text files in the current
+working directory, each listing module names derived from the described comparisons. ---

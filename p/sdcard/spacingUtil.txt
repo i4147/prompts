@@ -1,0 +1,92 @@
+The script appears to be cut off, but based on what's provided,
+construct a prompt accordingly.Design a Python utility class/script for Korean (or similar language)
+text spacing/segmentation preprocessing that prepares character-level training data for a machine
+learning model (e.g., RNN-based spacing correction).
+The script should: - Be a standalone Python 2/3-compatible script
+(`#!/bin/env python`, UTF-8 encoding) that imports `sys`, `re`, `pickle`,
+and `numpy`. - Define a class named `spacingUtil` encapsulating all utility logic for building
+character dictionaries
+and generating labeled training sequences for a space-insertion classifier. - In the constructor,
+define two class label constants:
+`CLASS_1` (value 1, meaning "next character is a space")
+and `CLASS_0` (value 0, meaning "next character is not a space"),
+and compile a regex (`S1`) that matches one
+or more whitespace characters. - Implement a `snorm(string)` method that normalizes whitespace in a
+string: replace tabs with spaces, collapse consecutive whitespace into a single space,
+and strip leading/trailing whitespace. - Implement `open_file(filename, mode)` that safely opens a
+file, printing an error message to stderr
+and exiting the program with status 1 if the file cannot be opened,
+otherwise returning the file handle. - Implement `close_file(fid)` that closes a given file handle.
+- Implement `build_dictionary(train_path, padd)` that reads a training text file line by line,
+strips empty lines, and iterates over every character in each line to build a character vocabulary.
+It should track characters already seen (to avoid duplicates),
+append a padding character/token (`padd`) to the vocabulary if not already present,
+and return a dictionary mapping each character to a unique integer index.
+The file should be closed after processing using `close_file`. - Implement `one_hot(i, size)` that
+returns a one-hot encoded list of length `size` with a 1 at index `i`
+and 0s elsewhere. - Implement `get_xy_data(sentence, pos, n_steps, padd)` that generates input
+(`x_data`) and output (`y_data`) sequences for training a sequential/character-based
+space-prediction model:
+starting at character position `pos` in `sentence`,
+iterate through up to `n_steps` characters
+(handling padding when the sentence is shorter than `n_steps`),
+and for each character determine whether the following character is a whitespace
+(assigning `CLASS_1`) or not (assigning `CLASS_0`),
+building the label sequence accordingly
+while skipping over actual whitespace characters in the input sequence itself.
+Track and return enough information
+(e.g., the resulting `x_data`, `y_data`, and the next starting position) to allow the caller to
+iterate over an entire sentence in chunks of `n_steps`.
+The main purpose is to support building a dataset pipeline for a word-spacing/segmentation
+restoration model: constructing a character vocabulary from raw text,
+encoding characters into numeric/one-hot form,
+and slicing sentences into fixed-length (`n_steps`) character windows with corresponding binary
+space/no-space labels,
+suitable for feeding into a sequence model (e.g., RNN/LSTM) built with NumPy
+and optionally serialized with `pickle`.
+[Tool: retrieve_resource_content] Params:
+{"resource_ids":[],"content_description":"placeholder"} Design a Python utility class/script for
+Korean (or similar language) text spacing/segmentation preprocessing that prepares character-level
+training data for a machine learning model (e.g., RNN-based spacing correction).
+The script should: - Be a standalone Python 2/3-compatible script
+(`#!/bin/env python`, UTF-8 encoding) that imports `sys`, `re`, `pickle`,
+and `numpy`. - Define a class named `spacingUtil` encapsulating all utility logic for building
+character dictionaries
+and generating labeled training sequences for a space-insertion classifier. - In the constructor,
+define two class label constants:
+`CLASS_1` (value 1, meaning "next character is a space")
+and `CLASS_0` (value 0, meaning "next character is not a space"),
+and compile a regex (`S1`) that matches one
+or more whitespace characters. - Implement a `snorm(string)` method that normalizes whitespace in a
+string: replace tabs with spaces, collapse consecutive whitespace into a single space,
+and strip leading/trailing whitespace. - Implement `open_file(filename, mode)` that safely opens a
+file, printing an error message to stderr
+and exiting the program with status 1 if the file cannot be opened,
+otherwise returning the file handle. - Implement `close_file(fid)` that closes a given file handle.
+- Implement `build_dictionary(train_path, padd)` that reads a training text file line by line,
+strips empty lines, and iterates over every character in each line to build a character vocabulary.
+It should track characters already seen (to avoid duplicates),
+append a padding character/token (`padd`) to the vocabulary if not already present,
+and return a dictionary mapping each character to a unique integer index.
+The file should be closed after processing using `close_file`. - Implement `one_hot(i, size)` that
+returns a one-hot encoded list of length `size` with a 1 at index `i`
+and 0s elsewhere. - Implement `get_xy_data(sentence, pos, n_steps, padd)` that generates input
+(`x_data`) and output (`y_data`) sequences for training a sequential/character-based
+space-prediction model:
+starting at character position `pos` in `sentence`,
+iterate through up to `n_steps` characters
+(handling padding when the sentence is shorter than `n_steps`),
+and for each character determine whether the following character is a whitespace
+(assigning `CLASS_1`) or not (assigning `CLASS_0`),
+building the label sequence accordingly
+while skipping over actual whitespace characters in the input sequence itself.
+Track and return enough information
+(e.g., the resulting `x_data`, `y_data`, and the next starting position) to allow the caller to
+iterate over an entire sentence in chunks of `n_steps`.
+The main purpose is to support building a dataset pipeline for a word-spacing/segmentation
+restoration model: constructing a character vocabulary from raw text,
+encoding characters into numeric/one-hot form,
+and slicing sentences into fixed-length (`n_steps`) character windows with corresponding binary
+space/no-space labels,
+suitable for feeding into a sequence model (e.g., RNN/LSTM) built with NumPy
+and optionally serialized with `pickle`. ---

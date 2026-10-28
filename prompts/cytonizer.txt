@@ -1,0 +1,18 @@
+Write a Python script that batch-compiles Cython source files (.pyx) into
+compiled extensions by invoking the Cython compiler on each file.
+The tool should accept zero or more command-line arguments, where each argument
+may be either a path to a single .pyx file or a directory.
+When a directory is given, it should discover all .pyx files within it.
+When no arguments are provided, it should search the current working directory
+for .pyx files.
+Gather the full set of target files first, then process them in parallel using a
+small pool of worker processes (around four).
+Each file should be compiled from its own containing directory so that relative
+paths and build artifacts are placed correctly, and the script should restore
+the original working directory afterward so that subsequent operations are not
+affected.
+Compilation should be triggered by running the external `cythonize` command for
+each file.
+The script should exit cleanly with a status code when finished, and should
+handle missing or invalid paths gracefully by skipping them rather than crashing
+the whole batch. ---

@@ -1,0 +1,29 @@
+Write a Python script that acts as a multi-format data ingestion and conversion
+utility.
+It should accept one or more input data files from the command line, detect or
+accept an explicit format for each file (such as CSV, JSON, SQLite databases,
+and other common tabular or structured text formats), and parse each input into
+a common internal representation of named tables, where each table is a
+collection of records with consistent column names.
+The tool should read input files efficiently: small files are loaded normally,
+while large files should be read through memory-mapped I/O to avoid excessive
+memory use.
+Parsing of multiple independent inputs may be parallelized across worker
+processes when it is beneficial.
+Any optional third-party dependency required by a particular format should be
+imported lazily, and if it is missing the tool should fail with a clear,
+actionable message telling the user which package to install.
+The script should write its results to an output destination chosen by the user,
+supporting at least CSV and JSON output, with an option to write everything to a
+single consolidated output or one output per table.
+It should normalize records so that column sets are unified across rows (filling
+missing values sensibly), derive the column list in a stable, order-preserving
+way, and handle empty or malformed inputs gracefully by logging warnings rather
+than crashing where possible.
+Provide a clean command-line interface with help text, sensible defaults, and
+options for specifying the input format, output format, output path, and any
+table-selection or filtering behavior.
+Use structured logging for progress and diagnostics, with a verbosity option.
+Return meaningful exit codes for success, invalid arguments, and unrecoverable
+errors, and make the core conversion logic reusable as importable functions so
+it can be called from other Python code as well as from the command line. ---

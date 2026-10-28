@@ -1,0 +1,29 @@
+Write a Python script that builds a simple native GUI app on Android using the termuxgui
+(termuxgui as tg) library.
+The script should open a connection to the Termux:GUI service using `tg.Connection()` as a context
+manager, then create a single `tg.Activity`.
+Within the activity, construct a view hierarchy using a `tg.LinearLayout` as the root view.
+Inside this root layout, add the following child views in order: 1.
+A `tg.TextView` acting as a title, displaying the text "Awesome Title",
+with its font size increased to 30 using `settextsize`.
+2. A `tg.TextView` for the main body content,
+displaying a long Lorem Ipsum placeholder paragraph
+(provide the full multi-paragraph-style Lorem Ipsum text as shown,
+concatenated from multiple string literals).
+3. A `tg.Button` labeled "Click here!" placed after the content text view.
+After creating the views,
+configure the content TextView's linear layout parameters by calling `setlinearlayoutparams(10)` on
+it, giving it layout weight/priority so it expands to take up more space than the title
+and button within the LinearLayout.
+Initialize a `count` variable set to 0,
+intended to be used/incremented later (e.g., to track button clicks).
+Set up the use of the `threading` and `time` modules,
+indicating that a background thread will be created to handle some ongoing
+or asynchronous behavior
+(such as listening for UI events like button clicks and updating state accordingly),
+though the thread's full implementation should follow the established pattern of initializing it
+after the UI is built.
+The code should follow idiomatic usage of the termuxgui library:
+creating views by passing the activity and parent layout, chaining view creation calls,
+and using the library's methods to adjust visual properties (text size, layout weight).
+Include the necessary imports at the top: `termuxgui as tg`, `time`, and `threading`. ---

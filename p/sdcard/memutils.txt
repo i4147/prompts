@@ -1,0 +1,26 @@
+Write a Python script that defines a decorator function named `track_memory` for measuring the peak
+memory usage of any function it wraps.
+Requirements and behavior:
+- Use `from __future__ import annotations` at the top of the file. - Import the built-in
+`tracemalloc` module for memory tracking
+and `wraps` from `functools` to preserve the wrapped function's metadata (name, docstring, etc.). -
+Implement `track_memory` as a decorator that accepts a single callable `func` as its argument. -
+Inside the decorator,
+define an inner `wrapper` function that accepts arbitrary positional
+and keyword arguments (`*args, **kwargs`) so it can wrap any function signature. - Decorate
+`wrapper` with `@wraps(func)` to retain the original function's identity. - Within `wrapper`,
+the behavior must be: 1.
+Start memory tracing using `tracemalloc.start()`.
+2. Call the original `func` with the passed `*args, **kwargs` and store its return value.
+3. Retrieve the current
+and peak traced memory usage via `tracemalloc.get_traced_memory()`
+(the current value can be discarded/unused, e.g. assigned to `_current`).
+4. Stop memory tracing using `tracemalloc.stop()`.
+5. Print a formatted message showing the decorated function's name (`func.__name__`)
+and the peak memory usage converted from bytes to megabytes, formatted to 2 decimal places,
+in the exact format: `"{function_name}: Peak {peak_in_MB:.2f} MB"`.
+6. Return the original result from the wrapped function call. - The decorator should return the
+`wrapper` function. - The main purpose of this script is to provide a reusable,
+lightweight profiling utility that can be applied via the `@track_memory` syntax to any function in
+order to print its peak memory consumption (in MB) each time it is called,
+without altering its input arguments or return value. ---

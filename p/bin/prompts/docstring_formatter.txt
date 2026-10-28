@@ -1,0 +1,8 @@
+Reformat overly long single-line module docstrings in place.
+AI-generated module docstrings often end up as one giant line that embeds numbered / bulleted lists
+("1. ...", "2) ...", "(3) ...", "- ...", "* ...", "• ..."), **Bold Titles**,
+and dense comma- / semicolon-separated clauses.
+This script walks every .py file under the current directory (recursively)
+and inserts newlines at those separators *inside the module docstring only*,
+leaving the rest of the file byte-for-byte unchanged.
+Run from the repository root: python format_docstrings.py

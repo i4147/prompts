@@ -1,0 +1,67 @@
+Design a Python module that provides an ELMo embedding interface for text corpora,
+supporting both pre-trained ELMo models (via AllenNLP) and the overall workflow for preparing,
+embedding, and evaluating word/document vectors from a text corpus.
+The script should include:
+1. **A helper function `process_line(line, lang, stopwords)`** that wraps a shared preprocessing
+utility (`preprocess_line`) to clean/tokenize a single line of text given a language
+and a stopwords set, to be used as a worker function for multiprocessing.
+2. **A main function `ELMo(...)`** that acts as the primary interface for generating ELMo
+embeddings, with the following behavior and parameters: - **Inputs:** - `corpus_file`:
+path to the raw text corpus to process. - `lang`:
+language of the corpus (default `"chinese"`),
+used for tokenization/stopword handling. - `dict_file`:
+optional custom user dictionary file (for tokenizer, e.g. Jieba). - `stopwords_file`:
+optional custom stopwords file. - `pre_trained`:
+boolean flag (default `True`) to decide whether to use a pre-trained ELMo model
+or train/configure a custom one. - `vector_size`:
+embedding dimensionality, used only when not using the pre-trained model. - `window_size`:
+context window size, used only in custom training mode. - `min_count`:
+minimum word frequency threshold, used only in custom training mode. - `max_iter`:
+maximum number of training iterations, used only in custom training mode. - `batch_size`:
+batch size for processing text through ELMo. - `cuda_device`:
+GPU device index for running the model;
+`-1` means CPU. - `chunksize`:
+chunk size used when preprocessing the corpus in parallel (for multiprocessing). - `**kwargs`:
+additional optional parameters passed through to underlying components
+(e.g., ELMo options/weights files, thresholding parameters, etc.). - **Core behavior:**
+- Records the start time to measure total execution time. - Creates an `output` directory
+  (if it doesn't already exist) to store cached/intermediate/result files. - Derives a `corpus_name`
+  from the input file's stem,
+  used for naming cache and output files. - Loads a custom user dictionary (if provided)
+  and a stopwords list/set (based on `lang` and optional custom file) using shared utility
+  functions. - Preprocesses the corpus into a cache file (e.g., `"{corpus_name}_elmo_cache.txt"`) if
+  it doesn't already exist, reusing the same preprocessing logic/style as a Word2Vec pipeline.
+This preprocessing should:
+- Read the corpus line by line
+(using `smart_open` for flexible file handling, including compressed files). - Apply `process_line`
+in parallel using a multiprocessing `Pool` (leveraging `cpu_count()` and the given `chunksize`) to
+tokenize/clean each line according to `lang`
+and `stopwords`. - Show progress via `tqdm`. - Write the cleaned/preprocessed lines to the cache
+file for reuse in subsequent runs. - Loads/initializes an ELMo model using AllenNLP's `Elmo` class
+and `batch_to_ids` utility, either:
+- Using standard pre-trained ELMo options/weights (when `pre_trained=True`),
+or - Using a custom configuration (dimensions, window, min count, iterations)
+when `pre_trained=False`. - Supports moving/running the model on GPU
+or CPU based on `cuda_device` using `torch`. - Processes the corpus (or cached, tokenized version)
+in batches of size `batch_size` to generate ELMo embeddings/vectors for words
+or documents. - Includes memory management considerations:
+uses `gc` for garbage collection and `psutil` to monitor system memory usage,
+especially useful when processing large corpora. - Uses helper functions `load_userdict`,
+`load_stopwords`, `preprocess_line`,
+and `get_optimal_threshold` from a shared model utilities module (relative import `..model.utils`)
+— the last one likely used to determine an optimal similarity/classification threshold based on the
+resulting embeddings. - Saves intermediate
+or final results (e.g., embeddings, vocabulary, or trained model artifacts) to the `output`
+directory, potentially using `pickle` and/or `numpy` for serialization. - Prints or logs progress
+and timing information throughout the process
+(e.g., elapsed time at the end, using `time.time() - start_time`). - **Outputs:** -
+Processed/embedded representations of the corpus (word vectors and/or document vectors) saved to
+disk in the `output` directory. - Possibly returns the trained/loaded ELMo model object,
+the generated embeddings,
+and/or computed threshold values for downstream tasks (e.g., similarity search, classification).
+3. **General notes:** - The function should be robust to large corpora via chunked multiprocessing
+preprocessing and caching to avoid redundant recomputation. - It should integrate cleanly into a
+larger NLP toolkit that also supports other embedding methods (e.g., Word2Vec),
+sharing common preprocessing utilities. - Include appropriate docstrings
+(in Chinese, consistent with the existing style) describing the function, its arguments,
+and defaults, matching the conventions used elsewhere in the codebase. ---

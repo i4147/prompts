@@ -1,0 +1,25 @@
+Implements ProcessPoolExecutor.
+The follow diagram and text describe the data-flow through the system:
+|======================= In-process =====================|== Out-of-process ==|
++----------+ +----------+ +--------+ +-----------+ +---------+ | | => | Work Ids
+| | | | Call Q | | Process | | | +----------+ | | +-----------+ | Pool | | | |
+... | | | | ... | +---------+ | | | 6 | => | | => | 5, call() | => | | | | | 7 |
+| | | ... | | | | Process | | ... | | Local | +-----------+ | Process | | Pool |
++----------+ | Worker | | #1..n | | Executor | | Thread | | | | | +----------- +
+| | +-----------+ | | | | <=> | Work Items | <=> | | <= | Result Q | <= | | | |
++------------+ | | +-----------+ | | | | | 6:
+call() | | | | ... | | | | | | future | +--------+ | 4, result | | | | | | ... | | 3,
+except | | | +----------+ +------------+ +-----------+ +---------+ Executor.submit() called:
+- creates a uniquely numbered _WorkItem
+and adds it to the "Work Items" dict - adds the id of the _WorkItem to the "Work Ids" queue Local
+worker thread: - reads work ids from the "Work Ids" queue
+and looks up the corresponding WorkItem from the "Work Items" dict:
+if the work item has been cancelled then it is simply removed from the dict,
+otherwise it is repackaged as a _CallItem and put in the "Call Q".
+New _CallItems are put in the "Call Q" until "Call Q" is full.
+NOTE: the size of the "Call Q" is kept small
+because calls placed in the "Call Q" can no longer be cancelled with Future.cancel(). - reads
+_ResultItems from "Result Q",
+updates the future stored in the "Work Items" dict and deletes the dict entry Process #1..n:
+- reads _CallItems from "Call Q", executes the calls,
+and puts the resulting _ResultItems in "Result Q"

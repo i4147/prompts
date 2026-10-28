@@ -1,0 +1,18 @@
+Write a Python script that reads a text file line by line, validates each entry,
+and reports on the presence or processing of specific lines.
+The tool should accept a file path and one or more target lines as input,
+normalize and validate each line (rejecting non-text or empty values and
+stripping stray line-break characters while logging a warning when this occurs),
+and then check whether each target line already exists within the file.
+The script should handle missing or unreadable files gracefully by reporting
+clear errors rather than crashing, and should use UTF-8 encoding for all file
+access.
+For processing larger batches of target lines, the tool should be able to
+distribute work across multiple worker processes to take advantage of available
+CPU cores, collecting a structured result for each line that indicates success
+or failure along with a descriptive message.
+Logging should be configured at the informational level with timestamps and
+severity labels so that progress and problems are traceable.
+The script should be runnable from the command line, print a clear summary of
+results at the end, and exit with a non-zero status code if any validation or
+processing errors occur. ---

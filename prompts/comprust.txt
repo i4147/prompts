@@ -1,0 +1,10 @@
+Write a Python script that takes a text file path from the command line, reads
+the file's contents, runs them through a text compression routine that shortens
+the text while preserving its meaning, and saves the compressed result to a new
+file placed alongside the original, using the same base name with a distinct
+".compressed" extension.
+The script should be runnable directly from the terminal, accept the target file
+as its single argument, and rely on an external compression component to perform
+the actual compression, returning the compressed text as its output.
+Keep the workflow simple and self-contained: one file in, one compressed file
+out, with the original file left unchanged. ---

@@ -1,0 +1,18 @@
+Write a Python script that extracts text from PDF documents, supporting multiple
+PDF parsing backends that the user can select, with optional password-protected
+file handling.
+The tool should accept a PDF file path (or several paths) and produce plain-text
+output for each page, preserving page order and clearly separating pages in the
+result.
+It should allow the user to choose the parsing engine, supply a password when
+the document is encrypted, and specify the output text encoding.
+An optional normalization step should collapse excessive whitespace and clean up
+stray line breaks so the resulting text is readable and consistent, and this
+step should be switchable off.
+The output should be written to a file or to standard output, and the script
+should be usable from the command line with clear arguments and help text, while
+also being importable so other programs can call its extraction functionality
+directly.
+Handle common failure cases gracefully, such as missing files, wrong passwords,
+unsupported or corrupted PDFs, and missing backend dependencies, reporting
+informative error messages rather than crashing with raw tracebacks. ---

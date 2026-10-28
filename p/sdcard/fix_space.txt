@@ -1,0 +1,40 @@
+Write a Python script that cleans up malformed spacing in a JSON Lines-style quotes file
+and exports the corrected data in two formats.
+Requirements: 1. **Helper function `fix_spaces_in_text(text)`**:
+- Takes a string and removes unwanted single spaces that occur between word characters
+(i.e., collapses erroneous spaces inserted inside words, such as "h e l l o" or "wo rld",
+by removing a space between any two word characters). - After that,
+collapses any remaining sequences of multiple spaces into a single space. - Returns the
+cleaned string.
+2. **Main function `process_quotes_file(input_file="quotes.json",
+output_file="quotes_fixed.json")`**:
+- Reads the input file line by line
+(the file is not a strict JSON array, but contains one JSON object per line,
+where each line may represent a quote record and may end with a trailing comma,
+similar to a pretty-printed JSON array with one element per line). - For each non-empty line:
+- Strip whitespace, and if the line ends with a comma,
+remove that trailing comma. - Attempt to parse the line as a JSON object using `json.loads`. - If
+parsing fails, catch the `json.JSONDecodeError`,
+print an error message showing the first 100 characters of the problematic line along with the
+exception details, and skip that line (continue processing). - If parsing succeeds,
+apply `fix_spaces_in_text` to the `"quote"` field
+and to the `"author"` field of the parsed object. - Append the fixed object to a list of fixed
+quotes. - After processing all lines:
+- Write the full list of fixed quote objects to `output_file` as a properly formatted JSON array
+(UTF-8 encoding, `ensure_ascii=False`, indented with 2 spaces). - Print a summary message showing
+how many quotes were processed and confirming the output file name. - Additionally,
+write a second output file named `quotes_fixed_lines.json`
+where each fixed quote object is serialized as a single JSON line
+(UTF-8, `ensure_ascii=False`, no indentation),
+separated by commas and newlines in the same one-object-per-line style as the input
+(last line without trailing comma, just a newline). - Print a confirmation message showing that this
+line-based file was saved.
+3. **Script entry point**:
+- Under `if __name__ == "__main__":`,
+call `process_quotes_file()` with the default input/output filenames to run the full pipeline.
+Notes on behavior to preserve:
+- The script should be resilient to malformed individual lines
+(skip and report them rather than crashing the whole run). - Input/output file paths should be
+configurable via function arguments but default to `"quotes.json"`
+and `"quotes_fixed.json"`. - Use Python's built-in `json` and `re` modules only,
+with `from __future__ import annotations` at the top of the file. ---

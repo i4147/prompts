@@ -1,0 +1,13 @@
+Write a Python script that cleans up the user's bash command history file
+located in their home directory.
+The script should read the history file, remove every entry that contains a
+specific unwanted marker pattern (a command fragment involving `cd` followed by
+a `printf` command substitution), eliminate duplicate lines from the remaining
+entries, and write the cleaned result back to the same file, overwriting its
+previous contents.
+The script should handle the file as UTF-8 text, run as a standalone program,
+and report completion to the user with a short confirmation message once
+finished.
+Focus on preserving the rest of the history as-is, being robust if the file is
+missing or unreadable, and making the behavior clear and predictable for the
+user. ---

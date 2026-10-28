@@ -1,0 +1,22 @@
+Write a Python script that acts as a command-line helper for compiling and
+immediately running a single C orool tak first argument, be passed through to
+the compiled program.
+It should validate that the file exists and that its extension is one of the
+supported C or C++ source types, printing a short usage message when no
+arguments are given and clear error messages to the standard error stream for
+missing files or unsupported extensions.
+The script should choose an appropriate compiler based on the file type,
+preferring a modern clang front end and falling back to an alternative such as
+gcc or g++ when the preferred one is not installed.
+If no suitable compiler can to the user and exit with a failure status.
+After compiling, the script should run the resulting executable, forwarding the
+remaining command-line arguments to it, and stream its output directly to the
+terminal.
+It should make the built binary executable as needed, use a sensible temporary
+or cached location for the build artifact, and clean up or manage that artifact
+in a reasonable way.
+The script should return the program's exit code (or a non-zero code on
+compilation or setup failure) so it behaves well in shell pipelines and scripts.
+Keep the implementation portable across common Unix-like systems, handle paths
+with user home shortcuts and relative locations, and present compiler errors to
+the user clearly rather than hiding them. ---

@@ -1,0 +1,15 @@
+Write a Python script that acts as a command-line utility for removing a range
+of lines from a text file in place.
+The script should accept a file path as its first argument, followed by a
+starting line number and an optional ending line number.
+When only a starting line is given, all lines from that position to the end of
+the file should be removed.
+When both a start and end line are given, the lines in that inclusive range
+should be removed, with the line numbering following a 1-based convention.
+The script should read the file using UTF-8 encoding, perform the deletion,
+overwrite the original file with the remaining content, and print a short
+message reporting how many lines remain.
+Handle the input as simply as possible from the command line, and assume the
+user supplies valid arguments.
+Keep the tool focused, self-contained, and easy to run directly from a terminal.
+---

@@ -1,0 +1,24 @@
+Write a Python script that scaffolds a new Rust-backed Python extension project
+using maturin and PyO3 in the current working directory.
+The script should accept an optional command-line argument for the project name;
+if none is given, it should fall back to the name of the current directory.
+Sanitize the chosen name so that it only contains letters, digits, and
+underscores, replacing any other characters with underscores, and exit with a
+clear error message if the result is not a valid Python identifier.
+Using that sanitized name, the script should generate the standard file layout
+for a maturin project: a Cargo manifest declaring the package name, version,
+Rust edition, and a library target configured as a C-compatible dynamic library
+plus a regular Rust library, with PyO3 as a dependency enabled with the
+extension-module feature; a Rust source file containing a minimal sample PyO3
+module exposing a simple example function (such as one that adds two numbers and
+returns the result as a string); a Python package directory with an initializer
+that re-exports the compiled extension's functionality; a pyproject file
+configured for maturin as the build backend; and a basic README and a .gitignore
+suited to Rust and Python projects.
+Each file should be created with its parent directories as needed, overwriting
+existing files if necessary, and the script should print a progress line for
+every file written, using paths relative to the project root.
+Begin the run by printing a header that states the project name and its
+location.
+The output should be a ready-to-build project that a developer can immediately
+compile with maturin and import in Python. ---

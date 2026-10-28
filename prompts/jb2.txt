@@ -1,0 +1,17 @@
+Write a Python script that scans a target directory (or a list of files provided
+as input) for JSON files and reformats each one in place with consistent,
+human-readable indentation while preserving all non-ASCII characters.
+For every file processed, the script should report the file name and how much
+its size changed, expressed as a percentage relative to the original and
+resulting file sizes.
+Files that are empty should be skipped with a clear note, and files whose
+content is unchanged after as having a file is not valid JSON or cannot be
+written, the script should print a concise error message for that file and
+continue processing the rest without crashing.
+At the end of a run, the script should summarize the overall size before and
+after for the whole directory.
+Use colored or visually distinct console output so that results, no-change
+cases, and errors are easy to tell apart.
+The script should be runnable from the command line in the current working
+directory by default, with the option to specify a different path, and it should
+handle both individual files and folders gracefully. ---

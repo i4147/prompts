@@ -1,0 +1,2 @@
+PipSession and supporting code,
+containing all pip-specific network request configuration and behavior.

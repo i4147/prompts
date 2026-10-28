@@ -1,27 +1,19 @@
 Role: You are an expert Python developer.
-
 Task: Generate a complete, robust, production-ready Python script that strips comments and docstrings from Python files.
-
 ---
-
 Backend Support
-
 · Make libcst optional via a -b, --backend CLI argument.
 · Available backends: libcst, tree-sitter, ast.
 · Default backend: libcst if installed, otherwise ast.
 · Each backend must preserve original formatting as much as possible. Do not restructure the whole file (e.g. never rely on ast.unparse() as the primary path — it rewrites the entire file). For the ast backend, use ast only to locate docstrings (line ranges) and remove them via targeted text edits so the rest of the file is untouched.
-
 File Handling
-
 · Support Python files without extensions (detect by attempting to parse, or by shebang / content heuristic).
 · Use pathlib for all filesystem traversal.
 · Accept multiple files/directories as input.
 · If no input is provided, recursively process files in the current directory.
 · Prune common heavy/irrelevant directories during traversal: .git, __pycache__, .mypy_cache, .ruff_cache, .pytest_cache, .venv, venv, lazy, node_modules, .tox, build, dist, .eggs, *.egg-info.
 · Target files: .py files and extensionless files that parse as Python. Also support .whl archives (process .py files inside them, rebuild the wheel if anything changed).
-
 Preservation Rules
-
 · Preserve shebangs, module docstrings, # type: comments, and # fmt: comments (don't add any other preserved categories).
 · If a docstring is the only node in a function/class body, replace it with pass to avoid syntax errors.
 · Preserve string literals exactly (single, double, triple-quoted, raw, f-strings, nested quotes).
@@ -31,41 +23,28 @@ Preservation Rules
   · "nested 'quotes' are tricky"
   · x = "#"  # real comment — only the trailing part is a comment
 · Preserve line numbering when removing standalone comment lines (replace with empty line if needed to keep downstream tooling stable).
-
 Validation
-
 · Before writing, validate the resulting code parses as valid Python (ast.parse). If validation fails, do not touch the original file; report the error with file path and reason.
-
 Atomic Writing
-
 · Write to a tempfile.NamedTemporaryFile in the same directory as the target, then shutil.move() for atomic replacement.
 · Clean up the temp file on any failure.
 · Never lose the original file's content, even on crash or validation failure.
-
 Concurrency
-
 · Use multiprocessing.Pool.imap_unordered with a fixed pool of 8 workers (no --worker CLI arg needed).
 · For dry-run mode, submit a picklable module-level function (avoid lambdas — they break pickling).
 · Process .whl files sequentially in the main process (filesystem/tempdir concerns).
-
 Logging
-
 · Log errors using loguru with file path, exception type, and traceback.
 · Never let a single file's failure abort the whole run — catch per-file errors and continue.
-
 Error Handling
-
 Handle gracefully and report with context:
-
 · SyntaxError (skip file, report line + reason)
 · UnicodeDecodeError / encoding issues (try utf-8, then utf-8-sig, then latin-1 fallback)
 · PermissionError
 · Corrupted / invalid wheel archives
 · Missing backend dependencies (clear message, fall back if possible)
 · Empty function/class bodies after docstring removal
-
 CLI Behavior (default: remove inline comments only)
-
 Flag Behavior
 -c, --comments Remove all comments except shebangs, # type, and # fmt.
 -d, --docstring Remove all docstrings except module docstring.
@@ -75,26 +54,18 @@ Flag Behavior
 -b, --backend Backend: libcst, tree-sitter, ast.
 --dry-run Show what would change without writing.
 --remove-module-docstring Also strip module-level docstrings.
-
 Clipboard behavior for -x
-
 After producing final_code:
-
 ```python
 subprocess.run(['termux-clipboard-set'], input=final_code, text=True)
 ```
-
 (Use input= rather than positional args to avoid argv limits on large files.)
-
 Output Format
-
 · Show the relative path of every processed file.
 · Show the number of bytes removed for every file, in green (use loguru color tags or ANSI codes).
 · Show unchanged files in gray.
 · Print a final summary: total files, changed files, comments removed, docstrings removed, errors.
-
 Example output:
-
 ```
 f1.py    34
 f2.py    128
@@ -102,23 +73,15 @@ f3.py    (unchanged)
 ...
 Summary: 3 files | 2 changed | 162 bytes removed | 0 errors
 ```
-
 Implementation Considerations
-
 · Speed / performance: streaming reads, minimal allocations, frozenset for skip dirs, in-place directory pruning during traversal.
 · Code clarity / maintainability: use dataclasses for result objects (e.g. FileResult(path, bytes_removed, comments_removed, docstrings_removed, error, changed)).
 · Memory efficiency: process files one at a time; avoid loading entire trees into memory.
 · Production-ready robustness: no silent failures, clear error reporting, atomic writes.
 · Feature set: streaming, adaptive backend selection, thorough edge-case handling.
-
 Type Hints
-
 · Full type annotations throughout, using modern syntax (str | None, list[FileResult], Path | None, etc.).
-
 Environment
-
 · Python version: 3.14
-
 Output
-
 · Return the full type-annotated code (single file, ready to run).

@@ -1,0 +1,4 @@
+Core transliteration engine.
+Both directions share the same loading / scoring machinery;
+only the conversion tables and the `variations()` segmentation differ.
+All file paths use `pathlib.Path`.

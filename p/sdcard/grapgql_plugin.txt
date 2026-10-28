@@ -1,0 +1,29 @@
+Write a Python script that provides GraphQL source code formatting functionality,
+designed to integrate with a code formatting tool
+(such as Prettier's Python bindings or a similar plugin system).
+The script should attempt to import `parse`
+and `print_ast` from the `graphql` library
+(the GraphQL core library used for parsing and printing GraphQL documents/schemas).
+Define a function named `format` that accepts two parameters:
+`text` (the raw GraphQL source code as a string)
+and `opts` (a parameter intended for formatting options,
+which may be unused in the primary implementation).
+Behavior requirements:
+- If the `graphql` library and its `parse`/`print_ast` functions are successfully imported,
+the `format` function should parse the input `text` into an AST using `parse`,
+then convert that AST back into formatted/pretty-printed GraphQL source code using `print_ast`,
+and return the result with a trailing newline character appended. - If the import fails
+(e.g., the `graphql` library is not installed, raising an `ImportError` or similar exception),
+the script should fall back to defining a no-op version of `format` that simply returns the original
+`text` unchanged, without raising an error.
+This ensures the script degrades gracefully when the optional dependency is missing.
+Use a `try`/`except` block at the module level to handle the conditional import
+and function definition,
+so that only one definition of `format` is active depending on whether the import succeeded.
+Add a trailing comment noting that TypeScript
+and ESTree (JavaScript/TypeScript AST) formatting support reuse Babel under the hood,
+as contextual documentation for maintainers (even though this specific script only handles GraphQL).
+Keep the code minimal, with no additional error handling, logging,
+or CLI interface — just the import attempt
+and the `format` function definition suitable for being called by an external formatting
+dispatcher. ---

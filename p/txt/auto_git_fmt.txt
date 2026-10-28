@@ -1,0 +1,3 @@
+auto_git_fmt.py - single-file CLI Usage:
+python auto_git_fmt.py [--dry-run] [--no-precommit] [--verbose] Drop this file anywhere,
+make executable, and run inside a git repo.

@@ -1,0 +1,1 @@
+Optional dependencies, file identity checks, and atomic output helpers.

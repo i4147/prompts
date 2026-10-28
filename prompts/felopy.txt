@@ -1,0 +1,23 @@
+Write a Python script that acts as a command-line wrapper around an external AI
+agent CLI.
+It should accept a free-form natural-language query from the user on the command
+line (multiple words joined together) along with an optional timeout setting in
+seconds, defaulting to five minutes.
+The script should forward the query to the external agent tool, wait for its
+response within the timeout, and report progress to the user on the standard
+error stream so that standard output stays clean.
+Once the agent returns its response, the script should scan the text for fenced
+code blocks, preferring blocks explicitly labeled as Python and falling back to
+unlabeled blocks if none are found.
+It should extract the code content from the first or most relevant block, strip
+surrounding whitespace, and save it as a Python file in a dedicated directory
+under the user's home folder, creating that directory if it does not exist.
+The filename should be generated automatically from a timestamp and a sanitized
+version of the query so that repeated runs never overwrite each other.
+The script should handle errors gracefully: report when the external tool is not
+installed or not found on the system path, report timeouts clearly, surface
+non-zero exit codes and error output from the external tool, and report when no
+code blocks are present in the response.
+On success, it should print the path of the saved file to the user.
+Keep the design simple, robust, and easy to run from a terminal, with a helpful
+usage message and description available through a help flag. ---

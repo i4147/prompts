@@ -1,0 +1,15 @@
+add_type_hints_live.py Workflow:
+- Collect runtime type observations for functions in a target Python file by running the target with
+a small profiler hook that captures argument
+and return value types. - Apply the observed types as annotations to the target file (or a copy)
+using libcst.
+Usage (examples): # Full run:
+collect then apply, writing annotated file to <target>.annotated.py python add_type_hints_live.py
+--target path/to/module.py --full # Collect only (creates types.json) python add_type_hints_live.py
+--target path/to/module.py --collect --types-out types.json # Apply only
+(uses previously produced types.json) python add_type_hints_live.py --target path/to/module.py
+--apply --types types.json --inplace Notes:
+- By default, the instrumented run will execute the target module (run as __main__)
+which may run top-level code.
+Use caution and run in an environment
+where running the module is safe. - Requires libcst for source rewriting: pip install libcst

@@ -1,0 +1,21 @@
+Write a Python command-line script that cleans up a text file in place by filtering out
+unwanted lines.
+The script should: - Define a function `process_file(fp: str) -> None` that takes a file path as
+input. - Open the file at that path for reading using UTF-8 encoding,
+using `pathlib.Path` to handle the path. - Read all lines from the file. - Filter out (skip) any
+line that either starts with the prefix "Ukl" or has a length less than 20 characters;
+keep all other lines. - Reopen the same file path in write mode (UTF-8 encoding)
+and overwrite it with only the retained lines,
+effectively removing the filtered-out lines from the file in place.
+The script should also define a `main() -> None` function that:
+- Records a start time using `time.perf_counter()`. - Calls `process_file` on a hardcoded file path
+(the file named "02", with no extension, located in the current working directory). - After
+processing completes, prints the elapsed time in seconds in the format: `{elapsed} seconds`.
+The script should be structured to run as a standalone program:
+use the `if __name__ == "__main__":` guard to call `main()`
+and pass its return value to `sys.exit()`.
+No command-line arguments, external libraries,
+or user prompts are needed—the input file path is fixed in the code.
+There is no return value or output file path change;
+the script modifies the target file directly
+and only prints the timing information to standard output.

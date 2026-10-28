@@ -1,0 +1,17 @@
+Write a Python script that lists files and directories in the current working
+directory whose names contain a user-supplied search term, printed as a sorted,
+human the command line.
+The tool should accept one search string as a positional argument and an
+optional flag that changes how symbolic links are handled: by default, symbolic
+links should be excluded from the results, but when the flag is provided they
+should be included.
+Each matching entry should be printed on its own line with a leading dash and
+indentation.
+Regular entries should show only their name, while symbolic links should show
+their name followed by an arrow and the fully resolved target path.
+The script should only inspect the top level of the current directory (no
+recursion), match names by simple substring containment, and exit cleanly with a
+status code when run as the main program.
+Handle the case where no search term is given or where the search term is an
+empty string in a sensible, user-friendly way, and make sure the output is
+deterministic by ordering entries alphabetically. ---

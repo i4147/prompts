@@ -1,0 +1,26 @@
+Write a Python script that batch-converts HTML web pages into Markdown files
+using an external HTML-to-Markdown conversion tool.
+The script should be runnable from the command line and accept zero or more
+arguments.
+Each argument may be either a path to an individual file or a directory.
+When given a directory, the script should locate the files it contains
+(including nested subdirectories) and include them in the work.
+When no arguments are provided, the script should operate on the files found in
+the current working directory.
+For each collected file, the script should check whether it is an HTML document
+(with either the `.html` or `.htm` extension, case-insensitive).
+Non-HTML files should be skipped without any conversion attempt.
+For each HTML file, it should invoke the external converter, capture the
+resulting Markdown text, and save it as a UTF-8 encoded file placed beside the
+original, with the same base name and a `.md` extension.
+Upon success, the script should print a concise confirmation line showing the
+original and new file names.
+If conversion fails for any file, the script should report the error message to
+standard error, continue processing the remaining files, and never abort the
+entire batch because of a single failure.
+Processing should be carried out across the collected files using a parallel or
+multi-process execution strategy so that large batches complete efficiently,
+with each file's result (success or failure) handled independently.
+The script should be well organized with clear separation between file
+discovery, per-file conversion, and the command-line entry point, and should
+guard its execution so it runs only when launched directly. ---

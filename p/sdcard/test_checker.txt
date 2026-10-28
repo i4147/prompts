@@ -1,0 +1,34 @@
+Write a Python test module (using plain `assert` statements, e.g. for pytest) that validates the
+behavior of a spell-checking library named `pycspell`,
+specifically the `SpellChecker` class from `pycspell.checker`
+and the `Dictionary` class from `pycspell.dictionary`.
+The test module should cover the following scenarios: 1. **Known word acceptance**:
+Create` using a `Dictionary` initialized with a list of known words (e.g., `["hello", "world"]`).
+Call `checker.check_text(...)` with a text composed entirely of words from that dictionary
+(e.g., `"hello world"`).
+Assert that the returned list of issues is empty,
+confirming no false positives for correctly spelled/known words.
+2. **Unknown word detection**:
+Create a `SpellChecker` using a `Dictionary` with a limited word list (e.g., `["hello"]`).
+Call `check_text` with a string containing one misspelled/unknown word (e.g., `"hello wurld"`).
+Assert that exactly one issue is returned, and verify the issue object exposes:
+- a `word` attribute matching the unknown word (e.g., `"wurld"`) - a `line` attribute indicating the
+  1-based line number where the issue occurs (e.g., `1`)
+- a `column` attribute indicating the 1-based column position
+  where the unknown word starts in the text (e.g., `7`) 3. **Custom/domain-specific word support**:
+Create a `SpellChecker` using a `Dictionary` that includes a custom/non-standard word
+(e.g., `"pycspell"`).
+Call `check_text` with a string containing that custom word alongside other words
+(e.g., `"pycspell is useful"`).
+Assert that none of the returned issues reference the custom word,
+confirming the dictionary correctly whitelists custom terms even if other words in the text might
+be flagged.
+Each test should be a standalone function with a descriptive name following the pattern
+`test_<behavior_being_tested>`, use no fixtures or parametrization,
+and rely only on direct instantiation of `SpellChecker`
+and `Dictionary` objects with inline word lists.
+The `Issue` objects returned by `check_text` must support attribute access for `word`, `line`,
+and `column`.
+The code must not include any imports beyond `SpellChecker` and `Dictionary`,
+and must not use any testing framework decorators—just plain functions with `assert` statements,
+each returning `None`. ---

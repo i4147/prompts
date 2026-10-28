@@ -1,0 +1,20 @@
+Write a Python script that loads a dictionary of previously saved translations
+from a JSON file (resuming safely if the file is missing, empty, or malformed),
+and also loads a list of previously failed words from a separate file so they
+can be retried.
+The tool should be designed to batch-translate a list of words or phrases into a
+target language, persist progress incrementally so that an interrupted run can
+resume without re-translating already completed entries, record any words that
+fail to translate into the failed-words file, and skip work that has already
+been done.
+Provide clear console and log messages reporting how many existing translations
+were loaded, how many items remain, and the outcome of each batch, and handle
+file-system and data-format errors gracefully with informative warnings rather
+than crashes.
+The main inputs are a source word list, an output path for the translations
+JSON, and a path for the failed-words record; the main output is an updated
+translations JSON file containing source-to-translation mappings plus an updated
+failed-words file.
+Keep the script self-contained, runnable from the command line with configurable
+file paths, and robust enough to be re-run repeatedly until all words are
+translated. ---

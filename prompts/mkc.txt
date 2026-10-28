@@ -1,0 +1,22 @@
+Write a Python script that acts as a small command-line build helper for C and
+C++ source files.
+It should accept a path to a single source file, verify that the file exists,
+and determine the appropriate compiler based on the file's extension: a C source
+should be compiled with the clang C compiler, and a C++ source should be
+compiled with the clang C++ compiler.
+Any other file type must be rejected with a clear error message written to the
+error output, and the script should exit with a non-zero status code.
+On a valid input, the script should produce an executable in the current working
+directory that is named after the source file without its extension.
+After a successful compilation, it should report the result to the user, then
+run the system's strip utility on the produced executable to remove debugging
+symbols, and report that stripping step as well.
+If the compilation fails, the script should print a concise error message to the
+error output, include any compiler diagnostic output that was captured, and exit
+with a non-zero status code.
+Handle failures of the strip step gracefully with an informative message.
+The tool should be robust and user-friendly: it should report missing files,
+unsupported extensions, and build failures clearly, and it should never leave
+the user guessing about what happened.
+Keep the interface simple, requiring only the source file path as input, and
+make the script runnable directly from the command line. ---

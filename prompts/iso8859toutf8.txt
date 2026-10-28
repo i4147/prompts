@@ -1,0 +1,23 @@
+Write a Python script that converts the character encoding of a text file in
+place from ISO-8859-1 (Latin-1) to UTF-8, while preserving the original content
+as a backup.
+The tool should target a single file named "script.sh" by default, but it should
+be easy to point it at any other file path.
+Key behaviors: - Before modifying anything, create a backup copy of the original
+file in the same directory, named by appending a ".bak" extension to the
+original filename, and preserve the file's metadata (such as timestamps and
+permissions) on the backup. - Read the backup using ISO-8859-1 decoding so that
+every byte is interpreted as a Latin-1 character, then write the decoded text
+back to the original file path using UTF-8 encoding. - Overwrite the original
+file with the UTF-8 version, leaving the backup untouched as a safety net. -
+After a successful conversion, print a short confirmation message to the console
+stating which file was converted and where the backup was saved. - The script
+should run its conversion when executed directly from the command line, and its
+core conversion routine should be reusable when imported into other Python code.
+- Handle the file operations cleanly so that the user is not left with a
+partially written file if something goes wrong; report errors such as a missing
+file or permission problems with clear messages rather than an unhandled crash.
+Inputs: the path of the file to convert (defaulting to "script.sh").
+Outputs: a UTF-8 encoded version of the file at the original path, a ".bak"
+backup of the original Latin-1 content, and a confirmation message printed to
+the console. ---

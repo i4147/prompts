@@ -1,0 +1,24 @@
+Write a Python script that analyzes Python source files to detect whether they
+use type annotations, and reports or optionally removes those annotations to
+produce an unannotated version of the code.
+The tool should accept one or more Python file paths (or a directory to scan
+recursively) as input and process each file independently.
+Key behaviors: - Parse each Python source file into a syntactic representation
+without executing it, and walk the structure to determine whether any function
+signatures (parameters, keyword-only parameters, variadic arguments, return
+types) or variable declarations carry type annotations. - Produce a per-file
+result indicating whether annotations were found, and summarize results across
+all processed files in a machine-readable format (such as JSON) written to
+standard output or a specified output file. - Provide an optional mode that
+strips all type annotations from function signatures and variable declarations
+while preserving the original logic, formatting where possible, and valid Python
+syntax, then writes the cleaned code to a new file or overwrites the original
+only when explicitly requested. - Handle both synchronous and asynchronous
+function definitions consistently. - Process files in parallel using multiple
+worker processes when many files are provided, while keeping results
+deterministic and ordered by input path. - Gracefully report files that fail to
+parse (e.g., syntax errors, encoding problems) without aborting the overall run,
+and include the error details in the output. - Return a non-zero exit status if
+any file could not be processed, and zero otherwise. - Include a command-line
+interface with clear help text, options for output location, recursive directory
+scanning, dry-run behavior, and worker count configuration. ---

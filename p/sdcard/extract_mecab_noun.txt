@@ -1,0 +1,46 @@
+Create a Python command-line script for Korean natural language text preprocessing that extracts
+likely noun-containing words/phrases from raw text,
+intended as a filtering/cleaning step in an NLP pipeline
+(e.g., for building word lists, keyword candidates,
+or corpus cleaning for Korean text-to-speech or NLP projects such as "SmiToText").
+The script should depend on an internal project library ("SmiToText") that provides:
+- An NLTK-based sentence tokenizer (`nltkSentTokenizer`) for splitting raw text into sentences. - A
+shared utility class (`Util`) for common helper functions
+(e.g., file I/O, logging, or text normalization) used across the project.
+Core requirements: 1.
+Import standard libraries:
+`argparse` (for CLI argument parsing), `os` (for file/path handling),
+and `date` from `datetime` (likely used for timestamping output files or logs).
+2. Instantiate the shared `Util` class at module level for reuse throughout the script.
+3. Implement a function `expect_noun_text(text)` that processes a string of Korean text
+and returns a list of candidate words (`word_list`) that are expected to be nouns
+or noun-like tokens, based on heuristic filtering rather than a full morphological analyzer.
+4. Inside `expect_noun_text`, define:
+- A list `check_word_end` containing sentence-ending punctuation marks
+(e.g., `.`, `:`, `;`, `!`, `?`, quotation marks, closing quotes) used to detect the end of a
+sentence/clause when scanning tokens. - A list `exclude_char_list` containing a broad set of
+punctuation marks, brackets, quotation marks,
+and special symbols commonly found in Korean text
+(including full-width brackets like `「」`, `【`, bullet/marker symbols like `◇ △ ▲ ○ ㆍ ·`,
+ellipsis `…`, and various quote styles) that should be stripped
+or excluded from candidate words. - A (commented-out, reference/example) list of Korean word
+endings/suffixes (e.g., verb/adjective conjugations like `잡는`, `하는`, `되는`, `받고`, `했다`, `이루어지는`,
+etc.) representing grammatical endings that typically indicate a word is NOT a standalone noun
+— intended to be used (or later enabled) to filter out non-noun tokens by checking if a word ends
+with any of these suffixes.
+5. The function should iterate through the tokens of the input text,
+use `check_word_end` to identify boundaries,
+use `exclude_char_list` to strip unwanted punctuation/symbols from each token,
+and build up `word_list` with the cleaned candidate noun-like words, returning this list.
+6. The script should be structured to support being run from the command line via `argparse`,
+accepting input such as a text file path
+and producing processed output (e.g., a filtered word list or a cleaned text/word file),
+with `os` and `date` used to manage file paths and output naming (e.g., timestamped output files).
+7. Design the code to integrate with the broader SmiToText pipeline:
+the sentence tokenizer should first split input text into sentences,
+and `expect_noun_text` (or similar logic) should then be applied per sentence to extract candidate
+noun words, suitable for building vocabulary lists
+or cleaning noisy Korean text for downstream NLP/TTS tasks.
+Keep the implementation heuristic and rule-based (no external POS tagger required),
+relying on punctuation lists
+and (optionally) suffix-based filtering to approximate noun extraction for Korean text. ---

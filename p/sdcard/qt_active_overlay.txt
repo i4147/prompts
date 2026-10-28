@@ -1,0 +1,2 @@
+Adapted from: https://wiki.python.org/moin/PyQt/A%20full%20widget%20waiting%20indicator Also from:
+https://github.dev/royerlab/aydin/blob/c19595f37a163f6cd34243c5d5975cddb4a637c1/aydin/gui/_qt/custom_widgets/overlay.py.

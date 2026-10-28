@@ -1,0 +1,25 @@
+Write a Python module that defines a `ToggleButton` class for a Termux:GUI Python binding library,
+representing a native Android ToggleButton widget.
+Requirements: - Import `Optional`
+and `Literal` from `typing`. - Import `View` from `termuxgui.view`,
+`Activity` from `termuxgui.activity`,
+and `CompoundButton` from `termuxgui.compoundbutton`. - Define a class `ToggleButton` that inherits
+from `CompoundButton`,
+with a docstring stating "This represents a ToggleButton." - The constructor (`__init__`) must
+accept: - `activity: Activity` (required, positional)
+— the activity the widget belongs to. - `parent: Optional[View] = None`
+— an optional parent view to attach the widget to. - `checked: bool = False`
+— the initial checked state of the toggle button. - `visibility: Optional[Literal[0, 1, 2]] = None`
+— an optional visibility state restricted to the values 0, 1, or 2. - Inside the constructor:
+- Build a dictionary `args` containing `"aid"` (from `activity.aid`), `"checked"`,
+  and `"visibility"`. - If `parent` is not `None`,
+  add a `"parent"` key to `args` set to `parent.id`. - Store the `checked` value as an instance
+  attribute (`self.checked`). - Call the parent class (`CompoundButton`) `__init__` method,
+  passing `activity` and the result of `activity.c.send_read_msg(...)`,
+  where the message sent is a dictionary with `"method": "createToggleButton"` and `"params": args`.
+This performs a remote procedure call to the Termux:GUI backend to create the native toggle button
+widget and retrieve its identifier.
+The code should contain no additional logic, validation,
+or error handling beyond what is described above — it should mirror the structure and conventions
+of other widget wrapper classes in this library (e.g., CompoundButton, View).
+---

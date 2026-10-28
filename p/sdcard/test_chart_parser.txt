@@ -1,0 +1,11 @@
+Regression tests for the exponential chart-parsing DoS (CWE-770; CVE-2026-12886).
+A highly-ambiguous grammar such as the 15-byte ``S -> S S | 'a'`` makes the number of parses
+exponential in the sentence length (the Catalan numbers),
+and ``nltk.parse.chart`` materialises every parse tree eagerly while reading them off the chart
+-- so a tiny grammar plus a short sentence pins the CPU and exhausts memory,
+and even obtaining the first parse never returns.
+The number of parse-tree nodes built is now bounded by ``MAX_PARSE_TREES``;
+once exceeded, tree extraction raises ``ValueError``.
+The "must not run unbounded" test runs in a spawned process with a hard timeout,
+and the worker reports its outcome via its exit code
+(no queue/thread, so it is robust on free-threaded builds), so a regression cannot hang the suite.

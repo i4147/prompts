@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line tool for analyzing a Git
+repository's commit history and exporting per-commit file-change summaries.
+The tool should accept a repository path, a target branch or revision, and
+optional filters such as a date range (since/until), author name or email
+matching, a maximum commit count, and an option to follow only first-parent
+history.
+For each commit in the selected range, it should identify which files were
+added, modified, deleted, and (where supported) renamed, and report totals such
+as the number of files touched and lines inserted and deleted.
+The tool should be able to read the repository through multiple backends with
+graceful fallback, so that features like rename detection and line statistics
+are used when the chosen backend supports them and are cleanly omitted
+otherwise.
+Output should be written as CSV with a fixed set of columns covering commit
+identity (full and short hashes), author and committer names and emails,
+authored and committed timestamps in ISO 8601 format, the commit message, parent
+hashes, and the per-commit file-change metrics.
+The tool should also support an optional JSON output format with equivalent
+data.
+Results should be streamed or written in a deterministic, chronological order,
+and the output destination should default to standard output but be configurable
+to a file.
+Configuration should be loadable from a TOML file, with command-line arguments
+overriding file values and sensible defaults applied otherwise.
+The tool should validate inputs, provide clear usage errors, and use distinct,
+documented exit codes for success, no matching commits, usage errors, and
+invalid or inaccessible repositories.
+Logging should be configurable via verbosity flags, with diagnostic messages
+going to standard error so they do not corrupt data output.
+Include helpful `--help` text describing all options and their behavior. ---

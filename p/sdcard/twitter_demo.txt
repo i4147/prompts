@@ -1,0 +1,13 @@
+Examples to demo the :py:mod:`twitterclient` code.
+These demo functions should all run, with the following caveats:
+* You must have obtained API keys from Twitter,
+and installed them according to the instructions in the
+`twitter HOWTO <https://www.nltk.org/howto/twitter.html>`_. * If you are on a slow network,
+some of the calls to the Twitter API may timeout. * If you are being rate limited while searching,
+you will receive a 420 error response. * Your terminal window / console must be able to display
+UTF-8 encoded characters.
+For documentation about the Twitter APIs,
+see `The Streaming APIs Overview <https://dev.twitter.com/streaming/overview>`_
+and `The REST APIs Overview <https://dev.twitter.com/rest/public>`_.
+For error codes see Twitter's
+`Error Codes and Responses <https://dev.twitter.com/overview/api/response-codes>`

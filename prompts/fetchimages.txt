@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line web image crawler.
+It should accept a starting URL and optional settings such as a maximum crawl
+depth, a maximum number of pages to visit, a restriction to the same domain, and
+a destination directory for downloaded files.
+Starting from the given page, the tool should fetch HTML pages, discover both
+hyperlinks to (including lazy-loading attributes, CSS-free image sources, and
+any base URL declared in the document), resolve relative addresses into absolute
+ones, and breadth-first traverse the site while avoiding revisiting the same
+page.
+For every discovered image, the script should download it, but only when the
+file extension or content indicates an image type from a common set of formats
+(such as JPEG, PNG, GIF, WebP, BMP, SVG, TIFF, ICO, and AVIF).
+Downloaded files should be saved into the output directory with safe, sanitized
+file names derived from the source URL, and duplicate images should be detected
+and skipped, for example by comparing content hashes.
+The tool should use a realistic browser-like user agent, handle network timeouts
+and HTTP errors gracefully without stopping the whole crawl, and respect a
+configurable delay between requests.
+The script should print progress information during the crawl and finish with a
+summary report listing the number of pages visited, images found, images saved,
+duplicates skipped, and errors encountered.
+Results should also be recorded in a manifest file mapping each saved image to
+its original URL and page of origin.
+Include clear help text for all command-line options and validate user inputs
+such as malformed URLs and invalid numeric limits before starting the crawl. ---

@@ -1,0 +1,6 @@
+Regression tests for the corpus-reader symlink / path-traversal sandbox bypass
+(CWE-59, GHSA-p4rw and siblings GHSA-j5pw / GHSA-mvf5 / GHSA-cr8c / GHSA-934p / GHSA-7qj2).
+Several readers derived a path from trusted corpus state
+and reopened it with a raw ``open()`` / ``codecs.open()``,
+so a symlink placed inside a trusted corpus root could resolve outside the root and still be parsed.
+Each now validates the path through ``nltk.pathsec.validate_path`` first.

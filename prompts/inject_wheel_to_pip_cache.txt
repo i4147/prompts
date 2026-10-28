@@ -1,0 +1,18 @@
+Write a Python script that acts as a helper for managing a local cache of Python
+wheel packages, keyed by the package's source URL and the current Python
+interpreter's identity.
+The script should accept a package source URL and a cache root directory,
+compute a stable, deterministic cache location for that URL that varies with the
+interpreter name and version, and organize cached entries into a nested
+directory layout to avoid overly large single folders.
+It should also be able to read and parse the metadata file embedded inside a
+`.whl` archive (the standard `.dist-info/METADATA` file, which uses RFC
+822-style headers), and raise a clear, descriptive error if the wheel archive
+contains no such metadata.
+The script should handle file-system paths and convert local file paths into
+proper file URLs where needed.
+Design the tool so that it can be imported as a module by other programs as well
+as run from the command line, with clean error handling, informative messages
+for the user, and no side effects beyond the cache directory it manages.
+Keep the implementation self-contained and readable, and make sure the cache key
+logic is reproducible across runs on the same interpreter. ---

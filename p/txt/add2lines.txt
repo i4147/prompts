@@ -1,0 +1,37 @@
+Write a Python command-line script that batch-modifies Python source files by prepending specific
+import lines to each file. **Purpose:** The script scans a directory
+(or uses a list of specified files) and prepends two lines — `from dh import ` and `import pytest\n`
+— to the beginning of each target file's content, using multiprocessing for parallel processing.
+It also reports the disk space saved (or changed) in the current working directory after the
+operation. **Inputs:** - Command-line arguments (`sys.argv[1:]`):
+an optional list of file paths to process. - If no arguments are provided,
+the script should recursively collect all files in the current working directory using a helper
+function `get_files(cwd, recursive=True)` from a local module named `dh`. - The `dh` module is
+expected to expose three helper functions:
+`get_files(path, recursive)` to list files,
+`get_size(path)` to compute the total size of a directory,
+and `format_size(size)` to format a byte count into a human-readable string. **Output:** - The
+script modifies the target files in place
+(reading each file's lines,
+then writing back a new version with the two extra lines inserted at the top,
+followed by the original content). - After processing, it prints a line to stdout in the format:
+`space saved : <formatted size>`,
+where the size is the difference between the directory size before
+and after processing (measured via `get_size`). **Notable behavior / implementation details:** - Use
+the `multiprocessing` module with a `spawn`-context `Pool` of 8 worker processes to process files
+concurrently, where each worker calls a `process_file(fp)` function that performs the
+read/modify/write logic for a single file. - Implement backpressure/throttling on the task queue:
+maintain a `deque` of `AsyncResult` objects from `pool.apply_async`,
+and cap the number of pending (in-flight) tasks at a constant `MAX_QUEUE = 16`;
+when the pending queue exceeds this limit,
+pop and block (`.get()`) on the oldest pending result before submitting more work. - After
+submitting all tasks,
+drain the remaining pending queue by calling `.get()` on each remaining result to ensure all work
+completes before measuring the final directory size. - The file reading/writing must use UTF-8
+encoding via `pathlib.Path.open`. - The `process_file` function should read all lines of a file,
+build a new list of lines starting with the two prepended lines followed by the original lines,
+then overwrite the file with this new content. - The script should be structured with a `main()`
+function that returns/produces an exit code,
+invoked via `if __name__ == "__main__": exit(main())`. - Compute the "before" size of the current
+working directory prior to processing and the "after" size post-processing,
+and print the difference (saved space) using the `format_size` helper.

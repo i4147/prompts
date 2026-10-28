@@ -1,0 +1,18 @@
+Write a Python script that formats C, C++, Java, and JavaScript/JSON source
+files in place using the clang-format tool with the LLVM style.
+The script should accept an optional list of file paths from the command line;
+if none are given, it should recursively discover all supported source files
+(C/C++ headers and sources, Java, JavaScript, and JSON) in the current working
+directory.
+Before processing, it should report how many files were found, using colored
+console output.
+Files should be formatted concurrently for speed, and each file should be
+handled independently so that a failure on one file (such as a missing or
+unreadable file, or clang-format not succeeding) does not stop the others.
+When a single file is supplied, format just that file and exit with a non-zero
+status code.
+When multiple files are processed, measure the total disk space of the working
+directory before and after formatting and report the net change in a
+human-readable size format (for example, bytes, KB, or MB).
+Include a standard script entry point so the tool runs when executed directly.
+Keep the output concise and the error handling robust. ---

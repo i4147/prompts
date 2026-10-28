@@ -1,0 +1,30 @@
+Write a Python script that batch-converts MP3 audio files to aduced bitrate
+using FFmpeg, designed to run efficiently across many files in parallel.
+The tool should accept a source directory (or file list) and an optional output
+location and target quality setting from the command line.
+It should discover all MP3 files in the source location, including files with
+differing letter-case extensions, and process them concurrently using a pool of
+worker processes (around 8 workers by default).
+For each file, the script should determine the original bitrate and duration
+using FFmpeg tooling, then compute a new target bitrate as a percentage of the
+original, with a sensible minimum floor so output never becomes unusably low.
+Re-encode each file to the computed bitrate while preserving the audio content
+and basic metadata where possible.
+Skip files that cannot be processed and record the reason rather than halting
+the whole batch.
+Before starting, verify that FFmpeg and FFprobe are installed and available; if
+they are missing, report a clear error and exit with a non-zero status code.
+Provide live, human-readable progress feedback in the terminal: a per-file
+status line, a progress indicator tied to elapsed encoding time relative to the
+file's duration, and color-coded success, warning, and error messages.
+Keep the output tidy by truncating long FFmpeg error output to a short preview.
+At the end, print a summary that reports how many files were converted, skipped,
+or failed, the total size before and after conversion, the overall space saved
+as a percentage, and the total elapsed time.
+Log notable events and errors with a structured logging approach, and optionally
+write the summary as a machine-readable report file.
+The script should be robust to interruption (for example, Ctrl+C should stop
+workers cleanly without leaving corrupted partial output), should not overwrite
+original files unless explicitly requested, and should handle edge cases such as
+zero-length files, unreadable metadata, and filenames containing spaces or
+unicode characters. ---

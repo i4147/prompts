@@ -1,0 +1,7 @@
+ai-cloudscraper
+docx2txt
+exejs
+google-cloud-core
+grpc-google-iam-v1
+grpcio
+pathos

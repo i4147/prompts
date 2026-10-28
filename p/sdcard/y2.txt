@@ -1,0 +1,29 @@
+Write a Python function named `validate` that checks whether a given archive file is valid
+and not corrupted, without fully extracting it. **Purpose:** The function should take the path to an
+archive file, automatically determine its format using a helper function
+`_detect_format(archive_path)`,
+and then attempt to open the archive using the appropriate library for that format to confirm it can
+be read successfully. **Input:** - `archive_path` (str):
+the file system path to the archive to validate. **Output:** - Returns `True` if the archive can be
+successfully opened/read for its detected format. - Returns `False` if opening the archive raises
+any exception (indicating corruption or an invalid file), for tar, zip/whl,
+and 7z formats. - Raises a `ValueError` with the message "Unsupported archive format" if the
+detected format is none of the supported ones. **Behavior details:** 1.
+Call `_detect_format(archive_path)` to get the archive extension/type as a string
+(e.g., "tar", "tar.gz", "zip", "whl", "7z").
+2. If the detected format starts with the string "tar"
+(covering plain tar and compressed variants like tar.gz, tar.bz2, etc.),
+attempt to open it using Python's built-in `tarfile.open()` inside a try/except block.
+Return `True` on success, `False` on any exception.
+3. If the detected format is exactly "zip" or "whl" (since wheel files are zip archives),
+use `zipfile.is_zipfile(archive_path)` to check validity and return its boolean result directly.
+4. If the detected format is "7z", import `py7zr` locally within this branch,
+and attempt to open the file using `py7zr.SevenZipFile(archive_path, "r")` inside a
+try/except block.
+Return `True` on success, `False` on any exception.
+5. For any other detected format, raise `ValueError("Unsupported archive format")`.
+6. Ensure resources are properly closed by using context managers (`with` statements)
+when opening the tarfile and 7z file.
+7. Use bare `except` clauses to catch any exception type when checking tar and 7z
+validity, since the goal is simply to detect whether opening succeeds or fails.
+---

@@ -1,0 +1,48 @@
+Write a prompt for an AI coding agent to generate a Python utility module.
+The script should define a `Util` class providing a collection of general-purpose helper methods
+commonly needed across projects, with the following requirements: **Purpose**:
+Create a reusable utility class that centralizes common filesystem, string/text processing,
+and type-checking helper functions. **Dependencies**:
+The script must import `os`, `errno`, `re`, `sys`, `pkg_resources`, `numpy as np`,
+and `normalize` from `krwordrank.hangle`. **Class structure**:
+Define a class named `Util` with an `__init__` method that sets an instance attribute
+`self.className` to `"Util"`. **Required methods**:
+1. `getAbsPath(self, filename)`
+   — returns the absolute path of a given filename using `os.path.abspath`.
+   2. `getCurDirPath(self, filename)`
+   — returns the directory portion of the absolute path of a given filename
+   (using `getAbsPath` and `os.path.dirname`).
+   3. `getRootPath(self, modulename)`
+   — uses `pkg_resources.resource_filename` to locate a module's root directory,
+   then resolves it to the parent directory using `getAbsPath`, and returns the absolute path.
+   4. `makeDir(self, path)` — checks whether `path` is a file or directory;
+if it's a file, derives the containing directory;
+if that directory does not exist,
+creates it (including intermediate directories) using `os.makedirs`.
+5. `rreplace(self, s, old, new, occurrence)`
+— replaces the last `occurrence` number of occurrences of `old` with `new` in string `s`,
+implemented via `rsplit` and `join`.
+6. `check_email(self, text)`
+— uses a regex pattern to detect whether `text` contains an email address,
+returning `True` or `False`.
+7. `normalize(self, text)`
+— cleans and normalizes Korean/mixed text by first removing illegal/keyboard-noise characters
+(via a method called `remove_keyboard_out_chractor`, assumed to exist elsewhere in the class)
+and then applying the `normalize` function from `krwordrank.hangle` with `english=True`,
+`number=True`, `punctuation=True` options enabled.
+8. `is_int(self, value)` — attempts to determine whether a given value represents an integer,
+trying `int()` conversion first, checking the resulting type,
+and falling back to checking `is_integer()` for float-like values;
+should handle exceptions gracefully
+(this method may be incomplete/cut off and should be completed logically,
+returning `True`/`False` as appropriate,
+potentially catching `ValueError`/`TypeError`). **Notable behavior/style**:
+- All methods are instance methods on the `Util` class (no static/class methods). - The class is
+designed to be imported
+and instantiated elsewhere in a larger project as a shared helper
+(e.g., for path resolution, directory creation, text cleaning before NLP tasks like keyword ranking,
+and basic validation). - Keep the code simple, procedural within each method,
+with minimal error handling beyond what's described. - Preserve the use of `pkg_resources` for
+resolving installed package/module paths rather than relying solely on `__file__`. - The regex in
+`check_email` should be a simple pattern matching typical email formats,
+not a fully RFC-compliant validator. ---

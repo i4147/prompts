@@ -1,0 +1,7 @@
+Create a Python module that implements a PyScaffold extension named `PreCommit`,
+which adds pre-commit hook support to a newly scaffolded Python project.
+The extension should integrate into PyScaffold's extension/action pipeline system
+and perform the following: 1. **Purpose**: When enabled, the extension should:
+- Add a `.pre-commit-config.yaml` file to the generated project, based on a template,
+so that the project is ready for use with the `pre-commit` tool.
+- Add a note/section to the project's README ---

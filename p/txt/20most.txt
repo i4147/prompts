@@ -1,0 +1,42 @@
+Create a Python command-line script that analyzes text files
+and prints the most frequent words found in each file. **Purpose:** The script extracts words from
+one or more text files, counts word frequency,
+and outputs the top 30 most common words per file to standard output,
+processing multiple files concurrently for performance. **Inputs:** - Command-line arguments:
+zero or more file paths to process. - If no file paths are provided as arguments,
+the script should fall back to automatically discovering all non-binary files in the current working
+directory (using a helper function `get_nobinary` from a local module named `dh`,
+which takes a directory path
+and returns a list of non-binary file paths). **Outputs:** - For each input file,
+print a single line to stdout containing up to the top 30 most frequent words found in that file,
+space-separated, followed by a trailing newline.
+Output order corresponds to word frequency ranking (most common first),
+with ties broken by the underlying counting order. **Core behavior:** 1.
+Define a word-extraction function that:
+- Strips leading/trailing whitespace from the text
+and lowercases it. - Replaces forward slashes `/` with spaces (to avoid merging path-like tokens). -
+Uses a regular expression to find all substrings of 3
+or more consecutive lowercase letters (`[a-z]{3,}`),
+returning them as a list of words (effectively ignoring numbers, punctuation, and shorter words).
+2. Define a per-file processing function that:
+- Reads the file's full text content using UTF-8 encoding. - Extracts words using the
+word-extraction function. - Uses `collections.Counter` to compute word frequencies. - Prints the 30
+most common words (via `Counter.most_common(30)`), each followed by a space,
+then a trailing newline after the last word.
+3. Implement a `main()` function that: - Reads file paths from `sys.argv[1:]`;
+if empty, calls `get_nobinary(cwd)` on the current working directory to get the file list. - Uses a
+`multiprocessing.Pool` with a fixed worker count constant (e.g., `MAX_WORKERS = 8`) to process files
+in parallel, dispatching the per-file processing function asynchronously for each file. - Manages a
+bounded queue (e.g., a `deque`) of pending async results,
+limiting in-flight tasks to a maximum (e.g., 32) by waiting on (`.get()`) the oldest pending result
+before submitting new ones once the limit is exceeded,
+then waits for all remaining pending results to complete after dispatching is done. - Returns
+normally (implicitly `None`) on success.
+4. Use the standard `if __name__ == "__main__": raise SystemExit(main())` entry-point pattern so the
+script can be run directly from the command line. **Notable details:** - Relies on an external/local
+helper module `dh` providing `get_nobinary(directory)` for discovering non-binary files
+when no explicit file arguments are given. - Designed for concurrent/parallel processing of
+potentially many files efficiently using multiprocessing with bounded concurrency to limit
+memory/resource usage. - Word matching is strictly lowercase alphabetic sequences of length >= 3
+after lowercasing the whole text, so mixed-case, numeric,
+and punctuation-containing tokens are excluded or split.

@@ -1,0 +1,29 @@
+Write a Python script that backs up installed Debian packages on a Termux
+(Android) environment by rebuilding each installed package as a .deb archive
+that can be reinstalled later.
+The tool should run from start to finish without requiring user interaction and
+store all of its output in a single working directory under the user's home
+folder (created automatically if it does not exist).
+Core behavior: - Enumerate all currently installed packages using the system's
+apt package database. - For each installed package, determine which files belong
+to it by reading the package manager's per-package file manifests from the
+Termux dpkg information directory, keeping only files that still exist on disk.
+- Retrieve package metadata (name, version, architecture, description,
+dependencies, and similar control fields) for each package, reporting a clear
+error if a package cannot be found in the cache. - Gather the package's files
+into a staging area, preserving their original directory structure and
+permissions as far as possible, and generate the standard control metadata
+needed to make the result a valid Debian package. - Pack the staged content into
+a .deb file (the Debian archive format) and save it into the working directory,
+using a filename that includes the package name, version, and architecture. -
+Skip packages that have no existing files, and continue processing the remaining
+packages when an individual package fails, recording each failure. - Clean up
+temporary staging directories after each package is processed, whether it
+succeeded or failed. - Print a concise progress log showing how many packages
+were processed, how many succeeded, how many were skipped, and which ones
+failed, and finish with a summary.
+Handle missing dependencies, unreadable files, and permission errors gracefully
+so that a single problem never aborts the whole backup.
+The script should be self-contained, safe to re-run (existing archives may be
+overwritten or skipped, as the design chooses), and print helpful messages for
+the user to follow along. ---

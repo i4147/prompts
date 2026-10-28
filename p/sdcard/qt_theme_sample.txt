@@ -1,0 +1,1 @@
+Sample widget that contains a broad mix of standard Qt and qtextra widgets.

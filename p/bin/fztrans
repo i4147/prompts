@@ -1,5 +1,5 @@
 Write a self-contained prompt that instructs an AI coding agent to build a
-Python command-line bilingual dictionary tool (Persian/Farsi ↔ English) for
+Python command-line bilingual dictionary tool (Persian/Farsi â†” English) for
 Termux on Android, backed by a JSON file at ~/dic.json.
 Cover the following: **Purpose:** A terminal dictionary lookup tool that
 translates words in both directions between Farsi (fa) and English (en) using a
@@ -23,7 +23,7 @@ expanded to the user's home directory, typed as `Final[str]` (though it is a
 Path object; reproduce faithfully). - The JSON is an object mapping Farsi words
 to English translations.
 Keys and values are coerced to strings and stripped of whitespace. - Build two
-dictionaries: `fa_en` (Farsi→English) and `en_fa` (English→Farsi, the inverse).
+dictionaries: `fa_en` (Farsiâ†’English) and `en_fa` (Englishâ†’Farsi, the inverse).
 Note that if multiple Farsi words share an English value, the inverse keeps the
 last one encountered. - Function `load_dictionary(path)` returns the tuple
 `(fa_en, en_fa)`.

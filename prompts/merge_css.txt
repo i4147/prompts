@@ -1,0 +1,17 @@
+Write a Python script that scans one or more user-supplied file or directory
+paths for CSS stylesheets, collects every unique CSS file found (recursing into
+directories and skipping duplicates), and then processes each stylesheet to find
+and handle external web font references.
+The tool should remove or neutralize Google Fonts `@import` statements and
+locate remote font file URLs (such as WOFF, WOFF2, TTF, OTF, or EOT links), so
+that the stylesheets can be made self-contained or otherwise prepared for
+offline or embedded use.
+It should accept command-line arguments for the target paths and any relevant
+options, print clear warnings to the error stream for invalid or unreadable
+paths, and report a concise summary of which files were processed and what
+changes were made.
+The script should be robust to encoding issues, avoid modifying files it cannot
+parse, and write its results either in place or to a specified output location,
+depending on user options.
+Keep the implementation approach open so the AI agent can choose the most
+suitable structure, libraries, and internal design. ---

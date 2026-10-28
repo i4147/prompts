@@ -1,0 +1,27 @@
+Write a Python script that acts as a command-line tool for stripping comments
+and docstrings from Python source files while ke code's behavior intact.
+The tool should accept one or more file or directory paths as input, recursively
+discover Python files within directories, and process each file independently so
+that large batches run quickly by using parallel workers with a sensible upper
+limit on concurrency.
+For each file, the script should parse the source in a way that preserves its
+structure and formatting as much as possible, then remove ordinary comments
+while retaining special directive comments that tools and interpreters depend
+on: shebang lines, type annotations comments, and formatter control markers such
+as those that turn formatting on or off or skip a single statement.
+Module, class, and function docstrings (the leading string literals in those
+bodies) should also be removed, leaving the remaining code valid and runnable.
+The script should be careful not to break syntax when a block would otherwise
+become empty, for example by substituting a harmless placeholder statement where
+needed.
+The tool should support an option to write changes back in place, an option to
+print a unified diff or summary of what would change without modifying files (a
+dry-run mode), and an option to write output to a specified destination
+directory while preserving relative paths.
+It should report a clear summary at the end, including how many files were
+scanned, modified, skipped, and any files that failed to parse, and it should
+exit with a nonzero status code when errors occur.
+Malformed or non-UTF-8 files must be handled gracefully with a descriptive
+message rather than crashing the whole batch.
+Output should be deterministic so that running the tool twice on the same input
+produces identical results. ---

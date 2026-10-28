@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line translation tool for
+bulk-translating words or short phrases between languages, using a pluggable set
+of translation backends.
+The user supplies the source text (either directly or from a file), chooses
+source and target languages and a translation service, and the tool returns the
+translated results in a clean, readable form.
+Key requirements: - Accept inputs from the command line: the words or text to
+translate (individually, from a file, or piped in), the source and target
+language codes, and the choice of translation backend.
+Support an option to list the languages each backend supports. - Support
+multiple translation backends behind a common interface, so new services can be
+added easily.
+Include at least one cloud-based API backend that requires an API key read from
+the environment, and a fallback or alternative backend.
+Clearly report configuration problems (such as missing keys or unsupported
+language pairs) to the user. - Validate language codes against each backend's
+supported list before making any requests, and provide helpful error messages
+with suggestions when a code is not supported. - Translate many items
+efficiently: process multiple entries concurrently with a configurable level of
+parallelism, and throttle or batch requests where the service allows it. -
+Handle transient failures gracefully with retries and exponential backoff; treat
+authentication and permission errors as non-retryable and stop cleanly. - Write
+output to the console and optionally to a file in formats such as plain text,
+CSV, or JSON, preserving the original order of inputs and pairing each source
+word with its translation. - Log progress and errors to both the console and a
+rotating log file, keeping console output readable when multiple workers run at
+once. - Shut down cleanly on interrupt signals (Ctrl+C), saving any partial
+results that were already completed and reporting what was not finished. - Work
+across Windows, macOS, and Linux, and detect the platform where behavior differs
+(for example, terminal handling or file paths). - Provide a clear `--help`
+message describing all options, with sensible defaults and a summary of exit
+codes for success, user errors, and backend/configuration errors. ---

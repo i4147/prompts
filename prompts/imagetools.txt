@@ -1,0 +1,26 @@
+Write a Python script that acts as a batch image conversion and normalization
+tool for a directory of mixed image files.
+The tool should accept a source folder (and optionally an output folder),
+recursively discover supported image files, and convert or normalize them into a
+consistent output format such as PNG or JPEG, with options for target size,
+quality, and whether to preserve the original folder structure.
+It should gracefully handle a wide range of input formats, including common
+raster formats, HEIF/HEIC photos, vector SVG files, and multi-page or document
+formats such as PDF, rasterizing them where appropriate.
+Where optional capabilities are not installed, the script should detect this at
+startup, skip the affected formats with a clear warning, and continue processing
+everything else rather than crashing.
+Key behaviors: - Accept command-line arguments for input path, output path,
+output format, maximum dimensions, JPEG/WebP quality, and an option to overwrite
+or skip existing outputs. - Process files in parallel across multiple CPU cores
+to speed up large batches, and report progress. - Correct image orientation
+based on embedded metadata, convert color modes safely (e.g., transparency to a
+white or chosen background when saving as JPEG), and preserve aspect ratio when
+resizing. - Validate each file, skip corrupt or unreadable inputs with a logged
+error, and never abort the whole batch because of a single failure. - Log all
+actions and errors to both the console and an optional log file, using
+configurable verbosity levels. - Print a final summary showing counts of
+converted, skipped, and failed files, along with total elapsed time. - Exit with
+a non-zero status code if any files failed, and zero otherwise.
+Ensure the script is well-structured, includes helpful `--help` documentation,
+and runs on Windows, macOS, and Linux. ---

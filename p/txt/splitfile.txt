@@ -1,0 +1,4 @@
+Split a merged file into individual files based on file path markers.
+File format expected:
+## 1. `path/to/file.py` ```python code content ``` ## 2. `path/to/another/file.py`
+```python more code ```

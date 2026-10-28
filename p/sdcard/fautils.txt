@@ -1,0 +1,46 @@
+Write a Python function named `get_persian_date` that converts the current Gregorian date
+(obtained internally via `datetime.now()`) into its equivalent Persian (Jalali/Shamsi) calendar
+date, expressed as a formatted string in Persian/Farsi.
+Requirements and behavior:
+- The function signature should be `get_persian_date(dformat=None) -> str | None`,
+using `from __future__ import annotations`. - It must internally import `datetime`
+and use `datetime.now()` to get the current date/time
+— it should not require any date argument from the caller. - Define two lookup lists in Persian:
+- `weeks`: the seven weekday names in Persian,
+ordered starting from "یکشنبه" (Sunday) through "شنبه" (Saturday),
+matching Python's `datetime.weekday()` ordering (Monday=0 ...
+Sunday=6) appropriately so the correct weekday name is selected. - `months`:
+the twelve Persian (Jalali) month names,
+from "فروردین" to "اسفند". - Implement the Gregorian-to-Jalali date conversion algorithm manually
+(without external libraries like `jdatetime` or `convertdate`):
+- Extract `day`, `month`, `year` from the current date,
+and handle edge cases for invalid/short year values
+(e.g., if `year <= 0`, default to 2000; if `year < 100`, add 1900). - Determine leap-year-related
+offset logic using loops that check divisibility patterns
+(e.g., iterating in steps of 4 across a range up to 3000) to classify the year into categories
+affecting the conversion offset
+(this mimics handling Gregorian leap year alignment relative to the Persian calendar epoch). - Based
+on the classification,
+subtract either 621 or 622 from the Gregorian year to get the base Persian year. - Convert the
+Gregorian month/day into the corresponding Persian month/day using a series of explicit conditional
+branches for each Gregorian month
+(handling the offset in days and month shift differently depending on whether the day falls before
+or after a specific threshold within that month),
+consistent with standard Gregorian-to-Jalali conversion tables. - Continue this per-month
+conditional logic through all 12 Gregorian months
+(the provided code is truncated after October,
+so the full implementation should continue similarly for November and December,
+and include final adjustments to determine the correct Persian year, month, and day,
+including leap-year-specific corrections). - After computing the Persian year, month, and day,
+determine the Persian weekday name using the weekday index from the original Gregorian date mapped
+to the `weeks` list. - The function should support an optional `dformat` parameter that
+defines/controls the output string formatting (e.g., a format template or pattern string) allowing
+the caller to customize how the weekday, day, month name,
+and year are combined into the final returned string.
+If `dformat` is not provided, use a sensible default formatted string combining weekday, day,
+Persian month name, and year. - Return the final formatted Persian date as a string.
+The function's return type should allow `None` as well (e.g., in case of unexpected failure),
+per the type hint `str | None`. - Keep all Persian text (weekday names, month names) exactly as
+literal Persian/Farsi strings,
+not transliterated. - The code should be self-contained in a single function with no external
+dependencies beyond the standard library `datetime` module. ---

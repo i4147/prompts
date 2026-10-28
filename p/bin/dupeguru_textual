@@ -26,7 +26,7 @@ the file's name. - A `DuplicateGroup` dataclass holding a list of `FileEntry`
 objects (default empty list), a `match_score` float (default 100.0), and a
 `reason` string (default "exact").
 Provide: - `total_size` property: returns 0 if there are no files; otherwise the
-size of the first file multiplied by (number of files minus one) — i.e., the
+size of the first file multiplied by (number of files minus one) â€” i.e., the
 reclaimable space if all but one copy are removed. - `size_str` property: the
 total size formatted with a human-readable helper. - A helper
 `format_size(size_bytes)` that converts a byte count into a human-readable

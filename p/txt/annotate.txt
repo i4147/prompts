@@ -1,0 +1,39 @@
+I'll provide the prompt text for the AI agent to produce this Python code.
+[Tool: generate_document] Title:
+AI Agent Prompt Write a Python command-line script that uses `libcst` to automatically add type
+annotations to Python source files that lack them.
+The script's purpose:
+- Parse a given Python file using `libcst` with a `MetadataWrapper`. - Traverse the module using a
+custom `cst.CSTTransformer` subclass (e.g., `TypeAnnotationTransformer`) that walks function
+definitions and adds missing type annotations to function parameters
+(positional-only, regular, and keyword-only) and, where feasible,
+return types — using `Any` from the `typing` module as a sensible default/fallback annotation
+when a more specific type cannot be inferred. - When the transformer adds any `Any` annotation,
+it must also ensure the module has the necessary `from typing import Any` import statement,
+inserting it near the top of the file
+(immediately after the module docstring if one is present, otherwise as the first statement) if it
+isn't already imported. - Preserve all existing formatting, comments,
+and code structure exactly as-is except for the inserted annotations
+and import (leveraging libcst's concrete syntax tree to maintain lossless round-tripping).
+Main inputs/outputs: - Input:
+one or more Python source file paths (or a directory to process recursively) provided via
+command-line arguments using `argparse`. - Output:
+the modified Python file(s) with type annotations added,
+either written back in place or to a specified output location/temporary file.
+Notable behavior and implementation details:
+- Uses `argparse` to define CLI options
+(e.g., target file/directory path, optional flags such as in-place modification, dry-run,
+or output directory). - Uses `tempfile`
+and `shutil` to safely write changes
+(e.g., write to a temporary file first, then atomically replace the original file) to avoid data
+loss if processing fails midway. - Uses `subprocess` to optionally invoke external tools
+(e.g., running a formatter like `black`
+or a type checker like `mypy`/`pyright` on the result to validate
+or format the output after annotation insertion). - Uses `pathlib.Path` for all file path handling.
+- Handles the case where the target function/module already has the needed import,
+avoiding duplicate imports. - Exits with appropriate status codes via `sys.exit` on errors
+(e.g., file not found, parse failure, subprocess failure)
+and prints meaningful error messages to stderr. - Should be robust to edge cases like empty files,
+files with only comments/docstrings,
+and functions that already have full
+or partial annotations (only filling in the missing ones without overwriting existing annotations).

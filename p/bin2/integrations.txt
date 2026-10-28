@@ -1,0 +1,1 @@
+Explicit opt-in malware scanners, hash lookups, and sandbox uploads.

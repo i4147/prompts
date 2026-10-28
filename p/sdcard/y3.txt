@@ -1,0 +1,34 @@
+Write a Python module serves as a unified dispatcher for processing archive files
+(tar-based and zip-based formats),
+building on top of existing sibling modules for compression/decompression, tar archive handling,
+zip archive handling, and validation.
+Requirements: 1.
+Import and re-expose (or at least rely on) the following from sibling modules within the same
+package: - `compress`
+and `decompress` from a `compression` module. - `process_tar_archive` from a `tar_archive` module. -
+`process_zip_archive` from a `zip_archive` module. - `validate` from a `validate` module.
+2. Implement a function `process_archive(src_path: str, process_func, dst_path: str = None)` that:
+- Detects the archive format/extension of `src_path` using an internal helper function
+`_detect_format` (assume this helper exists elsewhere or should be referenced/implemented,
+e.g. based on filename suffix inspection).
+- If the detected format is one of:
+  `tar`, `tar.gz`, `tar.xz`, `tar.bz2`, `tar.lz4`, `tar.zst`, or `tar.br`,
+  delegates processing to `process_tar_archive(src_path, process_func, dst_path)`
+  and returns its result.
+- If the detected format is `zip` or `whl`,
+  delegates processing to `process_zip_archive(src_path, process_func, dst_path)`
+  and returns its result.
+- If the format matches neither category,
+  raises a `ValueError` with the message "process_archive only supports tar.*, zip, and whl".
+Notable behavior/design notes:
+- This function acts as a generic entry point so callers don't need to know the specific archive
+type in advance; it inspects the file path/extension
+and routes to the appropriate specialized handler. - `process_func` is a callback/processing
+function passed through unchanged to the underlying tar/zip handlers,
+allowing custom per-file
+or per-entry processing logic during archive traversal. - `dst_path` is optional;
+when omitted, the underlying handlers presumably determine a default destination
+(e.g., in-place or derived from `src_path`). - The function supports a wide range of tar compression
+variants (gzip, xz, bz2, lz4, zstd, brotli) in addition to plain tar,
+as well as zip-based formats including Python wheel (`.whl`) files. - Keep the function lightweight:
+it should contain no archive-processing logic itself, only format detection and delegation. ---

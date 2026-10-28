@@ -1,0 +1,50 @@
+Write a prompt for an AI coding agent to generate a Python module that implements a JSON / JSONC /
+JSON5 formatter, to be used as a pretty-printer plugin backend
+(it imports a shared `Options` type from a sibling `..api` module,
+implying it's part of a larger multi-language formatter toolkit similar in spirit to Prettier).
+The module should: 1. **Purpose**:
+Parse JSON-like text
+(standard JSON, JSONC with comments,
+and JSON5 with relaxed syntax like trailing commas and possibly unquoted/single-quoted keys)
+and re-serialize it with custom, prettier-style formatting rules,
+rather than relying on the default `json.dumps` output.
+2. **Parsing strategy**:
+- Use Python's built-in `json` module (`json.loads`) as the actual parser/backend for all three
+variants. - Before parsing, run a light,
+string-aware pre-processing pass that strips `//` line comments, `/* ... */` block comments,
+and trailing commas (in objects and arrays) from the input text
+— but must correctly skip over content inside string literals
+  (handling both `"` and `'` quotes, and escape sequences like `\"` or `\\`) so that comment-like
+  or comma-like sequences inside strings are not mistakenly altered. - This normalization step
+  allows the same backend/serializer to transparently support `json`, `jsonc`, and `json5` inputs.
+  3. **Serialization/formatting behavior** (custom printer, not `json.dumps`):
+  - Accept an `Options` object (imported from a sibling `..api` module) that carries formatting
+  settings such as `print_width`, `tab_width`, `use_tabs`,
+  and `trailing_comma`. - Respect `tab_width`
+  and `use_tabs` to compute indentation strings per nesting level (tabs vs. spaces). - Respect
+  `print_width` to decide whether a nested object
+  or array should be printed inline on one line (if it fits within the width)
+  or expanded across multiple lines with indentation
+  — mimicking Prettier's line-fitting heuristic. - Respect `trailing_comma` option to optionally add
+  a trailing comma after the last item in multi-line objects/arrays. - Preserve the original key
+  order of objects (no alphabetical sorting or reordering). - Small/short nested structures should
+  collapse to a single line when they fit within the print width,
+  while larger structures expand with proper indentation,
+  recursively applying the same rules to nested objects and arrays.
+  4.
+**Inputs/Outputs**: - Input:
+a string containing JSON/JSONC/JSON5 source text, plus an `Options` configuration object. - Output:
+a formatted string representing the pretty-printed JSON according to the given options.
+5. **Code structure expectations**:
+- Include a module-level docstring explaining the purpose
+and behavior described above. - Implement a helper function (e.g. `_indent(options, level)`) that
+returns the proper indentation string for a given nesting level based on `use_tabs`/`tab_width`. -
+Implement a helper function (e.g. `_strip_comments_and_trailing(text)`) that performs the
+string-aware comment/trailing-comma stripping described above,
+implemented as a character-by-character scan
+(tracking whether the scanner is currently inside a string literal and
+which quote character started it) rather than a naive regex substitution,
+to avoid corrupting string contents. - Use `from __future__ import annotations` and import `json`,
+`re`, and `Options` from `..api`. - Design the rest of the module
+(main formatting/printing function(s)) to recursively walk the parsed Python data structure
+(dicts, lists, primitives) and build the output string according to the rules above. ---

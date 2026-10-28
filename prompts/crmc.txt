@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line tool for automatically
+modernizing Python source code to a target Python version (3.12).
+The tool should accept one or more file or directory paths as input, recursively
+discover Python source files (such as .py, .pyw, and .pyi files) within
+directories, and process them in parallel using a fixed-size pool of worker
+processes to speed up work on large codebases.
+The script should analyze each file's syntax tree and rewrite outdated
+constructs into their modern equivalents appropriate for the target version,
+while preserving the original formatting, comments, and overall program behavior
+as closely as possible.
+It should be able to handle a range of legacy patterns, such as older typing
+idioms, deprecated standard library usages, and Python 2-era or pre-modern
+syntax conventions where applicable.
+Key behaviors to support: - A dry-run or check mode that reports which files
+would change, without modifying anything, and returns a non-zero exit status
+when changes are needed. - A diff mode that shows the proposed changes as a
+unified diff for review. - An in-place mode that writes the transformed code
+back to the original files, with safe atomic writes so files are never left
+partially written. - Robust error handling: files that cannot be parsed or
+decoded (respecting source encodings and byte-order marks) should be reported
+clearly and skipped without stopping the entire run; a summary of processed,
+changed, and failed files should be printed at the end. - Graceful handling of
+interruption signals so that worker processes shut down cleanly. - Configurable
+logging of verbosity levels, with clear progress messages. - Validation that the
+output code still compiles and that the transformation does not introduce syntax
+errors; if it does, the original file must be kept unchanged. - Sensible
+command-line options for selecting target paths, excluding files or directories
+by pattern, choosing the mode of operation, and controlling verbosity.
+The tool should exit with a clear status code reflecting success, the presence
+of unchanged-but-needed changes in check mode, or fatal errors. ---

@@ -1,0 +1,44 @@
+Write a Python module that provides a programmatic (in-process) interface to flake8,
+allowing other Python code to run flake8 style checks on files without invoking flake8 as a
+subprocess or CLI command.
+The module should: 1.
+Import necessary components from the `flake8` package,
+including `flake8.formatting.base` (as `formatter`), `flake8.main.application` (as `app`),
+and `flake8.options.config`.
+2. Set up a module-level logger using `logging.getLogger(__name__)`.
+3. Define `__all__ = ("get_style_guide",)` to expose only the main factory function.
+4. Implement a function `get_style_guide(**kwargs)` that:
+- Creates a flake8 `Application` instance. - Parses preliminary options with an empty argument list
+(so it behaves as if run with no CLI args, relying on config files/defaults). - Configures flake8's
+logging based on the preliminary options (verbosity and output file). - Builds a `ConfigFileFinder`
+using the application's program name
+and the preliminary options
+(append_config, config file path, and isolated/ignore_config_files flag). - Finds
+and registers plugins via `application.find_plugins(config_finder)`
+and `application.register_plugin_options()`. - Parses the full configuration
+and CLI arguments via `application.parse_configuration_and_cli(config_finder, remaining_args)`. -
+Iterates over the provided `**kwargs`, and for each key/value pair,
+attempts to override the corresponding attribute on `application.options` using `getattr`/`setattr`.
+If the attribute doesn't exist on the options namespace,
+it should log an error (via the module logger) stating that the option could not be updated,
+rather than raising an exception. - Calls `application.make_formatter()`,
+`application.make_guide()`,
+and `application.make_file_checker_manager()` to fully initialize the application's checking
+machinery. - Returns a `StyleGuide` wrapper instance built from this configured application.
+5. Define a `StyleGuide` class that wraps a flake8 `Application` object:
+- Constructor takes the `application` instance, stores it privately,
+and also stores a reference to `application.file_checker_manager` for convenience. - Expose a
+read-only `options` property (typed as `argparse.Namespace`) that returns
+`self._application.options`. - Expose a read-only `paths` property that returns
+`self._application.paths`. - Include a `check_files` method that accepts an optional `paths`
+argument (defaulting appropriately, e.g. to the application's configured paths if not provided),
+which should run flake8's file checking process over those paths using the underlying file checker
+manager and report/return the results
+(e.g., run the checks, report errors,
+and return the resulting statistics/exit code
+or manager state as appropriate for a flake8-style programmatic check).
+The overall purpose is to encapsulate flake8's somewhat complex internal application bootstrap
+process (plugin discovery, config file resolution, option parsing) behind a simple
+`get_style_guide(**kwargs)` call that returns a convenient `StyleGuide` object,
+which can then be used to check files and access the resolved options/paths,
+similar to how flake8's legacy `get_style_guide` API worked in older versions. ---

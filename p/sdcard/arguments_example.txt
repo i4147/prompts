@@ -1,0 +1,25 @@
+Write a Python command-line script named `arguments_example.py` that uses the `docopt` library to
+define and parse its command-line interface entirely from a docstring.
+The script's purpose is to demonstrate `docopt`-based argument parsing by processing a FILE
+and optionally applying a correction to either the left-hand or right-hand side.
+Requirements: - Define a module-level docstring that serves as the usage specification for `docopt`,
+following standard docopt syntax.
+It must include: - A program usage line showing the script accepts optional flags `-v`, `-q`, `-r`,
+`-h` combined, followed by an optional `FILE` argument that can repeat (using `...`). - A second
+usage pattern requiring either `--left`
+or `--right` (mutually exclusive, grouped with parentheses and `|`),
+followed by a mandatory `CORRECTION` argument
+and a mandatory `FILE` argument. - A short description stating that the script processes FILE
+and optionally applies a correction to either the left-hand side
+or right-hand side. - An "Arguments" section documenting:
+- `FILE` — optional input file - `CORRECTION` — correction angle,
+which requires FILE and either `--left`
+or `--right` to be present - An "Options" section documenting:
+- `-h --help` - `-v` for verbose mode - `-q` for quiet mode - `-r` to make a report - `--left` to
+use the left-hand side - `--right` to use the right-hand side - Import `docopt` from the `docopt`
+package. - In the `if __name__ == "__main__":` block,
+call `docopt(__doc__)` to parse `sys.argv` based on the docstring, store the result in a variable,
+and print the resulting dictionary of parsed arguments/options to standard output.
+The script has no other inputs or outputs beyond the command-line arguments it parses
+and the printed dictionary — it does not read file contents or perform any actual correction logic;
+it only illustrates how docopt interprets the defined usage patterns and options. ---

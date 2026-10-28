@@ -1,0 +1,30 @@
+Create a Korean text keyword-extraction and stopword-filtering utility script.
+The script should: **Purpose:** Process Korean text input
+(likely news articles or documents with a title and body) to extract meaningful keywords/words by
+removing a large predefined list of Korean stopwords
+(particles, conjunctions, adverbs, and other non-content words) and using morphological analysis,
+then rank words by importance using the KRWordRank algorithm. **Main components/inputs:** - A
+hardcoded, extensive list of Korean stopwords (`all_stop_word`) covering connectives, pronouns,
+adverbs, demonstratives,
+and filler/onomatopoeic words. - Integration with `Mecab` (from `konlpy.tag`) for Korean
+morphological tokenization/POS tagging. - Use of `KRWordRank` (from `krwordrank.word`) for
+unsupervised keyword ranking/extraction from Korean sentences. - Use of `nltk`
+and its `stopwords` corpus,
+along with a custom `nltkSentTokenizer` (from `SmiToText.tokenizer.nltk`) for sentence tokenization.
+- A custom `Util` class (from `SmiToText.util.util`) for shared utility functions. - Command-line
+  argument parsing via `argparse` to accept input parameters
+  (e.g., input file/text path, output path, or processing options). - Use of `date` for timestamping
+  output, and `json` for reading/writing structured data
+  (e.g., input documents or output keyword results in JSON format). - Use of `copy`, `itertools`,
+  `re`, and `os` for data manipulation, combinatorial operations, regex-based text cleaning,
+  and file system handling. **Expected behavior/outputs:** - Read input text data
+  (possibly from JSON files containing titles/bodies of documents). - Clean
+  and preprocess the text (regex cleaning, removing stopwords from the `all_stop_word` list). -
+  Tokenize sentences and words using both NLTK-based
+  and Mecab-based tokenizers. - Apply KRWordRank to compute word importance scores/rankings from the
+  processed Korean text. - Output the extracted keywords andor ranking results,
+  likely saved to a file (JSON) with a date-based naming convention,
+  and/or printed to console. - Support command-line execution with configurable arguments for
+  flexibility (e.g., specifying input/output file paths or number of top keywords to extract).
+Ensure the stopword list is comprehensive and includes all the Korean stopwords, connective words,
+pronouns, and filler words typically used to clean Korean NLP text before keyword extraction. ---

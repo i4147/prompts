@@ -1,0 +1,52 @@
+Design a prompt for an AI coding agent that generates a complete,
+production-ready Python command-line tool implementing an "APK Font Extractor."
+The prompt should specify the following requirements clearly:
+**Purpose:** Create a Python script that scans one or more APK files (Android application packages)
+or directories containing APK files, extracts embedded font files from within them,
+deduplicates and renames the fonts based on their actual font metadata
+(family name, style, weight, italic flag), and saves the cleaned,
+organized font files into a single output directory. **Main Inputs:** - One
+or more input paths provided via command-line arguments,
+each of which can be either a single `.apk` file
+or a directory to be recursively searched for `.apk` files. - An optional output directory argument
+(default: `fonts`) where extracted fonts will be saved. - An optional worker count argument
+(default: 8) to control parallel/concurrent processing of multiple APK files for performance. **Main
+Outputs:** - A directory of extracted, deduplicated font files, renamed using a clean,
+human-readable naming convention derived from font metadata
+(e.g., family name + style + weight + italic indicator + original extension). - Console/log output
+(via Python's `logging` module, timestamped, INFO level by default) reporting progress,
+including which APK files were found, which fonts were extracted, duplicates skipped,
+errors encountered, and a final summary
+(counts of APKs processed, fonts extracted, duplicates skipped, failures). **Notable
+Behavior/Requirements:** 1.
+Use `argparse` to build a CLI interface supporting multiple input paths, output directory,
+and worker count options.
+2. Recursively search directories for `.apk` files using `Path.rglob`,
+and accept directly specified `.apk` files as well.
+3. Treat APKs as ZIP archives (`zipfile` module)
+and search inside them for font files located in common font directories
+(e.g., `font`, `fonts`, `assets/fonts`, `res/font`, `assets`) with recognized font extensions
+(`.ttf`, `.otf`, `.woff`, `.woff2`, `.ttc`, `.eot`).
+4. Use the `fontTools.ttLib.TTFont` library to parse extracted font binaries
+and read their `name` table to determine the actual family name, subfamily/style name, weight,
+and italic flag — rather than relying solely on filenames.
+5. Define a structured data class (e.g., `FontInfo`) to hold parsed font metadata
+(family name, style name, weight, italic flag, file extension, original path within the APK).
+6. Deduplicate fonts across all processed APKs
+(e.g., by content hash or by normalized metadata signature) so identical fonts extracted from
+multiple APKs or multiple locations are only saved once, logging skipped duplicates.
+7. Process multiple APK files concurrently using `multiprocessing` (or a process/thread pool),
+with a configurable worker count
+and proper timeout handling
+(handle `concurrent.futures.TimeoutError` gracefully for APKs that take too long or hang).
+8. Handle errors gracefully per-APK
+and per-font (e.g., corrupted zip, unreadable font, missing name table) without crashing the whole
+run — log the error and continue processing remaining files.
+9. Use `pathlib.Path` throughout for filesystem path handling instead of raw strings.
+10. Structure the code around a main class (e.g., `APKFontExtractor`) encapsulating configuration
+(output directory, worker count), internal state (tracking of processed/seen fonts),
+and methods for finding APKs, extracting fonts from a single APK, parsing font metadata,
+deduplicating, and saving final output
+— plus a `main()` entry point that wires up argument parsing and invokes the extractor.
+Output the final script as a single, self-contained,
+well-commented Python file following these specifications.

@@ -1,0 +1,32 @@
+Write a Python module (using `from __future__ import annotations`) that provides a reusable utility
+for recursively discovering source/text files under one or more given paths,
+filtered by file extension.
+Requirements: 1.
+Import `os` and `Path` from `pathlib`, and `Iterable` from `typing`.
+2. Define a module-level constant `DEFAULT_IGNORES`,
+a set of directory names to always skip during traversal, including:
+`.git`, `.hg`, `.svn`, `__pycache__`, `node_modules`, `.venv`, `venv`, `dist`, and `build`.
+3. Define a function `iter_files(paths, *, extensions=None)` that: - Accepts `paths`:
+an iterable of strings
+or `Path` objects (files and/or directories). - Accepts an optional keyword-only argument
+`extensions`: a set of file extension strings (including the leading dot).
+If not provided (`None`), default to a built-in set of common source/text extensions:
+`.py`, `.js`, `.jsx`, `.ts`, `.tsx`, `.md`, `.txt`, `.json`, `.yaml`, `.yml`, `.toml`, `.go`, `.rs`,
+`.java`, `.c`, `.cpp`,
+`.h`. - Returns/yields an iterable (generator) of `Path` objects matching the extension filter.
+4. Behavior for each entry in `paths`: - Convert the entry to a `Path`. - If it is a file:
+yield it only if its suffix (case-insensitive) is in the `extensions` set;
+otherwise skip it (continue to the next path entry without descending further). - If it is not a
+file and not a directory (e.g., doesn't exist): skip it silently. - If it is a directory:
+recursively walk it using `os.walk`,
+pruning traversal by removing any subdirectory
+whose name appears in `DEFAULT_IGNORES`
+(modify the `directories` list in place so `os.walk` does not descend into ignored directories).
+For every remaining file encountered during the walk,
+yield its `Path` only if its suffix (case-insensitive) matches the `extensions` set.
+5. Ensure suffix matching is case-insensitive (e.g., `.PY` should match `.py`).
+6. The function should be a generator (use `yield`),
+lazily producing matching `Path` objects rather than building a full list upfront.
+7. Do not add any CLI, logging, docstrings, tests,
+or extra functionality beyond what is described above
+— keep it minimal and focused solely on this file-discovery utility. ---

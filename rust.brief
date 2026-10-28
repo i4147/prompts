@@ -1,5 +1,4 @@
 # Reimplement Linux `{{COMMAND}}` in Rust
-
 ## Naming (HARD)
 - Binary name MUST be exactly `{{COMMAND}}` — no `-rs`/`-rust`/`-impl` suffixes in
   `[[bin]] name`, on-disk file, help text, or errors.
@@ -7,14 +6,12 @@
 - `--help` / `--version` / error messages must match the reference **byte-for-byte**.
 - CLI surface must match reference: short+long options, `-oVAL`, `--opt=VAL`,
   `--opt VAL`, grouped `-abc`, repeated `-e a -e b`, `--` terminator.
-
 ## Flags (HARD)
 - Implement **every** flag the reference accepts; no silent drops, no no-ops.
 - Unimplementable flags → list them with one-line reasons in your initial reply
   and in README "Unsupported flags" section. Any flag not listed MUST work.
 - Every supported flag gets ≥1 unit test + ≥1 integration test, tracked in
   `tests/matrix.toml`.
-
 ## Constraints
 - Rust 2021, `[dependencies]` empty, `#![forbid(unsafe_code)]`
 - **No process spawning** in impl (`Command`, `fork`/`exec*`, `posix_spawn`). Tests
@@ -22,7 +19,6 @@
 - No shelling out to the real command or to `find`/`grep`/`sed`/`sort`/`xargs`.
 - Any added crate must be justified in the initial reply before use.
 - target env is linux
-
 ## Functional requirements (FILL IN)
 must match orig cmd in 
 -- input sources
@@ -31,7 +27,6 @@ must match orig cmd in
 -- error semantics
 must handle: 
 -- edge cases
-
 ## Compatibility & robustness (always)
 - Exit-code table in README (0/1/2/other); each code exercised by an integration test.
 - Golden files for `--help`, `--version`, and one error message per error class.
@@ -41,7 +36,6 @@ must handle:
 - `ulimit -v 262144` on 1M files must not OOM; peak RSS O(1) in input size
   (`make bench-mem` reports via `/usr/bin/time -v`).
 - FD count in `/proc/<pid>/fd` stable across 10k iterations.
-
 ## Testing (always)
 - `scripts/difftest.sh`: runs your binary and reference on same fixture, diffs
   stdout/stderr/exit byte-for-byte, ≥20 cases covering every flag + error class.
@@ -51,7 +45,6 @@ must handle:
 - `tests/fixtures/sanity/` (read-only, do not modify): empty dir; file with `\xff`
   in name; file with newline in name; symlink loop; dir with 10k files. Tests must
   cover all five.
-
 ## Quality (always)
 - `src/lib.rs` (core) + one `src/bin/{{BIN}}.rs` per binary. Core unit-testable
   without spawning.
@@ -60,7 +53,6 @@ must handle:
 - No panics on malformed input; errors → stderr, non-zero exit.
 - Each integration test uses a fresh `tempfile::tempdir` and `chdir`s in; no
   order- or `$HOME`-dependence.
-
 ## Deliverables
 1. Source tree, `Cargo.toml` with exact `[[bin]] name`, empty `[dependencies]`.
 2. `README.md`: design, supported-flags table, Unsupported flags, exit-code table,
@@ -70,7 +62,6 @@ must handle:
 4. `scripts/difftest.sh`, `scripts/grade.sh`, `tests/matrix.toml`.
 5. Final message: what shipped, every omitted flag + reason, crates used + why,
    known limits.
-
 ## Known pitfalls
 - concrete traps 
 — byte sequences
@@ -78,7 +69,6 @@ must handle:
 - fs edge cases
   - signals
   - locale
-
 ## Reporting back first
 Reply with: 
 (1) reference version & where its flag list came from

@@ -1,0 +1,32 @@
+Write a Python script that demonstrates
+and tests the `prettier` Python API (`from prettier.api import Options, format`) across multiple
+language parsers.
+The script should define a list of test cases,
+where each case is a tuple of `(parser_name, source_code_string)`.
+Include at least the following parsers with a short representative,
+intentionally unformatted/messy snippet of source code for each:
+- `json` (a compact JSON object with nested arrays/objects) - `jsonc`
+(JSON with a comment and a trailing comma) - `css`
+(rules with multiple selectors, a media query, and no spacing) - `scss`
+(SCSS with a variable and nested selector) - `markdown`
+(a header without space, paragraph text, a bullet list, a subheading, and an indented code block) -
+`yaml` (a simple mapping with a nested list and nested object) - `graphql`
+(a query with a variable and selected fields) - `babel`
+(plain JS with an object literal and a function) - `typescript`
+(an interface declaration and a typed const) - `html` (nested div/p/span/img elements) - `vue`
+(a minimal `<template>` block) For each case, the script should: 1.
+Print a header line showing which parser is being tested, e.g. `=== parser: <parser_name> ===`.
+2. Call `format(src, Options(parser=parser_name))` to format the source code using that parser.
+3. Print the formatted output.
+4. Check idempotency by formatting the already-formatted output again with the same parser
+and printing whether the result equals the first formatted output,
+labeled as `IDEMPOTENT: True/False`.
+5. If formatting raises an exception for a given case, catch it,
+print the full traceback (using the `traceback` module),
+and continue processing the remaining cases without stopping the script.
+6. Print a blank line after each case for readability.
+The purpose of the script is to serve as a quick sanity-check/smoke-test harness for the `prettier`
+Python bindings, verifying that each supported language parser can successfully format sample
+snippets and that formatting is idempotent
+(i.e., formatting already-formatted code again produces identical output),
+while gracefully reporting any parser that fails. ---

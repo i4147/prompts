@@ -1,0 +1,21 @@
+Write a Python script that acts as a versatile archive and compression utility,
+capable of creating and extracting compressed archives across manyats.
+The tool should accept a source file or directory and an output path from the command line,
+automatically infer the desired archive or compression format from the output filename's extension,
+and support a configurable compression level and number of parallel workers where applicable.
+It should handle single-file compressionecs (such as gzip, bzip2, xz/Z4, Brotli, and 7z) as well as
+multi-file container formats (such as tar variants,ip, and wrapping compropriately.
+The should also support the reverse operation,
+decompressing or extracting an existing archive back to its original form in a specified
+destination, detecting the format from the input filename.
+Processing of large files should be done in streamed, fixed-size chunks to keep memory usage low,
+and long-running compression jobs should use parallelism when it meaningfully speeds up the work.
+Include a clear command-line interface with helpful usage messages, sensible defaults,
+and validation that reports unsupported extensions, missing paths,
+and invalid options with readable error messages and non-zero exit codes.
+Log progress and key events using a structured logging approach,
+and provide timestamps or summary information on completion such as input size, output size,
+and compression ratio.
+The tool should preserve file metadata such as modification times where the format allows,
+skip or warn about unreadable entries without aborting the whole operation,
+and never silently overwrite existing output unless the user explicitly requests it. ---

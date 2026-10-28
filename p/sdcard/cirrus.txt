@@ -1,0 +1,34 @@
+Write a Python module for a PyScaffold extension named "Cirrus" that adds Cirrus CI configuration
+support to a scaffolded project.
+The script should: - Define a module-level constant `TEMPLATE_FILE` set to `"cirrus"`,
+referring to the name of a template resource used to generate the Cirrus CI config file content. -
+Import necessary components from the parent package:
+`structure` module, `Action`, `ActionParams`, `ScaffoldOpts`,
+and `Structure` types from an `actions` module,
+a `no_overwrite` operation from an `operations` module,
+a `get_template` helper from a `templates` module,
+and `Extension` plus an `include` helper from the local extensions package,
+as well as a `PreCommit` extension class from a sibling `pre_commit` module. - Define a class
+`Cirrus` that subclasses `Extension`: - Implement `augment_cli(self, parser)`:
+registers a CLI flag (using the extension's own `flag` and `help_text` attributes) on an
+`ArgumentParser`.
+The flag takes zero arguments (`nargs=0`) and its action is `include(PreCommit(), self)`,
+meaning activating this extension automatically also activates the `PreCommit` extension.
+The method returns `self` to allow chaining. - Implement `activate(self, actions)`:
+registers an `add_files` action into the provided list of actions,
+scheduled to run after the `"define_structure"` action,
+and returns the resulting list of actions. - Define a module-level function
+`add_files(struct, opts)` that takes the current project `Structure` and `ScaffoldOpts`,
+builds a small file structure dict mapping `".cirrus.yml"` to a tuple of
+`(cirrus_descriptor, no_overwrite())` (so the file won't be overwritten if it already exists),
+merges this into the existing structure using `structure.merge`,
+and returns the merged structure along with the unmodified `opts`. - Define a module-level function
+`cirrus_descriptor(_opts)` that takes the scaffold options (unused, hence the underscore prefix)
+and returns the rendered template content as a string,
+obtained by calling `get_template(TEMPLATE_FILE).template`.
+Include appropriate type hints (`List[Action]`, `ActionParams`, `ScaffoldOpts`, `Structure`)
+matching the PyScaffold extension API conventions,
+and ensure the code is organized as a self-contained extension module that integrates with
+PyScaffold's action pipeline
+and template system for generating a `.cirrus.yml` file in new projects,
+with the Cirrus extension automatically enabling pre-commit support when activated. ---

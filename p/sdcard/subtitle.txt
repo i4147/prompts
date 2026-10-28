@@ -1,0 +1,26 @@
+Write a Python module for a document-parsing framework that adds support for subtitle file formats
+(.srt, .vtt, .ass, .ssa).
+Purpose: - Implement a parser function that reads a subtitle file
+and converts it into a standardized internal `Document` representation composed of `Block` objects,
+so subtitle files can be processed alongside other document types in the same pipeline.
+Requirements: - Use the `pysubs2` library to load
+and parse the subtitle file content. - Register the parser function for the four extensions
+(".srt", ".vtt", ".ass", ".ssa") under a format category named "subtitle",
+using a `register` decorator imported from a local `..registry` module. - Import `Block`
+and `Document` model classes from a local `..model` module. - The function must accept a single
+argument: a `Path` object pointing to the subtitle file,
+and return a `Document` instance. - For each subtitle cue/line in the loaded subtitle object:
+- Extract the plain text (stripped of formatting),
+and skip the cue entirely if the resulting text is empty after stripping whitespace. - Create one
+`Block` per non-empty cue with:
+- `kind` set to `"paragraph"` - `text` set to the stripped plain text - `meta` dictionary containing
+the cue's `start` time, `end` time, and `style` name - Construct and return a `Document` with:
+- `path` set to the input path - `format` set to `"subtitle"` - `blocks` set to the list of
+generated blocks - `metadata` containing a `cue_count` key with the total number of blocks created
+Notable behavior: - Empty or whitespace-only cues are silently skipped
+and do not produce blocks. - Use `from __future__ import annotations` for forward-compatible type
+hint annotations. - Include a concise module-level docstring describing the file as handling
+subtitle formats, and a function-level docstring noting that it produces one paragraph Block per cue
+with timestamps stored in the block's metadata. - Keep the implementation minimal, type-hinted,
+and consistent with a plugin-style registry pattern
+where parsers self-register for specific file extensions. ---

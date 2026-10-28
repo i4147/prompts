@@ -1,0 +1,1 @@
+Replace letters with NATO phonetic alphabet words.

@@ -1,0 +1,13 @@
+Write a Python script that reads a shell-style configuration or template file,
+extracts variable assignments defined within it (supporting both single-quoted
+literal values and double-quoted values with backslash escapes), locates a
+dynamic expression declared in the file, and resolves that expression by
+substituting references to the extracted variables.
+The tool should accept the input file path from the command line, handle missing
+or malformed input gracefully with clear error messages, and output the fully
+resolved result to standard output (or to an optional output file specified by
+the user).
+It should leave unknown variable references unchanged rather than failing, and
+should exit with a non-zero status code when no usable expression can be found.
+Prioritize robustness, read command-line us help text, and correct handling of
+escape sequences and multi-line content. ---

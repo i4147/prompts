@@ -1,0 +1,55 @@
+Write a Python benchmark script that measures
+and compares the performance of different parallel-execution strategies implemented in a custom
+module named `dh`, specifically evaluating how fast each strategy can compute SHA256 checksums for a
+set of files.
+Purpose: - Benchmark several parallel processing functions imported from the `dh` module
+(which provides `MAX_WORKERS`, a `ParallelSummary` dataclass/type, and a helper called `mpf`,
+plus presumably multiple "map-parallel" execution strategies such as thread-based, process-based,
+and possibly other custom implementations). - Use SHA256 file hashing as the representative workload
+for the benchmark, since it's CPU/IO bound and a good stand-in for real parallel work.
+Main behavior: 1.
+Define a `calculate_sha256(file_path)` helper function that:
+- Accepts a `Path` or `str`. - Returns a tuple `(hash_hex_string, error_message)`. - If the file
+doesn't exist, returns an empty hash string
+and an error message like `"File not found: {file_path}"`. - Otherwise opens the file in binary
+mode, reads it in chunks (block-by-block) using `hashlib.sha256()`, updates the hash incrementally,
+and returns the final hex digest with `None` as the error. - Wrap file reading in error handling so
+that any exception (e.g., permission errors, I/O errors) is caught
+and returned as the error message instead of raising.
+2. Define a `BenchmarkResult` dataclass to store the outcome of benchmarking a single parallel
+function, including: - `function_name`:
+name of the strategy/function being benchmarked. - `total_time`:
+elapsed wall-clock time for the run. - `throughput`:
+computed as files processed per second. - `success_rate`:
+percentage/fraction of files successfully hashed without error.
+- `results`: list of raw per-file results (hash + error tuples or similar). - `summary`:
+  optional `ParallelSummary` object returned by the `dh` module's parallel runner
+  (for additional diagnostics like worker counts, timing breakdown, etc.). - A `to_dict()` method
+  that serializes the result into a plain dictionary
+  (rounding `total_time` to 4 decimals, `throughput` and `success_rate` to 2 decimals)
+  and includes a `files_processed` count derived from the length of `results`.
+  3.
+The overall script should:
+- Generate or accept a list of file paths to benchmark against
+(e.g., test files created on disk or passed in). - For each parallel strategy/function exposed by
+`dh` (using `ThreadPoolExecutor`, `ProcessPoolExecutor`,
+and/or `dh`'s own `mpf`/parallel helpers with `MAX_WORKERS`),
+run the `calculate_sha256` function across all files in parallel,
+timing the full run with `time.time()`
+or similar. - Collect results into `BenchmarkResult` instances,
+computing throughput (files/second)
+and success rate (fraction of files with no error) for each strategy. - Aggregate
+and print/report statistics across multiple runs if applicable
+(using `statistics` module functions like mean/median/stdev for repeated trials). - Output a
+comparison of all benchmarked strategies,
+either as formatted console output
+and/or serialized JSON (using the `json` module) summarizing each `BenchmarkResult.to_dict()`. - Use
+`sys` and `os` for environment/system-level operations
+(e.g., reading command-line arguments, determining CPU count, or locating test files)
+and `Path` from `pathlib` for all file path handling. - Be runnable as a standalone script
+(include a `#!/usr/bin/env python3` shebang
+and a module-level docstring describing it as a "Benchmark script for testing parallel processing
+functions from the dh module" that "Tests various parallel execution strategies with SHA256 hashing
+of files"). - Use `from __future__ import annotations` for forward-compatible type hints
+and type-annotate functions using `Callable`, `Any`,
+and union types (e.g., `Path | str`, `str | None`) throughout. ---

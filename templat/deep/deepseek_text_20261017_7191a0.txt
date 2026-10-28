@@ -1,0 +1,72 @@
+# Reimplement Linux `{{COMMAND}}` in Python
+## Naming (HARD)
+- Console script name MUST be exactly `{{COMMAND}}` â€” no `-py`/`-python`/`-impl`
+  suffixes in `[project.scripts]` key, `python -m {{PACKAGE}}`, help text, or errors.
+- Multiple reference binaries â†’ one `[project.scripts]` entry each, exact names.
+- `--help` / `--version` / error messages must match the reference **byte-for-byte**
+  (argparse defaults differ â€” configure or hand-roll to match).
+- CLI surface must match reference: short+long options, `-oVAL`, `--opt=VAL`,
+  `--opt VAL`, grouped `-abc`, repeated `-e a -e b`, `--` terminator.
+## Flags (HARD)
+- Implement **every** flag the reference accepts; no silent drops, no no-ops.
+- Unimplementable flags â†’ list them with one-line reasons in your initial reply
+  and in README "Unsupported flags" section. Any flag not listed MUST work.
+- Every supported flag gets â‰Ą1 unit test + â‰Ą1 integration test, tracked in
+  `tests/matrix.py`.
+## Constraints
+- Python 3.11+, **stdlib only**, `[project] dependencies = []`.
+- **No process spawning in `{{PACKAGE}}/`**: `subprocess`, `os.system`, `os.popen`,
+  `os.spawn*`, `os.exec*`, `os.fork`, `pty`, `asyncio.create_subprocess_*`,
+  `multiprocessing`, and `ctypes` reaching fork/exec are forbidden. Tests may use
+  `subprocess` only for differential testing against the real binary.
+- Mechanical check must pass:
+  `grep -rn 'subprocess\\|os\\.system\\|os\\.popen\\|os\\.exec\\|os\\.spawn\\|os\\.fork\\|pty\\.' {{PACKAGE}}/`
+  returns nothing.
+- No shelling out to the real command or to `find`/`grep`/`sed`/`sort`/`xargs`.
+## Functional requirements (FILL IN)
+{{FILL_IN: input sources, byte-exact output, exit-code mapping, error semantics,
+edge cases.}}
+## Compatibility & robustness (always)
+- Exit-code table in README (0/1/2/other); each code exercised by an integration test.
+- Golden files for `--help`, `--version`, and one error message per error class.
+- SIGPIPE: `{{COMMAND}} ... | head -1` exits with reference code, no traceback/no
+  stderr. Catch `BrokenPipeError`.
+- Pathological filenames: newline, control bytes, non-UTF-8 (`\xff\xfe`), ~255-byte
+  names, paths near `PATH_MAX`. Byte-preserve via `os.fsencode`/bytes paths.
+- `ulimit -v 262144` on 1M files must not OOM; peak RSS O(1) in input size
+  (`make bench-mem` reports via `/usr/bin/time -v`).
+- FD count in `/proc/<pid>/fd` stable across 10k iterations.
+## Testing (always)
+- `scripts/difftest.sh`: runs your entry point and reference on same fixture, diffs
+  stdout/stderr/exit byte-for-byte, â‰Ą20 cases covering every flag + error class.
+  Skips cleanly if reference absent.
+- `scripts/grade.sh`: one-command self-grader that runs difftest and prints pass/fail.
+- `tests/matrix.py` + test asserting every listed flag has â‰Ą1 passing test.
+- `tests/fixtures/sanity/` (read-only, do not modify): empty dir; file with `\xff`
+  in name; file with newline in name; symlink loop; dir with 10k files. Tests must
+  cover all five.
+## Quality (always)
+- `{{PACKAGE}}/__init__.py`, `{{PACKAGE}}/core.py` (logic), `{{PACKAGE}}/cli.py`
+  (entry). Core importable and unit-testable.
+- Type hints throughout; docstrings on all public items.
+- `unittest` only (no pytest).
+- Non-zero exit + stderr on error; no bare `except:`; `sys.exit()` only in `cli.py`.
+- Each integration test uses a fresh `tempfile.mkdtemp` and `chdir`s in; no order-
+  or `$HOME`-dependence.
+## Deliverables
+1. Source tree + `pyproject.toml` with `[project.scripts] {{COMMAND}} = "{{PACKAGE}}.cli:main"`
+   and `dependencies = []`.
+2. `README.md`: design, supported-flags table, Unsupported flags, exit-code table,
+   deviations, how to run.
+3. `scripts/demo.sh`: builds fixture, runs `{{COMMAND}}`, â‰Ą5 invocations with
+   expected output.
+4. `scripts/difftest.sh`, `scripts/grade.sh`, `tests/matrix.py`.
+5. Final message: what shipped, every omitted flag + reason, packages used + why,
+   known limits.
+## Known pitfalls (FILL IN)
+{{FILL_IN: concrete traps.}}
+## Reporting back first
+Reply with: (1) reference version + where its flag list came from, (2) flags you
+will implement, (3) flags you will NOT implement + reasons, (4) how you guarantee
+zero process spawning in `{{PACKAGE}}/`, (5) non-UTF-8 path strategy,
+(6) confirmation the script key will be exactly `{{COMMAND}}`. Then code.

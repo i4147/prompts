@@ -1,0 +1,14 @@
+Write a Python script that takes a single file path from the command line, moves
+that file into a fixed destination folder used for storing documents on an
+Android device (under /sdcard/doc), and reports the outcome to the user.
+The script should create the destination folder if it does not already exist.
+If a file with the same name is already present in the destination, the script
+must leave both the source and the existing destination file untouched and print
+a clear message telling the user the target file already exists and that they
+should remove it and try again.
+Otherwise, the script should copy the file's contents into the destination,
+delete the original source file so the move is complete, and print a short
+confirmation that the operation finished.
+The script should run as a standalone command-line tool, read its input from the
+first command-line argument, and perform the operation without any interactive
+prompts. ---

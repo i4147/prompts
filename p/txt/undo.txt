@@ -1,0 +1,5 @@
+Module to help implement undo functionality.
+Usage: t = TextWidget() s = UndoSequence() def on_textwidget_text_inserted():
+s.begin_group() if not t.is_modified():
+s.add_action( TextWidgetModifiedAction() ) s.add_action( InsertionAction() ) s.end_group() def
+on_undo_button_pressed(): s.undo()

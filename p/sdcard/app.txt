@@ -1,0 +1,47 @@
+[Tool: think] Params:
+{"content":"The user wants a prompt that describes the code's purpose, inputs/outputs,
+and notable behavior - not the code itself.
+This is a single, simple task (no ambiguity, no need for multiple tools).
+I should just directly answer with the prompt text, no tool calls needed.
+This doesn't require any of the generation tools since the user is asking me to produce a text
+prompt describing code, not generate a document/image/etc.
+I'll just respond directly."} Create a Python script that embeds a Neovim instance inside a Textual
+(TUI) application, allowing one or more files to be opened
+and edited using real Neovim inside a terminal UI widget.
+Main requirements and behavior:
+- Use Python 3 with `from __future__ import annotations`, and rely on the `rich`, `textual`,
+and a custom `textual_nvim.nvim_client` module that provides `NvimClient`, `Cell`,
+and `Highlight` classes for communicating with an embedded Neovim process (via RPC/UI attach). -
+Accept a list of file paths (as `Path` objects) from the command line,
+which will be opened as buffers in the embedded Neovim session. - Define a custom Textual `Widget`
+subclass named `NvimView` that:
+- Is focusable (`can_focus=True`). - Fills the available space (`width: 1fr; height: 1fr;`)
+and uses the app's background color via Textual CSS (`DEFAULT_CSS`). - Stores the list of files to
+open and holds a reference to an `NvimClient` instance (initially `None`). - On mount:
+focuses itself and starts the embedded Neovim client/process,
+sizing it according to the widget's current terminal columns and rows (minimum 1x1). - On unmount:
+cleanly stops the Neovim client/process if it is running. - On resize events:
+forwards the new width/height to the running Neovim client so the embedded UI grid stays in sync
+with the widget size. - Renders Neovim's screen buffer (grid of `Cell`/`Highlight` data) into the
+widget using Rich `Segment` and `Style` objects,
+translating Neovim's highlight attributes
+(foreground/background colors, bold, italic, underline, etc.) into Rich styles for proper terminal
+rendering. - Handles keyboard input events,
+translating Textual key events into Neovim-compatible key notation.
+Includes a mapping (`SPECIAL_KEYS`) from Textual key names
+(e.g., "escape", "enter", "tab", "backspace", "delete", "insert", arrow keys, "home", "end",
+"pageup", "pagedown") to their corresponding Neovim special key notation
+(e.g., `<Esc>`, `<CR>`, `<Tab>`, `<BS>`, `<Del>`, `<Insert>`, `<Up>`, `<Down>`, `<Left>`, `<Right>`,
+`<Home>`, `<End>`, `<PageUp>`, `<PageDown>`),
+and forwards all keystrokes to the Neovim process so the user can edit files as if using Neovim
+directly, including normal, insert,
+and other vim modes. - Supports mouse/geometry-related sizing via Textual's `Size`
+and `events` module as needed for correct terminal emulation. - Wrap the widget in a Textual `App`
+subclass that composes `NvimView` as its main content,
+accepts bindings (using `Binding`) for app-level actions (e.g., quitting),
+and is runnable as a standalone script,
+reading file paths to open from `sys.argv`. - The overall goal is to let users open
+and edit real files with full Neovim functionality (syntax highlighting, modes, keybindings)
+rendered inside a Textual-based terminal UI,
+acting as a bridge/terminal emulator between Neovim's UI protocol and Textual's rendering
+and input system. ---

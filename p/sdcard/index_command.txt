@@ -1,0 +1,5 @@
+Contains command classes which may interact with an index / the network.
+Unlike its sister module, req_command,
+this module still uses lazy imports so commands
+which don't always hit the network (e.g. list w/o --outdated or --uptodate) don't need waste time
+importing PipSession and friends.

@@ -1,0 +1,30 @@
+Write a Python script that acts as a resilient command-line file downloader for
+large files, supporting resumable transfers, parallel segmented downloads, and
+progress reporting.
+The tool should accept one or more URLs (or a list file of URLs) along with
+options for the output directory, number of concurrent connections or workers,
+retry limits, timeouts, custom headers or a user-agent string, and an optional
+expected checksum for verification.
+It should probe each target to determine its size and whether the server
+supports byte-range requests, then choose an appropriate strategy: split large
+files into segments downloaded in parallel and reassembled into the final file,
+or fall back to a single-stream download when ranges are not supported.
+Key behaviors: - Resume interrupted downloads from partial files on disk without
+re-fetching completed data, and never corrupt an existing finished file unless
+explicitly told to overwrite it. - Retry failed segments or requests with
+backoff, handling network errors, timeouts, and transient HTTP errors
+gracefully, while reporting permanent failures clearly. - Display a live
+progress indicator per file showing bytes transferred, percentage, speed, and
+estimated time remaining, and print a concise summary at the end. - Verify
+integrity by computing a hash (such as MD5, SHA-1, or SHA-256) of the completed
+file and comparing it against an expected value when provided, reporting
+mismatches. - Handle user interruption (such as Ctrl+C) cleanly by saving
+progress so the transfer can be resumed later, without leaving corrupted output.
+- Sanitize output filenames derived from URLs, avoid overwriting unrelated
+files, and create the output directory if needed. - Optionally use multiple
+worker processes or threads to download several files concurrently, with a
+configurable limit. - Log activity to both the console and an optional log file
+at a configurable verbosity level. - Exit with a meaningful status code: zero
+when all downloads succeed and verify, non-zero otherwise.
+Use only standard practices suitable for a robust, production-quality
+command-line utility, and provide clear help text describing all options. ---

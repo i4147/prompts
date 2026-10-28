@@ -1,0 +1,1 @@
+Streaming exact hashes and optional ssdeep, TLSH, sdhash, and MinHash.

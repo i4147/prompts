@@ -1,0 +1,24 @@
+Write a Python script that takes the path to a text file containing pip freeze
+output, reads its contents, and rewrites that same file so that it contains only
+the package names, one per line, with all version pins, direct URL references,
+VCS links, environment markers, comments, blank lines, and editable-install
+prefixes removed.
+The tool should be invokable from the command line with a single required
+argument: the path to the file.
+It should validate that the path exists and points to a regular file, and exit
+with a clear, user-friendly error message if it does not.
+Read the file as UTF-8 while tolerating malformed bytes.
+Handle each kind of line sensibly: - Skip blank lines and comment lines. - Skip
+lines that are plain VCS or HTTP/HTTPS URLs without a usable package name. - For
+lines of the form `name @ url`, keep only the name before the `@`. - For
+standard requirement lines such as `name==1.2.3`, `name>=2.0`, or `name[extra]`,
+keep only the bare package name (without extras or version specifiers). -
+Recognize and strip a leading editable-install flag when present. - Ignore any
+line from which no valid package name can be extracted.
+Preserve the original order of the packages as they appear in the input, and
+write the result back to the same file, overwriting its previous content.
+The output should be a clean, newline-terminated list of unique-as-encountered
+package names suitable for later use in dependency listings or reinstallation
+tasks.
+Provide informative help text describing the tool's purpose and its single file
+argument. ---

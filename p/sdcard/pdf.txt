@@ -1,0 +1,40 @@
+Write a Python module for a document-parsing framework that implements a PDF parser plugin,
+to be placed in a parsers subpackage
+and registered via a `@register` decorator (imported from a sibling `..registry` module) for the
+".pdf" file extension under the format key "pdf".
+The module should import `Path` from `pathlib`, use `fitz` (PyMuPDF), `pdfplumber`, `pytesseract`,
+and `pdf2image.convert_from_path`,
+and import `Block` and `Document` data model classes from a sibling `..model` module.
+The module's purpose is to extract structured content from PDF files,
+with automatic OCR fallback for scanned/image-only pages.
+Define a function `parse_pdf(path: Path) -> Document` decorated with
+`@register([".pdf"], "pdf")` that: 1.
+Opens the PDF with `pdfplumber` and iterates over every page (1-indexed).
+2. For each page, extracts text via `page.extract_text()`.
+If non-empty text is found, appends a `Block` of kind "paragraph" containing the text,
+with metadata recording the page number.
+3. For pages with extracted text, also extracts any tables via `page.extract_tables()`,
+converting each table into a Markdown-style pipe table
+(rows joined as "| cell | cell |", with newlines inside cells replaced by spaces),
+and appends each as a `Block` of kind "table" with page number metadata.
+4. If a page yields no text (likely a scanned image page),
+records its page number in a list of OCR-pending pages instead of creating a block immediately.
+5. Tracks overall metadata in a dict including total page count (`pages`)
+and the list of pages needing OCR (`ocr_pages`).
+6. After the initial pass, if there are any OCR-pending pages,
+uses `pdf2image.convert_from_path` to render just the range of those pages
+(from the minimum to maximum page number in the OCR list) into images,
+then runs `pytesseract.image_to_string` on each rendered image.
+If OCR produces non-empty text,
+appends a "paragraph" `Block` with metadata containing the page number and an `ocr: True` flag.
+7. Additionally opens the file with `fitz` (PyMuPDF) in a try block to extract document metadata
+(such as title) and merge it into the metadata dict,
+handling failures gracefully (e.g., via try/except) so metadata extraction issues don't crash the
+whole parse.
+8. Finally constructs and returns a `Document` object containing the collected list of `Block`s
+and the accumulated metadata dict.
+The function should degrade gracefully:
+text-based PDFs should be parsed quickly via `pdfplumber` without invoking OCR,
+while scanned PDFs (or individual scanned pages within an otherwise text-based PDF) should
+automatically fall back to Tesseract OCR only for the pages that need it,
+minimizing unnecessary image rendering and OCR cost. ---

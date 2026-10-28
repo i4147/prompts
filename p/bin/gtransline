@@ -18,9 +18,9 @@ module-level logger named after `__name__`. **Constants:** - A frozen set
 `SKIP_DIRS` of directory names to skip during traversal: "lazy", ".git",
 "__pycache__", ".mypy_cache", ".ruff_cache", ".pytest_cache". - A compiled regex
 `CHINESE_PATTERN` matching a single CJK character from these Unicode ranges:
-U+4E00–U+9FFF, U+3400–U+4DBF, U+20000–U+2A6DF, U+2A700–U+2B73F, U+2B740–U+2B81F,
-U+2B820–U+2CEAF, U+F900–U+FAFF. (Note: write the extension-B range correctly as
-U+20000–U+2A6DF, and be careful that the range expressions are valid regex
+U+4E00‚ÄìU+9FFF, U+3400‚ÄìU+4DBF, U+20000‚ÄìU+2A6DF, U+2A700‚ÄìU+2B73F, U+2B740‚ÄìU+2B81F,
+U+2B820‚ÄìU+2CEAF, U+F900‚ÄìU+FAFF. (Note: write the extension-B range correctly as
+U+20000‚ÄìU+2A6DF, and be careful that the range expressions are valid regex
 character ranges using the proper code point escapes.) **Helper functions:** -
 `is_chinese_text(text, threshold=0.3)`: remove all whitespace, return False if
 empty; count Chinese characters via the regex; return True if the ratio of

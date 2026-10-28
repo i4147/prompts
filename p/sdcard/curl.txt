@@ -1,0 +1,40 @@
+Write a Python module that provides a cURL-based URL fetching utility with both a library API
+and a command-line interface,
+designed to work whether
+or not the optional `pycurl` package is installed
+(fall back to invoking the system `curl` binary via `subprocess` when `pycurl` is unavailable).
+The module should include: 1.
+A `CurlHeader` class that mimics the behavior of pycurl's header buffer object:
+- Accumulates header text written to it via a `write(buff)` method
+  (accepting both `bytes` and `str`, encoding to UTF-8 as needed)
+  and returning the number of bytes written. - A `setvalue_from_file(in_filename)` method that loads
+  header content from a file,
+  normalizing each line to end with `\r `. - A `getvalue()` method returning the accumulated header
+  text decoded as UTF-8 (replacing undecodable bytes). - A `__str__` method that returns the same
+  decoded text.
+  2.
+A `GetURL` class that encapsulates fetching logic:
+- Holds a `CurlHeader` instance for storing response headers,
+an `insecure` flag (default `False`) for disabling SSL verification,
+and an optional `http_proxy` setting. - `get_content_length(hdr)`:
+accepts either a `CurlHeader` instance or a raw header string,
+and uses a case-insensitive regex to extract the `Content-Length` value,
+returning it as an `int` or `None` if not present. - `set_insecure(bool_value=True)`:
+sets the insecure/SSL-verification-disabled flag. - `set_proxy(http_proxy)`:
+stores the proxy URL to be used for requests. - `get_status_code(status_line)`:
+parses an HTTP status line (e.g., `"HTTP/1.1 200 OK"`) using a regex to extract
+and return the numeric status code as an `int`,
+or `None` if the input is empty
+or doesn't match. - (Continue the class with methods to actually perform the fetch:
+when `pycurl` is available, use it to perform the request, applying proxy and SSL-insecure settings,
+writing response headers into the `CurlHeader` buffer, and returning the response body/content;
+when `pycurl` is not available,
+fall back to building and running an equivalent `curl` command via `subprocess`,
+parsing its output/headers similarly,
+and applying the same proxy/insecure options via command-line flags.)
+Include appropriate type hints (using `from __future__ import annotations` for compatibility),
+handle edge cases (missing headers, malformed status lines, missing files),
+and ensure the implementation is robust enough to be used as a general-purpose "fetch URL content
+and inspect its headers/status" utility,
+usable both by importing the classes and (if applicable) from the command line.
+---

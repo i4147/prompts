@@ -1,0 +1,17 @@
+Write a Python script that generates type stub files (.pyi) for Python source
+files by invoking an external stub generation tool.
+The script should accept one or more Python file paths as command-line
+arguments; if none are provided, it should automatically discover all Python
+files in the current working directory.
+For each source file, it should skip generation if a stub file with the same
+base name already exists, print a clear status message, and otherwise run the
+external stub generator on that file, reporting success or capturing and
+displaying any error output without stopping the overall run.
+When multiple files are processed, the work should be carried out concurrently
+or in parallel to improve throughput, with progress reported to the user.
+After processing, the script should identify any source files that still lack a
+corresponding stub file and report them in a summary, so the user knows which
+files were not covered.
+Exit cleanly with an appropriate status code, handling the single-file case
+simply and the multi-file case efficiently.
+Keep the output concise, informative, and easy to read in a terminal. ---

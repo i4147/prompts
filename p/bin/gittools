@@ -47,8 +47,8 @@ Guard the entry point with `if __name__ == "__main__":`. 8. **Summary
 printing:** A helper prints a 40-character dashed separator, then "Summary:",
 then the three counts (success with a configurable label defaulting to
 "Successfully cloned", existed, failed) and the total.
-Use the emoji prefixes ✅ for success, ⏭️ for existing, and a failure marker such
-as ❌. 9. **Error handling:** Catch and log exceptions per item with loguru
+Use the emoji prefixes âś… for success, âŹ­ď¸Ź for existing, and a failure marker such
+as âťŚ. 9. **Error handling:** Catch and log exceptions per item with loguru
 (`logger.error`/`logger.warning`); never let unexpected exceptions leave the
 worker pool unhandled.
 Use `KeyboardInterrupt` handling to exit cleanly. 10. **Logging:** Use

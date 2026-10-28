@@ -1,0 +1,21 @@
+Write a Python script that scans two fixed directories in the user's home
+folder, one containing shell scripts (files ending in `.sh`) and one containing
+Python scripts (files ending in `.py`), and creates extensionless symbolic links
+for each script so the scripts can be invoked by their base name from a
+command-line environment.
+The script should: - Target the `bashbin` directory in the user's home folder
+for `.sh` files, and the `bin` directory in the user's home folder for `.py`
+files. - For each matching file, resolve it to its absolute real path and create
+a symbolic link in the same directory whose name is the file's name without its
+extension, pointing back to the original file by its filename. - Be idempotent:
+if the extensionless name already is a valid symbolic link, leave it alone and
+produce no output for it. - If a regular (non-link) file already occupies the
+extensionless name, replace it with the symbolic link, and report the creation.
+- If nothing exists at the target name, create the symbolic link and report the
+creation. - Print a single human-readable line for each link created or
+replaced, in the form `Created: <link name> -> <target filename>`, and print
+nothing for links that were already correct. - Run its main work only when
+executed directly as a program, not when imported as a module. - Handle the case
+where a directory does not exist or contains no matching files gracefully,
+without crashing. - Avoid unnecessary side effects: never modify files other
+than the link names it manages, and never touch the original script files. ---

@@ -1,0 +1,25 @@
+Write a Python script that converts a plain text file containing quotes
+and authors into a structured JSON file.
+The script should define a function `convert_text_to_json(input_file, output_file="out.json")` that:
+- Reads the input text file line by line using UTF-8 encoding. - Parses the file under the
+assumption that each quote appears on one line,
+optionally followed immediately by its author on the next non-empty line.
+Blank lines should be skipped. - Logic: for each non-empty line encountered, treat it as a "quote".
+Check the next line — if it exists and is non-empty,
+treat it as the "author" for that quote and advance two lines;
+otherwise, treat the author as an empty string
+and advance only one line. - Collect all parsed entries into a list of dictionaries,
+each with the keys `"quote"`
+and `"author"`. - Write the resulting list to the output JSON file with indentation of 2 spaces,
+UTF-8 characters preserved (not escaped),
+using `json.dump`. - Print a success message showing how many quotes were converted
+and the output filename. - Handle errors gracefully:
+if the input file is not found, print a clear error message;
+for any other exception, print the error message as well.
+The script should not crash on these errors.
+The script should be runnable from the command line,
+accepting the input file path as the first command-line argument (`sys.argv[1]`),
+and always writing the output to a fixed file named `out.json` in the current directory.
+Include `from __future__ import annotations` at the top of the file,
+and wrap the command-line execution logic in an `if __name__ == "__main__":` block that imports
+`sys` and calls the conversion function with the provided input filename. ---

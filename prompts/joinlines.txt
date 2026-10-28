@@ -1,0 +1,9 @@
+Write a Python script that takes a single text file path from the command line,
+reads the file, and rewrites it in place so that every blank or whitespace-only
+line is removed and all remaining lines are joined together into one continuous
+line with their line breaks stripped.
+The result should be saved back to the same file with a single trailing newline
+at the end.
+The script should read and write the file using UTF-8 encoding, handle the file
+path supplied as the first command-line argument, and exit cleanly when it
+finishes. ---

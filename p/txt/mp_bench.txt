@@ -1,0 +1,3 @@
+Optimized parallel job runner using mp.Pool.starmap
+and collections.deque for streaming result collection.
+Includes comparison with apply_async.

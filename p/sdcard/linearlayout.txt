@@ -1,0 +1,25 @@
+Write a Python module that defines a `LinearLayout` class wrapping the Termux:GUI `LinearLayout`
+widget in an object-oriented interface,
+to be used as part of an OO layer built on top of the `termuxgui` library.
+Requirements: - Import `Optional`
+and `Literal` from the `typing` module. - Import the `termuxgui` library as `tg`. - Import
+`Activity` from `termuxgui.activity`. - Import `ViewGroup` from `termuxgui.oo.viewgroup`. - Define a
+class named `LinearLayout` that inherits from both `ViewGroup`
+and `tg.LinearLayout` (in that order),
+combining the custom OO `ViewGroup` behavior with the native `termuxgui` `LinearLayout` widget. -
+Add a class docstring describing it as representing a LinearLayout. - Implement an `__init__` method
+with the following parameters: - `activity`: an `Activity` instance (required).
+- `parent`: an `Optional[ViewGroup]`, defaulting to `None`,
+  representing the parent view group. - `vertical`:
+  a `bool`, defaulting to `True`,
+  indicating the orientation of the layout (vertical vs horizontal). - `visibility`:
+  an `Optional[Literal[0, 1, 2]]`, defaulting to `None`,
+  representing the view's visibility state. - Inside `__init__`,
+  first call `tg.LinearLayout.__init__` with `self`, `activity`, `parent`, `vertical`,
+  and `visibility` to properly initialize the underlying native widget. - Then call
+  `ViewGroup.__init__` with `self`, `activity`, `self.id`,
+  and `parent` to initialize the custom OO wrapper state,
+  using the `id` attribute that was set by the native widget's initializer.
+- Preserve exact parameter names, defaults,
+  and the order of initialization calls (native widget init before `ViewGroup` init) since other
+  parts of the OO layer rely on `self.id` being set first. ---

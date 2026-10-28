@@ -1,0 +1,9 @@
+NLTK Twitter client This module offers methods for collecting and processing Tweets.
+Most of the functionality depends on access to the Twitter APIs,
+and this is handled via the third party Twython library.
+If one of the methods below returns an integer,
+it is probably a `Twitter error code <https://dev.twitter.com/overview/api/response-codes>`_.
+For example, the response of '420' means that you have reached the limit of the requests you can
+currently make to the Twitter API.
+Currently, `rate limits for the search API <https://dev.twitter.com/rest/public/rate-limiting>`_ are
+divided into 15 minute windows.

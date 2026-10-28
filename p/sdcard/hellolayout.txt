@@ -1,0 +1,25 @@
+Write a Python script that uses the `termuxgui` library to build
+and display a simple native GUI screen on Android via Termux:GUI.
+The script should: 1.
+Open a connection to the Termux:GUI service using `termuxgui.Connection` as a context manager,
+and create a new `Activity` tied to that connection.
+2. Build a view hierarchy consisting of:
+- A root `LinearLayout` (created with no explicit parent so it becomes the Activity's root view). -
+A `TextView` acting as a title, attached to the root layout, displaying the text "Awesome Title",
+with its font size increased to 30. - A second `TextView` attached to the root layout that displays
+a long placeholder "Lorem ipsum..." paragraph as the main content text. - A `Button` attached to the
+root layout with the label "Click here!", placed after the content text view.
+3. Adjust the layout weighting so the content `TextView` is given a higher linear layout priority
+(weight value 10) than the title and button,
+making it visually larger/take up more space relative to the other two views.
+4. Keep the activity visible by sleeping for 5 seconds (`time.sleep(5)`) before the script ends
+and the connection closes.
+Notable behavior/comments to preserve conceptually:
+- Explain (e.g., via inline comments) that each View
+or layout can be created with a parent Layout to establish a hierarchy,
+and that omitting the parent causes the view to become the root view of the activity. - No explicit
+inputs are required from the user;
+all content (title text, paragraph text, button label) is hardcoded in the script. - No outputs are
+returned/printed; the "output" is the rendered GUI on the Termux:GUI overlay for the duration of the
+sleep call. - The script does not handle any button click events
+or user interaction logic—it only renders the static layout and waits before exiting. ---

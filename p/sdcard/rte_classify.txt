@@ -1,0 +1,6 @@
+Simple classifier for RTE corpus.
+It calculates the overlap in words and named entities between text and hypothesis,
+and also whether there are words / named entities in the hypothesis which fail to occur in the text,
+since this is an indicator that the hypothesis is more informative than
+(i.e not entailed by) the text.
+TO DO: better Named Entity classification TO DO: add lemmatization

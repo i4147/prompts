@@ -1,0 +1,32 @@
+Write a Python module that implements an in-memory statistics tracker for recording
+and querying lint-style violations (as used in a tool like flake8).
+The module should provide: 1.
+A `Statistics` class that:
+- Maintains an internal dictionary store mapping a composite key (filename + error code) to a
+`Statistic` object. - Has a `record(error)` method that accepts a `Violation`-like object
+(with at least `filename`, `code`, and `text`/message attributes), builds a key from it,
+creates a new `Statistic` entry if the key doesn't exist yet,
+and increments the count for that key each time a matching violation is recorded. - Has an
+`error_codes()` method that returns a sorted list of all unique error codes currently tracked,
+deduplicated across filenames. - Has a `statistics_for(prefix, filename=None)` method that is a
+generator yielding `Statistic` objects whose error code starts with the given prefix,
+optionally filtered to a specific filename, returned in sorted key order.
+2. A `Key` class implemented as a `collections.namedtuple` with fields `filename` and `code`,
+which is hashable/immutable (uses `__slots__ = ()`), and provides:
+- A `create_from(error)` classmethod that builds a `Key` from a violation object's `filename`
+and `code`. - A `matches(prefix, filename)` method that returns `True` if the key's code starts with
+the given prefix and either no filename filter is provided or the filename matches exactly.
+3. A `Statistic` class that stores the data for a single error code/filename combination,
+with attributes `error_code`, `filename`, `message`,
+and `count` (starting count, typically passed in at creation), plus:
+- A `create_from(error)` classmethod that constructs a `Statistic` from a violation object
+(using its code, filename, and message/text, with an initial count of 1).
+- An `increment()` method that increases the stored count by 1 each time a matching violation is
+  recorded again.
+Use Python type hints throughout (including `Dict`, `List`, `Optional`, `Generator` from `typing`),
+and use a `TYPE_CHECKING` guarded import for the `Violation` type
+(imported from a module such as `flake8.style_guide`) to avoid circular imports at runtime
+while still providing accurate type annotations.
+The code should have no external dependencies beyond the standard library
+and should be organized so that `Statistics` aggregates/records violations,
+`Key` provides the lookup/matching logic, and `Statistic` holds the per-key data and count. ---

@@ -1,0 +1,85 @@
+Write a prompt for an AI coding agent that will generate a comprehensive Python "general utilities"
+module intended to be imported across a larger application (e.g., a system/ops-oriented toolkit).
+The module should be written for Python 3, use `from __future__ import annotations`,
+and include the following characteristics: **Purpose**:
+Provide a broad grab-bag of reusable low-level helper utilities covering error handling, logging,
+process/system utilities, file/path helpers, argument parsing helpers,
+and other common Python idioms that get duplicated across scripts in a larger codebase.
+The module should act as a single shared dependency that other modules in the application import
+from, rather than a standalone script with a specific business purpose. **Dependencies**:
+- Rely primarily on the Python standard library:
+`argparse`, `atexit`, `contextlib` (`contextmanager`), `datetime`, `errno`,
+`functools` (`partial`, `wraps`), `glob`, `inspect`, `itertools`, `json`, `logging`, `os`, `re`,
+`shutil`, `sys`, `tempfile`, `time`, `types`, `argparse.HelpFormatter`,
+`collections` (`defaultdict`, `namedtuple`), `collections.abc` (`Iterable`, `Mapping`, `Sequence`),
+`pathlib.Path`, `typing` (`Any`, `Callable`, `Optional`). - Gracefully handle
+optional/platform-specific imports with `try/except ImportError` blocks,
+falling back to `None` or an alternative implementation when unavailable:
+- `syslog` (Unix-only) → fall back to `None`. - `cgitb` (may be absent) → fall back to `None`. -
+`eventlet.sleep` and `eventlet.semaphore.Semaphore` → if eventlet isn't installed,
+fall back to `time.sleep` (aliased as `_sleep`)
+and define a no-op `Semaphore` class that implements the context manager protocol
+(`__enter__` returns self, `__exit__` returns `False`)
+and accepts arbitrary constructor arguments
+(via `*args, **kwargs` in `__init__`, doing nothing with them). - `tkinter` → attempt the import
+wrapped in try/except,
+falling back to `None` if unavailable
+(used only for optional GUI-related helper functions elsewhere in the module). **Required
+functionality to include**
+(implement each as a well-documented function/class, with docstrings and type hints where sensible):
+1. **Error handling helpers**:
+- A function to format exceptions into human-readable strings
+(including exception type, message, and optionally traceback). - A context manager that suppresses
+specified exception types
+and optionally logs them instead of raising. - A decorator that retries a function call on failure,
+with configurable max attempts, delay between attempts, and which exception types to catch.
+2. **Logging helpers**:
+- A function to configure a standard logger
+(console + optional file handler + optional syslog handler if available) with a sensible default
+format including timestamps, level,
+and module name. - A helper to log
+and optionally re-raise exceptions in one call. - Support for adjusting log verbosity based on a
+count of `-v` flags (e.g., mapping 0/1/2+ to WARNING/INFO/DEBUG).
+3. **Process/system utilities**:
+- A function to run a subprocess command, capturing stdout/stderr, with options for timeout,
+working directory, and raising on non-zero exit code. - A function to register cleanup callbacks via
+`atexit` with error-safe wrapping so one failing cleanup doesn't prevent others from running. - A
+helper to check whether a process with a given PID is still running. - A
+rate-limiting/semaphore-based throttling helper built on the `Semaphore` (real or no-op fallback)
+and `_sleep`.
+4. **File/path utilities**:
+- A function to safely create directories (`mkdir -p` style) using `pathlib.Path`,
+ignoring "already exists" errors via `errno`. - A function to atomically write to a file
+(write to a temp file in the same directory via `tempfile`,
+then `os.replace`/`shutil.move` into place). - A function to find files matching a glob pattern
+recursively. - A function to read/write JSON files with sensible defaults
+(e.g., `indent=2`, UTF-8 encoding) and error handling. - A context manager for creating
+and automatically cleaning up a temporary directory.
+5. **Argument parsing helpers**:
+- A custom `argparse.HelpFormatter` subclass that improves help text formatting
+(e.g., preserves newlines or widens columns). - A helper function to build a base
+`argparse.ArgumentParser` pre-populated with common flags
+(e.g., `-v/--verbose`, `--dry-run`, `--log-file`).
+6. **General-purpose Python idiom helpers**:
+- A decorator (using `functools.wraps`) to memoize/cache function results,
+optionally with a time-to-live. - A function to flatten nested iterables
+(using `itertools` and `collections.abc.Iterable` checks, careful not to flatten strings/bytes). - A
+function to merge dictionaries deeply (checking `collections.abc.Mapping`),
+with configurable override behavior. - A function to chunk a sequence/iterable into fixed-size
+batches. - A utility to inspect a callable's signature (via `inspect`)
+and filter/validate keyword arguments before calling it. - A simple `namedtuple`-based
+or lightweight struct for representing timestamped records,
+plus a helper to get the current UTC/local timestamp in ISO format (via `datetime`). - A
+`defaultdict`-based counter/grouping helper for aggregating items by key. **Style/behavior notes**:
+- All functions and classes should include descriptive docstrings explaining parameters,
+return values, and raised exceptions. - Use type hints
+(leveraging `typing.Any`, `Callable`, `Optional`, and `collections.abc` types) throughout function
+signatures. - Code should be defensive:
+validate inputs where reasonable,
+and prefer catching specific exceptions over bare `except:`. - Favor pure functions
+and context managers over global mutable state where possible,
+except where a module-level logger
+or shared semaphore instance is genuinely useful. - No `if __name__ == "__main__"` block is needed
+— this is a library module, not a script. - Keep the module self-contained in a single file,
+organized with clear section comments (e.g., `# --- Error Handling ---`, `# --- Logging ---`, etc.)
+grouping related functions together in the order listed above. ---

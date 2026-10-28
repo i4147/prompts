@@ -1,0 +1,1 @@
+A reader for corpora that consist of plaintext documents.

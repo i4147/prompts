@@ -1,0 +1,19 @@
+Write a Python script that analyzes a local Git repository and reports, for each
+commit, which files were newly added in that commit.
+The tool should accept the path to a repository as input and produce a
+structured result mapping each commit identifier to the list of files that first
+appeared in that commit, including files whose paths were introduced by the
+commit relative to its parent state.
+It should handle commits with no parents (initial commits) by treating all files
+in their tree as added, and it should skip or gracefully handle merge commits
+and deleted or renamed files so that only genuinely new paths are reported.
+The script should traverse the full commit history reachable from the
+repository's current branch, avoid redundant work by reusing previously computed
+file listings for identical tree states, and support both human-readable console
+output and machine-readable JSON output selected through a command-line option.
+It should validate that the provided path is a valid repository and report clear
+error messages for invalid paths, empty repositories, or repositories with
+unreadable objects.
+The output should preserve commit order from oldest to newest and include the
+commit hash, author name, commit timestamp, and the sorted list of added file
+paths for each commit. ---

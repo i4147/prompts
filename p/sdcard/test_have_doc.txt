@@ -1,0 +1,15 @@
+Write a Python script that scans the current working directory for Python source files and reports
+which of them contain a module-level docstring.
+The script should: - Use `pathlib.Path` to determine the current working directory (`Path.cwd()`). -
+Import and use two helper functions from a local module named `dh`: - `get_pyfiles(path)`:
+given a directory path,
+returns an iterable of Python file paths (e.g., `.py` files) found within that directory
+(recursively or not, matching the helper's implementation). - `have_doc(path)`:
+given a file path, returns a boolean indicating whether that Python file has a documentation string
+(docstring) defined at the top of the module. - In the `if __name__ == "__main__":` block,
+iterate over all Python files returned by `get_pyfiles(cwd)`. - For each file,
+check if it has a docstring using `have_doc(path)`. - If the file has a docstring,
+print its path to standard output. - Files without a docstring should be silently skipped
+(no output for them). - The script does not take command-line arguments;
+it always operates on the current working directory. - The output is simply a list of file paths
+(one per line) for Python files that contain documentation strings. ---

@@ -1,0 +1,2 @@
+A graphical tool for exploring the regular expression based chunk parser
+``nltk.chunk.RegexpChunkParser``.

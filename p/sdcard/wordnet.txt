@@ -1,0 +1,6 @@
+An NLTK interface for WordNet WordNet is a lexical database of English.
+Using synsets, helps find conceptual relationships between words such as hypernyms, hyponyms,
+synonyms, antonyms etc.
+For details about WordNet see:
+https://wordnet.princeton.edu/ This module also allows you to find lemmas in languages other than
+English from the Open Multilingual Wordnet https://omwn.org/

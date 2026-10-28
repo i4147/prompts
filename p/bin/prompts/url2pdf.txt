@@ -1,0 +1,12 @@
+Write a Python script that fetches the HTML content of a given web page URL
+and saves a rendered PDF snapshot of it to a local file.
+The tool should accept a target URL and an output file name,
+report progress to the user as it works (announcing the URL being processed),
+and confirm success with the saved file's location when the PDF is written.
+If anything goes wrong during fetching or rendering, the tool should catch the error,
+print a clear message describing the failure to the error output stream,
+and exit gracefully without crashing.
+By default, it should snapshot a placeholder website (https://example.com)
+and save the result as "website_snapshot.pdf" when run directly,
+but the design should make it easy to reuse the core conversion logic with any URL and file name.
+Prioritize simplicity, reliability, and clear user-facing messages. ---

@@ -1,0 +1,4 @@
+Distance Metrics.
+Compute the distance between two items (usually strings).
+As metrics, they must satisfy the following three requirements: 1. d(a, a) = 0
+2. d(a, b) >= 0 3. d(a, c) <= d(a, b) + d(b, c)

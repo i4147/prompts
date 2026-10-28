@@ -1,0 +1,2 @@
+Compression Library Benchmark Tool Compares:
+pylzma, py7zr, zstandard, lz4, cramjam (incl. snappy), brotli

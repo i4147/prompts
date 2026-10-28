@@ -1,0 +1,32 @@
+Write a Python tool that scans a codebase, source archive,
+or distribution package and produces a structured report of the Python modules, symbols,
+and constants it contains, along with the dependencies and configuration values they rely on.
+The tool should accept a path to a directory
+or archive file as input (including common compressed and wheel-style formats)
+and skip irrelevant folders such as version control metadata, virtual environments, caches,
+and dependency directories.
+For each Python file found,
+the tool should parse the source code to identify top-level definitions such as classes, functions,
+and module-level constants, and record their names and locations.
+It should also detect imported modules and the symbols they bring in,
+distinguishing between standard library usage, third-party packages,
+and internal project modules where feasible.
+Where a parser for the newer syntax tree is available,
+the tool should use it for more robust analysis,
+and it should degrade gracefully to a simpler AST-based approach
+when optional dependencies are missing.
+The tool should identify uppercase-style constants and configuration-like values,
+summarize how often each symbol is referenced across the codebase,
+and flag potential issues such as unused imports, duplicated definitions,
+or missing type annotations on public functions.
+Results should be aggregated into a single structured output that can be written to the console as a
+readable summary and optionally exported to a machine-readable format such as JSON,
+and optionally stored in a lightweight local database for later querying.
+Command-line usage should be simple:
+the user provides the target path, an optional output file, an optional database path,
+and flags to control verbosity and which checks to run.
+The tool must handle malformed or unparseable files gracefully by logging a warning and continuing,
+never crashing on a single bad file.
+Include clear error messages for invalid paths or unsupported archive formats,
+and ensure the output is deterministic so repeated runs on the same input produce identical
+reports. ---

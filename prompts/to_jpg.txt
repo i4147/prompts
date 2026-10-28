@@ -1,0 +1,5 @@
+Multi-backend image converter with automatic fallback.
+Design contract: * Never abort the whole run because one backend fails on one
+file. * For every file, try each viable backend (in priority order) until one
+produces a non-empty output; only then move it into place. * The source file is
+only removed after a successful conversion.

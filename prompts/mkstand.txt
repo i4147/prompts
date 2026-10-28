@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line tool for saving a web page as
+a single, self-contained HTML file.
+Given a URL (or a local HTML file), the tool should fetch the page and download
+all of its referenced external assets, including stylesheets, scripts, images,
+icons, and web fonts, then embed them directly into the HTML so the resulting
+file can be opened offline without any external dependencies.
+Key requirements: - **Input:** Accept a page URL or a local HTML file path as
+the primary argument, plus an optional output file path.
+Provide sensible defaults for the output name when none is given, derived from
+the source page. - **Asset discovery:** Parse the HTML to find linked resources
+such as stylesheet links, script sources, image sources (including lazy-loaded
+and responsive image attributes), favicons, and inline style blocks.
+Also scan CSS content for referenced images and fonts, resolving relative paths
+correctly against the appropriate base URL. - **Embedding:** Convert discovered
+assets into inline form (for example, data URIs for images and fonts, and
+inlined text for stylesheets and scripts), and rewrite the references in the
+document so they point to the embedded content. - **Concurrency:** Download
+assets in parallel using a bounded worker pool to keep the run time reasonable,
+with a configurable or sensible default concurrency limit. - **Robustness:** Use
+request timeouts and handle network failures gracefully.
+A single failed asset should not abort the whole job; instead, leave the
+original reference intact and report a warning.
+Skip or gracefully handle non-HTTP references such as `data:` URIs and
+`javascript:` links. - **MIME handling:** Determine correct content types for
+each asset, with fallbacks for uncommon types such as web fonts. - **Output:**
+Write a single valid HTML file to disk and print a concise summary to the user,
+including the output location and counts of successfully embedded and failed
+assets.
+Logging should be quiet by default, showing only warnings and errors. -
+**Usability:** Provide clear command-line help and sensible error messages for
+invalid inputs, unreachable URLs, or missing files. ---

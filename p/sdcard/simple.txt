@@ -1,0 +1,21 @@
+Simple Tokenizers These tokenizers divide strings into substrings using the string
+``split()`` method.
+When tokenizing using a particular delimiter string, use the string ``split()`` method directly,
+as this is more efficient.
+The simple tokenizers are *not* available as separate functions;
+instead, you should just use the string ``split()`` method directly:
+>>> s = "Good muffins cost $3.88 in New York.
+Please buy me two of them.
+Thanks." >>> s.split() # doctest:
++NORMALIZE_WHITESPACE
+['Good', 'muffins', 'cost', '$3.88', 'in', 'New', 'York.', 'Please', 'buy', 'me', 'two', 'of',
+'them.', 'Thanks.'] >>> s.split(' ') # doctest:
++NORMALIZE_WHITESPACE
+['Good', 'muffins', 'cost', '$3.88 in', 'New', 'York.', '', 'Please', 'buy', 'me two', 'of', 'them.
+Thanks.'] >>> s.split(' ') # doctest:
++NORMALIZE_WHITESPACE ['Good muffins cost $3.88', 'in New York.
+Please buy me', 'two of them.', '', 'Thanks.']
+The simple tokenizers are mainly useful because they follow the standard ``TokenizerI`` interface,
+and so can be used with any code that expects a tokenizer.
+For example, these tokenizers can be used to specify the tokenization conventions
+when building a `CorpusReader`.

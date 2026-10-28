@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line tool for stripping comments
+from source code files in a directory tree.
+The tool should accept a path to a file or folder (with an option to recurse
+into subdirectories), and process every supported source file it finds.
+It should detect the correct single-line comment syntax for each file based on
+its extension (for example, hash-style comments for Python, shell, and YAML
+files, double-slash comments for C-family, JavaScript, Java, Go, and Rust files,
+a double-quote for Vim scripts, and a double-dash for Lua), falling back to a
+sensible default for unknown types.
+The tool should remove full-line and trailing comments while leaving
+comment-like text inside string literals untouched, and it should preserve the
+rest of each file's formatting and line structure as closely as possible.
+Writes should be safe: the tool should update files atomically so that an
+interrupted run never leaves a half-written file, and it should offer a dry-run
+mode that reports what would change without modifying anything.
+Provide a summary at the end listing how many files were scanned, modified, and
+skipped, along with any errors encountered.
+For performance, the tool should process files in parallel using a configurable
+number of worker processes, handle very large files efficiently (for example, by
+streaming or chunking them), and treat small files with a simpler fast path.
+It should skip binary files, files that cannot be decoded as text, and common
+non-source directories such as version control folders and virtual environments.
+Use clear logging for progress and problems, and make the command-line interface
+self-documenting with help text, sensible defaults, and a clean exit status that
+reflects success or failure. ---

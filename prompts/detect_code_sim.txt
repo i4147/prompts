@@ -1,0 +1,2 @@
+Recursive Python File Duplicate and Similarity Detector.
+Target: Python 3.14+

@@ -1,0 +1,14 @@
+Browse the module docstrings of the Python files in a directory. ``pydocview`` scans a directory
+(the current working directory by default) for ``*.py`` files,
+extracts each file's module docstring,
+renders it as Markdown and shows the result in the terminal one file at a time.
+Long docstrings are split into pages that fit the terminal height,
+and the user moves forward and backward through them with the keyboard.
+Usage: pydocview [DIRECTORY] Controls:
+space / right / down / page-down / enter next page (or next file) left / up / page-up / b previous
+page (or file) n / ] next file p /
+[ previous file g / G first / last file q / esc quit If single-key input capture is unavailable (for
+example because ``readchar`` is not installed), the viewer falls back to a line-based paging mode:
+press Enter to continue, or type a command and press Enter.
+Errors such as a missing directory are reported as plain messages
+and a non-zero exit code instead of a traceback.

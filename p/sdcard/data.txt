@@ -1,0 +1,14 @@
+Functions to find and load NLTK resource files, such as corpora, grammars,
+and saved processing objects.
+Resource files are identified using URLs,
+such as ``nltk:corpora/abc/rural.txt``
+or ``https://raw.githubusercontent.com/nltk/nltk/develop/nltk/test/toy.cfg``.
+The following URL protocols are supported: - ``file:path``: Specifies the file whose path is *path*.
+Both relative and absolute paths may be used. - ``https://host/path``:
+Specifies the file stored on the web server *host* at path *path*. - ``nltk:path``:
+Specifies the file stored in the NLTK data package at *path*.
+NLTK will search for these files in the directories specified by ``nltk.data.path``.
+If no protocol is specified, then the default protocol ``nltk:`` will be used.
+This module provides to functions that can be used to access a resource file, given its URL:
+``load()`` loads a given resource, and adds it to a resource cache;
+and ``retrieve()`` copies a given resource to a local file.

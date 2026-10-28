@@ -1,0 +1,14 @@
+Write a Python script that searches GitHub for the most popular recently created
+Python repositories and saves a summary list to a local text file.
+The script should load a GitHub access token from a user-level environment
+configuration file in the home directory, and fail with a clear error message if
+the token is missing.
+It should query GitHub's repository search service for Python-language projects
+created within roughly the last ten days, ranked by star count in descending
+order, retrieving up to fifty results per request.
+Each matching repository's full name (owner and repository name) should be
+written, one per line, to an output file named "ghpy10.txt" in the current
+working directory.
+The script should handle failed API responses by surfacing the error rather than
+silently writing incomplete output, and should be runnable as a standalone
+command-line tool with no required arguments. ---

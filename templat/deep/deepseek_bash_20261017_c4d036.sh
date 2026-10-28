@@ -2,7 +2,6 @@
 # save-cht.sh — download all sheets listed by :list
 OUT=~/cht-offline
 mkdir -p "$OUT"
-
 # Get the list of all topics
 curl -s "https://cht.sh/:list" | while read -r topic; do
     [ -z "$topic" ] && continue

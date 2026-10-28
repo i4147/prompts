@@ -1,0 +1,23 @@
+Write a Python script that demonstrates how to optimize an SVG string using the `svgo` Python
+package's `optimize` function.
+The script should: 1.
+Import the `optimize` function from the `svgo` module.
+2. Define a sample SVG document as a multi-line string containing:
+- An `<svg>` root element with `xmlns`, `width="100"`,
+and `height="100"` attributes. - An XML comment (e.g., `<!-- comment -->`). - A simple child
+element, such as a `<rect>` with `width="100"`, `height="100"`, and `fill="red"`.
+3. Call `optimize` with the SVG string and a configuration dictionary that includes:
+- `"plugins": ["preset-default"]` to apply the default optimization preset
+(which should strip comments and perform standard cleanups). - `"floatPrecision": 2` to limit
+numeric precision in the output. - `"multipass": True` to run the optimization process multiple
+times until no further reductions occur. - `"pretty": True` to produce human-readable,
+indented output instead of a minified single line.
+4. Print the optimized SVG markup by accessing the `"data"` key of the dictionary/object returned by
+`optimize`.
+The main input is the raw SVG markup plus the options dictionary;
+the main output is the optimized (and pretty-printed) SVG string printed to standard output.
+Note that the comment present in the original SVG should be removed by the `preset-default` plugin
+during optimization,
+and the output formatting should reflect the `pretty` option (indented tags) rather than a compact
+single-line
+SVG. ---

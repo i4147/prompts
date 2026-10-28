@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line code-quality
+and cleanup tool for Python source trees.
+It should accept one or more file or directory paths,
+recursively discover Python source files
+(skipping common virtual-environment, cache, and version-control directories by default,
+with options to add custom exclude patterns), and analyze or transform each file's source code.
+The tool should support multiple operating modes selectable from the command line:
+- A report mode that scans code
+and lists issues such as lines exceeding a configurable length limit, unused or redundant imports,
+bare or overly broad exception handlers, and similar style or hygiene problems, with file names,
+line numbers, and short descriptions. - A fix
+or rewrite mode that automatically applies safe corrections
+(for example, normalizing imports, removing unused imports, or tidying exception handling)
+while preserving program behavior,
+and that can either write changes in place
+or show a unified diff of proposed changes without modifying files. - A check mode that exits with a
+non-zero status code when issues are found, suitable for use in continuous integration pipelines.
+Key behaviors to honor:
+- Process files in parallel when there are many, with a configurable number of workers,
+and handle failures in individual files gracefully without aborting the whole run. - Skip files that
+are too large, unreadable, binary, or contain syntax errors,
+reporting them clearly rather than crashing. - Preserve each file's original encoding
+and line endings where possible,
+and never corrupt a file if an error occurs mid-operation (use safe, atomic-style writes). - Respect
+file permissions and symbolic links sensibly. - Provide a summary at the end:
+number of files scanned, issues found, files changed, and files skipped,
+with a meaningful exit code. - Optionally handle compressed
+or archived inputs (such as zip, tar, gzip, bz2, or xz archives) by inspecting Python files inside
+them without extracting to unsafe locations. - Produce clear, well-formatted terminal output,
+support a verbose flag for debugging detail,
+and include built-in help text with usage examples. - Work across Windows, macOS, and Linux,
+and be safe against path traversal and malformed input. ---

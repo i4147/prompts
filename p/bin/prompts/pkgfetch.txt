@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line tool for downloading Python packages
+and their dependencies for offline use or transfer to another machine.
+The tool should accept one
+or more package requirement specifications (with optional version constraints and extras)
+or a requirements file,
+and resolve each to the concrete distribution files (wheels or source archives) that match a
+specified target environment, such as a particular Python version, platform, and implementation.
+It should query one or more Python package index mirrors
+(including the official PyPI and common regional mirrors),
+allow the user to select or override the index URL,
+and gracefully fall back between mirrors when one is unreachable.
+Key behaviors: - Recursively resolve transitive dependencies,
+respecting environment markers and version specifiers,
+and avoid downloading duplicates. - Prefer binary wheels compatible with the target environment,
+with an option to allow or restrict source distributions,
+and an option to only download binary packages. - Support selecting a target platform,
+Python version, and ABI tags so packages can be fetched for a different machine than the one running
+the script.
+- Verify downloaded files against the hashes published in the index when available,
+  and report mismatches. - Save files into a user-specified destination directory,
+  optionally producing a single compressed archive (zip or tar) of all downloaded artifacts plus a
+  manifest file listing packages, versions,
+  and hashes. - Provide a dry-run mode that prints the resolved plan without downloading anything. -
+  Offer a companion mode that installs packages from a previously created local directory
+  or archive without network access,
+  using the bundled artifacts. - Show clear progress and logging output,
+  with a verbose flag for debugging and a quiet flag for scripting,
+  and return meaningful non-zero exit codes on failures such as unresolvable requirements,
+  network errors, or hash mismatches. - Handle invalid input gracefully with helpful error messages,
+  and clean up partial downloads on interruption. ---

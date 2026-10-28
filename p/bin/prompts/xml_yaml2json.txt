@@ -1,0 +1,18 @@
+Write a Python script that converts configuration
+and structured data files (TOML, XML, and YAML) into JSON.
+The tool should accept a single file or a directory as input,
+recursively discover matching files by extension when given a directory,
+and convert each file into a JSON document written alongside it
+or into a user-specified output location.
+It should handle each supported format using the appropriate parser,
+degrade gracefully when an optional parsing dependency is not installed by printing a clear error
+message to stderr and exiting with a non-zero status,
+and report failures for individual files without stopping the processing of the remaining files.
+The script should process multiple files concurrently to improve throughput.
+It should expose a command-line interface that lets the user choose the input path, the output path,
+the JSON indentation level, whether non-ASCII characters are escaped,
+and whether object keys are sorted,
+and it should print a concise summary of successful and failed conversions at the end.
+XML parsing must be done safely to guard against malicious inputs such as entity expansion attacks.
+The output must always be valid, UTF-8 encoded JSON,
+and the script should return an exit code reflecting overall success or failure. ---

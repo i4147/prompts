@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree (or a single file) for Python
+source files and detects duplicated or near-duplicated code blocks across them,
+then reports the findings.
+The tool should accept a root path and a configurable list of paths to exclude,
+skipping any files that match those exclusions and any file that is not a Python
+source file.
+It should walk nested folders, gather every eligible file, and then analyze
+their contents to identify repeated logic, such as identical or structurally
+similar functions, classes, or statement sequences, even when variable names or
+formatting differ slightly.
+The script should use the parsed structure of each file rather than relying only
+on raw text, so that comparisons are meaningful and resilient to superficial
+changes like whitespace, comments, or renamed identifiers.
+It should support a minimum size threshold so that trivial snippets are ignored,
+and it should handle files that cannot be parsed gracefully by logging a warning
+and continuing with the rest.
+Where practical, the analysis should be able to take advantage of parallel
+processing so that large codebases are handled efficiently, and it should keep
+memory use reasonable.
+Progress and warnings should be reported through a logger that falls back to
+standard logging if an optional logging library is unavailable.
+The output should be a clear summary listing each group of duplicate blocks,
+including the file paths, line ranges, and the number of occurrences, with the
+groups ordered by impact (for example, the amount of duplicated lines).
+The script should also be usable from the command line with options for the root
+path, exclusions, minimum block size, output format (plain text or JSON), and an
+option to write results to a file.
+It should exit with a non-zero status code when duplicates are found if a strict
+mode is requested, and zero otherwise. ---

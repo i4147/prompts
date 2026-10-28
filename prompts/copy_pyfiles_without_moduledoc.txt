@@ -1,0 +1,19 @@
+Write a Python script that scans the current working directory for Python source
+files and relocates any file lacking a module-level docstring into a dedicated
+folder inside the user's home directory, reporting each move.
+The script should: - Examine only the top-level files in the current working
+directory with a Python extension, skipping any entries that are not regular
+files. - Determine whether each file has a module docstring at its top, ignoring
+leading whitespace.
+If the file begins with a shebang line, treat it as not having a docstring,
+regardless of what follows.
+Read files as UTF-8 text. - For every file without a module docstring, move it
+into a destination folder located at a "tmp/notannotated" path under the user's
+home directory, creating that folder and any missing parent folders if they do
+not already exist. - Process files in reverse alphabetical order. - Print a
+clear, human-readable message for each moved file showing its original location
+and its new location. - Produce no output or changes for files that already
+contain a module docstring. - Run its main logic only when executed directly as
+a program, not when imported as a module.
+Keep the implementation simple, robust, and portable across operating systems,
+using whatever standard approach best fits these behaviors. ---

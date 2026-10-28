@@ -1,0 +1,22 @@
+Write a Python script that scrapes the trending Python repositories page on
+GitHub for three time windows (daily, weekly, and monthly) and saves the results
+to structured files.
+The script should request each trending page with a sensible timeout and handle
+HTTP errors gracefully, then parse the returned HTML to extract, for each
+repository, its owner/name, full URL, description, primary programming language,
+and any other visible metadata such as star count, fork count, and stars gained
+during the period.
+Entries with missing optional fields should still be recorded with empty or
+default values rather than causing failures.
+The script should organize its output in a dedicated output directory, creating
+it if it does not exist, and produce one file per timeframe in a
+machine-friendly format such as CSV and JSON, with consistent column names and a
+clear, predictable structure.
+It should print a concise progress summary to the console indicating how many
+repositories were found for each timeframe and where the files were saved.
+Design the script so that the set of timeframes and the output location are easy
+to change, and include a clear top-level entry point that runs the full
+collection process when the script is executed directly.
+Prioritize robustness against network failures and changes in page layout, and
+keep the code readable and well-documented with brief comments explaining each
+major step. ---

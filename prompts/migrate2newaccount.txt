@@ -1,0 +1,23 @@
+Write a Python script that migrates a collection of local Git repositories from
+their current GitHub account to a new GitHub account.
+The script should be run from a parent directory that contains multiple project
+subfolders.
+It should skip a configurable set of folders that are not repositories or should
+be excluded (for example, large source mirrors or Git metadata directories), and
+ignore any subfolder that is not a Git repository.
+For each eligible repository, the script should ensure any uncommitted work is
+staged and committed with a generic sync message when changes exist, then create
+a private repository under the new account's namespace using the GitHub
+command-line tool, repoint the local repository's origin to the corresponding
+SSH address under the new account, and push all branches and all tags to that
+new remote with upstream tracking configured.
+The script should proceed through every repository even if an individual step
+fails, relying on the outcome of each operation without halting the whole run,
+and should return to the parent directory after processing each repository so
+that the working context stays consistent.
+The target account name should be defined once at the top of the script so it
+can be changed easily.
+The script should be self-contained, require no interactive input, and print or
+otherwise report minimal progress so the user can follow what happened.
+Focus on producing a robust, readable tool that performs this bulk migration
+reliably across all eligible repositories. ---

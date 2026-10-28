@@ -1,0 +1,13 @@
+Write a Python script that takes a text file path from the command line and an
+optional minimum length threshold (default 10 characters), then removes every
+line whose content, after trimming surrounding whitespace, is shorter than that
+threshold, and saves the remaining lines back into the same file in place.
+The script should print a usage message and exit with an error status when the
+required filename argument is missing, and should accept the optional threshold
+as a second argument.
+It should read and write the file using UTF-8 encoding, preserve the original
+line content of the kept lines, and handle the case where the file does not
+exist by printing a clear error message instead of crashing.
+Any other unexpected error should be caught and reported with a brief
+descriptive message.
+The script should run as a standalone command-line tool. ---

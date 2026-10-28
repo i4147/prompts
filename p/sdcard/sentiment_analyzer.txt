@@ -1,0 +1,3 @@
+A SentimentAnalyzer is a tool to implement
+and facilitate Sentiment Analysis tasks using NLTK features and classifiers,
+especially for teaching and demonstrative purposes.

@@ -1,0 +1,13 @@
+Regression tests for the unbounded-default-``max_len`` DoS in ``nltk.util.everygrams``
+(CWE-770; CVE-2026-12861).
+With ``max_len`` left at its ``-1`` default it expands to ``len(sequence)``,
+so enumerating every n-gram of every length from ``min_len`` to ``len(sequence)`` over each window
+yields O(n**2) tuples totalling O(n**3) elements
+-- a few-thousand-token sequence then allocates gigabytes and OOM-kills the process.
+The defaulted ``max_len`` is now capped by ``MAX_EVERYGRAMS_DEFAULT_LEN``;
+a longer sequence with the default raises ``ValueError`` asking for an explicit ``max_len``.
+An explicitly supplied ``max_len`` is never capped.
+The "must not allocate" test runs in a spawned process with a hard timeout,
+and the worker reports its outcome through its exit code
+(no queue/thread, so it is robust on free-threaded builds),
+so a regression cannot OOM/hang the suite.

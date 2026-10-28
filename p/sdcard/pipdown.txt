@@ -1,0 +1,78 @@
+Design a prompt for an AI coding agent that will generate a complete,
+self-contained Python 3 command-line script implementing an offline-friendly PyPI package
+downloader/resolver tool.
+The prompt must specify the following requirements in detail: **Purpose**:
+Build a CLI tool that reads Python dependency specifications
+(from requirement strings and/or requirements files),
+resolves them against one or more PyPI-compatible "simple" package index servers,
+selects the best-matching distribution (wheel or source archive) for a target Python
+interpreter/platform, downloads the selected files with integrity verification,
+and stores them locally (optionally packaged into an archive), while supporting concurrency,
+mirrors/fallback indexes,
+and resumable/parallel chunked downloads. **Core functional requirements**: 1.
+Accept one or more package requirement specifiers on the command line
+(PEP 508 style, e.g. `package==1.2.3`, `package>=1.0,<2.0`) and/or one
+or more `-r/--requirement` files containing such specifiers
+(ignoring comments and blank lines,
+supporting line continuations typical of pip requirements files).
+2. Query a configurable list of PyPI "simple" index URLs
+(default list should include a primary mirror, a Tsinghua University mirror,
+and the official pypi.org simple index, tried in order with fallback on failure),
+using `httpx` as the HTTP client
+and sending the proper `Accept` header for the PyPI Simple API
+(both JSON and HTML variants, e.g. `application/vnd.pypi.simple.v1+json` and HTML fallback).
+3. Parse the simple index response
+— support both the JSON simple API format
+and legacy HTML index pages
+(implement an HTML parser subclassing `html.parser.HTMLParser` to extract anchor links, hrefs,
+and embedded metadata like hashes from query strings or `data-*` attributes).
+4. For each candidate file found, extract metadata:
+filename, URL, hashes
+(supporting multiple algorithms such as sha256, sha512, sha384, sha224, sha1, md5,
+with a defined preference order favoring stronger algorithms), and requires-python constraints.
+5. Filter and rank candidates using the `packaging` library:
+parse wheel filenames (`packaging.utils.parse_wheel_filename`),
+compute compatible tags for the target interpreter/platform using `packaging.tags`
+(`cpython_tags`, `compatible_tags`, `generic_tags`, `interpreter_name`, `interpreter_version`),
+validate version specifiers (`packaging.specifiers.SpecifierSet`)
+and handle invalid versions/specifiers/wheel names gracefully
+(catching `InvalidVersion`, `InvalidSpecifier`, `InvalidWheelFilename`).
+Recognize common source distribution archive suffixes (`.tar.gz`, `.tar.bz2`, `.zip`, `.whl`, etc.)
+as a fallback when no compatible wheel exists.
+6. Normalize package names using `packaging.utils.canonicalize_name`
+and parse requirement strings using `packaging.requirements.Requirement`.
+7. Download selected distribution files with streaming HTTP requests,
+verifying integrity against the known hash(es) using `hashlib`.
+For large files (above a defined size threshold, e.g. 5MB),
+support parallel chunked/multi-range downloads using a thread pool
+(`concurrent.futures.ThreadPoolExecutor`) with a bounded number of worker threads
+(e.g., between 4 and 8, based on CPU count),
+and use a reasonable chunk size (e.g., 1MB) for streaming/writing to disk.
+8. Support extracting or repackaging downloaded archives using `tarfile` and `zipfile` as needed,
+and organizing final output into a destination directory,
+optionally bundling everything into a single archive file.
+9. Provide clear logging throughout the process using `loguru`
+(info on progress/selection decisions, warnings on fallback/mirror switches, errors on failures).
+10. Expose a full command-line interface via `argparse`, including options for:
+requirement strings, requirements file(s), output/destination directory,
+target Python version/platform/tags, custom index URLs, number of worker threads,
+and any relevant flags (e.g., verbose/debug logging, hash-checking strictness).
+11. Handle errors robustly:
+network failures with retries/fallback across mirrors, missing packages,
+no compatible distributions found, checksum mismatches,
+and invalid user input — exiting with appropriate non-zero status codes and clear error messages.
+12. Use dataclasses to model internal structures
+(e.g., a candidate file record with fields like name, version, URL, filename, hashes, size,
+and tags; a resolved requirement record, etc.). **Output**:
+The script should produce downloaded package files (wheels and/or source distributions) saved to a
+specified local directory (or packaged archive),
+accompanied by console/log output summarizing what was resolved, selected, and downloaded,
+plus non-zero exit codes on failure. **Implementation notes**:
+Write it as a single executable Python 3 script (`#!/usr/bin/env python3`) using only the following
+third-party dependencies: `httpx`, `loguru`, and `packaging`;
+everything else should rely on the Python standard library
+(`argparse`, `hashlib`, `json`, `os`, `shutil`, `subprocess`, `sys`, `tarfile`, `zipfile`,
+`concurrent.futures`, `dataclasses`, `html.parser`, `pathlib`, `typing`, `urllib.parse`).
+Structure the code with clear separation of concerns
+(index querying, HTML/JSON parsing, candidate selection/ranking, downloading with verification,
+archive handling, and CLI entry point). ---

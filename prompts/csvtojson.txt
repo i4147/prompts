@@ -1,0 +1,12 @@
+Write a Python script that converts a CSV file into a JSON file.
+The script should accept the path to an input CSV file as a command-line
+argument and produce a JSON file in the same location with the same base name
+but a .json extension.
+The CSV file's first row is treated as column headers, and each subsequent row
+becomes one record, with the headers as keys.
+The output should be a JSON array of these records, written with UTF-8 encoding
+and human-readable indentation.
+The script should read the CSV using UTF-8 encoding and handle newlines
+correctly within quoted fields.
+When run from the terminal, it should take the input file path directly from the
+command line and perform the conversion without further interaction. ---

@@ -1,0 +1,51 @@
+Build a Python command-line/batch utility for recompressing ".tar.<codec>" archive files into a
+different compression codec,
+designed to run compression-heavy work in parallel across multiple CPU cores.
+The script should: 1. **Purpose**:
+Scan for files whose names match the pattern `<stem>.tar.<codec>`
+(e.g., `archive.tar.gz`, `data.tar.xz`, `backup.tar.zst`), decompress them,
+and re-compress the contained tar stream into a new target codec,
+writing the result as `<stem>.tar.<new_codec>` in the same directory.
+2. **Supported codecs**:
+At minimum support `gz` (gzip), `bz2` (bzip2), `xz` (lzma),
+`zst`/`zstd` (via the `zstandard` library), `lz4` (via `lz4.frame`),
+`br`/`brotli` (via the `brotli` library), and `7z` (via `py7zr`).
+The tool should be able to both read (decompress) and write (compress) in these formats,
+with a single-file "transcode" model (decompress source stream fully then re-encode to destination),
+not a full tar re-packing — it operates on the raw compressed byte stream, not on tar entries.
+3. **Filename parsing**:
+Implement a helper that parses a filename like `name.part.tar.gz` into a `(stem, codec)` tuple,
+where `stem` is everything before `.tar.<codec>` (defaulting to `"archive"` if empty)
+and `codec` is the lowercased extension after `.tar.`.
+Return `None` if the filename doesn't match the expected `*.tar.<codec>` pattern
+(i.e., fewer than 3 dot-separated parts or the second-to-last part isn't `tar`).
+4. **Destination path helper**:
+   Given a source path and a desired destination codec,
+   compute the output path by reusing the parsed stem
+   and substituting the new codec extension (e.g., `archive.tar.gz` → `archive.tar.zst`).
+   5. **Streaming I/O**:
+   Process files in fixed-size chunks (e.g., 1 MiB) to avoid loading entire archives into memory.
+Use appropriate chunked read/write loops for each codec
+(e.g., `gzip.open`, `bz2.open`, `lzma.open` with `FORMAT_XZ`,
+zstandard decompressor/compressor streams, lz4 frame streams, brotli decompressor,
+and py7zr for 7z archives).
+6. **Compression settings**:
+Use sensible high-ratio defaults, such as LZMA/xz preset level 9 (`XZ_PRESET_9 = 9`),
+and create the destination parent directory automatically if it doesn't exist before writing.
+7. **Parallelism**: Use `concurrent.futures.ProcessPoolExecutor` together with `as_completed` to
+process multiple archive files concurrently, one process per file (or per task),
+to leverage multi-core CPUs for large batch recompression jobs.
+8. **Helper/utility imports**:
+It relies on an internal helper module `dh` providing `fsz` (likely file-size formatting/lookup)
+and `gsz` (likely a size-related utility) for logging or reporting progress,
+such as printing human-readable before/after file sizes and compression ratios.
+9. **Error handling & reporting**:
+The script should gracefully handle unsupported codecs, missing files,
+and per-file failures within the process pool without crashing the entire batch,
+and it should report progress/results
+(e.g., which files succeeded, final sizes, compression savings) to standard output.
+10. **Typical usage**:
+Designed to be run as a standalone script (e.g., via `sys.argv` or a CLI entry point) that accepts a
+directory or list of files plus a target codec,
+then recompresses all matching `.tar.<codec>` archives found into the new target codec, in parallel,
+printing a summary at the end.

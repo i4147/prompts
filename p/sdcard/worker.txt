@@ -1,0 +1,60 @@
+Create a Python module that implements per-file discovery, classification,
+and formatting logic for shell script files,
+designed to be used as worker functions in a `multiprocessing.Pool`
+(for use by a batch shell-script formatter/linter CLI tool). **Key design constraint**:
+All functions must be plain top-level,
+module-level functions (no closures, no nested functions, no lambdas capturing state) so that the
+entire module remains picklable for multiprocessing worker processes. **Module structure
+and exports** (`__all__`):
+`BashExt`, `EXTENSIONS`, `FileKind`, `Result`, `discover`, `read_text`, `write_atomic`,
+`categorize`, `process_one`. **Imports/dependencies**:
+Uses `from __future__ import annotations`,
+standataclasses`, `typFormatError`, `Options`, `SyntaxError`, `format_script`,
+`validate` from a sibling module `.core`. **Constants**: - `EXTENSIONS`:
+a extensions treated as shell scripts: `.sh`, `.bash`, `.ksh`, `.mksh`, `.bats`. - `BashExt`:
+the extension string (`.bash`) used to tag extension-less files that are detected as bash via
+shebang. **`FileKind` class**:
+A simple string-constant namespace (not an enum) classifying how a path was identified as a shell
+script candidate, with four class attributes:
+- `NOT_SCRIPT = "not-a-script"` - `BY_EXT = "by-extension"` - `BY_SHEBANG = "by-shebang"` -
+`DETECTED = "by-content"` (extension-less file whose leading `#!` line indicates bash) **`Result`
+dataclass**: Represents the outcome of processing a single file, with fields:
+- `path: str` - `ok: bool = True` - `kind: str = FileKind.NOT_SCRIPT` - `changed: bool = False` -
+`message: str = ""` (human-readable explanation) - `error: str = ""` (non-empty only on failure) It
+should implement `__bool__` returning `self.ok`,
+so a `Result` can be used directly in boolean contexts (e.g., `if result:`). **Functions to
+implement**: 1. `discover(paths: List[str], only_sh: bool = False) -> List[str]` Expand a list of
+input paths (which may be files or directories) into a sorted,
+de-duplicated list of candidate shell script file paths, using `pathlib` for traversal.
+Recursively walk directories.
+When `only_sh` is True, restrict matches to files with extensions in `EXTENSIONS`;
+otherwise also include extension-less files that could be scripts
+(to be further classified later by shebang inspection).ully.
+2. `read_text(path: str) -> str` Read and return the full text contents of a file,
+handling text encoding/decoding robustly (e.g., UTF-8 with reasonable error handling),
+suitable for later parsing/formatting.
+3. `write_atomic(path: str, content: str) -> None` Write `content` to `path` atomically,
+using `tempfile` to write to a temporary file in the same directory and then renaming it into place,
+to avoid partial/corrupt writes if interrupted.
+4. `categorize(path: str) -> str` Determ return one of the `FileKind` constants for a given path:
+check the file extension against `EXTENSIONS` first (`BY_EXT`);
+if extension-less, read the first line
+and check for a shebang referencing `bash`/`sh` (`BY_SHEBANG` or `DETECTED` as appropriate);
+otherwise return `NOT_SCRIPT`.
+5. `process_one(path: str, options: Options, check_only: bool = False) -> Result` Process a single
+file end-to-end: categorize it,
+skip (OT_SCRIPT` `Result`) if it isn't a recognized shell script, otherwise read its content,
+run `validate` to check syntax
+(catching `SyntaxError` and wrapping it into a failed `Result` with the `error` field populated),
+then call `format_script` with the given `Options` (catching `FormatError` similarly).
+If the formatted content differs from the original,
+either write it back atomically via `write_atomic` (normal mode)
+or just flag `changed=True` without writing (when `check_only=True`, e.g., for CI "check" mode).
+Return a `Result` describing success/failure, whether content changed, the classification kind,
+and a human-readable message.
+All exceptions should be caught and converted into a `Result` with `ok=False`
+and a descriptive `error` string rather than propagating,
+so that pool workers never crash the parent process.
+Include a module-level docstring explaining that this is kept as plain top-level functions
+(no closures) specifically so the whole module is trivially picklable for `multiprocessing.Pool`
+workers. ---

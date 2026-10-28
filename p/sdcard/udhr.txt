@@ -1,0 +1,2 @@
+UDHR corpus reader.
+It mostly deals with encodings.

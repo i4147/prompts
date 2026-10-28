@@ -1,0 +1,4 @@
+Tests for ``nltk.xmlsec``, which blocks XML entity-expansion DoS (CWE-776).
+Every case runs against both back ends:
+``defusedxml`` when it is installed, and the standard-library fallback used when it is not.
+The two must agree, because either may be the one protecting a given install.

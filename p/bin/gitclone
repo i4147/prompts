@@ -14,10 +14,10 @@ If omitted, the target is the repository name derived from the URL (last path
 component, trailing slashes stripped, and a `.git` suffix removed), with `.git`
 appended, e.g. `<name>.git`. - No arguments: print the usage line `Usage: g2
 <repo-url> [target-dir]` and return exit code 1. **Outputs:** - Progress
-messages printed to stdout, using these exact formats with emoji: - `🔍 Default
-branch: <branch>` - `📦 Cloning only '<branch>' (with submodules) from <url> into
+messages printed to stdout, using these exact formats with emoji: - `đź”Ť Default
+branch: <branch>` - `đź“¦ Cloning only '<branch>' (with submodules) from <url> into
 <target> ...` - Error message printed to stderr on failure to detect the branch:
-`❌ Could not determine default branch for <url>`. - The function returns an
+`âťŚ Could not determine default branch for <url>`. - The function returns an
 integer exit status, which the script's entry point passes to `sys.exit`. **Key
 logic and helpers:** 1. `_default_branch(url)`: run `git ls-remote --symref
 <url> HEAD` via `subprocess.run` with `capture_output=True, text=True`.

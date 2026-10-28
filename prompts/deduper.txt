@@ -1,0 +1,35 @@
+Write a Python script that scans a directory tree (and optionally archive files
+within it) to find Python source files, extracts their structural content, and
+reports duplicate or near-duplicate code across them.
+The tool should accept a root path as its main input and produce a readable
+report of duplicated code blocks, including the files and locations where each
+duplicate occurs.
+Key requirements: - Accept a target directory or single file via command-line
+arguments, with options to control behaviors such as minimum block size, output
+format, and whether to inspect compressed or archived inputs. - Recognize and
+transparently read a range of common archive and compression formats (such as
+zip, tar variants, and gzip/bzip2/xz/zstd/brotli-compressed files), extracting
+their Python contents without requiring the user to unpack them manually.
+Use temporary storage where needed and clean it up afterward. - Skip common
+non-source directories (version control folders, virtual environments, caches,
+build artifacts, and similar) by default. - Parse Python source into a
+structural representation so that comparisons focus on meaningful code
+(functions, classes, and top-level assignments) rather than raw text.
+Where a robust parser is available, prefer it; otherwise fall back gracefully to
+a standard-library approach.
+Files that fail to parse should be reported as warnings and skipped rather than
+halting the run. - Normalize code before comparison so that differences in
+names, comments, docstrings, whitespace, or formatting do not hide duplicates,
+while still grouping identical logic together. - Hash normalized units to detect
+exact duplicates efficiently, and group all occurrences of each duplicate
+together with their file paths, line ranges, and kind of construct. - Optionally
+leverage multiple processes to speed up analysis of large codebases, with a
+sensible default for worker count. - Log progress and problems using a
+structured logging facility, keeping normal output clean and machine-friendly
+when requested. - Produce a clear summary: total files scanned, units analyzed,
+number of duplicate groups, and the duplicate groups themselves sorted by impact
+(for example, by number of duplicate occurrences or lines of code affected).
+Support at least a human-readable text output and a structured JSON output. -
+Exit with a meaningful status code indicating success, the presence of
+duplicates, or a fatal error. - Handle invalid paths, unreadable files, and
+corrupted archives gracefully with informative messages. ---

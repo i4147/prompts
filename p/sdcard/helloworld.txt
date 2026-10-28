@@ -1,0 +1,37 @@
+Write a Python script that demonstrates building a simple "Hello World" GUI application using the
+Termux:GUI object-oriented API (termuxgui.oo, typically imported as tgo),
+while also importing the base termuxgui module (as tg) since some lower-level classes like
+RemoteViews and Buffer are still required from it even when using the object-oriented wrapper.
+The script must illustrate the object-oriented, class-based approach to building Termux:GUI apps,
+with the following structure and behavior: 1.
+Define a reusable custom layout class named `HelloWorldLayout` that subclasses `tgo.LinearLayout`.
+Its constructor should accept an `Activity` instance,
+call the parent constructor to initialize the LinearLayout as the root layout, then:
+- Add a `TextView` displaying the text "Hello World",
+attached to the activity and parented to this layout. - Add a `Button` labeled "Click me!",
+attached to the activity
+and parented to this layout. - Demonstrate the event-callback system by assigning a lambda to the
+button's `on_click` attribute.
+The callback should accept an event object and the view object as parameters,
+and simply print the event's `type`, the event's `value`, and the view's `id`.
+2. Define a custom activity class named `HelloWorldActivity` that subclasses `tgo.Activity`.
+Its constructor should accept connection and type parameters, call the parent constructor,
+and then instantiate `HelloWorldLayout` passing itself, attaching the layout to the activity.
+3. In the main execution flow,
+open a `tgo.Connection` using a `with` statement (context manager) to ensure proper cleanup.
+Inside the context: - Launch the activity using the connection's `launch` method,
+passing the `HelloWorldActivity` class
+(rather than instantiating it directly,
+since activity creation is now handled through the connection's launch method). - Start the built-in
+event loop via the connection's `event_loop` method,
+noting that this loop automatically terminates once there are no more open activities.
+Include inline comments explaining the key conceptual differences from the older
+procedural/non-object-oriented Termux:GUI API, specifically:
+that layouts can be defined as reusable classes,
+that the event system allows assigning callables to `on_*` attributes (such as `on_click`)
+which get invoked with the event and the view as arguments
+when the corresponding event fires on that view,
+that activities are now defined as classes rather than instantiated directly,
+that activities are created via the connection's `launch` method instead of a direct constructor
+call, and that the event loop is built into the connection object and exits automatically
+when no activities remain open. ---

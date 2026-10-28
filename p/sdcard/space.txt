@@ -1,0 +1,26 @@
+Write a Python class for the Termux:GUI library that represents a "Space" view widget,
+used to create empty/blank space within a UI layout.
+The class should be named `Space`
+and must inherit from a base `View` class (imported from `termuxgui.view`).
+It also depends on an `Activity` class (imported from `termuxgui.activity`),
+and should use `Optional` and `Literal` from the `typing` module for type hints.
+Requirements: 1. **Class docstring**:
+Include a short docstring explaining that this represents a Space,
+used to create empty space in a layout.
+2. **Constructor (`__init__`)**: - Parameters: - `activity`:
+an instance of `Activity` (required, positional). - `parent`:
+an optional `View` instance representing the parent view in the layout (default `None`). -
+`visibility`: an optional `Literal[0, 1, 2]` value controlling the view's visibility state
+(default `None`). - Behavior:
+- Build a dictionary of arguments containing `"aid"` (taken from `activity.aid`)
+and `"visibility"` (the passed-in value). - If `parent` is not `None`,
+add a `"parent"` key to the arguments dictionary,
+set to `parent.id`. - Call the parent `View.__init__` method, passing `self`, `activity`,
+and the result of calling `activity.c.send_read_msg(...)` with a message dictionary containing
+`"method": "createSpace"` and `"params"` set to the arguments dictionary built above.
+This sends a request to create the space view via the activity's communication channel
+and uses the returned value (presumably a view ID) to initialize the base `View`.
+The code should be concise, properly typed with type hints,
+and follow the same structural pattern as other simple View subclasses in this GUI binding library
+(i.e., minimal wrapper that sends a creation message through the activity's connection
+and initializes the base View with the result). ---

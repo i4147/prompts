@@ -1,0 +1,4 @@
+Extract embedded base64 data-URIs from text files into an assets directory.
+Recursively scans a directory tree *and* iteratively re-processes any newly
+written text assets (CSS, SVG, …) that still contain data-URIs until none
+remain.

@@ -1,0 +1,6 @@
+Regression tests for unbounded recursion in the logic parser (CWE-674). `LogicParser` is a
+recursive-descent parser: each nested sub-expression recurses through `process_next_expression`.
+Deeply nested input would otherwise recurse until Python raised an uncaught `RecursionError`,
+crashing the caller.
+The parser now caps the nesting depth at `LogicParser.MAX_PARSE_DEPTH`
+and raises a normal `LogicalExpressionException` instead.

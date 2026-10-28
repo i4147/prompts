@@ -1,0 +1,1 @@
+Floating progress overlay widget anchored to another Qt widget.

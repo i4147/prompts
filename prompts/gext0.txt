@@ -1,0 +1,32 @@
+Write a Python script that analyzes a collection of Python source packages and
+archives and extracts the individual code entities (such as classes, functions,
+and their source definitions) from them, saving each extracted entity as its own
+organized output file.
+The tool should accept a directory of inputs that may contain raw Python source
+files as well as compressed or packaged archives (such as zip files, wheels, and
+various tarball formats including gzip, xz, and zstd compressed tars).
+It should recursively discover these inputs, unpack archives into a temporary
+working area, and then process only Python source files and extensionless files
+that appear to be Python code, ignoring other file types.
+For each Python source file, the script should parse the code into its syntactic
+structure and identify top-level and nested definitions, including classes,
+functions, and methods, while tracking the scope depth of each one.
+For every identified entity, it should capture the exact original source text of
+that definition, along with metadata such as the entity's name, type, starting
+and ending line numbers, the originating file path, and its parent scope.
+Files that cannot be parsed as valid Python should be skipped gracefully with a
+logged warning rather than halting the whole run.
+The results should be written to an output directory, organized so that entities
+are grouped by their originating package or archive and remain easy to browse.
+Each extracted entity should be saved in a clearly named file, and a summary
+index or manifest should be produced listing all extracted entities with their
+metadata and counts of processed files, skipped files, and errors.
+Because the input set may be large, the script should take advantage of parallel
+processing across available CPU cores to speed up extraction, while keeping
+results deterministic and safely aggregated.
+It must clean up temporary extraction directories when finished, even if errors
+occur, and should protect against unsafe archive members such as path traversal
+attempts or absolute paths within archives.
+Provide clear command-line options for specifying the input location, the output
+location, and optionally the number of worker processes, and include informative
+progress and error reporting throughout the run. ---

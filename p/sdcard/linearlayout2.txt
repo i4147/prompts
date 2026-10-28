@@ -1,0 +1,25 @@
+Write a Python script that uses the `termuxgui` library (imported as `tg`) to display a simple GUI
+on Android via Termux:GUI, demonstrating basic layout and view sizing.
+The script should: - Open a connection to the Termux:GUI plugin using `tg.Connection()` as a context
+manager. - Create an `Activity` on that connection. - Create a vertical `LinearLayout` as the root
+layout for the activity. - Add three `TextView` widgets to the root layout, labeled "TextView 1",
+"TextView 2", and "TextView 3". - Between the second and third TextViews,
+add a horizontal `LinearLayout`
+(created with the orientation parameter set to `False` to make it horizontal) nested inside the root
+layout, intended to hold a row of buttons. - Inside that horizontal layout,
+add three `Button` widgets labeled "Button1", "Button2",
+and "Button3". - For all four direct children of the root layout
+(the three TextViews and the horizontal button layout),
+set their linear layout weight to 0 (via `setlinearlayoutparams(0)`) so they do not expand to fill
+available free space,
+and set their height to `tg.View.WRAP_CONTENT` so each only occupies the vertical space it actually
+needs (since they are stacked like a list). - Include inline comments explaining:
+the three ways width/height can be specified (integer dp value, "WRAP_CONTENT", "MATCH_PARENT"),
+why the layout weight must be set to 0 first to prevent views from consuming extra free space,
+and why WRAP_CONTENT is used for height in this list-like vertical arrangement. - After building the
+UI, call `time.sleep(5)` so the activity remains visible for 5 seconds before the script
+(and connection) ends.
+The script has no return value/output other than the rendered GUI on the device screen;
+it is a minimal demonstration of combining vertical and horizontal LinearLayouts with TextViews
+and Buttons and controlling their sizing behavior using layout weight
+and WRAP_CONTENT in the termuxgui API. ---

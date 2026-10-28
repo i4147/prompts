@@ -1,0 +1,30 @@
+Write a Python script that acts as a universal file compression benchmarking and
+conversion tool.
+The script should take a source file path as input and compress it using a wide
+range of compression algorithms and archive formats, including common ones
+(gzip, bzip2, LZMA/XZ, ZIP, TAR-based archives) and optional third-party codecs
+(such as Brotli, ZZ4, 7z, LZMA-alone, Zopfli-optimized gzip, PPMd, Deflate64,
+and encrypted ZIP variants).
+Each compressor should be exposed as a pluggable, named option that takes an
+input file, an output location, and an optional compression level, and returns
+the result of the operation.
+The tool should gracefully handle missing optional dependencies: any codec whose
+library is not installed should be skipped or reported as unavailable rather
+than causing the script to crash, and the user should be informed which formats
+are supported in the current environment.
+Key behaviors: - Accept a file path (and optionally a list of algorithms or a
+"run all" mode) from the command line. - For each selected algorithm, compress
+the input into a temporary or designated output location, using a configurable
+compression level where the codec supports one. - Measure and report, for each
+algorithm, the compressed size, compression ratio versus the original, elapsed
+compression time, and whether the operation succeeded or failed. - Optionally
+verify each output by decompressing it and comparing the result to the original
+bytes, reporting any mismatch. - Clean up temporary files and handle errors per
+algorithm so that one failing codec does not stop the others. - Present results
+in a clear, sorted summary table (e.g., by size or by time), and optionally
+export the results to a machine-readable format such as JSON or CSV. - Provide
+helpful error messages for invalid paths, unsupported options, or missing
+dependencies, and exit with an appropriate status code.
+The script should be self-contained, well-organized, and designed so that new
+compression backends can be added easily by registering them alongside the
+existing ones. ---

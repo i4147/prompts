@@ -1,0 +1,20 @@
+Write a Python script that batch-converts HTML files into clean Markdown
+documents.
+The tool should accept a set of HTML file paths (or a directory to scan for HTML
+files) and, for each file, extract the main readable article content while
+discarding navigation, headers, footers, and other boilerplate.
+The extracted content should then be converted into Markdown that preserves
+links, images, and tables, with no artificial line wrapping.
+Key behaviors: - Skip any file whose corresponding Markdown output already
+exists, so repeated runs are idempotent and do not reprocess completed work. -
+Write each Markdown file alongside its source, using the same base name and a
+.md extension, encoded as UTF-8. - Tolerate malformed or non-UTF-8 input without
+crashing by ignoring undecodable characters. - If a file yields no meaningful
+content after extraction, report that clearly to the user and leave the source
+untouched. - Print a concise status message for each file processed (success or
+failure) so the user can track progress. - Optionally delete the original HTML
+file after a successful conversion, controlled by a configurable flag that
+defaults to removing the source. - Handle errors per file so that a failure on
+one document does not stop processing of the remaining files, and report which
+files failed and why. - Run as a command-line tool that accepts file paths from
+the command line, with clear usage guidance when arguments are missing. ---

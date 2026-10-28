@@ -1,0 +1,47 @@
+Create a Python module
+(compatible with `from __future__ import annotations`, intended to be read with `# fmt: off`) that
+implements a reusable **validator framework** plus a **URL validation function** built on top of it,
+as described below. **1.
+Validation framework** - Define a `ValidationFailure` exception class that:
+- Is constructed with the validated function
+and a dictionary of its argument names/values. - Stores the function as `self.func`
+and spreads the argument dictionary into its own `__dict__` so each argument becomes an attribute. -
+Implements `__repr__` showing the function name and the arguments (excluding `func` itself),
+and `__str__` that reuses `__repr__`. - Implements `__bool__` returning `False`,
+so a `ValidationFailure` instance is falsy
+— this allows validator functions to be used directly in `if` conditions
+while still carrying rich failure details if inspected. - Define a private helper
+`_func_args_as_dict(func, *args, **kwargs)` that introspects `func`'s signature
+(via `inspect.getfullargspec`)
+and builds a single dictionary mapping parameter names to the actual values passed in
+`*args`/`**kwargs`, merging positional and keyword arguments correctly
+and preserving key order without duplicates. - Define a `validator` decorator that wraps any
+boolean-returning function so that:
+- If the wrapped function returns a truthy value,
+the decorator returns `True`. - If it returns a falsy value,
+the decorator returns a `ValidationFailure` instance populated with the wrapped function
+and the dict of its call arguments (using `_func_args_as_dict`). - Uses `functools.wraps` to
+preserve the original function's metadata. **2.
+URL validation** - Build a compiled regular expression (`url_regex`) that validates URLs according
+to common rules, including: - Schemes:
+`http`, `https`, `ftp`. - Optional userinfo (user:password@) section supporting unicode
+and percent-encoded characters. - Host matching that distinguishes
+and allows private/reserved IP ranges (e.g., `10.x.x.x`, `127.x.x.x`, `169.254.x.x`, `192.168.x.x`),
+other IPv4 addresses,
+and regular domain names/hostnames (including internationalized/unicode domains and localhost),
+using helper octet sub-patterns (`ip_middle_octet`, `ip_last_octet`) to correctly validate IPv4
+octet ranges (0-255). - An optional port number. - An optional path/query/fragment section. -
+Case-insensitive matching,
+anchored at both start
+and end of the string. - Expose a public function (decorated with `@validator`) that takes a URL
+string and optional flags to control whether private/reserved IP hosts are allowed,
+and returns `True` if the string matches the URL pattern (respecting those flags),
+or a `ValidationFailure` (falsy) otherwise
+— so callers can do `if is_valid_url(some_string): ...`
+while still being able to inspect the failure details if needed.
+The overall purpose of the module is to provide a small, generic,
+reusable pattern for writing validation functions that return either `True` or a rich,
+falsy `ValidationFailure` object carrying the original function
+and its call arguments for debugging/introspection,
+and to use this pattern to implement a robust URL validator supporting both public domain names
+and (optionally) private/reserved IP addresses. ---

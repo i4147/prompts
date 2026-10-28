@@ -1,0 +1,19 @@
+Write a Python script that merges all Python source files in the current working
+directory into a single consolidated Python file.
+The merged file should be named after the current directory (for example, a
+folder named "myproject" produces "myproject.py") and placed in that same
+directory.
+The script should: - Discover every `.py` file in the current directory,
+excluding the output file itself if it already exists from a previous run. -
+Process the files in a deterministic, alphabetical order so that repeated runs
+produce identical output. - Concatenate the contents of all discovered files
+into the single output file, reading and writing text using UTF-8 encoding. -
+Rewrite relative package-style imports so they remain valid in the merged file.
+Specifically, imports of the form `from . import module`, `from .module import
+name`, and bare `import .` references should be converted to absolute imports
+that use the current folder's name as the package name. - Overwrite the output
+file on each run rather than appending to it. - Report to the user, upon
+completion, how many source files were merged into the output file.
+The script should be self-contained, runnable directly from the command line in
+the target directory, and handle the standard file system and text-processing
+needs without requiring any external dependencies. ---

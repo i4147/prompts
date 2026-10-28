@@ -1,0 +1,21 @@
+Write a Python package `__init__.py` module that serves as the public API entry point for a code
+formatting library.
+The module should use a relative import
+(`from __future__ import annotations` for postponed evaluation of annotations) to import the
+following functions and objects from a local `.api` submodule:
+`check`, `format`, `format_with_cursor`, `get_support_info`, and `version`.
+Requirements: - Include `from __future__ import annotations` at the top of the file. - Import
+`check`, `format`, `format_with_cursor`, `get_support_info`,
+and `version` from the sibling module `.api` using a relative import. - Define an `__all__` list
+that explicitly re-exports these five names in this exact order:
+`"format"`, `"check"`, `"format_with_cursor"`, `"get_support_info"`,
+`"version"`. - The purpose of this module is to expose a clean,
+stable public interface for the package,
+so that consumers can do
+`from package import format, check, format_with_cursor, get_support_info, version` without needing
+to know about the internal `.api` module structure. - The functions themselves
+(`format`, `check`, `format_with_cursor`, `get_support_info`, `version`) are assumed to already be
+implemented in the `.api` module — this file only re-exports them,
+it does not define their logic. - Keep the file minimal and idiomatic,
+following standard Python packaging conventions for an `__init__.py` that aggregates
+and exposes a public API. ---

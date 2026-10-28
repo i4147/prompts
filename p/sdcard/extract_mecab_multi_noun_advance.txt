@@ -1,0 +1,41 @@
+Prompt a Korean NLP keyword-extraction CLI script with the following requirements:
+Build a Python command-line tool for extracting keywords/key sentences from Korean text documents,
+intended as part of a larger "SmiToText" NLP toolkit package. **Purpose:** The script should process
+Korean text (from a file or raw input), tokenize it into sentences and words,
+remove Korean stopwords,
+and extract the most important keywords
+and/or representative sentences using the KR-WordRank algorithm
+(a Korean adaptation of TextRank/PageRank-style word ranking).
+It should also support Korean morphological analysis using Mecab (via KoNLPy) for more accurate
+tokenization. **Main inputs:** - A command-line argument interface (via `argparse`) to specify:
+- Input source: a path to a text file to read,
+or raw text passed directly - Parameters for KR-WordRank such as minimum word count,
+maximum word length, beta (damping factor),
+and max number of iterations - Number of top keywords
+and/or top sentences to return - Optional output file path to save results (e.g., JSON) **Main
+outputs:** - A ranked list of extracted keywords with their importance scores - Optionally,
+a ranked list of representative sentences from the document - Results printed to stdout
+and/or written to a JSON output file,
+optionally timestamped with the current date **Notable behavior/details to include:** - Define a
+large, hardcoded Korean stopword list (`all_stop_word`) containing several hundred common Korean
+function words, conjunctions, pronouns,
+and particles (e.g., "가령", "각각", "그러나", "그리고", "때문에", "로부터", etc.) used to filter out
+non-content-bearing words before ranking - Use `nltk` for general sentence tokenization utilities
+(leveraging a custom `nltkSentTokenizer` from the SmiToText package)
+and ensure required NLTK corpora (like `stopwords`) are downloaded if missing - Use
+`konlpy.tag.Mecab` for Korean morphological tagging/part-of-speech extraction to improve word
+segmentation accuracy before stopword filtering
+and ranking - Use `krwordrank.word.KRWordRank` to compute word graph ranks and extract top keywords
+and key sentences from the tokenized,
+stopword-filtered text - Use `collections.Counter` for word frequency counting
+and `itertools`/`copy`/`re` for text preprocessing, deduplication,
+and cleaning (e.g., removing punctuation, normalizing whitespace) - Integrate with a custom `Util`
+helper class from the SmiToText package for shared utility functions
+(e.g., file I/O, logging, or text cleaning helpers) - Handle errors gracefully
+(e.g., missing input file, empty text, KRWordRank failing to converge) with informative messages -
+Structure the script with a `main()` function guarded by `if __name__ == "__main__":`,
+parsing arguments and orchestrating the pipeline:
+load text → tokenize sentences → tokenize/POS-tag words → filter stopwords → run KRWordRank → output
+top keywords and sentences Write clean, well-commented Python code following these specifications,
+matching typical conventions of the SmiToText project
+(module-level imports, consistent naming, CLI-friendly design). ---

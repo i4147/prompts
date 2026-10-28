@@ -1,0 +1,25 @@
+Write a Python command-line script that replicates the argument-parsing interface of the
+`git remote` command using the `docopt` library.
+The script should: - Define a module-level docstring that serves as the usage specification for
+`docopt`, fully describing the `git remote` command and all its subcommands, including:
+- `git remote [-v | --verbose]` -
+`git remote add [-t <branch>] [-m <master>] [-f] [--mirror] <name> <url>` -
+`git remote rename <old> <new>` - `git remote rm <name>` -
+`git remote set-head <name> (-a | -d | <branch>)` - `git remote [-v | --verbose] show [-n] <name>` -
+`git remote prune [-n | --dry-run] <name>` -
+`git remote [-v | --verbose] update [-p | --prune] [(<group> | <remote>)...]` -
+`git remote set-branches <name> [--add] <branch>...` -
+`git remote set-url <name> <newurl> [<oldurl>]` - `git remote set-url --add <name> <newurl>` -
+`git remote set-url --delete <name> <url>` - Include an options section in the docstring documenting
+the `-v, --verbose` flag (be verbose; must be placed before a subcommand). - In the
+`if __name__ == "__main__":` block,
+call `docopt(__doc__)` to parse `sys.argv` according to the usage patterns defined in the docstring,
+store the result in a variable named `arguments`,
+and print the resulting dictionary of parsed arguments and options.
+- Rely entirely on `docopt` for parsing, validation,
+  and help/usage message generation (no manual argument parsing logic). - The output is simply the
+  dictionary printed to standard output,
+  showing each defined option/argument from the usage patterns
+  and its parsed value
+  (flag booleans, positional argument strings/lists, or `None` if not provided),
+  based on whatever command-line arguments are passed when running the script. ---

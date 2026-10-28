@@ -1,0 +1,12 @@
+Download artifacts from CircleCI for a documentation build.
+This is run by the :file:`.github/workflows/circleci.yml` workflow in order to get the
+warning/deprecation logs that will be posted on commits as checks.
+Logs are downloaded from the :file:`docs/logs` artifact path
+and placed in the :file:`logs` directory.
+Additionally, the artifact count for a build is produced as a workflow output,
+by appending to the file specified by :env:`GITHUB_OUTPUT`.
+If there are no logs, an "ERROR" message is printed, but this is not fatal,
+as the initial 'status' workflow runs when the build has first started,
+and there are naturally no artifacts at that point.
+This script should be run by passing the CircleCI build URL as its first argument.
+In the GitHub Actions workflow, this URL comes from ``github.event.target_url``.

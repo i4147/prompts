@@ -1,0 +1,26 @@
+Write a Python module that provides utilities for safely resolving
+and preparing file extraction paths,
+intended to protect against path traversal ("Zip Slip") vulnerabilities
+when extracting archive members (e.g., from zip or tar files).
+Requirements: 1.
+Use `from __future__ import annotations` and import `Path` from `pathlib`.
+2. Define a custom exception class `UnsafeArchivePathError` that inherits from `ValueError`,
+used to signal that an archive member's path would resolve outside the intended
+extraction directory.
+3. Implement a function `safe_destination(root: Path, member_name: str) -> Path` that:
+- Resolves `root` to an absolute,
+normalized path. - Joins `root` with `member_name`
+and resolves the resulting path. - Checks whether the resolved destination path is still contained
+within `root` using `Path.relative_to`. - If the destination escapes `root`
+(i.e., `relative_to` raises a `ValueError`),
+raises `UnsafeArchivePathError` with a message indicating the offending member name
+(include the repr of `member_name` in the message),
+chaining the original exception using `from exc`. - Returns the resolved,
+validated destination `Path` if it is safe.
+4. Implement a function `ensure_parent(path: Path) -> None` that:
+- Creates the parent directory of the given `path` if it does not already exist,
+including any necessary intermediate directories
+(equivalent to `mkdir(parents=True, exist_ok=True)`). - Does not return anything.
+The code should have no side effects on import (no top-level execution), be self-contained,
+and use only the standard library (`pathlib`).
+Include full type annotations matching the signatures described above. ---

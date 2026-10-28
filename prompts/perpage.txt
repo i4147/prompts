@@ -1,0 +1,17 @@
+Write a Python script that splits a PDF file into individual single-page PDF
+files, saving each page as its own document in a designated output directory.
+The script should accept a PDF file path (or a directory of PDFs) and an output
+directory as command-line inputs, with a sensible default output location if
+none is specified.
+Each generated page file should be named after the original document with a
+zero-padded page number so that files sort correctly in order.
+The script should also be able to optionally extract the text content of each
+page into a separate plain-text file alongside the split PDFs.
+To speed up processing of multiple documents or large files, the work should be
+distributed across a pool of parallel workers, and the script should support
+selecting among several different parallel execution strategies.
+Progress and results should be reported through clear logging, including the
+number of pages processed per document and any errors encountered, with failures
+on one file not stopping the processing of the others.
+The script should report a summary at the end of the run and exit with an
+appropriate status code indicating success or failure. ---

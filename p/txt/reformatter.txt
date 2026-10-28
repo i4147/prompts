@@ -1,0 +1,1 @@
+Reformat piwheels packages.json: one package per line, with optional sorting.

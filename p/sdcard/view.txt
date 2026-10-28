@@ -1,0 +1,55 @@
+Write a prompt for an AI coding agent to generate a Python module that implements a `View` class as
+part of a Termux:GUI Python binding library.
+The prompt should specify the following:
+**Purpose:** Create a Python class named `View` that represents a generic GUI view/widget in the
+Termux:GUI protocol.
+This class serves as the base wrapper for communicating with the Termux:GUI plugin via a
+socket/JSON-RPC-like message protocol,
+allowing manipulation of a view's layout properties (margins, width, height, visibility, etc.) that
+belongs to a given `Activity`. **Dependencies/Imports:** - Use `typing` for `Optional`, `Literal`,
+`List`, and `Union` type hints. - Import `Event` from `termuxgui.event`. - Import `Activity` from
+`termuxgui.activity`. **Class structure and behavior:** 1.
+Class-level constants:
+- `GONE = 0`, `HIDDEN = 1`,
+`VISIBLE = 2` — integer constants representing visibility states of a view (gone/hidden/visible),
+matching Android's View visibility semantics. - `WRAP_CONTENT: str = "WRAP_CONTENT"`
+and `MATCH_PARENT: str = "MATCH_PARENT"` — special string constants usable as size values,
+meaning the view should size itself to its content or to match its parent's size,
+respectively. - Include docstrings for the class and each constant explaining their purpose.
+2. `__init__(self, activity: Activity, id: int)`:
+- Store the given `Activity` instance in `self.a`
+and the integer `id` in `self.id`. - If `id == -1`,
+raise a `RuntimeError("Could not create View")` to signal that view creation failed.
+3. `__eq__(self, other)`:
+- Support equality comparison against a plain `int` (compare against `self.id`)
+and against another `View` instance (compare `self.id` to `other.id`).
+4. `delete(self)`: - Send a message to delete this view from the layout via
+`self.a.c.send_msg(...)`,
+using method name `"deleteView"`
+and params `{"aid": self.a.aid, "id": self.id}`. - Include a docstring:
+"Deletes this View from the layout."
+5. `setmargin(self, margin: int, dir: Optional[Literal["top", "bottom", "left", "right"]] = None)`:
+- Sets the margin (in pixels) for this view,
+either for all sides (when `dir` is `None`)
+or for one specific side (`"top"`, `"bottom"`, `"left"`, `"right"`). - Build a params dict with
+`aid`, `id`, and `margin`;
+if `dir` is provided,
+add it to the params. - Send the message via `self.a.c.send_msg(...)` using method name
+`"setMargin"`. - Include a docstring: "Sets the margins of this View for one or all directions."
+6. `setwidth(self, width: Union[int, str], px: bool = False)`:
+- Sets the width of the view. `width` can be an integer (a size value)
+or one of the special string constants (`WRAP_CONTENT`/`MATCH_PARENT`). - Include a
+`px: bool = False` parameter indicating whether the integer width should be interpreted as raw
+pixels (`True`) versus density-independent units (`False`). - Include a docstring describing that it
+sets the view's width,
+and leave the method body to be implemented consistently with `setmargin`'s message-sending pattern
+(constructing a params dict with `aid`, `id`, `width`, and `px`,
+then sending it via `self.a.c.send_msg(...)` with an appropriate method name such as `"setWidth"`).
+**Style notes:** - Follow the existing code's style:
+concise docstrings in triple quotes placed directly under each class/constant/method,
+type hints on all method signatures,
+and the `self.a.c.send_msg({"method": ..., "params": {...}})` pattern for all communication with the
+GUI backend. - Keep the class minimal
+and focused purely on this base `View` functionality
+(margins, width, deletion, equality, visibility/size constants) without adding unrelated
+widget-specific logic. ---

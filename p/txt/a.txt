@@ -1,0 +1,36 @@
+Write a prompt for an AI coding agent to generate a Python script with the following purpose
+and behavior: The script should use the `twscrape` library (an async Twitter/X scraping tool) to
+search X (Twitter) for recent posts sharing Clash of Clans Town Hall 18 (TH18) base layouts,
+and compile the results into a standalone HTML report file. **Main functionality:** 1.
+Initialize a `twscrape.API` instance.
+2. Build a search query targeting English-language tweets that mention TH18 along with terms like
+"base", "layout", "copy link", or "base link",
+while excluding reply tweets (use proper X advanced search syntax, e.g. `lang:en -filter:replies`).
+3. Asynchronously fetch up to 50 matching tweets using `gather(api.search(query, limit=50))`.
+4. For each tweet collected:
+- Construct the post URL in the form `https://x.com/{username}/status/{tweet_id}`. - Scan the tweet
+text for Clash of Clans base-link indicators
+(e.g. substrings like `link.clashofclans.com` or `action=OpenLayout`),
+and extract any matching link tokens into a list. - Include the tweet in the results if it either
+contains a base link OR mentions relevant keywords such as "th18", "town hall 18", "legend",
+"war base", "cwl" (case-insensitive). - For included tweets, record:
+formatted date/time (`YYYY-MM-DD HH:MM`), author username,
+tweet text (truncated to 280 characters with an ellipsis if longer), post URL,
+list of extracted base links, like count, and view count.
+5. Deduplicate the collected results by post URL (so each unique tweet appears only once).
+6. Print progress/status messages to the console
+(e.g. that the search has started, and how many relevant posts were found).
+7. Generate an HTML report from the deduplicated results via a `generate_html` function,
+presenting each post's date, author, text, link to the original post, extracted base links,
+and engagement metrics (likes/views) in a readable layout.
+8. Save the HTML report to a file
+whose name includes a timestamp (e.g. `TH18_Bases_{timestamp}.html`),
+so each run produces a uniquely named output file. **Notable behavior/requirements:** - The script
+must run asynchronously using `asyncio`
+and an `async def main()` entry point. - Use `twscrape`'s logger utility (`set_log_level`) for
+controlling log verbosity. - Handle text safely
+(lowercasing for keyword matching, slicing for truncation) without crashing on short tweets. -
+Design the HTML generation so it embeds/escapes tweet content appropriately for safe display in a
+browser. - The final output should be a self-contained HTML file that a user can open directly to
+browse the collected TH18 base-sharing posts,
+including clickable links to the original tweets and any extracted Clash of Clans base links.

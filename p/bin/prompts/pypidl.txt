@@ -1,0 +1,33 @@
+Write a Python script that acts as a command-line package downloader
+and resolver for the Python Package Index.
+It should accept one or more package names (optionally with version specifiers)
+and an output directory, then locate each requested package on configurable PyPI-compatible mirrors,
+select the appropriate release file for the target platform and Python version,
+and download it efficiently.
+The tool should check mirrors in a sensible priority order and fall back automatically
+when one is unreachable or returns errors, so that a failed mirror never stops the overall job.
+Key behaviors to include:
+- Support resolving dependencies recursively,
+avoiding duplicate downloads and handling cycles safely,
+with an option to disable dependency resolution. - Allow the user to choose a preferred mirror
+or source, and to set a custom index URL
+or additional mirrors via command-line options. - Download files concurrently with a configurable
+number of workers, showing live progress (download speed, bytes transferred, and time remaining)
+when a terminal is available,
+and falling back to plain logging otherwise. - Use resumable or segmented downloads
+where the server supports them,
+and verify each downloaded artifact's integrity against the hash published in the package metadata,
+discarding and retrying corrupted files. - Support a dry-run mode that reports what would be
+downloaded without fetching any files, and a summary mode that prints a final report of successes,
+failures, and skipped packages. - Optionally support requirements-file input
+(one requirement per line, comments ignored) in addition to direct package arguments. - Provide an
+option to target a specific platform, architecture, and Python version when selecting wheels,
+with a sensible default based on the running interpreter. - Include an optional fallback that builds
+or retrieves packages through the local package manager when no suitable prebuilt artifact exists,
+clearly reporting when this path is used. - Handle network timeouts, HTTP errors,
+and malformed metadata gracefully,
+with configurable retry counts
+and backoff. - Exit with a non-zero status code if any requested package fails,
+and zero otherwise. - Use only the standard library as a baseline,
+and gracefully enhance behavior when optional third-party tools are available,
+degrading cleanly when they are not. ---

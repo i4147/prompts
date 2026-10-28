@@ -1,0 +1,28 @@
+Write a Python script that moves every top-level subdirectory from a
+user-specified source directory into a user-specified destination directory.
+The script should accept the two directory paths as inputs (for example via
+command-line arguments), validate them before doing anything, and abort with a
+clear, friendly error message if the source or destination does not exist, if
+they are the same location, or if the paths are otherwise invalid.
+Once validated, the script should report the resolved source and destination
+paths to the user, then process only the immediate child folders of the source
+(not files, and not nested folders within those children).
+If the source contains no subdirectories, it should inform the user with a
+warning and exit cleanly.
+Before moving anything, the script should check for name collisions: if a
+subdirectory with the same name already exists in the destination, that folder
+should be skipped rather than overwritten or merged, and the user should be told
+it was skipped.
+Every other subdirectory should be moved in sorted, alphabetical order.
+The script should print a status line for each folder it handles, indicating
+whether it was moved, skipped due to a conflict, or failed with an error.
+Errors on one folder should not stop the processing of the remaining folders;
+the script should continue and handle the rest.
+At the end, it should print a concise summary showing how many folders were
+moved, how many were skipped, and how many failed.
+The output should use clear, emoji-friendly console messages with a visual
+separator between the header information and the per-folder results.
+The script should exit with a zero status on success and a non-zero status when
+invalid arguments or invalid directories are supplied.
+Keep the tool safe, predictable, and non-destructive: it must never delete or
+overwrite existing data. ---

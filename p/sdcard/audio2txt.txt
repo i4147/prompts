@@ -1,0 +1,38 @@
+Write a prompt for an AI coding agent to create a Python command-line script that converts an M4A
+audio file into a text transcription using speech recognition.
+The script should: - Be a standalone Python 3 script (using `#!/usr/bin/env python3` shebang) that
+uses the `speech_recognition` library for transcription
+and `pydub.AudioSegment` for audio format conversion,
+along with the standard `os`
+and `sys` modules. - Expose a function `m4a_to_text(input_file, output_file="out.txt")` that:
+- Checks if the input file exists;
+if not, prints an error message
+and exits with status code 1. - Prints a status message indicating conversion has started,
+then loads the M4A file using `AudioSegment.from_file()`
+and exports it to a temporary WAV file
+(e.g., a path derived from the input filename with a `.wav` extension or a fixed temp name). - Uses
+`speech_recognition.Recognizer()`
+and `speech_recognition.AudioFile()` to read the temporary WAV file, records the audio data,
+and calls `recognizer.recognize_google()` (or similar) to transcribe it to text. - Writes the
+transcribed text to the specified output file
+and prints a success message with the output file path. - Handles `sr.UnknownValueError`
+(audio could not be understood) and `sr.RequestError` (API/service request failure) separately,
+printing a descriptive error message for each
+and exiting with status code 1. - Uses a `try/finally` block to ensure the temporary WAV file is
+always deleted (checking existence with `os.path.exists` and removing it with `os.remove`) after
+processing, regardless of success or failure,
+and prints a cleanup confirmation message. - Include a `main()` function that:
+- Verifies that a `.venv` virtual environment directory exists in the current working directory;
+if not, prints an error explaining that the virtual environment must be created first
+(with the suggested command `python -m venv .venv`)
+and exits with status code 1. - Changes the working directory to the script's own directory
+(based on `os.path.dirname(os.path.abspath(__file__))`) so relative paths work consistently. -
+Validates command-line arguments: requires at least one argument (the input M4A file path);
+if missing, prints a usage message (`Usage: python script.py <input.m4a> [output.txt]`) with an
+example, and exits with status code
+1. - Reads the input file path from `sys.argv[1]`
+   and an optional output file path from `sys.argv[2]`,
+   defaulting to `"out.txt"` if not provided. - Calls `m4a_to_text(input_file, output_file)` with
+   these arguments. - Guard the `main()` call with `if __name__ == "__main__":`. - Include clear
+   print statements throughout for user feedback (conversion progress, errors, cleanup, and success)
+   and ensure all error paths exit with a non-zero status code. ---

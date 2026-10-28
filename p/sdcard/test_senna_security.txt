@@ -1,0 +1,9 @@
+Regression tests for the untrusted-search-path fix in the Senna wrapper. ``Senna.__init__`` accepted
+a *relative* ``senna_path`` (e.g. ".")
+and resolved the executable against the current working directory.
+Because ``executable()`` returns a path that contains a separator (e.g. ``./senna-osx``),
+``subprocess.Popen`` runs it directly from the CWD without consulting ``$PATH``,
+so an attacker who can write a ``senna-<platform>`` file there would have it executed
+-- running code from an untrusted location (CWE-829, an untrusted search path, CWE-426/CWE-427).
+Only an explicit *absolute* directory (or an absolute ``SENNA`` environment variable) is now used;
+a relative ``senna_path`` no longer falls back to the CWD.

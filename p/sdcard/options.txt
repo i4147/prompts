@@ -1,0 +1,23 @@
+Write a Python module that defines an immutable configuration data structure for a code refactoring
+tool called "pyrefactor".
+Requirements: - Add a module-level docstring:
+"Options dataclass for pyrefactor configuration." - Use Python's `dataclasses` module to create a
+frozen (immutable) dataclass named `Options`. - The dataclass must have the following fields with
+these exact names, types, and default values: - `mode`: `str` (required, no default) - `root`:
+`str`, default `"."` - `backup`: `bool`, default `True` - `format`:
+`bool`, default `False` - `verbose`: `bool`, default `True` - `undo`:
+`bool`, default `False` - `single`: `bool`, default `True` - `target_funcs`:
+`str`, default `""` - `target_consts`: `str`, default `""` - `target_classes`:
+`str`, default `""` - Implement a `__post_init__` method that assigns default filenames
+when the corresponding target fields are left empty (falsy):
+- If `target_funcs` is empty, set it to `"funcs.py"` - If `target_consts` is empty,
+set it to `"consts.py"` - If `target_classes` is empty,
+set it to `"classes.py"` - Since the dataclass is frozen,
+use `object.__setattr__(self, "<field_name>", "<value>")` inside `__post_init__` to bypass
+immutability when setting these default values. - The purpose of this class is to serve as a
+central, immutable configuration object holding all runtime options for the pyrefactor tool,
+including operation mode, target root directory, backup/formatting/verbosity/undo/single-file flags,
+and output filenames for extracted functions, constants,
+and classes — with sensible default filenames applied automatically
+when not explicitly specified. - Do not include any additional methods, imports,
+or logic beyond what is described above. ---

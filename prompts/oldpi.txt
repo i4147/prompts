@@ -1,0 +1,23 @@
+Write a Python script that recursively scans a given directory tree for source
+files and detects legacy Python 2-style `print` statements (for example, `print
+"text"` written without parentheses) that would break under Python 3.
+The tool should accept a root directory path and an optional set of file
+extensions to restrict the search (defaulting to all files if none are given).
+It should traverse the tree breadth-first, skip common cache, version-control,
+and tooling directories, ignore symbolic links, and tolerate permission or I/O
+errors without crashing.
+For each candidate file, the script should check its size and read it
+efficiently: very large files (above roughly 1 MB) should be handled in a
+memory-conscious way, such as memory-mapping, rather than loaded entirely.
+It should use a multiline pattern match to find offending print statements, and
+where useful, confirm that a match is not inside a comment or string by using
+Python's tokenizer.
+Files that cannot be decoded or parsed should be reported gracefully rather than
+halting the run.
+The output should be a clear report listing each offending file with its path,
+line number, and the matching line content, followed by a summary showing the
+total number of files scanned, the number of files with issues, and the total
+number of occurrences found.
+The script should exit with a non-zero status code when any legacy print
+statements are found and zero otherwise, and it should accept the root path and
+extension filter from the command line with helpful usage information. ---

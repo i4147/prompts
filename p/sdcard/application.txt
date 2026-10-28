@@ -1,0 +1,42 @@
+Create a Python module that implements the core `Application` class for the Flake8 command-line
+linting tool, orchestrating the entire lifecycle of a flake8 run from argument parsing to
+final exit.
+The script should rely on flake8's internal modules
+(`flake8.checker`, `flake8.defaults`, `flake8.exceptions`, `flake8.style_guide`, `flake8.utils`,
+`flake8.main.options`, `flake8.options.aggregator`, `flake8.options.config`,
+`flake8.options.manager`,
+`flake8.plugins.manager`) along with standard library modules such as `argparse`, `logging`, `sys`,
+and `time`.
+Main purpose: - Encapsulate the full flake8 execution flow in an `Application` class that:
+initializes a preliminary argument parser and option manager,
+discovers and registers checker/formatter plugins,
+parses and aggregates configuration (from CLI args and config files), sets up logging verbosity,
+builds the style guide, runs the file checker manager against target files,
+collects and reports results/statistics, and determines the final process exit code.
+Constructor inputs/behavior:
+- Accepts `program` (default `"flake8"`)
+and `version` (default `flake8.__version__`) parameters. - Records a `start_time` timestamp
+and initializes `end_time` as `None`. - Sets up a preliminary `argparse.ArgumentParser`
+(without help) via `options.register_preliminary_options`. - Creates the main `OptionManager`
+(with program name, version, and the preliminary parser as parent)
+and registers default options via `options.register_default_options`. - Initializes placeholder
+attributes (typed as `Optional`) for:
+check plugins, formatting plugins, formatter, style guide, file checker manager,
+and other run-time state (e.g., parsed options, selected/ignored codes, results, statistics) to be
+populated later during the run.
+Expected overall behavior of the class (to be implemented in methods beyond the constructor):
+- Parse preliminary options to find config file location
+and plugin-related flags before full option parsing. - Load and merge configuration from files
+and CLI, respecting precedence rules. - Discover installed checker and formatter plugins,
+register their options, and finalize the option manager.
+- Configure logging level/format based on verbosity flags. - Build a `StyleGuideManager` from the
+  final parsed options. - Run checks across the specified files/paths using the file checker
+  manager, handling exceptions (e.g., `flake8.exceptions` types) gracefully. - Aggregate results
+  and statistics, report them through the selected formatter. - Compute
+  and return/exit with an appropriate exit code reflecting whether violations were found
+  or errors occurred. - Track and expose total elapsed run time using `start_time`/`end_time`.
+Include a module-level logger (`LOG`) using `logging.getLogger(__name__)` for internal diagnostic
+logging throughout the class's methods.
+Use type hints (including `Dict`, `List`, `Optional`, `Set`, `Tuple`, `Type`,
+and `TYPE_CHECKING` for conditionally importing `BaseFormatter` from `flake8.formatting.base` only
+for type checking purposes) to annotate attributes and method signatures accurately. ---

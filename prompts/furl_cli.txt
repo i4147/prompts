@@ -1,0 +1,25 @@
+Write a Python library that provides a simple, chainable interface for parsing,
+constructing, and manipulating URLs.
+The tool should accept a URL string (or individual URL components) and expose a
+mutable object whose parts can be read and modified: scheme, username, password,
+host, port, path segments, query parameters, and fragment.
+It should support adding, setting, removing, and reading query parameters,
+including repeated keys and ordered multi-value parameters, and it should allow
+path segments to be appended, replaced, or normalized (resolving "." and ".."
+segments).
+The object should be able to render itself back into a correctly encoded URL
+string, and should provide sensible default port handling for common schemes so
+that default ports can be omitted from the output.
+Include support for joining a relative URL onto a base URL, comparing URLs for
+equality, and producing deep copies so that modifications do not affect the
+original.
+Percent-encoding and decoding of path, query, and fragment components should be
+handled correctly, with control over which characters are treated as safe.
+Provide a clear, readable string representation and make the object work
+naturally with common Python idioms such as equality checks and copying.
+Handle malformed or incomplete input gracefully, emitting informative warnings
+where appropriate rather than crashing, and allow optional integration with a
+debugging helper if it is available, falling back to a no-op otherwise.
+The result should be a well-documented, dependency-light module that can be
+imported into other projects and used to build, inspect, and transform URLs in a
+fluent, object-oriented way. ---

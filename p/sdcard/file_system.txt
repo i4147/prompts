@@ -1,0 +1,50 @@
+Write a prompt describing a Python module that provides filesystem helper utilities used in a code
+scaffolding/project generation tool,
+intended to be run as part of a larger package that supports "pretend" (dry-run) mode
+and structured logging of file operations.
+The module should expose the following functionality: 1.
+A context manager `tmpfile` that creates a temporary file (using `tempfile.mkstemp`),
+closes its file descriptor, yields a `Path` object pointing to it,
+and guarantees the file is deleted afterward even if an exception occurs.
+2. A context manager `chdir` that temporarily changes the current working directory to a given path,
+restoring the original directory afterward (using a try/finally block).
+It must support a `pretend` keyword argument:
+when `pretend` is truthy,
+it should skip the actual `os.chdir` call but still log the action and still yield control.
+It should log the action via a `logger.report("chdir", path)` call
+and wrap the yield inside a `logger.indent()` context.
+3. A `move` function that accepts one or more source paths as positional arguments
+and a required `target` keyword argument,
+moving each source to the target using `shutil.move` (converting paths to strings).
+It must support a `pretend` keyword argument that, when truthy,
+skips the actual move
+but still logs each operation via `logger.report("move", path, target=target)`.
+4. A `create_file` function that writes given text content to a path
+(using `Path.write_text` with a configurable `encoding`, defaulting to `"utf-8"`),
+supports a `pretend` flag to skip the actual write,
+logs the action via `logger.report("create", path)`, and returns the resulting `Path` object.
+5. A `create_directory` function that creates a directory
+(including parent directories, with `exist_ok=True`).
+It accepts an `update` flag:
+if the directory already exists and `update` is True, it should skip creation,
+log via `logger.report("skip", path)`, and return `None`.
+It accepts a `pretend` flag to skip actual directory creation while still allowing logging.
+It should handle `OSError` during directory creation,
+with special handling depending on whether `update` is set
+(e.g., re-raising or ignoring the error appropriately when the directory already exists).
+The function returns the `Path` object on success.
+The module should use type hints throughout,
+define a `PathLike` type alias as `Union[str, os.PathLike]`,
+and import supporting utilities such as a custom `logger` object
+(from a local `.log` module, supporting `.report(action, path,
+**extra)` and an `.indent()` context manager for nested log formatting)
+and an `IS_WINDOWS` constant (from a local `.shell` module) for platform-specific behavior such as
+handling read-only files
+or permission errors (e.g., using `os.chmod`, `stat` constants, and `errno` codes) when deleting
+or overwriting files/directories on Windows.
+Include necessary standard library imports:
+`errno`, `os`, `shutil`, `stat`, `contextmanager` from `contextlib`, `partial` from `functools`,
+`Path` from `pathlib`, `mkstemp` from `tempfile`,
+and typing utilities (`Callable`, `Optional`, `Union`) as needed for additional helper functions
+related to robust file/directory removal that gracefully handles permission errors across platforms,
+particularly on Windows where read-only attributes can prevent deletion. ---

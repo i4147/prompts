@@ -1,0 +1,1 @@
+Build SCRIPT_INDEX.md: group repo scripts by functionality and log duplicates.

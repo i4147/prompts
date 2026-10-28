@@ -1,0 +1,27 @@
+Write a Python script that acts as a command-line tool for migrating a
+developer's git identity and related references across a local workspace.
+The tool should accept the old and new usernames and email addresses (with
+sensible built-in defaults that can be overridden from the command line), then
+scan a target directory tree for text-based configuration and source files such
+as Python modules, TOML/INI/JSON/YAML files, markdown and plain-text
+documentation, shell and environment files, and common package or git
+configuration files.
+It should skip dependency folders, virtual environments, build outputs, caches,
+and IDE metadata, and ignore files that are too large to process safely.
+Within each eligible file, the script should locate occurrences of the old
+username and old email and replace them with the new values, while preserving
+file encoding and line endings as much as possible.
+It should support a dry-run mode that reports every intended change without
+modifying anything, and a mode that actually applies the changes.
+The tool should also be able to update the global or repository-level git user
+name and email configuration so future commits use the new identity, and
+optionally verify that the configuration was applied.
+The script must produce a clear, timestamped log both to the console and to a
+log file in the working directory, recording each file examined, each
+replacement made, skipped files with reasons, and any errors encountered, while
+continuing gracefully past individual failures.
+At the end, it should print a concise summary of how many files were scanned,
+modified, and skipped, and how many total replacements were made.
+Provide helpful usage messages, validate inputs before making any changes, and
+ensure the tool is safe to re-run without corrupting files that have already
+been migrated. ---

@@ -1,0 +1,28 @@
+Write a Python script that acts as an interactive command-line bilingual
+dictionary lookup tool between Persian (Farsi) and English.
+The tool should load its word data from a JSON dictionary file stored in the
+user's home directory, where each entry maps a Persian word to its English
+equivalent.
+If the dictionary file is missing or cannot be parsed, the tool should report a
+clear error message to the user and exit gracefully.
+Key behaviors to include: - Support both directions of lookup: the user can
+enter a Persian word and receive its English translation, or enter an English
+word and receive its Persian equivalent.
+The tool should automatically detect which language the input belongs to. -
+Provide an interactive prompt loop that keeps running until the user chooses to
+quit, with simple exit commands. - Offer tab-completion or autocomplete for
+known words in both languages to make lookups faster and reduce typing errors. -
+When a word is not found exactly, suggest close matches (fuzzy matching) from
+the dictionary so the user can correct a typo. - Allow the tool to be invoked
+directly with a word as a command-line argument for a one-off lookup, in
+addition to the interactive mode. - Include an option to display the translation
+using an external formatting or display helper when available, falling back
+gracefully when it is not installed. - Handle keyboard interruptions and
+end-of-input signals cleanly without crashing. - Log informational and error
+messages through a consistent logging setup rather than unstructured printing
+where appropriate. - Handle Persian text correctly with UTF-8 encoding
+throughout.
+The output for each lookup should clearly show the query, the matched
+translation, and any suggestions when no exact match exists.
+Keep the design modular and readable, with the core lookup logic separated from
+the user interface layer. ---

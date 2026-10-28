@@ -1,0 +1,5 @@
+Usage: ner spacy [--overwrite --spacy-model NAME] --radlex FILE -i FILE -o FILE ner regex
+[--overwrite] --phrases FILE -i FILE -o FILE Options:
+--overwrite -o FILE -i FILE --phrases FILE Phrase patterns --radlex FILE The RadLex ontology file
+[default: .radtext/resources/Radlex4.1.xlsx] --spacy-model NAME spaCy trained model
+[default: en_core_web_sm]

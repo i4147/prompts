@@ -1,0 +1,28 @@
+Write a Python script that imports two functions, `get_ipackages` and `get_ipkgs`,
+from a local module named `dh`.
+The script's purpose is to retrieve and validate information about installed packages,
+printing results to standard output and tracking any malformed entries.
+The script must behave as follows: 1.
+Initialize an integer counter variable `errs` to 0,
+which will track the number of invalid/malformed entries encountered.
+2. Call `get_ipackages()`, which returns a dictionary mapping package names to version strings.
+Iterate over this dictionary's items (package name and version pairs):
+- If both the package name and version are not `None`, print them in the format:
+`"{pkg} : {ver}"`. - If either the package name or version is `None`,
+increment `errs` by 1 and print the message: `"there is a none element in ipackages output"`.
+3. Call `get_ipkgs()`, which returns an iterable (e.g., a list) of package names.
+Iterate over each package name:
+- If the package name is not `None`,
+print it as-is (just the name on its own line). - If the package name is `None`,
+increment `errs` by 1 and print the message: `"there is a none element in ipkgs output"`.
+4. After both loops complete, print a final summary line in the format:
+`"done with {errs} errors"`,
+where `{errs}` is the final count of malformed entries found across both checks.
+Notable behavior/requirements: - The script does not handle exceptions;
+it assumes `get_ipackages()` and `get_ipkgs()` execute successfully
+and return the expected data types (dict and iterable, respectively). - The validation only checks
+for `None` values, not other invalid types or empty strings. - The two loops are independent
+and both contribute to the same shared `errs` counter. - Output ordering must be:
+all output from the first loop (over `get_ipackages()`),
+followed by all output from the second loop (over `get_ipkgs()`),
+followed by the final summary line. - Use f-strings for all formatted print statements. ---

@@ -1,0 +1,10 @@
+Write a Python script that imports a function named `ln` from a local module called `dh`.
+The script should call `ln` with the string argument "hi"
+and print the returned result to standard output.
+Main input: the hardcoded string "hi" passed to the `ln` function.
+Main output: whatever value `ln("hi")` returns, printed to the console.
+Notable behavior: - The script assumes a module named `dh.py` exists in the same directory
+or is otherwise importable, and that it defines a callable named `ln`.
+- The script does not define `ln` itself—it only imports and uses it. - No command-line arguments,
+  user input, or error handling are involved;
+  it is a minimal, direct function call and print statement. ---

@@ -1,0 +1,12 @@
+Write a Python script that generates a minimal, valid HTML5 boilerplate file on
+disk.
+The script should create a starter web page with a UTF-8 charset declaration, a
+responsive viewport meta tag, a document title, a visible heading reading
+"Hello, World!", and a placeholder comment indicating where content should go.
+The output filename should default to "index.html" but be easy to change, and
+the file should be written to the current working directory.
+The script should report success by printing the created file's name and
+location, and if writing fails for any reason (such as permission problems), it
+should catch the error and print a clear error message instead of crashing.
+The script should run its main behavior only when executed directly, not when
+imported as a module. ---

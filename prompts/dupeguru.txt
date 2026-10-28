@@ -1,0 +1,27 @@
+Write a Python script that scans one or more user-specified directory trees and
+identifies groups of duplicate files, so the user can review and reclaim wasted
+disk space.
+The tool should accept one or more root folders from the command line, along
+with optional settings such as minimum file size, directories to exclude, and
+whether to follow symbolic links (off by default).
+It should recursively traverse the given locations, skipping common non-user
+directories such as version control metadata, dependency caches, build output,
+IDE settings, and OS trash or system folders, while handling unreadable paths
+and permission errors gracefully without crashing.
+To keep the process efficient, the script should first group candidate files by
+size, discarding files that have a unique size, and then narrow matches by
+comparing a small leading sample of each file before performing a full content
+comparison on the remaining candidates.
+Content comparison should use a cryptographic hash computed in streamed chunks
+so that large files never need to be loaded into memory at once.
+The script should make use of parallel processing where it meaningfully speeds
+up hashing of many files, while remaining safe across platforms.
+The output should be a human-readable report listing each set of identical files
+with their shared size, the paths belonging to each group, and a summary of the
+total number of duplicate groups, duplicate files, and the reclaimable disk
+space in a readable unit format (such as KiB, MiB, or GiB).
+The script should optionally export the same results in a machine-readable
+format such as JSON or CSV.
+It must never delete, move, or modify any files on its own; it should only
+report findings, and it should exit with a clear status code indicating success,
+invalid arguments, or errors encountered during the scan. ---

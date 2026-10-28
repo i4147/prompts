@@ -1,0 +1,26 @@
+Write a Python script that analyzes the source code of other Python modules in a
+project and reorganizes them into a single consolidated, self-contained file.
+The tool should accept a set of module names and file paths as input, read each
+module's source text, and structurally break each one down into its import
+statements, function definitions, class definitions, top-level assignments
+(including any special export list declaration), and the code that runs only
+when the file is executed directly.
+It should then merge these pieces together, resolving and removing duplicate or
+redundant imports, preserving the original behavior and ordering of top-level
+definitions, and keeping the entry-point logic last so the combined output runs
+correctly as a standalone program.
+The script should also handle the case where a module's contents are embedded or
+encoded (for example, base64-encoded payloads or serialized JSON data) by
+detecting and decoding such content so it can be inlined in readable form.
+Output the consolidated program to a specified file path, and produce a concise
+summary report listing each module processed, the number of imports, functions,
+classes, and assignments found, and any warnings about unparseable sections,
+name collisions between modules, or content that could not be decoded.
+Provide clear error handling for missing files, invalid syntax, and encoding
+problems, reporting each issue without aborting the entire run whenever
+possible.
+The tool should work from the command line with options to specify the output
+location, choose whether to keep comments-derived documentation, and enable a
+dry-run mode that prints the planned structure without writing any file.
+Ensure the generated script is well-organized, uses only the Python standard
+library, and runs correctly on common Python 3 versions. ---

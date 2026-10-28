@@ -1,0 +1,34 @@
+Write a Python test module using plain `assert` statements
+(pytest-style, no test framework imports beyond the module under test) that thoroughly tests a
+`Trie` class imported from `pycspell.trie`.
+The `Trie` class implements a prefix tree for storing and querying words,
+and the tests should validate the following behavior:
+1. **Insertion and membership checking** (`test_trie_insert_and_contains`):
+Verify that `trie.insert(word)` returns `True` when inserting a new word and `False`
+when inserting a word that already exists in the trie.
+Verify that `trie.contains(word)` returns `True` for words that were inserted
+and `False` for prefixes/substrings that were not explicitly inserted as complete words.
+2. **Node lookup** (`test_trie_find_node`):
+Verify that `trie.find_node(string)` returns a non-`None` node object
+when the string is a valid prefix (even if not a complete word) of something in the trie,
+and returns `None` when the string is not a prefix of anything stored.
+3. **Prefix search** (`test_trie_find_prefix`):
+Verify that `trie.find_prefix(string)` returns a tuple `(prefix, is_word)` representing the longest
+matching prefix found in the trie for the given input string,
+along with a boolean indicating whether that matched prefix is itself a complete word stored
+in the trie.
+Test both a case where the longest matching prefix is a complete word and a case
+where it is only a partial/incomplete path (not a stored word).
+4. **Word enumeration** (`test_trie_words`):
+Verify that `trie.words(prefix)` returns an iterable of all complete words stored in the trie that
+start with the given prefix,
+and that calling `trie.words()` with no arguments returns all words stored in the trie.
+Use set comparison to verify contents regardless of order.
+5. **Bulk construction** (`test_trie_from_words`):
+Verify that `Trie.from_words(words)` is a class method/constructor that builds a trie from an
+iterable of words, that `trie.size()` returns the correct count of words inserted,
+and that every word in the original list is found via `contains()`.
+Each test function should have no parameters, a `-> None` return type annotation,
+and should be self-contained (creating its own `Trie` instance).
+Use clear, descriptive assertions covering both positive
+and negative cases for each method under test. ---

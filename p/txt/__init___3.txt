@@ -1,0 +1,3 @@
+This is a library for interacting with the Termux:GUI plugin from python.
+You don't need to include all the submodules,
+all needed classes are automatically included in the package scope upon importing the package.

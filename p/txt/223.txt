@@ -1,0 +1,47 @@
+Write a Python command-line script that automatically applies all available `lib2to3` fixers to
+modernize/refactor Python source files in place, processing files in parallel for speed.
+Requirements: 1. **Purpose**:
+The script scans one or more given file/directory paths for Python files (`.py`)
+and runs the full set of `lib2to3.fixes` refactoring transformations on each file,
+overwriting the file with the refactored content if it changed.
+2. **Inputs**: Command-line arguments (`sys.argv[1:]`) specifying one or more file
+or directory paths to process.
+If no arguments are given, default to the current directory (`"."`).
+3. **File discovery**: - For each given path:
+if it's a file with a `.py` extension, include it directly. - If it's a directory,
+recursively search it for all `.py` files (using `rglob`). - Deduplicate the resulting file list
+while preserving order.
+4. **Fixer collection**:
+Use `lib2to3.refactor.get_fixers_from_package("lib2to3.fixes")` to gather the complete list of
+available fixers, and pass them to a `RefactoringTool`.
+5. **Per-file processing function**:
+- Read the file content as UTF-8 text. - Create a `RefactoringTool` instance with all fixers
+and call `refactor_string` on the file's content. - If the refactored result differs from the
+original and is non-empty, write it back to the file (UTF-8) and report the file as changed.
+- If no changes were needed,
+  report it as unchanged. - Catch `SyntaxError` separately
+  and report it as a syntax error (including the exception message) without crashing. - Catch any
+  other `Exception` and report it as a generic error (including the exception message) without
+  crashing. - Return a tuple of `(file_path, success_flag, message)` for each processed file.
+  6. **Parallel execution**:
+  Use a `multiprocessing.Pool` with a fixed number of worker processes (e.g., 8) to process all
+  discovered files concurrently via `apply_async`, then collect results in order.
+  7. **Output/reporting**:
+  - If no Python files are found,
+  print a message (e.g., "No Python files found.")
+  and exit with a non-zero status code. - Otherwise,
+  print how many files are being processed and with how many workers. - For each processed file,
+  print its path along with the success/failure status
+  and message (e.g., changed, unchanged, syntax error, or error details),
+  including a progress indicator (e.g., index out of total). - Track
+  and report the count of failed files;
+  the script should return/exit with an appropriate status code reflecting whether
+  failures occurred.
+  8. **Entry point**: Wrap the logic in a `main()` function returning an integer exit code,
+  and invoke it via the standard `if __name__ == "__main__":
+sys.exit(main())` pattern.
+The overall behavior should resemble a batch "modernize legacy Python 2/3 compatible code" tool that
+leverages `lib2to3`'s fixer infrastructure to safely
+and efficiently rewrite multiple files in a codebase,
+with clear per-file success/failure feedback
+and parallel processing for performance on large codebases.

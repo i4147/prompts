@@ -1,0 +1,22 @@
+Write a Python script that converts an HTML document into a PDF file using a command-line interface.
+The tool should accept a required input HTML file path and an optional output PDF path,
+defaulting the output to a PDF with the same name and location as the input when none is given.
+It should validate that the input file exists and has the expected HTML extension,
+exiting with a clear, user-friendly error message on stderr and a non-zero status code on failure.
+Warnings should be printed to stderr, and normal status messages to stdout.
+The script should support optional styling:
+one or more external CSS files and inline CSS strings supplied via command-line arguments,
+applied to the rendered document in the order given.
+It should also allow an optional base URL so that relative links, images,
+and stylesheets inside the HTML resolve correctly during rendering.
+The core behavior is rendering the HTML content (read as text) into a PDF using a suitable
+HTML-to-PDF rendering library, with the styles applied.
+The tool should handle missing or unreadable files, invalid arguments,
+and rendering errors gracefully.
+It may also include a helper that scans the HTML for embedded
+or referenced local resources such as images,
+so that they can be embedded or verified before rendering,
+emitting warnings for any that cannot be found.
+Choose the internal structure, libraries, and parsing approach freely,
+as long as the end result is a reliable command-line converter that turns an HTML file into a styled
+PDF with the described options. ---

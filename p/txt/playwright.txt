@@ -1,0 +1,35 @@
+Write a prompt for an AI coding agent to generate a Python automation script with the following
+purpose and behavior:
+The script should use Playwright's async API to automate a real,
+persistent Google Chrome browser instance
+(launched via `launch_persistent_context`, not a throwaway browser),
+reusing the user's acteting the "Google/Chrome" user data folder under the macOS user's
+Library/Application Support path,
+built via `os.path.expanduser`) so that existing login sessions
+(e.g., a logged-in Google/Gemini account) are preserved and reused.
+Main purpose: Launch Chrome visibly
+(headless=False, maximized, with automation-detection flags disabled), navigate to Google/Gemini,
+verify whether the user is already authenticated,
+and then locate and export the content of the currently active Gemini chat conversation on the page.
+Key behavior requirements:
+- Launch the persistent browser context with args that disable Chrome's "controlled by automation"
+indtab and navigate to the target the D then pause briefly (a few seconds) to let the the user appL
+contains "sign-in" or a "Sign in" text element the page). - If not logged in,
+print a clear alert message instructing the user to manually log in within the opened browser
+window, and wait (with a generous timeout, e.g., up to 2 minutes) for a selector that indicates a
+successful login/chat UI (e.g., a "conversation-container" element) to appear. - If the wait times
+out, print a timeout message and gracefully close the browser context,
+then exit the function without crashing. - If already authenticated
+(or after successful manual sign-in),
+print a confirmation message and proceed to searchagaination-container" selector with a e.g.,
+15 seear, user step (launching browser, navigating,
+authentching forands what the real time. - Structure the logic as an_active_gemini_ch
+`async with async_playwright()path.expanduser` to build afriendly ( Chrome user data directory.
+Inputs: No command-line arguments or external inputs;
+the script relies on the local machine's existing Chrome user profile/session for authentication.
+Outputs: Console/log messages describing progress and status;
+the ultimate goal (to be completed beyond the shown excerpt) is extracting/exporting the text
+content of the active Gemini conversation from the page once the conversation
+container(s) are found.
+Note: The script should be resilient to the not-logged-in case and avoid crashing,
+closing the browser cleanly on failure/timeout scenarios.

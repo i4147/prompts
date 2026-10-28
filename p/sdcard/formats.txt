@@ -1,0 +1,8 @@
+Write a Python module that provides archive/compression format detection
+and lookup utilities based on file naming conventions.
+The module should: 1.
+Define a frozen, slotted dataclass named `Format` with three fields: - `name`:
+a string identifier for the format (e.g., "tar.gz", "zip", "7z") - `suffixes`:
+a tuple of strings representing the valid file extensions for this format
+(e.g., (".tar.gz", ".tgz")) - `kind`:
+a string categorizing the underlying handling mechanism (e.g., "tar", ---

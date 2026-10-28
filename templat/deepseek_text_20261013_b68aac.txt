@@ -1,0 +1,7 @@
+Review+fix the Python 3.12 code below for Termux/aarch64. Goal: <GOAL>. Symptom: <SYMPTOM>.
+Output only: [BUGS] [PERF] [TERMUX] then [PATCH] as one annotated python block.
+Rules: pathlib only, loguru only, multiprocessing/ProcessPoolExecutor for CPU-bound, asyncio for I/O,
+match/case, dataclasses(slots=True), PEP 604/585/695, subprocess list-form check=True, no shell=True,
+tempfile.gettempdir() not /tmp, no sudo/fork/glibc assumptions, if __name__=="__main__" guard + spawn.
+No comments, no docstrings, no prose. Code:
+<PASTE CODE HERE>

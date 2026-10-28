@@ -1,0 +1,21 @@
+Write a Python script that migrates a developer's Git and GitHub identity across
+a local project tree.
+The tool should accept a root directory to scan, plus old and new username and
+email values (with sensible defaults provided), and by default run in a safe
+dry-run mode that only reports what would change.
+When explicitly asked to apply changes, it should rewrite occurrences of the old
+identity with the new one inside text-based source and configuration files, such
+as Python, TOML, INI, JSON, Markdown, YAML, shell, and environment-style files,
+while skipping dependency, build, cache, IDE, and version-control directories,
+as well as files that are binary or larger than a reasonable size limit.
+It should also update the repository's local Git author and committer
+configuration where a Git repository is present, and optionally reset the author
+of existing commits when requested, with clear warnings about rewriting history.
+The script should log every action and result both to the console and to a
+persistent log file, present a clear summary at the end (files scanned, files
+changed, matches found, errors encountered), handle permission and encoding
+errors gracefully without crashing, and never modify anything outside the
+specified root directory.
+Provide a command-line interface with helpful help text, confirmation prompts
+before any destructive operation, and an option to create backups of files
+before they are modified. ---

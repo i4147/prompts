@@ -1,0 +1,2 @@
+A context object for caching a function's return value each time it is called with the same
+input arguments.

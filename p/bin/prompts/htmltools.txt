@@ -1,0 +1,39 @@
+Write a Python script that acts as a command-line tool for archiving a web page into a single,
+self-contained HTML file.
+Given a URL or a local HTML file path,
+the tool should fetch the page and download all of its referenced external resources,
+including stylesheets, scripts, images, fonts, and other assets,
+then rewrite the references so the saved page works offline without network access.
+Key requirements: - **Inputs:** A page URL or local HTML file path as the main positional argument,
+plus optional command-line flags that control behavior such as the output file location,
+request timeouts, the maximum number of parallel workers for downloads,
+whether to skip certain resource types (for example, images or scripts), a custom user agent,
+and verbosity or logging level. - **Outputs:** A single HTML file
+where all discovered assets are embedded (for example, as data URIs)
+or saved to a sibling folder with rewritten relative links.
+The tool should report a concise summary on completion, such as the number of resources downloaded,
+skipped, and failed. - **Resource discovery:** Parse the HTML to find stylesheets, scripts,
+images (including lazy-loading and responsive image attributes), icons, media sources,
+and inline style blocks.
+Also parse CSS files to locate nested references such as background images, fonts,
+and imported stylesheets,
+resolving them relative to their source file. - **URL handling:** Resolve relative URLs correctly
+against the base page URL (respecting any declared base tag), ignore fragments when fetching,
+normalize duplicate URLs so each asset is downloaded only once,
+and skip unsupported schemes such as javascript or mailto. - **Robustness:** Handle network errors,
+timeouts, and non-200 responses gracefully by logging a warning
+and leaving the original reference intact rather than crashing.
+Support retries for transient failures and guess MIME types from content or file extensions
+when the server does not provide them. - **Performance:** Download resources concurrently with a
+configurable worker count,
+and use a content hash to avoid duplicate storage of identical assets. - **Encoding
+and safety:** Preserve the original character encoding of the page, sanitize generated filenames,
+and guard against path traversal when writing files to disk. - **Logging:** Provide clear progress
+and warning messages through a standard or third-party logging facility,
+with quieter defaults for normal use. - **Error exits:** Return a non-zero exit status with a
+helpful message when the input is invalid, the output cannot be written,
+or the page cannot be fetched at all.
+The implementation should be self-contained and runnable from the command line,
+with a `--help` option that documents all flags.
+The author is free to choose the libraries, structure,
+and internal design that best satisfy these behaviors. ---

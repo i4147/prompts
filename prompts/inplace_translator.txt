@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line universal translator for text
+files, using AI language services to translate content into a target language
+while preserving the original file's structure and formatting.
+The tool should: - Accept a source file path or a glob pattern (so multiple
+files can be processed in one run), plus a target language and optionally a
+source language, provided through command-line arguments. - Support at least two
+AI translation backends (one OpenAI-compatible service and one Google Gemini
+service), selectable by the user, with a sensible default.
+Each backend should only be used if its library is installed and its API key is
+available. - Load configuration such as API keys from a local environment file
+in the user's home directory (simple KEY=VALUE format, ignoring blank lines and
+comments) as well as from the actual environment, with environment variables
+taking appropriate precedence. - Read each input file, split or chunk long
+content as needed so it fits within model limits, translate each chunk, and
+reassemble the result in the original order and layout (headings, lists, code
+blocks, line breaks, and blank lines should be kept intact where practical). -
+Write the translated output to a new file next to the source (or to a
+user-specified output location), using a clear naming convention that includes
+the target language, and never overwrite the original file unless explicitly
+requested. - Handle errors gracefully: missing files, missing API keys,
+unavailable libraries, network or API failures (with retries and a clear
+message), and encoding issues (UTF-8 by default with a fallback).
+Report progress and a final summary of successes and failures to the user. -
+Provide a helpful `--help` usage description and exit with meaningful status
+codes on failure. - Optionally support a dry-run or preview mode that shows what
+would be translated without calling any API, and a way to print the translation
+to standard output instead of writing a file.
+The script should be self-contained, safe to run repeatedly, and designed for
+developers and content creators who need to batch-translate documents such as
+Markdown, plain text, or subtitle-like files. ---

@@ -1,0 +1,43 @@
+Write a Python script that demonstrates how to build a command-line interface with many options
+using the `docopt` library.
+The script should be a single module
+whose docstring serves as the complete docopt usage specification
+(this docstring is what `docopt` parses to generate the CLI).
+It should emulate a pycodestyle/pep8-style linter CLI with the following behavior: Usage patterns:
+- Main mode: accepts optional short/combined flags `-h`, `-v`, `-q`, `-r`, `-f NAME`,
+an `--exclude=PATTERNS` option, mutually exclusive `--select=ERRORS` or `--ignore=ERRORS` options,
+plus `--show-source`, `--statistics`, `--count`, `--benchmark` flags,
+followATH` arguments (destination paths to check). - Alternate mode:
+either run doctests on itself via `--doctest`,
+or run a regression test suite from a directory via `--testsuite=DIR`. - Version mode:
+`--version` alone to print the version and exit.
+Arguments: - `PATH`: one or more destination paths (variadic).
+Options (with descriptions matching standard pycodestyle-like tool semantics): - `-h --help`:
+show help message and exit. - `--version`: show version and exit. - `-v --verbose`:
+print status messages. - `-q --quiet`: report only file names. - `-r --repeat`:
+show all occurrences of the same error. - `--exclude=PATTERNS`:
+exclude files/directories matching comma-separated patterns,
+default value `.svn,CVS,.bzr,.hg,.git`. - `-f NAME --file=NAME`:
+when parsing directories, only check filenames matching comma-separated patterns,
+default value `*.py`. - `--select=ERRORS`:
+select errors and warnings (e.g., E,W6). - `--ignore=ERRORS`:
+skip errors and warnings (e.g., E4,W). - `--show-source`:
+show source code for each error. - `--statistics`: count errors and warnings. - `--count`:
+print total number of errors/warnings to stderr
+and set exit code to 1 if total is non-zero. - `--benchmark`:
+measure processing speed. - `--testsuite=DIR`:
+run regression tests from the given directory. - `--doctest`: run doctest on the script itself.
+Main behavior: - Import `docopt` from the `docopt` package. - In the `if __name__ == "__main__":`
+block, call `docopt(__doc__, version="1.0.0rc2")` to parse `sys.argv` against the docstring-defined
+usage, passing version string `"1.0.0rc2"` so `--version` works automatically. - Store the parsed
+result in a variable named `arguments`
+and simply print it (the parsed arguments dictionary) to standard output.
+Notable points to preserve:
+- The docstring must be precisely formatted so docopt can parse it correctly
+(proper indentation, line continuations for wrapped usage lines,
+blank line separating "Arguments:" and "Options:" sections,
+and `[default: ...]` annotations embedded in the option descriptions for `--exclude`
+and `--file`). - The script does not implement any actual linting logic
+— it is purely a demonstration of docopt option parsing
+and simply echoes back the parsed arguments. - No other imports, functions,
+or classes are needed beyond `docopt` and the `__main__` guard. ---

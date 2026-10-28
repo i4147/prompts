@@ -1,0 +1,29 @@
+Write a Python script that recursively scans a directory tree and strips
+HTML/markup tags from text-based files, producing cleaned plain-text output
+while leaving selected content intact.
+The tool should accept a root directory to process, along with optional settings
+that let the user choose which file extensions to process (with sensible
+defaults for HTML and plain-text files), and optionally specify a separate set
+of file types from which meta tags are removed.
+It should support a configurable pattern for identifying meta tags to remove,
+and a configurable set of marker sequences that identify tag-like text which
+must be preserved rather than stripped.
+The script should read each matching file robustly, handling common text
+encodings gracefully when a file is not valid UTF-8.
+For the cleaning itself, it should remove markup tags while preserving the
+surrounding text content, and where a more accurate HTML parser is available, it
+may use one, but it must also function correctly without it.
+Preserved marker sequences must survive the cleaning untouched.
+The tool should write results either in place (overwriting the originals) or to
+a separate output directory that mirrors the input structure, controlled by a
+command-line option.
+It should offer a dry-run mode that reports what would change without modifying
+any files, and it should log progress and errors through a standard logging
+facility with adjustable verbosity.
+At the end, it should print a concise summary of how many files were scanned,
+modified, skipped, and failed.
+The script should be usable as a command-line utility with clear help text,
+validate its inputs (such as confirming the root directory exists), and exit
+with a non-zero status code on fatal errors.
+Failures on individual files should be reported without aborting the entire run.
+---

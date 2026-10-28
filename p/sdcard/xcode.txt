@@ -1,0 +1,69 @@
+[Tool: generate_document] Title:
+placeholder Design a Python command-line utility that reconstructs executable Python scripts from a
+directory of OCR-scanned (or similarly extracted) page text files.
+Purpose: The tool scans a given directory for files named with a pattern like `page_<number>.txt`
+(e.g., `page_1.txt`, `page_12.txt`),
+where each file contains lines of text that were extracted from scanned pages of a
+printed/photographed source code listing.
+Each line in these files is expected to be prefixed with a line number followed by a period
+(e.g., `"12. print('hello')"`), mimicking numbered code listings in a book or printout.
+The script's job is to: 1.
+Discover and sort all page files numerically by the page number embedded in their filename
+(not alphabetically).
+2. Read each page file,
+parse out lines matching the numbered-line pattern (digits, a period, then the code content),
+stripping the numeric prefix to recover the original code text.
+3. Concatenate the recovered code lines across pages in page order (and line order within a page) to
+reconstruct one or more complete Python scripts.
+4. Use heuristics to determine whether a given chunk of text is valid/plausible Python code
+— specifically by attempting to parse it (via the `ast` module) wrapped in several candidate
+templates (e.g., as-is, inside a function body, inside an `if True:` block, inside a `try:` block,
+with and without a trailing `pass`),
+to handle fragments that aren't valid on their own
+(like a lone `elif`, `except`, indented block, etc.).
+Lines that are comments (starting with `#`) are also treated as acceptable.
+5. Group/split the recovered lines into logical "Script" units
+(each tracking its list of code lines, the start page and end page it spans,
+and able to render itself back into a single text blob with a trailing newline).
+6. Output the reconstructed script(s)
+— likely writing them to file(s) on disk and/or printing to stdout,
+with information about which page range each script came from.
+Main inputs: - A directory path containing the `page_<N>.txt` files
+(provided via command-line argument using `argparse`). - Optional CLI flags to control behavior
+(e.g., output directory/file, verbosity, or a flag to control how scripts are split/validated).
+Main outputs: - One or more reconstructed `.py` source files (or printed output) representing the
+original code recovered from the numbered page listings. - Console messages/logs indicating
+progress, the page ranges covered by each detected script,
+and any errors or warnings (e.g., unparseable lines, missing pages, gaps in numbering).
+Notable behavior and requirements:
+- Use `argparse` for CLI argument parsing
+and `pathlib.Path` for filesystem operations. - Use compiled regular expressions:
+one to match numbered code lines within a page file
+(capturing the line number and the remaining text),
+and one to extract the page number from filenames like `page_12.txt`. - Implement a
+`looks_like_python(text: str) -> bool` helper that trims the text,
+immediately accepts comment-only lines (starting with `#`),
+and otherwise tries parsing the text embedded in a series of wrapper templates
+(bare, inside a dummy function, inside `if True:`, inside `try:`,
+each with and without an added `pass` statement) using `ast.parse`,
+catching `SyntaxError` and `ValueError`,
+returning `True` on the first successful parse
+and `False` if all attempts fail. - Define a frozen dataclass `CodeLine` holding `page` (int),
+`line_no` (int), and `text` (str) for each recovered line. - Define a dataclass `Script` holding a
+list of `CodeLine` objects,
+with convenience properties `start_page`
+and `end_page` (derived from the first/last line's page, defaulting to 0 if empty),
+a `render()` method that joins all line texts with newlines plus a trailing newline,
+and a `__len__` method returning the number of lines. - Implement a
+`find_page_files(directory: Path) -> list[Path]` function that iterates the directory,
+filters to files matching the page-file regex, extracts the numeric page index,
+and returns the files sorted by that numeric page order
+(so `page_2.txt` comes before `page_10.txt`). - Handle edge cases gracefully:
+missing or empty directory, no matching page files, non-sequential or duplicate page numbers,
+lines that don't match the numbering pattern,
+and malformed/unparseable code fragments
+— using `sys.exit` with appropriate error messages/codes
+where fatal issues occur. - The script should be self-contained,
+runnable as a standalone CLI tool (e.g., via `if __name__ == "__main__":`),
+importing only standard library modules
+(`argparse`, `ast`, `re`, `sys`, `dataclasses`, `pathlib`). ---

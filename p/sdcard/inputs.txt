@@ -1,0 +1,41 @@
+Write a Python script that implements a simple Termux:GUI dialog-based front-end for downloading
+videos using youtube-dl (or a compatible downloader).
+The script should use the `termuxgui` module (imported as `tg`) along with `sys`
+and `subprocess.run` to: 1.
+Open a connection to the Termux:GUI service
+and create an Activity configured as a dialog (small popup-style window, not a full screen).
+2. Build a vertical LinearLayout containing:
+- A title TextView reading "Download Video",
+with a larger text size (around 30)
+and a small margin (around 5) for visual spacing. - A TextView labeled "Video link:" followed by an
+empty EditText for the user to paste/enter the video URL. - A TextView labeled "Filename
+(empty for automatic filename):" followed by an empty EditText for the user to optionally specify an
+output filename. - A Checkbox labeled "high quality", initially unchecked,
+letting the user toggle whether to download in high definition. - A horizontal sub-layout
+(nested inside the main layout) containing two Buttons side by side: "download" and "cancel".
+3. Maintain a boolean variable (e.g., `hd`) tracking the high-quality checkbox state,
+defaulting to False.
+4. Enter the Termux:GUI event loop (`c.events()`) and handle events as follows:
+- On a destroy event where the activity is finishing,
+exit the program via `sys.exit()`. - On a click event targeting the checkbox,
+update the `hd` variable based on the event's "set" value
+(checkboxes emit click events with an extra boolean "set" field indicating checked state). - On a
+click event targeting the "download" button,
+read the current text from the video link EditText and the filename EditText,
+then construct a command-line argument list for invoking a youtube-dl style downloader
+(the arguments should incorporate the link, the optional filename, and the high-quality flag state),
+intending to execute it (e.g., via `subprocess.run`) to perform the actual download. - (Implicitly)
+a "cancel" button to allow the user to dismiss the dialog without downloading.
+Notable behavior/design points to replicate:
+- The activity is created with `dialog=True` so it renders as a compact dialog rather than a
+full-screen app. - Because it's a dialog,
+views are packed tightly without needing explicit WRAP_CONTENT sizing. - View identity comparisons
+use the raw event's `id` field compared directly against the button/checkbox objects,
+which Termux:GUI supports natively. - The script is interactive and event-driven,
+blocking on the event loop until the user interacts with the UI
+or closes the dialog. - Keep the UI minimal and functional,
+matching a simple utility tool aesthetic for a mobile Termux environment.
+Inputs: user-provided video URL (text), optional filename (text),
+and a high-quality toggle (checkbox).
+Output: invocation of a video downloader command-line tool with arguments derived from the above
+inputs (link, filename, quality flag), run as a subprocess. ---

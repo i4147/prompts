@@ -1,0 +1,16 @@
+Write a Python script that takes a text file path and a single target character
+from the command line, then rewrites that same file in place with a cleaned
+version of its contents.
+For each line of the file, the script should remove surrounding whitespace and
+discard lines that end up empty.
+If a line contains the target character, everything from the first occurrence of
+that character onward should be cut off, so only the portion before it is kept
+(for example, to strip trailing comments marked by a specific symbol).
+Lines that do not contain the target character should be kept, trimmed of
+surrounding whitespace.
+The cleaned lines should be saved back to the original file as UTF-8 text,
+joined by newline characters.
+If no lines remain after processing, the file should be left unchanged rather
+than overwritten with empty content.
+The script should run as a standalone command-line tool and handle the file as
+UTF-8 text throughout. ---

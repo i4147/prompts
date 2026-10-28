@@ -1,0 +1,20 @@
+Write a Python script that acts as a multi-engine text translation tool with a
+command-line interface.
+It should accept source and target language codes (with "auto" detection for the
+source), take input text from a file or direct argument, and produce translated
+output written to a file or standard output.
+The tool should support several translation backends, allowing the user to
+choose one, and should use a fallback strategy so that if one backend fails or
+is unavailable, another can be tried.
+It should translate in parallel batches for efficiency, preserve the original
+line or paragraph structure of the input, and report progress and errors through
+a logging facility.
+Include a quality or similarity check that compares results from multiple
+engines and selects or flags the most consistent translation.
+The tool should handle common language code aliases (such as Chinese variants
+and Portuguese Brazilian), validate unsupported codes with a clear error
+message, support retries with backoff for transient network failures, and
+optionally load custom translator plugins from a user-provided Python module
+path.
+Provide a summary of results at the end, including counts of successes,
+failures, and the backend used for each segment. ---

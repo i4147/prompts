@@ -1,0 +1,50 @@
+Create a Python module that performs HTML sanitization and resource inlining/rewriting for saving
+or archiving a web page as a single, self-contained, safe HTML document.
+The script should use `html.parser.HTMLParser` as a base to parse HTML content
+and rebuild a cleaned version of it,
+working in conjunction with sibling helper functions (imported from a local `.parser` module) such
+as `normalize_location`, `resolve_path`, `get_charset`, `is_document_content_type`,
+`is_stylesheet_content_type`, and `is_text_content_type`.
+Key requirements and behaviors: 1. **Constants/reference data**:
+- Define a set of HTML void elements (e.g., `area`, `br`, `img`, `input`, `meta`, etc.) that do not
+have closing tags. - Define a set of "raw text" elements
+(e.g., `style`, `script`, `xmp`, `iframe`, `noscript`, etc.)
+whose content should be treated as raw/unescaped text rather than parsed as markup. - Define a
+comprehensive set of HTML event handler attribute names
+(e.g., `onclick`, `onload`, `onchange`, `onmessage`, `ondrag`, etc., covering window, document,
+form, mouse, keyboard, drag-and-drop, media,
+and other DOM event categories) that must be stripped from tags to neutralize inline JavaScript
+execution (XSS prevention).
+2. **Core functionality** (to be implemented using the above building blocks):
+- Parse an HTML document and reconstruct it while removing dangerous constructs:
+strip all event handler attributes, neutralize `javascript:` URLs and other unsafe URL schemes,
+and optionally remove
+or sanitize `<script>` tags. - Resolve relative URLs
+(links, images, stylesheets, scripts, media sources, etc.) against a base URL using
+`urljoin`/`urlparse`/`resolve_path`/`normalize_location`,
+so that resources can be correctly located. - Inline external resources
+(such as images, stylesheets, and other linked assets) directly into the HTML by fetching/reading
+their content and embedding them as `base64`-encoded data URIs,
+using the appropriate MIME/content-type detection
+(`get_charset`, `is_document_content_type`, `is_stylesheet_content_type`, `is_text_content_type`) to
+decide how each resource should be handled
+(inlined as data URI, embedded as text, parsed further, or skipped). - Properly handle character
+encoding/charset detection and HTML entity escaping/unescaping (via the `html` module)
+when rewriting attribute values and text content. - Preserve the overall structure
+and formatting of the document as much as possible while producing a safe, portable,
+single-file HTML output.
+3. **Inputs**: An HTML source (string or file/path via `pathlib.Path`),
+along with its base URL/location for resolving relative references,
+and access to the linked resources (local files or fetched content) that need to be inlined.
+4. **Outputs**: A sanitized,
+self-contained HTML string (or file) with all dangerous scripting/event-handler attributes removed,
+unsafe URLs neutralized, and external resources inlined as data URIs where applicable,
+suitable for safe offline viewing or archiving.
+5. **Notable behavior/edge cases to handle**:
+- Correctly distinguish void elements vs. normal elements
+when reconstructing tags (no closing tag emitted for void elements). - Treat raw text elements'
+content literally (not re-parsed as nested HTML). - Comprehensive coverage of event handler
+attributes across all common DOM event types so that none are missed. - Robust URL resolution for
+edge cases (protocol-relative URLs, fragment-only URLs, data URIs already present, query strings)
+using `urlparse`/`unquote`/`urljoin`. - Graceful fallback behavior when a resource cannot be fetched
+or decoded (e.g., leave the reference as-is or drop it safely rather than crashing). ---

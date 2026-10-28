@@ -1,0 +1,19 @@
+Write a Python script that displays an image directly in a terminal using
+colored text blocks.
+The script should take an image file path as its command-line input, open the
+image, and render it so that it fits the current terminal window while
+preserving the original aspect ratio.
+Each character cell should represent two vertically stacked pixels, using a
+half-block character whose foreground and background colors carry the top and
+bottom pixel colors, with full 24-bit true-color output.
+The rendered result should be printed to standard output as a series of text
+lines, with proper color resets at the end of each line so the terminal display
+stays clean.
+The script should automatically detect the terminal's dimensions, leave a small
+margin at the bottom so output does not scroll awkwardly, and scale the image
+down with high-quality resampling when it is larger than the available space.
+Handle the case where the image is not in RGB mode by converting it first, and
+ensure the output works for both wide and tall images.
+The script should run only when executed directly as a main program and should
+be designed as a simple, self-contained command-line utility for previewing
+images in a terminal. ---

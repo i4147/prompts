@@ -1,0 +1,38 @@
+Write a Python module that defines a centralized set of configuration constants to settings for a
+PEP 8 / style-checking tool similar to flake8 or pycodestyle.
+The script's purpose is purely declarative:
+it does not contain functions or executable logic,
+only module-level constants that other parts of a linting tool would import and reference.
+Requirements for the constants: 1.
+Import the `re` module since regular expressions are needed for some constants.
+2. Define `EXCLUDE` as a tuple of default directory/file patterns that should be excluded from
+linting (e.g. version control directories like `.svn`, `CVS`, `.bzr`, `.hg`, `.git`,
+plus common build/cache artifacts like `__pycache__`, `.tox`, `.eggs`, `*.egg`).
+3. Define `IGNORE` as a tuple of default error/warning codes to ignore
+(e.g. a typical pycodestyle/flake8 default ignore list including codes like `E121`, `E123`, `E126`,
+`E226`, `E24`, `E704`, `W503`, `W504`).
+4. Define `SELECT` as a tuple of top-level error/warning code prefixes that should be
+selected/checked by default (e.g. `E`, `F`, `W`, `C90`).
+5. Define `MAX_LINE_LENGTH` as an integer constant for the maximum allowed line length
+(79, per PEP 8).
+6. Define `INDENT_SIZE` as an integer constant for the standard indentation width (4 spaces).
+7. Define `TRUTHY_VALUES` as a set of lowercase string tokens that should be interpreted as boolean
+"true" when parsing config values (e.g. `"true"`, `"1"`, `"t"`).
+8. Define `WHITESPACE` as a frozenset containing the whitespace characters used for
+tokenizing/parsing (space and tab).
+9. Define `STATISTIC_NAMES` as a tuple of string labels representing categories of statistics the
+tool can report (e.g. `"logical lines"`, `"physical lines"`, `"tokens"`).
+10. Define `NOQA_INLINE_REGEXP` as a compiled,
+case-insensitive regular expression that matches an inline `# noqa` comment,
+optionally followed by a colon and a list of one
+or more specific error codes (letters followed by digits), separated by commas and/or whitespace,
+capturing the codes in a named group `codes`.
+11. Define `NOQA_FILE` as a compiled,
+case-insensitive regular expression that matches a whole-file suppression comment such as
+`# flake8: noqa` or `# flake8=noqa`, allowing leading whitespace.
+Notable behavior/conventions to preserve:
+- All constants should be immutable
+where appropriate (tuples, frozenset) to signal they are fixed defaults not meant to be mutated. -
+Naming should be all-uppercase (module-level constants convention). - The regular expressions must
+be pre-compiled with `re.compile` for performance and reuse,
+and must use case-insensitive matching. ---

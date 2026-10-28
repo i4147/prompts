@@ -1,0 +1,16 @@
+Write a Python script that scans a given Python source file and produces a
+structured summary of its public top-level definitions.
+The tool should accept a file path as input, safely read and parse the file's
+source without executing it, and identify all publicly exposed top-level
+functions (including asynchronous ones), classes, and constant-style
+module-level assignments, ignoring any names that are private (prefixed with an
+underscore).
+The output should be a categorized listing of these names, grouped into
+functions, classes, and constants, so that a developer can quickly understand
+the public API surface of the module.
+The script must handle failure gracefully: if the file cannot be decoded,
+contains syntax errors, or cannot be read for any other reason, it should log a
+clear error message describing the problem and return an empty but well-formed
+result rather than crashing.
+Logging should be used for diagnostics, and the overall behavior should be
+reliable and side-effect free with respect to the analyzed file. ---

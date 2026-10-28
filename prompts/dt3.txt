@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line batch translation tool for
+text files.
+It should accept an input file path, a source language (defaulting to automatic
+detection), a target language, and an output path, then translate the file's
+contents and save the result.
+The tool should support a predefined set of common language codes (including
+regional variants such as Brazilian Portuguese and Simplified Chinese, with
+sensible mappings between user-facing codes and the codes expected by the
+translation backend).
+It should allow the user to choose among multiple translation backends through a
+plugin-style mechanism, so that new providers can be added without changing the
+core logic, and it should ship with at least one default backend that requires
+no API key.
+Key behaviors to include: - Split long input into manageable chunks that respect
+sentence or line boundaries, translate them concurrently with a configurable
+number of worker threads, and reassemble them in their original order. - Show
+progress as chunks complete, and log useful information (timing, chunk counts,
+errors) using a logging facility. - Retry failed translation requests with a
+configurable number of attempts and backoff, and fail gracefully with a clear
+message if a chunk cannot be translated. - Preserve line breaks and basic
+formatting structure of the original document where possible. - Optionally use a
+translation memory or cache so that repeated sentences are not re-translated
+within or across runs, and optionally compare results against a reference file
+to report a similarity score using a fuzzy text-matching measure. - Write output
+atomically (to a temporary file first, then move it into place) so a partial run
+never corrupts the destination file. - Accept a command-line flag toported
+languages and backends, and validate all user inputs with helpful error messages
+before doing any work. - Load any custom backend or plugin module from a
+user-specified path at runtime. - Exit with meaningful non-zero status codes on
+failure, and print a concise summary of the run (characters processed, chunks
+translated, elapsed time) on success. ---

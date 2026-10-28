@@ -1,0 +1,5 @@
+Remove image references from documentation files. clean_md.py -> python image_remover_merged.py fast
+--workers 8 doclin.py -> python image_remover_merged.py smart <paths...> markdown_image_remover.py
+-> python image_remover_merged.py markdown [--workers N] remove_image_refrences.py -> python
+image_remover_merged.py remote <extensions...> rmimg.py -> python image_remover_merged.py html
+--workers 8

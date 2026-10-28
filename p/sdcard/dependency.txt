@@ -1,0 +1,30 @@
+Write a Python module that provides a FastAPI dependency function named `get_identity_context` for
+extracting and validating user identity from incoming HTTP requests.
+Requirements: - Wrap the `fastapi` imports (`Cookie`, `Header`, `HTTPException`, `status`) in a
+try/except `ImportError` block.
+If FastAPI is not installed,
+raise a `RuntimeError` with a clear message indicating that this module
+(referenced as `ab_core.identity_context.dependency::get_identity_context`) requires FastAPI,
+and instruct the user to install the package with an `[fastapi]` extra;
+chain the original exception using `from e`. - Import `IdentificationError` from a local
+`.exceptions` module, an `identify` async function from a local `.identify` module,
+and an `IdentityContext` model from a local `.models` module. - Define an async function
+`get_identity_context` intended to be used as a FastAPI dependency,
+with the following parameters (using `typing.Annotated`):
+- `access_token`: an optional string read from a cookie named `access_token` (default `None`). -
+  `authorization`: an optional string read from the `Authorization` header (default `None`). - Token
+  resolution logic: 1.
+If `access_token` cookie is present, use it as the token.
+2. Otherwise, if the `authorization` header is present
+and starts with `"bearer "` (case-insensitive),
+extract the token portion after the "Bearer " prefix.
+3. If no token could be resolved from either source,
+raise an `HTTPException` with status code 401 (Unauthorized)
+and detail message `"Missing access token"`. - Once a token is obtained,
+call `await identify(token=token)` to resolve it into an `IdentityContext` object
+and return it. - If `identify` raises an `IdentificationError`,
+catch it and re-raise as an `HTTPException` with status code 401 (Unauthorized),
+using the string representation of the caught exception as the detail message,
+chaining the original exception using `from e`. - The function should be fully type-annotated,
+returning `IdentityContext`,
+and designed for use with FastAPI's dependency injection system (e.g., via `Depends`). ---

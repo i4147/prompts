@@ -1,0 +1,20 @@
+Regression tests for the ReDoS backstop (GHSA-w3v8-gmh9-3wv7 umbrella).
+Every NLTK sink that compiles a *caller-supplied* regular expression
+or tag pattern must bound the match with a wall-clock timeout,
+so a crafted pattern cannot pin a CPU core forever (catastrophic backtracking / ReDoS, CWE-1333).
+This file bakes the full adversarial *attack sweep* into CI.
+Each hardened sink is hammered with a battery of catastrophic-backtracking patterns;
+every one must raise :class:`TimeoutError` (the timeout fired) rather than hang.
+The sweep was first run out-of-process against the unpatched code,
+where every pattern below ran to a hard wall-clock kill -- so these are proven exploits,
+not hypotheticals.
+Two pattern families, empirically separated:
+* ``BACKSTOP_FAMILY`` -- alternation of identical/overlapping branches (``(a|a)*`` and friends).
+Neither ``re`` nor the ``regex`` optimiser defuses these, so ONLY the wall-clock timeout stops them.
+They must raise. * ``DEFUSED_FAMILY``
+-- nested quantifiers over the *same* sub-expression (``(a+)+$`` etc.).
+The ``regex`` optimiser linearises these outright, so they must finish fast and must NOT raise.
+Kept so a future engine/opt regression
+(which would turn them back into hangs the timeout must then catch) is visible.
+The timeout is monkeypatched short so the suite stays fast;
+payloads are long enough that 2**N backtracking cannot finish inside any small window.

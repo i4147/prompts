@@ -1,0 +1,14 @@
+Write a Python script that takes two command-line arguments: the path to a text
+file and a prefix string.
+The script should validate that exactly two arguments are supplied, printing a
+brief usage message to standard error and exiting with a non-zero status if not.
+It should confirm the given path refers to an existing regular file, reporting
+an error to standard error and exiting with a non-zero status otherwise.
+When the input is valid, the script should prepend the prefix string, followed
+by a single space, to every non-blank line in the file, leaving blank or
+whitespace-only lines unchanged.
+The original line endings and overall file structure must be preserved.
+The modified content should be saved back to the same file, replacing the
+original contents.
+On success, the script should print a short confirmation message that includes
+the file path, indicating the file was updated. ---

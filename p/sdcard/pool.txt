@@ -1,0 +1,5 @@
+Custom implementation of multiprocessing.Pool with custom pickler.
+This module provides efficient ways of working with data stored in shared memory with numpy.memmap
+arrays without inducing any memory copy between the parent and child processes.
+This module should not be imported if multiprocessing is not available as it implements subclasses
+of multiprocessing Pool that uses a custom alternative to SimpleQueue.

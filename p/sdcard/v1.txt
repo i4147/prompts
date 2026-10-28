@@ -1,0 +1,41 @@
+Write a Python command-line implementation of the classic "Tower of Hanoi" puzzle game,
+inspired by Al Sweigart's "inventwithpython.com" style console games.
+Requirements: 1. **Purpose**:
+Simulate the Tower of Hanoi puzzle with 3 towers labeled "A", "B", and "C",
+where the player must move a configurable number of disks
+(set via a constant, e.g., `TOTAL_DISKS = 5`) from the starting tower to another tower,
+one disk at a time, following the rule that a larger disk can never be placed on top of a
+smaller disk.
+2. **Data representation**:
+- Represent the towers as a dictionary with keys `"A"`, `"B"`, `"C"`,
+where each value is a list of integers representing disks,
+ordered from the bottom of the tower to the top. - The largest disk is represented by the highest
+number; a fully solved tower for `TOTAL_DISKS` disks is a list counting down from `TOTAL_DISKS` to 1
+(e.g., `[5, 4, 3, 2, 1]`). - At the start of the game,
+all disks are stacked in solved order on tower "A", while towers "B" and "C" are empty.
+3. **Main program flow (`main` function)**:
+- Print an introductory banner/header with the game title, author credit, brief instructions,
+and a link to the Wikipedia page on the Tower of Hanoi. - Include a docstring
+or comment explaining the tower data structure and giving examples of valid
+and invalid disk configurations. - Initialize the towers dictionary using a deep/shallow copy of the
+solved tower for "A" and empty lists for "B" and "C". - Run an infinite loop that: a.
+Displays the current state of all towers
+(via a `displayTowers` function, to be implemented separately,
+which visually renders the three towers and their disks). b.
+Prompts the player for a move
+(via a `getPlayerMove` function, to be implemented separately, which returns a tuple of `(fromTower,
+toTower)` after validating the move, e.g.,
+ensuring the source tower isn't empty and a larger disk isn't placed on a smaller one). c.
+Executes the move by popping the top disk from the `fromTower` list
+and appending it to the `toTower` list. - The loop should continue indefinitely
+(the win-condition check and any exit/quit handling can be assumed to be handled elsewhere
+or added as a natural extension).
+4. **Code structure notes**:
+- Use `copy.copy()` (or equivalent) to initialize tower "A" from the solved tower list so the
+original constant isn't mutated. - Import `copy`
+and `sys` modules at the top. - Structure the code so `main()` is the entry point containing the
+game loop logic, while `displayTowers`
+and `getPlayerMove` are referenced as helper functions
+(their implementations should render the towers in an ASCII-art style
+and handle user input/validation respectively, consistent with a text-based console game).
+Produce clean, well-commented Python 3 code matching this structure and behavior. ---

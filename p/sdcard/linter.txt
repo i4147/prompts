@@ -1,0 +1,52 @@
+Write a prompt for an AI coding agent to generate a Python script with the following specifications:
+Create a Python module that implements a structural and style linter for TOML files,
+designed as a lightweight complement to a tool like taplo,
+explicitly excluding JSON-schema validation
+(which requires external schema files and is out of scope). **Purpose**:
+Analyze TOML source text and report structural and stylistic issues at two severity levels,
+without performing schema-based validation. **Error-level checks**:
+- Parse errors (any invalid TOML syntax) - Duplicate keys and duplicate
+or conflicting table definitions - Presence of a BOM (byte order mark) - Smart/curly quotes used
+instead of straight quotes **Warning-level checks**:
+- CRLF line endings (note in the message that taplo's formatter rewrites them as LF
+unless `crlf=true` is configured) - Trailing whitespace - Tabs used in indentation - Missing newline
+at end of file **Main input/output**:
+- A public function `lint_source(text: str) -> list` that takes raw TOML source text as input
+and returns a list of `Issue` objects. - Define an `Issue` dataclass with fields:
+`line` (int), `col` (int), `severity` (str, either `"error"` or `"warning"`),
+and `msg` (str, descriptive message). - Export both `Issue`
+and `lint_source` via `__all__`. **Notable behavior/design**:
+- The module imports parsing utilities from a sibling `.parser` module, including `Array`,
+`Document`, `InlineTable`, `KeyValue`, `MStr`, `TableHeader`, `TaploError`, `line_col`, `normalize`,
+and `parse_document`.
+Assume these already exist and provide:
+text normalization, full TOML document parsing into an AST-like structure,
+and offset-to-line/column conversion. - `lint_source` first normalizes the input text,
+then attempts to parse it into a `Document`. - If parsing fails (raises `TaploError`),
+the function should still run the textual/style checks on the raw
+and normalized text (passing an empty skip-set for multiline-string regions,
+since the document structure couldn't be determined),
+then append a single error `Issue` derived from the parse exception's offset
+(converted to line/col via `line_col`) and message,
+and return immediately — semantic checks are skipped in this case. - If parsing succeeds,
+compute a set of line numbers that fall inside multiline strings
+(via a helper that inspects the parsed `Document` and normalized text) so that textual/style checks
+can skip flagging issues inside those multiline string regions
+(e.g., trailing whitespace or tabs that are intentionally part of the string content). - Run
+textual/style checks
+(producing warnings like CRLF, trailing whitespace, tabs in indentation, missing final newline,
+plus error-level BOM/smart-quote detection) on the original (non-normalized) text
+where line-ending detection matters,
+while using the normalized text for offset/line-column calculations
+where appropriate. - Run semantic checks (duplicate keys, duplicate/conflicting tables, etc.) by
+walking the parsed `Document` structure,
+handling the relevant node types (`TableHeader`, `KeyValue`, `Array`, `InlineTable`, `MStr`) to
+detect conflicts. - Combine textual and semantic issues into a single list
+and return it. - Structure the code into clearly separated private helper functions for textual
+checks (`_textual`), semantic checks (`_semantic`),
+and multiline-string line detection (`_multiline_string_lines`),
+with a module-level docstring explaining the scope
+(structural + style linting only, no schema validation)
+and inline comments/section separators distinguishing the textual-check section from other sections.
+- Use `from __future__ import annotations`
+and Python's `dataclasses` module for the `Issue` type. ---

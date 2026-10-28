@@ -1,0 +1,41 @@
+Write a Python command-line script intended to run in a Termux environment on Android
+(use the Termux Python interpreter shebang line: `#!/data/data/com.termux/files/usr/bin/python`).
+The script batch-compresses PNG image files in place using the external `pngquant` command-line
+tool. **Purpose:** Scan for PNG files (given as arguments or discovered recursively)
+and compress each one in place with `pngquant`,
+allowing `pngquant` itself to decide to skip a file if compression would not reduce its size.
+**Inputs:** - Command-line arguments via `sys.argv[1:]`.
+Each argument can be: - A file path:
+if it is a valid existing file, add it directly to the list of files to process. - A directory path:
+recursively scan it for files with `.png` or `.PNG` extensions
+and add them to the list. - If no arguments are provided,
+default to recursively scanning the current working directory for PNG files. - The script depends on
+a custom helper module named `dh` that provides these utility functions,
+which should be imported and used as-is (assume they already exist, do not reimplement them):
+- `cprint` — for printing colored/formatted console messages. - `fsz`
+— for formatting/retrieving file size information. - `get_files`
+— for recursively discovering files filtered by extension. - `gsz`
+— a helper related to size retrieval/formatting.
+- `mpf3` — a helper utility (used as part of the module's general utilities). - `runcmd`
+  — for executing external shell commands and capturing their stdout
+  and stderr output. **Processing behavior:** For every discovered PNG file,
+  record its original file size before compression.
+Build and run a `pngquant` command that overwrites the file in place
+(using the appropriate force/output flags so the original file is replaced with the compressed
+version), using maximum quality settings and allowing `pngquant` to skip files
+where compression wouldn't help.
+Capture the command's stdout and stderr via `runcmd`.
+After the command finishes,
+check if the file still exists and compare its new size to the original size:
+- If the file was skipped
+or compression failed (e.g., output indicates no change, error, or the file size didn't decrease),
+print a colored message using `cprint` indicating the file was skipped/unchanged,
+along with the file name and formatted size info. - If compression succeeded
+and reduced the file size, print a colored success message using `cprint` showing the file name,
+the original size and the new size (formatted via `fsz`/`gsz`), and the amount/percentage saved.
+Print progress/status information for each file as it is processed,
+and print a final summary at the end (e.g., total files processed, total space saved) once all files
+have been compressed.
+Handle errors gracefully (e.g., missing `pngquant` binary, permission issues) by printing an
+informative colored error message instead of crashing,
+and continue processing the remaining files. ---

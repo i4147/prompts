@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line utility for archiving a
+directory into a tar or compressed tar.gz file.
+The user supplies the path to an existing folder as the main input, and
+optionally an output file path; if no output path is given, the archive is
+placed beside the source folder and named after it, with a .tar extension for
+uncompressed archives or .tar.gz for compressed ones.
+The tool should let the user choose the compression mode and should validate the
+input carefully: expand user home shortcuts, resolve the path to an absolute
+location, and produce clear, human-readable error messages when the folder does
+not exist or the path is not a directory.
+The script should also support an optional cleanup step that removes the
+original source folder after a successful archive is created.
+This deletion must be cautious: it should refuse to delete symbolic links that
+point to directories, avoid removing the output archive itself, and only proceed
+once the archive has been written completely and verified as readable.
+Provide a safety confirmation mechanism (for example, an interactive prompt with
+a bypass flag for automation) before any destructive action.
+Where it is useful for large folders, the script may parallelize work using
+multiple processes, with a user-configurable worker count that must be a
+positive integer; the argument parser should reject values below one.
+Errors during archiving should be reported without leaving a corrupt or partial
+output file behind, and the script should exit with a non-zero status code on
+failure and zero on success.
+Keep the interface clean and self-documenting with a help message, and print
+concise progress or result information to the console. ---

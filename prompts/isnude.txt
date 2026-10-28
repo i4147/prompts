@@ -1,0 +1,16 @@
+Write a Python script that scans the current working directory for image files
+(JPG, JPEG, PNG, and WEBP), detects which ones contain nudity using an automated
+content-analysis library, and moves any flagged images into a dedicated
+subfolder named "nude" within the working directory.
+The script should process files in parallel for speed and skip any files that
+already reside inside the "nude" folder.
+It should accept an optional command-line flag that, when present, enables
+downscaling of large images (larger than 800 pixels in width or height) before
+analysis to speed up detection, while leaving the original files unmodified.
+For each file processed, print the file name and the analysis result to the
+console, and print a colored highlight message for any image identified as nude.
+The script must create the target folder if it does not already exist, handle
+unreadable or corrupt image files gracefully without stopping the overall run,
+and perform the detection without altering the content of the images themselves.
+Keep the design simple, runnable as a standalone command-line tool from the
+folder containing the images. ---

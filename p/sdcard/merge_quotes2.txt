@@ -1,0 +1,31 @@
+Write a Python script that merges a list of new quotes into an existing quotes database stored as
+JSON, while avoiding duplicate entries.
+The script should include: 1.
+A `load_json(filename)` function that:
+- Reads and parses a JSON file using UTF-8 encoding. - If the file does not exist,
+prints a warning message saying the file was not found and a new one will be created,
+then returns an empty list. - If the file contains invalid JSON,
+prints an error message with the details and exits the program with a non-zero status code.
+2. A `save_json(filename, data)` function that writes the given data to a file as formatted JSON
+(2-space indentation, UTF-8 encoding,
+with `ensure_ascii=False` so non-ASCII characters are preserved).
+3. An `add_unique_quotes(existing_file, new_file, check_author=True)` function that:
+- Loads the existing quotes database from `existing_file`
+and the new quotes to merge from `new_file`,
+both expected to be JSON lists of dictionaries with at least `"quote"`
+and `"author"` keys. - If `new_file` is empty or contains no quotes,
+prints a message indicating so
+and returns without making changes. - Builds a set of unique keys from the existing quotes to detect
+duplicates: - If `check_author` is `True`, the uniqueness key is a tuple of the stripped,
+lowercased quote text and stripped, lowercased author name. - If `check_author` is `False`,
+the uniqueness key is just the stripped,
+lowercased quote text (ignoring author). - Iterates through the new quotes,
+appending each quote to the existing list only if its key is not already in the set of existing
+keys, updating the set as new quotes are added,
+and counting how many were added versus skipped as duplicates. - If at least one new quote was
+added, saves the updated combined list back to `existing_file` using `save_json`. - Prints a summary
+message showing how many quotes were processed from `new_file`,
+and should also report how many were added and how many were skipped as duplicates.
+Use `from __future__ import annotations` and the `json` and `sys` modules.
+The code should be structured as reusable functions (not wrapped in a class),
+suitable for being imported or extended with a command-line interface. ---

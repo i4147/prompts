@@ -1,0 +1,48 @@
+Create a Python command-line benchmarking script that compares different parallel file-hashing
+strategies using multiprocessing, measuring their performance on a directory of files.
+The script should be a standalone,
+executable Python 3 module (with a `#!/usr/bin/env python3` shebang) named something like
+`bench_mpf.py`, using modern Python typing features
+(e.g., generic type parameters with `TypeVar`/PEP 695-style syntax,
+`from __future__ import annotations`). **Purpose:** Benchmark
+and compare multiple implementations of a "map files to hash digests in parallel using a process
+pool" pattern, to evaluate throughput/latency trade-offs between different queuing/backpressure
+strategies (e.g., unbounded in-flight task submission vs. bounded in-flight task submission with a
+configurable concurrency cap). **Command-line interface:** Use `argparse` to accept:
+- `folder` (positional, required):
+path to the directory containing files to hash. - `--repeat N` (optional, int):
+number of times to repeat each benchmark run for statistical stability
+(e.g., to compute mean/median/stdev of timings). - `--pattern GLOB` (optional, string):
+a glob pattern (e.g., `*.txt`) to filter
+which files in the folder are included. - `--pool SIZE` (optional, int):
+size/limit for the process pool
+or in-flight task queue used by the bounded strategy. **Core behavior:** 1.
+Discover files in the given folder (optionally filtered by the glob pattern) using `pathlib.Path`.
+2. Define a hashing worker function that reads a file in fixed-size chunks
+(use a 1 MiB buffer, e.g. `CHUNK = 1 << 20`)
+and computes a hash digest (e.g., using `hashlib`, such as SHA-256) for each file,
+returning the digest (and ideally the filename).
+3. Implement at least two parallel-mapping strategies over a `multiprocessing.Pool`:
+- One strategy (`mpf_as`) that submits tasks asynchronously via `pool.apply_async`,
+keeping a bounded deque of pending `AsyncResult` objects (e.g., cap of ~32 in flight)
+and draining results with `.get()` as new tasks are submitted,
+then draining all remaining results at the end. - A second strategy (`mpf_bounded`) that generalizes
+this with configurable `processes` (defaulting to `os.cpu_count()`)
+and `max_inflight` (defaulting to `2 * processes`) parameters,
+enforcing backpressure so that no more than `max_inflight` tasks are pending at once before
+submitting new ones. - Both strategies should be generic over input/output types
+(using `TypeVar`s `T` and `R`), accept a callable `func` and an iterable of inputs `files`,
+and return a `list[R]` of results in submission order.
+4. Time each strategy (e.g., using `time.perf_counter` or similar),
+running each one `--repeat` times if specified,
+and compute summary statistics (mean, median, standard deviation via the `statistics` module)
+across repeats.
+5. Print a clear comparison report to stdout showing each strategy's name, timing statistics,
+and number of files processed,
+so the user can see which approach performs best for the given workload. **Notable implementation
+details to preserve:** - Uses `collections.deque` for efficient FIFO management of pending async
+results. - Uses `multiprocessing.pool.AsyncResult` type hints for the pending queue. - Designed to
+be run directly from the command line against a real folder of files,
+with no external dependencies beyond the Python standard library. - Should handle errors gracefully
+(e.g., invalid folder path, no matching files)
+and exit with an appropriate status code via `sys.exit`. ---

@@ -1,0 +1,52 @@
+Write a prompt for an AI coding agent to generate a Python script with the following purpose
+and behavior: **Purpose:** Create a command-line tool that scans a Python codebase to detect
+and automatically remove unused import statements,
+using `pyflakes` for static analysis
+and `ast` for parsing/rewriting import lines. **Main inputs:** - A list of Python files to process,
+obtained via a `get_pyfiles` helper function imported from a local module named `dh`. - No other
+explicit CLI arguments are required beyond what `get_pyfiles` provides
+(it should supply the set of `.py` files to scan, e.g. from a project root or given path arguments).
+**Main outputs:** - The script modifies the scanned `.py` files in place,
+removing unused import names/statements. - It prints diagnostic/error messages
+(e.g., file read errors, syntax errors, per-file processing errors) to `stderr`. - It prints a
+summary to stdout indicating which files were modified and ideally
+which unused imports were removed from each. **Core behavior and implementation notes:** 1.
+Define a custom `pyflakes.reporter.Reporter` subclass (e.g., `UnusedImportCollector`) that overrides
+`unexpectedError`, `syntaxError` (both silently ignoring/suppressing output), and `flake`,
+where `flake` filters and collects only `pyflakes.messages.UnusedImport` instances into a list.
+2. Implement a `get_unused_imports(path: Path) -> List[pyflakes.messages.UnusedImport]` function
+that: - Reads the file's source text (UTF-8),
+handling and logging read errors to stderr
+and returning an empty list on failure. - Runs `pyflakes.api.check` on the source using the custom
+reporter, handling and logging any exceptions to stderr. - Returns the collected
+unused-import messages.
+3. Implement a `process_file(path: str | Path) -> Tuple[str, List[str]]` function that:
+- Calls `get_unused_imports` on the file;
+if none found, returns immediately with an empty list. - Re-reads the source
+and parses it into an AST via `ast.parse`,
+catching and logging `SyntaxError` to stderr
+and returning an empty list on failure. - Maps pyflakes' reported unused-import messages to their
+line numbers and the specific unused names on each line
+(building something like `Dict[int, Set[str]]`),
+since a single import line can contain multiple names (e.g., `import os, sys`)
+and only some may be unused. - Walks the AST to locate `Import`
+and `ImportFrom` nodes matching those line numbers,
+and reconstructs/rewrites each affected line to remove only the unused names
+while preserving the names that are still used
+(e.g., `import os, sys` → `import sys` if only `os` is unused;
+if all names on a line are unused,
+the entire import line should be removed). - Writes the modified source back to the file if changes
+were made, and returns a tuple of the file path and a list describing which imports were removed.
+4. Use `multiprocessing` to parallelize the scanning/fixing of files across the list returned by
+`get_pyfiles`, speeding up processing for large codebases.
+5. In the main entry point (`if __name__ == "__main__":` or a `main()` function),
+gather the file list via `get_pyfiles`,
+run `process_file` across all files in parallel using a multiprocessing pool, collect the results,
+and print a summary of all modified files and the unused imports removed from each to stdout.
+6. Ensure robustness:
+the script should not crash on individual file errors
+(unreadable files, syntax errors, unexpected pyflakes exceptions)
+— such errors should be logged to stderr and that file skipped,
+while processing continues for the rest of the files.
+7. Add appropriate type hints throughout (using `Dict`, `List`, `Set`, `Tuple` from `typing`)
+and docstrings/comments explaining each function's role.

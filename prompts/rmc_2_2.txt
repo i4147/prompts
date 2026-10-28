@@ -1,0 +1,11 @@
+pystrip - strip comments / docstrings from Python files, in place.
+Backends: tree-sitter (default, byte-range edits) or libcst (lossless CST).
+Neither ever re-generates code from an AST, so formatting and string literals
+(raw strings, escapes, ...) stay exactly as written. pip install tree-sitter
+tree-sitter-python libcst Modes (default) strip inline (trailing) comments only
+-c strip ALL comments (full-line ones too) -d strip ALL docstrings (class/def
+with only a docstring -> `pass`) -a strip everything, including what is normally
+preserved Always preserved (unless -a): shebang, module docstring, directive
+comments (noqa, type:, pylint:, fmt:, pragma, coding:, ...) and commented-out
+code.
+Blank lines are removed (except inside multi-line strings).

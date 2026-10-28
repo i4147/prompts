@@ -1,0 +1,9 @@
+Find the top-N most similar files in ~/bin to a given file using ssdeep.
+Python sources are normalized before hashing: shebang, comments, docstrings, and
+type annotations are removed so similarity reflects structure, not
+formatting/comment noise.
+Targets Python 3.14+: * pathlib.Path.walk for traversal * selectable
+multiprocessing backend via --mp-method (serial | interpreter | process | thread
+| auto) Optimizations: * persistent hash cache keyed by (path, mtime_ns, size) *
+single lstat per file; symlinks and specials skipped * atomic cache writes;
+cache failures are non-fatal

@@ -1,0 +1,1 @@
+Check Python files in current directory and report definitions that are not exported in __init__.py

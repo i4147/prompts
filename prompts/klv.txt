@@ -1,0 +1,29 @@
+Write a Python script that analyzes a local collection of Python package wheel
+files (or a mirror/index directory of them) and produces a cleaned-up,
+deduplicated set of the most relevant package builds, specifically targeting
+ARM-based and Android/Linux platforms.
+The script should accept command-line options for the source directory, the
+output directory, the number of parallel workers, and the batch size used when
+processing large numbers of files, with sensible defaults for each.
+The tool should scan the input location for wheel files, recognize the package
+name, version, Python version tag, and target platform from each filename using
+pattern matching, and keep only the wheels that match the target platforms (such
+as Android API builds and Linux ARM builds, with configurable keyword lists for
+ARM identification).
+When multiple versions of the same package exist, it should group files by
+normalized package name and select the newest version using a robust
+version-comparison scheme that gracefully handles non-standard version strings
+(pre-releases, post-release suffixes, mixed alphanumeric segments) without
+crashing.
+Processing should be parallelized across multiple worker processes, and work
+should be divided into batches so that large inputs remain manageable and memory
+use stays bounded.
+Progress and problems should be reported through a standard logging setup with
+configurable verbosity, and malformed or unexpected filenames should be skipped
+with a warning rather than halting the run.
+The output should be a directory containing the selected wheel files copied from
+the source, along with a summary of what was kept, what was skipped, and why.
+The script should be safe to re-run (idempotent where practical), should
+validate that the input directory exists and report clear errors otherwise, and
+should exit with a nonzero status code on fatal failures and zero on success.
+Provide a clear command-line help message describing all options. ---

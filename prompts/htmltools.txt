@@ -1,0 +1,32 @@
+Write a Python script that ac for archiving acontained HTML file.
+The tool takes a web URL (or a local HTML file) as input and produces one HTML
+document in which all external resources it depends on are embedded so the page
+can be opened offline without network access.
+Core behavior to implement: - Accept a URL or local file path, plus command-line
+options controlling output file location, request timeouts, custom request
+headers or user agent, whether to follow and inline linked stylesheets, scripts,
+images, fonts, and other media, and how deeply to crawl or process nested
+resources. - Fetch the target page, parse its HTML, and locate every referenced
+external resource: stylesheets (including URLs and @import rules inside CSS),
+scripts, images (including srcset and lazy-loading attributes), icons, fonts,
+and other media referenced by CSS url() expressions. - Resolve relative
+references against the correct base URL, respecting any declared base element,
+and normalize or strip URL fragments as appropriate. - Download resources
+concurrently where practical, with retry and graceful failure handling so that a
+single broken resource does not abort the whole job; report failures as warnings
+rather than fatal errors. - Inline the downloaded content: convert binary assets
+such as images and fonts into data URIs using their correct MIME types, and
+embed CSS and JavaScript directly into the document.
+Rewrite the URLs inside CSS accordingly, and avoid duplicating the same resource
+multiple times by caching by content or URL. - Optionally remove or neutralize
+elements that would require network access or are undesirable in an archive, and
+support options toain resource types or domains. - Support an option to use a
+more capable browser-like fetcher for pages that need JavaScript rendering or
+special TLS/Hall back gracefully when that optional dependency is not installed.
+- Write the final result to a single HTML file with a sensible default name
+derived from the page title URL, creating output directories as needed, and
+print a concise summary of how many resources were inlined, skipped, and failed.
+- Use clear logging with adjustable verbosity, produce helpful error messages
+for invalid input, and exit with appropriate status codes. - Keep the script
+robust, readable, and runnable as a standalone program with a `--help` interface
+describing all options. ---

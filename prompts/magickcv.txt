@@ -1,0 +1,33 @@
+Write a Python script that acts as a command-line image processing tool.
+It should accept one or more input image files (or a directory of images) and an
+output location, then apply a configurable pipeline of transformations to each
+image and save the results.
+The tool should support the following behaviors: - **Resizing with flexible
+geometry**: Accept size specifications in a compact text form that can express
+width only, height only, or both, with optional modifiers controlling how the
+image fits the target (e.g., preserving aspect ratio, forcing exact dimensions,
+only shrinking or only enlarging, or scaling by percentage).
+Let the user choose the resampling quality from a set of standard named filters.
+- **Color and appearance adjustments**: Allow optional tweaks such as
+brightness, contrast, sharpness, and color saturation, plus conversion to
+grayscale or other color modes, and automatic contrast normalization or
+auto-orientation based on EXIF data. - **Border, frame, and background
+handling**: Support adding a solid border or padding with a user-specified color
+(accepting common color names and hex or RGBA values), and filling transparent
+areas with a background color when flattening images. - **Text and annotation
+overlay**: Optionally draw a text caption onto each image at a chosen position,
+with configurable font size, color, and margin. - **Computer-vision utilities**:
+Optionally apply OpenCV-based operations such as edge detection, blurring, or
+denoising, and report basic image statistics. - **Batch processing and output
+control**: Process multiple files in one run, preserve or change the output
+format (e.g., PNG, JPEG, WebP), control JPEG/WebP quality, optionally overwrite
+or skip existing outputs, and mirror the input folder structure when processing
+directories. - **Robust command-line interface**: Provide clear help text,
+validate all arguments with helpful error messages (invalid colors, malformed
+geometry, unsupported files), and print a concise summary of processed and
+failed files at the end. - **Error resilience**: Continue processing remaining
+files if one image fails to open or save, logging the problem without crashing
+the whole run.
+The script should be self-contained, runnable from the terminal, and produce
+deterministic, well-documented output files that match the requested
+transformations. ---

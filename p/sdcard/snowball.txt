@@ -1,0 +1,2 @@
+Snowball stemmers This module provides a port of the Snowball stemmers developed by Martin Porter.
+There is also a demo function: `snowball.demo()`.

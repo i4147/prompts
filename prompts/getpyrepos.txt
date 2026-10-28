@@ -1,0 +1,18 @@
+Write a Python script that fetches all public repositories for a given GitHub
+username, keeps only those whose primary language is Python, and outputs a
+structured summary of each matching repository.
+The script should accept the GitHub username as a command-line argument, handle
+pagination automatically so that users with many repositories are fully covered,
+and sort or present results by most recently updated.
+For each repository, capture its name, full name, description (with a sensible
+fallback when missing), web URL, star count, fork count, primary language,
+creation and last-update timestamps, and visibility status.
+Output the collected results as well-formatted JSON to standard output, and
+optionally allow the user to save them to a file.
+Handle errors gracefully, including network failures, HTTP errors such as
+unknown users or rate limiting, and invalid responses, reporting clear messages
+to the user and exiting with a non-zero status code when something goes wrong.
+If no Python repositories are found, the script should still produce a valid,
+empty result rather than crashing.
+Include a brief usage message when the username argument is missing or invalid.
+---

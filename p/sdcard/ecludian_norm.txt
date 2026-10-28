@@ -1,0 +1,13 @@
+Write a Python script that computes the Euclidean norm (L2 norm) of a numeric vector using NumPy.
+Requirements: - Include the `from __future__ import annotations` statement at the top of the file. -
+Define a function named `ecludian_norm(a)` that takes a single argument `a`,
+which is an iterable (e.g., list, tuple, or array) of numeric values. - Inside the function,
+initialize an accumulator variable named `sum` to 0. - Iterate over each element `n` in the input
+iterable `a`, squaring it using `np.power(n, 2)`
+and adding the result to the `sum` accumulator. - After the loop,
+return the square root of the accumulated sum using `np.sqrt(sum)`. - The function should rely on
+the NumPy library (imported as `np`) for the power and square root operations,
+but assume `numpy` is already imported elsewhere as `np`
+(do not add the import inside the function). - Do not add type hints, docstrings, error handling,
+or any additional logic beyond what is described above. - The output should be exactly one function
+definition matching this behavior, preceded by the future annotations import line. ---

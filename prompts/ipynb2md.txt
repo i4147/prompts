@@ -1,0 +1,13 @@
+Write a Python script that takes a Jupyter notebook file path as a command-line
+argument and converts it into a Markdown document saved alongside the original,
+using the same base name with a .md extension.
+The script should read the notebook (in UTF-8 encoding and standard notebook
+format version 4), then process each cell in order: markdown cells should be
+written out as plain Markdown content, and code cells should be wrapped in a
+fenced Python code block.
+Ensure there is spacing between cells so the resulting Markdown is cleanly
+readable.
+Once the conversion is complete, the script should print a short confirmation
+message showing the path of the generated Markdown file.
+The script should run as a standalone command-line tool and handle the input
+path provided by the user. ---

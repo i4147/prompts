@@ -1,0 +1,16 @@
+Living-audit regression tests for the path-traversal / file-I/O sandbox cluster
+(GHSA-8mgp-746c-j5xp umbrella).
+CWE-22 / CWE-59 / CWE-377 / CWE-400.
+Consolidates the file-system attack surface an attacker can reach
+and locks in the fixes that already live (or now land) on ``develop`` so a future refactor cannot
+silently reopen any of them:
+* CVE-2026-54293 (GHSA-p4gq-832x-fm9v, #3629)
+-- traversal via URL-encoded path separators / traversal segments in ``nltk.data``. * CVE-2026-12243
+(GHSA-q5h6-fcf5-49g9, #3698)
+-- ``..%2f`` bypass of the ``data.py`` guard (an "incomplete fix" for #3504). * GHSA-f794
+-- ``pathsec`` symlink/hardlink (TOCTOU) read escape (CWE-59),
+plus its newly-closed *write*-side counterpart
+(a symlink swapped in at a ``retrieve()``/model-write destination).
+Payloads are kept whether or not they currently leak, as long as they are plausible:
+the guard-passing-but-benign encodings are the natural place a future double-decode bug would
+regress, so they are asserted to resolve in-root.

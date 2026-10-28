@@ -1,0 +1,27 @@
+Write a Python script that acts as a project-scanning and collection utility for
+a source code directory.
+The tool should accept a target directory path, an output file path, and an
+optional list of directory names to exclude from scanning.
+It should recursively walk the target directory tree, skipping excluded
+directories, symbolic links, and anything that is not a regular file.
+For each candidate file, it should determine whether the file is text-based by
+inspecting a small leading sample of its bytes, and ignore files that appear to
+be binary.
+The primary "collect" operation should gather the relevant text files and write
+a consolidated report to the specified output file, with each included file's
+relative path and contents clearly delimited so the report is easy to read and
+navigate.
+The tool should also be capable of locating license-related files (for example,
+files named LICENSE, COPYING, or NOTICE, in any case) within the scanned tree
+and including them in the collected output, prioritizing them in the report.
+Human-readable file sizes should be formatted in a compact form (bytes through
+gigabytes, falling back to a larger unit when needed) and used in any summary
+the tool prints, such as the number of files collected and the total size
+processed.
+The script should be a command-line tool with clear subcommands and help text.
+It should create any missing parent directories for the output file, handle
+unreadable files or permission errors gracefully by logging a warning and
+continuing, validate that the target directory exists before doing any work, and
+exit with a meaningful non-zero status code on fatal errors.
+Output to the console should be concise and informative, reporting where the
+consolidated file was written and a short summary of what was collected. ---

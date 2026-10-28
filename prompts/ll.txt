@@ -1,0 +1,21 @@
+Write a Python script that acts as a command-line disk usage and file listing
+utility.
+It should accept a directory path (defaulting to the current directory when none
+is given) and display each immediate entry in that directory along with its
+total size, where directories report the recursive sum of all regular files
+beneath them.
+Symbolic links and entries that cannot be accessed should be skipped gracefully
+without crashing the program.
+Sizes must be presented in human-readable form (bytes, KB, MB, GB, TB, using
+powers of 1024 with whole-number precision and a space before the unit label),
+and a zero-sized item should display as "0 B".
+The script should support a reverse-order flag (`-r`) that reverses the default
+sorting of the listing, where entries are ordered by size.
+The output should show each entry's human-readable size alongside its name, with
+directories clearly distinguishable from files, and should present a clean,
+aligned, easy-to-scan layout.
+Handle nonexistent paths by reporting a clear message rather than raising an
+unhandled error.
+Keep the implementation self-contained, use only the Python standard library,
+and make the program run from the terminal and print results to standard output.
+---

@@ -1,0 +1,21 @@
+Write a Python script that scans the current working directory for files and
+removes small, near-empty text files, while safely skipping binary files.
+The script should gather the files in the current directory (using a helper that
+lists the files available there), and for each file first determine whether it
+is binary.
+Binary files should be left untouched, and the script should report that each
+one was skipped by printing its file name.
+For every non-binary file, read its contents as UTF-8 text.
+If the file no longer exists by the time it is processed, do nothing.
+Otherwise, measure the file in two ways: the total number of characters in its
+contents and the number of lines it contains.
+If the file is shorter than 100 characters or has fewer than 3 lines, delete it
+from disk and print a message stating its name followed by "removed".
+Files that meet or exceed both thresholds must be kept unchanged and produce no
+output.
+The script should run as a standalone command-line tool: when executed directly,
+it performs the scan-and-clean process once for the current directory and exits
+with the status code returned by its main routine.
+Handle the process with clear, predictable behavior so that it never modifies
+anything outside the target directory's files that it has explicitly evaluated,
+and it should not attempt to delete files that are binary. ---

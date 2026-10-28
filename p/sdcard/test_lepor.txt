@@ -1,0 +1,12 @@
+Regression tests for two DoS defects in NLTK LEPOR word alignment
+(``nltk.translate.lepor.alignment``, used by ``sentence_lepor``/``corpus_lepor``). * Uncaught
+``IndexError`` on ordinary input (CWE-20):
+the match-flag list was created empty and then assigned into by index, raising ``IndexError:
+list assignment index out of range`` whenever a hypothesis token appears two
+or more times in the reference -- a very common case. * Quadratic time (CWE-407):
+the aligner used ``ref_tokens.count``/``index`` once per hypothesis token,
+i.e. O(len(ref) * len(hyp)).
+The reference positions are now indexed once up front, making the aligner linear.
+(Removing the crash also exposed a latent copy-paste bug in the "no windowed match" branch that
+appended the chosen index twice;
+that duplicate is removed so each hypothesis token contributes at most one alignment.)

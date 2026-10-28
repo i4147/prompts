@@ -1,0 +1,45 @@
+Generate a Python unit test suite (using pytest) for a parallel/multiprocessing utility module
+named `dh`.
+The module under test exposes:
+a `PoolMethod` enum (with members such as `MAP`, `STARMAP`, `IMAP`, `PROCESS_POOL`, `THREAD_POOL`,
+`JOBLIB`, a `parse` classmethod/staticmethod that converts strings
+or enum instances to the enum case-insensitively
+and raises `ValueError` with message containing "unknown method" for invalid input,
+and an `is_mp_pool` property that is `True` for `MAP`/`STARMAP`/`IMAP`
+and `False` for `PROCESS_POOL`/`THREAD_POOL`/`JOBLIB`),
+a main parallel-execution entry point function `mpf`
+(which dispatches work across items using a specified pool method and number of workers),
+internal helper functions `_run_mp_pool`, `_run_executor`,
+and `_run_joblib` (each implementing execution via Python's `multiprocessing.Pool`,
+`concurrent.futures` executors, and `joblib.Parallel` respectively),
+internal dispatcher/manager classes `_PoolDispatcher`
+and `_ExecutorFutureManager`
+(handling task submission, result collection,
+and timeout/error handling for pool and executor-based execution),
+and module-level constants `MAX_WORKERS` and `DEFAULT_CHUNKSIZE`.
+Requirements for the generated test code: 1.
+Import from `dh`: `PoolMethod`, `mpf`, `_run_mp_pool`, `_run_executor`, `_run_joblib`,
+`_PoolDispatcher`, `_ExecutorFutureManager`, `MAX_WORKERS`, `DEFAULT_CHUNKSIZE`.
+2. Use standard library imports:
+`pytest`, `time`, `TimeoutError as FutureTimeoutError` from `concurrent.futures`,
+`Path` from `pathlib`, and `Mock`, `patch`, `MagicMock` from `unittest.mock`.
+Use `from __future__ import annotations` at the top.
+3. Organize tests into classes grouped by functionality area, at minimum:
+- A `TestPoolMethodEnum` class covering:
+parsing a valid lowercase string to the correct enum member;
+passing an existing enum instance through `parse` unchanged;
+case-insensitive string parsing (e.g., uppercase input);
+parsing an invalid/unknown method string raises `ValueError` with a message matching "unknown
+method"; the `is_mp_pool` property returning `True` for `MAP`, `STARMAP`, `IMAP`;
+and returning `False` for `PROCESS_POOL`, `THREAD_POOL`,
+`JOBLIB`. - A `TestSimpleMapOperations` class with at least a basic functional test that calls `mpf`
+with a simple squaring function over a list of integers using the `"thread_pool"` method
+and a small worker count (e.g., `workers=2`),
+asserting the returned results list matches the expected squared values in order.
+4. Tests should be self-contained,
+use plain functions (not lambdas) as worker callables where multiprocessing-safety matters,
+use simple assertions (`assert result == expected`),
+and avoid requiring actual slow computation or external resources.
+5. Do not include additional explanation, comments about intent beyond what's needed for clarity,
+or any implementation of the `dh` module itself—only the test code.
+6. Output only the test code, structured as a complete, runnable pytest module. ---

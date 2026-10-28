@@ -1,0 +1,22 @@
+Write a Python script that automatically creates a monthly git branch in a local
+repository, named after the current month and year (for example,
+"october_2026"), so that each month has its own working branch.
+The script should: - Operate on a fixed local git repository located in a
+standard personal "bin" folder within the user's home directory, and use a
+configurable main branch name (default "main") as the base for new branches. -
+Determine the current month and year at runtime and derive a lowercase branch
+name from them. - Check whether that monthly branch already exists, looking both
+in the local repository and on the remote "origin" remote.
+If it exists, report this clearly to the user and exit successfully without
+making changes. - If the branch does not exist, fetch the latest state of the
+main branch from the remote, then create the new monthly branch from it and
+switch to it. - Optionally push the newly created branch to the remote "origin"
+and set up upstream tracking, reporting success or failure at each step. - Print
+clear, human-readable progress and status messages (using check marks or similar
+symbols for success), and handle errors gracefully, including a missing
+repository, git not being installed, network or remote failures, and unexpected
+exceptions, without crashing with an unformatted traceback. - Return a
+meaningful exit status: zero onheduled ( monthly branch is in place
+automatically.
+Keep the implementation clean, robust, and self-contained, using only the Python
+standard library. ---

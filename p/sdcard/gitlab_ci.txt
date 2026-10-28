@@ -1,0 +1,23 @@
+Write a Python module for a PyScaffold-style project scaffolding tool that implements a "GitLab"
+extension class.
+The script should: - Import necessary types and utilities from the parent package,
+including `structure`, the `Action`/`ActionParams`/`ScaffoldOpts`/`Structure` types from `actions`,
+the `no_overwrite` operation from `operations`, `get_template` from `templates`,
+and the `Extension`/`include` helpers plus a `PreCommit` extension from the local extensions
+package. - Define a class `GitLab` that subclasses `Extension`,
+representing a CLI extension that adds GitLab CI support to a scaffolded project. - Implement
+`augment_cli(self, parser)`:
+it should register a command-line flag (using `self.flag` and `self.help_text`) on the given
+`ArgumentParser`.
+The flag should take zero arguments (`nargs=0`)
+and its action should be the `include` helper wrapping a `PreCommit()` extension instance together
+with `self`, so that enabling this extension automatically also includes the PreCommit extension.
+The method should return `self` to allow chaining. - Implement `activate(self, actions)`:
+it should register a module-level function `add_files` into the provided list of actions,
+scheduled to run after the `"define_structure"` action, using `self.register(...)`.
+It should return the resulting list of actions. - Define a standalone function
+`add_files(struct: Structure, opts: ScaffoldOpts) -> ActionParams` that builds a dictionary mapping
+`".gitlab-ci.yml"` to a tuple of `(get_template("gitlab_ci"), no_overwrite())`,
+merges this dictionary into the existing project `struct` using `structure.merge`,
+and returns the merged structure together with the unchanged `opts`.
+Use full type hints as ---

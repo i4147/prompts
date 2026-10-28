@@ -1,0 +1,3 @@
+Repository recon script.
+Single Python entry point that merges the original shell pipeline
+(git / find / rg / inline python heredocs) into a structured report.

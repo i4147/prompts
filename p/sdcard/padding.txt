@@ -1,0 +1,25 @@
+Write a Python module that defines padding scheme classes for use with RSA encryption/decryption,
+mirroring the structure used in cryptography libraries
+(such as the `cryptography` package's asymmetric padding module).
+The module must contain exactly two classes: 1. **`PKCS1v15`**:
+An empty marker/placeholder class representing the PKCS#1 v1.5 padding scheme.
+It should have no attributes or methods, just a `pass` statement in its body.
+It is used purely as a type indicator to signal that PKCS#1 v1.5 padding should be applied.
+2. **`OAEP`**: A class representing the Optimal Asymmetric Encryption Padding (OAEP) scheme,
+used for more secure RSA encryption/decryption.
+It must implement an `__init__` constructor with the following parameters: - `mgf`:
+the mask generation function to use (e.g., an MGF1 instance). - `algorithm`:
+the hash algorithm to use within the padding scheme. - `label` (optional, default `None`):
+an optional label associated with the message, used for OAEP's additional authenticated data.
+The constructor should simply store each of these parameters as instance attributes
+(`self.mgf`, `self.algorithm`, `self.label`) with no additional validation, logic, or side effects.
+Notable behavior/requirements:
+- Keep both classes minimal and lightweight — no inheritance from a base class, no abstract methods,
+no validation logic,
+and no docstrings required. - The classes should act as simple data containers/configuration objects
+that other RSA encryption code can inspect (e.g., via `isinstance` checks) to determine
+which padding strategy to use. - Do not implement any actual cryptographic padding/unpadding logic
+in this module — only the configuration classes themselves. - Match the exact class names
+(`PKCS1v15`, `OAEP`) and the exact constructor signature
+and attribute names for `OAEP` (`mgf`, `algorithm`, `label=None`) as specified,
+since other code may depend on this exact interface. ---

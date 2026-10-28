@@ -1,0 +1,36 @@
+Write a Python utility module for discovering files of specific types within a directory,
+with the following requirements: **Purpose**:
+Provide helper functions to validate an input directory path, normalize file extension formats,
+and search for files matching given extensions (and optionally a filename pattern) within that
+directory, returning either absolute file paths or just filenames. **Functions and behavior**:
+1. `_process_input_path(path_to_data: (Path, str)) -> Path` - Accepts a directory path as either a
+`pathlib.Path` or a `str`. - Converts a string input into a `Path`. - Raises `TypeError` if the
+input is neither `str` nor `Path`. - Raises `NotADirectoryError` if the resulting path does not
+exist as a directory. - Returns the validated `Path` object.
+2. `_process_extensions(file_extensions: (str, list)) -> list` - Accepts either a single extension
+as a string or a list of extensions. - Wraps a single string into a list. - Raises `TypeError` if
+the input is neither `str` nor `list`. - Ensures every extension starts with a leading dot
+(e.g., converts `"txt"` to `".txt"`, leaves `".txt"` unchanged). - Returns the processed list of
+extensions.
+3. `_get_all_files(path_to_data: (Path, str), file_extensions: (str, list), file_name:
+str = "*", sorted: bool = True, return_absolute_filepath:
+bool = False) -> list` - Validates the directory using `_process_input_path`
+and normalizes extensions using `_process_extensions`. - For each extension,
+builds a glob search pattern by combining `file_name` (default wildcard `"*"`) with the extension,
+and searches inside the given directory using `glob.glob`. - Collects matches across all extensions
+into a single list. - If `return_absolute_filepath` is `True`, stores the full absolute file path;
+otherwise, splits the path using `os.path.split`
+and stores only the filename (tail part). - If `sorted` is `True`,
+sorts the resulting list before returning it. - Returns the final list of discovered files
+(as absolute paths or filenames, per the flag). **Imports needed**:
+`pathlib.Path`, `glob`, `os`,
+and `warnings` (even if `warnings` is not directly used in the shown logic,
+include the import for consistency with the original module). **Notable considerations**:
+- These are internal/helper-style functions (prefixed with underscore),
+intended to support a larger file-discovery
+or data-loading utility. - Type validation should happen early with clear,
+descriptive error messages including the actual invalid value
+or type received. - The extension normalization must handle mixed input
+(with or without leading dots) gracefully.
+- The glob pattern construction should support wildcard filename matching by default
+  while still allowing specific filename prefixes/patterns to be passed in.

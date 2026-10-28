@@ -1,0 +1,27 @@
+Write a Python script that scans a directory tree for color values in text-based
+source and style files, then either reports them or rewrites them with randomly
+generated replacement colors.
+The tool should accept a root path (file or directory) and an option to restrict
+which file types are processed.
+It should skip binary files, ignore files or directories that a shared utility
+marks as excluded when that utility is available, and fall back to simple
+built-in equivalents when it is not.
+Recognize color literals in several common notations: short and long hexadecimal
+codes with a leading hash, bare hex strings that appear in the text, and
+CSS-style functional color expressions in rgb or rgba form, including those with
+fractional alpha values.
+Each match should be handled in a way that preserves the surrounding text and
+the original notation style as much as practical.
+Provide a dry-run or report mode that prints each file path, the line numbers,
+and the colors found, with a summary count at the end.
+Provide a mode that actually modifies files, generating replacement colors using
+a hue, saturation, and lightness approach so that the new colors are visually
+plausible, with an optional seed so results can be reproduced.
+Allow the user to control how much the colors change, and make it possible to
+exclude specific colors from being altered.
+The output should use colored terminal text for readability when the terminal
+supports it, and the script should exit with a clear status code indicating
+success, nothing found, or an error.
+Include a command-line interface with helpful usage text, and make sure file
+write operations are safe, such as writing through a temporary file so a failed
+write never corrupts the original. ---

@@ -1,22 +1,14 @@
 """(No content in stream)
-
 ---"""
-
 First, a quick note: if your pyproject.toml already uses setuptools as the build backend and contains all metadata, you usually do not need a setup.py. If you still need one for compatibility, the correct file is often just:
-
 ```python
 from setuptools import setup
-
 setup()
 ```
-
 But to ask an AI agent properly, use a structured prompt like this. Replace the bracketed parts and paste your actual pyproject.toml / project tree.
-
 ---
-
 ```text
 You are an expert Python packaging engineer.
-
 Context:
 - I have an existing Python project with a pyproject.toml already present.
 - I need you to generate a setup.py file for this project.
@@ -28,18 +20,13 @@ Context:
 ```toml
 [paste full pyproject.toml here]
 ```
-
 · Relevant project tree:
-
 ```text
 [paste project tree here, e.g. output of `tree -L 3`]
 ```
-
 Task:
 Generate a setup.py that is consistent with the existing pyproject.toml.
-
 Rules:
-
 1. If the build backend is setuptools and pyproject.toml already contains all metadata, generate the minimal shim:
    from setuptools import setup
    setup()
@@ -51,21 +38,14 @@ Rules:
 6. Preserve compatibility with [target Python version].
 7. Add brief comments explaining any non-obvious logic.
 8. Ensure the result supports pip install -e . and python -m build if applicable.
-
 Output:
-
 · First, provide the complete setup.py in a code block.
 · Then, a short section titled "Assumptions / Notes" listing any assumptions and any changes I should make.
 · If you need more files or information, ask for them before generating.
-
 ```
-
 ---
-
 If you want an even shorter prompt:
-
 ```text
 Generate a minimal setup.py shim for a Python project that already has a pyproject.toml using setuptools. It should only call setup() and not duplicate metadata. If pyproject.toml uses a non-setuptools backend, explain why setup.py is not appropriate. Here is pyproject.toml: [paste]
 ```
-
 The key is to give the agent your actual pyproject.toml and tell it not to hallucinate or duplicate metadata.

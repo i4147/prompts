@@ -1,0 +1,90 @@
+Design a prompt for an AI coding agent that will generate a Python script implementing a minimal
+Neovim GUI client backend using the `pynvim` library.
+The script should: **Purpose**:
+Connect to a running Neovim instance (via a socket/pipe or embedded session)
+and act as a headless remote UI,
+attaching to Neovim's UI protocol to receive
+and process grid-based screen updates (the "nvim_ui_attach" redraw events),
+maintaining an in-memory representation of the terminal/editor screen state that could later be
+rendered by any front-end (terminal, GUI window, etc.). **Core data structures**:
+- A `Cell` dataclass representing a single character cell with its text content
+and an associated highlight/attribute ID. - A `Highlight` dataclass representing text styling
+attributes: foreground color, background color, and boolean flags for bold, italic, underline,
+and reverse video. - A `Grid` dataclass representing the full screen buffer:
+width, height, a 2D list of `Cell` objects, and cursor row/column position.
+It must support: - `resize(width, height)`:
+reallocate the cell grid to new dimensions,
+clamping the cursor position to remain within bounds. - `clear()`:
+reset all cells to blank text with no highlight. - `put(row, col, text, highlight_id)`:
+write a single cell's text and highlight at a given position,
+safely ignoring out-of-bounds coordinates. - `scroll(top, bottom, left, right, rows, cols)`:
+shift a rectangular region of the grid content vertically/horizontally by the given row/column
+deltas, preserving a snapshot of the old cell contents before applying the scroll
+(to correctly compute source/destination offsets without overwriting data prematurely).
+**Concurrency/runtime behavior**:
+Use `threading` (`Thread`, `Event`)
+and a `Queue` to handle asynchronous communication between the Neovim event loop
+(driven by `pynvim`) and the main application logic,
+allowing redraw notifications to be received and processed without blocking,
+and allowing clean shutdown signaling via an `Event`. **Implementation notes**:
+- Use Python 3.10+ features:
+`from __future__ import annotations`, `@dataclass(slots=True)` for memory-efficient,
+type-annotated data classes, and modern type hints (e.g., `str
+| None`). - Use `Callable` and `Any` typing imports for callback-style hooks
+(e.g., a redraw/update callback invoked when the grid changes). - The script should be structured as
+a reusable module (classes only, not necessarily a `__main__` block),
+suitable for integration into a larger Neovim GUI client application,
+handling Neovim UI events such as grid resize, grid line updates, grid clear, grid cursor goto,
+grid scroll, and highlight attribute definitions,
+and updating the `Grid`/`Highlight` state accordingly.
+[Tool: think] Params:
+{} Design a prompt for an AI coding agent that will generate a Python script implementing a minimal
+Neovim GUI client backend using the `pynvim` library. **Purpose**:
+The script should connect to a running Neovim instance (via a socket/pipe or embedded session)
+and act as a headless remote UI,
+attaching to Neovim's UI protocol to receive
+and process grid-based screen update events ("redraw" notifications),
+maintaining an in-memory representation of the terminal/editor screen state that can later be
+rendered by any front-end (terminal emulator, GUI window, etc.). **Core data structures**:
+- A `Cell` dataclass representing a single character cell,
+storing its text content and an associated highlight/attribute ID,
+with sensible defaults (blank space, highlight id 0). - A `Highlight` dataclass representing text
+styling attributes: foreground color, background color, and boolean flags for bold, italic,
+underline, and reverse video,
+all with sensible defaults. - A `Grid` dataclass representing the full screen buffer:
+width, height, a 2D list of `Cell` objects, and cursor row/column position,
+with default dimensions (e.g. 80x24).
+It must expose the following methods: - `resize(width, height)`:
+reallocate the entire cell grid to the new dimensions (creating fresh `Cell` instances),
+and clamp the current cursor row/column so they remain within the new bounds. - `clear()`:
+reset every cell in the grid back to blank text with highlight id 0,
+without reallocating the grid. - `put(row, col, text, highlight_id)`:
+write a single cell's text and highlight id at the given coordinates,
+silently ignoring the call if the coordinates fall outside the grid bounds. -
+`scroll(top, bottom, left, right, rows, cols)`:
+shift the contents of a rectangular sub-region of the grid
+(bounded by top/bottom rows and left/right columns) by a given number of rows and columns.
+It must first take a full snapshot (deep copy) of the existing cells before mutating anything,
+so that source and destination offsets can be computed correctly without data corruption during the
+shift. **Concurrency/runtime behavior**:
+The script should use Python's `threading` module (`Thread` and `Event`) together with a `Queue` to
+decouple the Neovim event loop (driven by `pynvim`, which runs its own I/O thread) from the main
+application/rendering logic.
+Redraw notifications arriving asynchronously from Neovim should be queued
+and processed without blocking the Neovim connection,
+and an `Event` should be used to signal clean shutdown of any background thread(s). **Implementation
+notes/style**: - Target Python 3.10+,
+using `from __future__ import annotations` for deferred annotation evaluation. - Use
+`@dataclass(slots=True)` for all data classes (`Cell`, `Highlight`, `Grid`) for memory efficiency
+and strict attribute definitions,
+with proper type annotations including modern union syntax like `str | None`. - Import `Any`
+and `Callable` from `typing` to support optional callback hooks
+(e.g., a redraw/update callback invoked whenever the grid's state changes). - The code should be
+organized as a reusable module composed primarily of these dataclasses
+(plus any supporting client/handler class that wires up `pynvim`, the background thread,
+and the queue), rather than a simple top-to-bottom script,
+so it can be imported into a larger Neovim GUI client application. - The resulting client logic
+should be capable of handling standard Neovim UI grid events — resize, line updates, clear,
+cursor goto, scroll,
+and highlight attribute definitions
+— updating the `Grid` and `Highlight` state accordingly as these events are received. ---

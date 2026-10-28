@@ -1,0 +1,23 @@
+Write a Python script that connects to the GitHub API to retrieve the list of
+repositories belonging to a specified user account.
+The script should accept a GitHub username as input, along with an optional
+access token loaded from environment configuration or supplied directly, so that
+authenticated requests can be made for higher rate limits and access to private
+repositories the token permits.
+It should allow a configurable network timeout for API requests.
+While the request is in progress, the script should display a live countdown in
+the terminal that updates each second and then clears itself once the operation
+completes, running in a way that does not block the main work.
+If the user has no repositories, the script should print a clear message stating
+that no repositories were found for that username and return an empty result.
+When repositories are found, the script should gather their key details, such as
+names, descriptions, visibility, primary language, star and fork counts, and
+last-updated timestamps, and return them in a structured form that can be
+displayed on screen or exported to a file in a common machine-readable format.
+The script should handle common failure cases gracefully, including invalid or
+nonexistent usernames, expired or invalid tokens, network interruptions, and API
+rate-limit errors, presenting a helpful error message to the user instead of
+crashing with an unhandled traceback.
+It should be runnable from the command line, accepting the username and optional
+flags for token and timeout, and should ensure that sensitive credentials are
+never printed to the console or written to output files. ---

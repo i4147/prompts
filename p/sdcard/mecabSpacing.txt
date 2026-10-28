@@ -1,0 +1,41 @@
+Design an AI agent prompt for generating a Python script with the following specification:
+--- **Purpose:** Create a Python script that performs Korean-specific text spacing
+correction/normalization using the Mecab morphological analyzer
+(via a custom `SmiToText.tokenizer.mecab` module) along with a custom `Util` helper class
+(from `SmiToText.util.util`).
+The core functionality is a "smart spacing" algorithm for Korean sentences,
+which re-applies correct spacing rules based on part-of-speech (POS) tags produced by Mecab,
+since Korean text is frequently found without proper spacing
+or with inconsistent spacing (e.g., from speech transcription, OCR, or subtitle files). **Main
+Inputs:** - A raw Korean sentence string (possibly with incorrect or missing spacing) passed to the
+main spacing function `mecabSpacing(sentence, DEBUG=False)`. - An optional `DEBUG` flag to print
+intermediate tokenization/POS tagging steps for troubleshooting. **Main Outputs:** - A correctly
+spaced Korean sentence string,
+where spacing decisions are made by inspecting the POS tag of each morpheme token returned by Mecab
+and classifying it into predefined category lists: - `split_sp_type`:
+POS tags that should generally be followed by a space
+(e.g., `SL` foreign word, `SSO`/`SSC` brackets, `SY` symbols). - `split_not_sp_type`:
+a large list of POS tags that should NOT be followed by a space
+(e.g., particles, endings, verb/adjective suffixes like `NNG`, `NNP`, `VV`, `VX`, `EC`, `EF`, `ETM`,
+`XSN`, `JKB+JX`, etc.). - `josa_type`:
+Korean grammatical particles (josa) that require special handling
+when deciding spacing. - Helper utility functions used internally: - `find_offsets(string, char)`:
+returns a list of all index positions
+where a given character occurs within a string. - `rreplace(s, old, new, occurrence)`:
+replaces the last N occurrences of a substring (`old`) with a new substring (`new`) in a string,
+working from the right side instead of the left (opposite of Python's built-in `str.replace`).
+**Notable Behavior:** - The script imports
+and instantiates a `Util` object at module load time for use across functions. - The spacing logic
+relies heavily on an extensive,
+explicitly enumerated set of Mecab POS tag combinations
+(including compound tags like `XSV+EP+EC`, `VV+EP+EP`, `EC+VX+EF`) to decide whether a space should
+be inserted after a given morpheme,
+reflecting the complexity
+and ambiguity of Korean morphology. - The `DEBUG` parameter allows verbose output of the
+tokenization and decision process for each morpheme during spacing reconstruction,
+useful for debugging edge cases in Korean grammar handling. - The script is intended to be used as
+an importable module (via `sys` and relative imports), not necessarily as a standalone CLI tool,
+suggesting it's part of a larger NLP/text-processing library (`SmiToText`) focused on Korean
+language processing,
+likely related to subtitle (SMI file) to text conversion workflows. - Encoding is explicitly
+declared as UTF-8 to properly handle Korean (Hangul) characters throughout the script. ---

@@ -1,0 +1,30 @@
+Write a Python script that uses the PyMuPDF (fitz) library to work with PDF files,
+providing two utility functions: 1. `count_pages(pdf_path: Path) -> int`:
+Accepts a `Path` object pointing to a PDF file,
+opens it using `fitz.open` within a context manager
+(ensuring the document is properly closed afterward),
+and returns the total number of pages in the document as an integer (using `len(document)`).
+2. `extract_one_page(job: tuple[str, int]) -> str`:
+Accepts a single tuple argument named `job`,
+which unpacks into `pdf_name` (a string representing the PDF file path)
+and `page_number` (an integer representing the zero-indexed page number to extract).
+The function opens the PDF using `fitz.open` within a context manager,
+loads the specified page via `document.load_page(page_number)`,
+extracts the page's text content using `page.get_text("text")`,
+strips any trailing form-feed character (`\f`) from the extracted text using `.rstrip("\f")`,
+and returns the resulting cleaned string.
+Notable behavior and design notes:
+- Both functions rely on PyMuPDF's `fitz.open` context manager pattern to safely open
+and automatically close PDF documents,
+preventing resource leaks. - `extract_one_page` is designed to accept its parameters bundled as a
+single tuple (`job`),
+which makes it convenient for use with parallel/multiprocessing APIs
+(e.g., `multiprocessing.Pool.map` or `concurrent.futures.ProcessPoolExecutor.map`)
+where a single iterable of jobs is distributed across worker processes—each job representing one PDF
+page extraction task. - `count_pages` takes a `Path` object (from `pathlib`)
+while `extract_one_page` takes a plain string file path inside the tuple;
+be consistent with this distinction. - The text extraction mode is explicitly set to `"text"`
+(plain text extraction, not HTML, dict, or other formats). - No error handling is included for
+invalid paths, out-of-range page numbers,
+or corrupted PDFs—assume well-formed inputs. - Include the necessary import (`fitz` from PyMuPDF)
+and assume `Path` is imported from `pathlib` where used in type hints. ---

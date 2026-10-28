@@ -1,0 +1,28 @@
+Write a Python script that acts as a command-line utility for bulk-uninstalling
+pip packages from the current Python environment.
+The tool should accept one or more package names as command-line arguments and
+uninstall them without requiring interactive confirmation.
+It should also support an optional wildcard mode, triggered by a leading flag,
+in which each supplied term is treated as a substring and every currently
+installed package whose name contains that term (case-insensitive) is selected
+for removal.
+Key requirements: - **Input:** Command-line arguments consisting of an optional
+wildcard flag followed by one or more package names or substring patterns.
+Package name matching should be case-insensitive. - **Discovery:** Determine the
+set of packages currently installed in the active environment so that wildcard
+patterns can be resolved against real installed names, and exact names can be
+normalized to their installed casing. - **Behavior:** In normal mode, resolve
+the supplied names against installed packages and uninstall them.
+In wildcard mode, expand each pattern into all matching installed packages,
+de-duplicate the results, and uninstall the combined set in a single operation.
+- **Safety and feedback:** If no arguments are given, or the wildcard flag is
+provided without any patterns, print a brief usage message showing the expected
+syntax and exit with a non-zero status.
+Report clearly which packages were targeted for removal, and handle the case
+where nothing matches gracefully with an informative message. - **Output and
+exit status:** Print human-readable progress and result messages to the console.
+Exit with a status code reflecting success or failure of the uninstall
+operation. - **Constraints:** Use only the standard library and the pip
+installation tooling already available in the Python environment.
+The script should be a single file runnable directly with the Python
+interpreter. ---

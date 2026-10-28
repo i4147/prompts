@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line tool for minifying JavaScript
+source files in a project directory tree.
+The tool should accept a root path (file or directory) and a choice of output
+mode, then produce compacted JavaScript output while preserving program
+behavior.
+Core behavior: - Walk a directory recursively, locating JavaScript files, and
+skip common non-source or build/dependency folders (such as version control,
+virtual environment, package cache, IDE configuration, and build output
+directories). - Process files in parallel across available CPU cores to keep
+large projects fast. - For each file, parse the JavaScript syntax first.
+If the source contains syntax errors, do not emit a broken output; instead
+report the file as failed and leave the original untouched. - Strip comments
+reliably using a syntax-aware approach so that comment-like text inside strings,
+template literals, or regular expressions is never removed. - Remove unnecessary
+whitespace and newlines to shrink file size, while keeping the code valid and
+semantically identical, including correct handling of automatic semicolon
+insertion and spacing between tokens that would otherwise merge. - Handle empty
+files gracefully by passing them through unchanged. - Support an option to write
+results in place, or to write them to a separate output directory that mirrors
+the original structure.
+Preserve the relative directory layout in the output. - Optionally fall back to
+an available third-party minifier library if the primary strategy is
+unavailable, and degrade gracefully when optional dependencies are not
+installed. - Provide a dry-run or diff-style preview option that shows what
+would change without modifying files. - Print a clear summary at the end: number
+of files processed, succeeded, skipped, and failed, plus total bytes saved and
+percentage reduction. - Exit with a non-zero status code if any file failed to
+process. - Validate inputs and give helpful error messages for missing paths or
+unsupported file types.
+The script should be a self-contained, runnable command-line program with a
+clear usage/help message. ---

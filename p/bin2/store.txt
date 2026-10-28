@@ -1,0 +1,1 @@
+Tiny SQLite cache of hash -> plaintext pairs discovered so far.

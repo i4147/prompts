@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line tool for checking
+and reporting on the installed Python packages in an environment,
+identifying which ones have newer versions available,
+and optionally upgrading or reporting on them in a readable, color-aware terminal output.
+The tool should: - Accept command-line options that let the user control its behavior,
+such as limiting the scope to specific packages,
+choosing whether to only report or also apply updates, filtering out pre-release versions,
+and selecting the target index
+or source for version information. - Discover the packages installed in the current Python
+environment and determine each one's installed version. - Look up the latest available versions from
+a remote package index, handling network failures, timeouts,
+and missing or malformed responses gracefully without crashing the whole run. - Compare installed
+and available versions using proper version semantics (not naive string comparison),
+and flag packages that are outdated, up to date,
+or unknown. - Support fuzzy matching of package names when the user supplies an approximate name,
+offering the closest matches when there is no exact hit,
+if such matching is available in the environment. - Optionally verify downloaded distribution files
+(such as wheels) for compatibility with the running interpreter and platform,
+and report incompatible
+or unusable candidates. - Perform lookups in parallel across multiple packages to keep runtime
+reasonable, while keeping results deterministically ordered in the output. - When asked to upgrade,
+invoke the environment's own package installer as a subprocess, stream or capture its output,
+and report success or failure per package, with a clear summary at the end. - Print a clean,
+aligned summary table to the terminal, using colors only when the output is an interactive terminal,
+and produce a non-zero exit status if errors occur or if outdated packages remain after the run
+when a check-only mode is used. - Provide a helpful usage message
+and clear error messages for invalid arguments, missing dependencies, and unreachable networks,
+and degrade gracefully when optional libraries are not installed.
+The script should be self-contained, runnable directly from the command line,
+and written so that its behavior is easy to understand from its help text and its output. ---

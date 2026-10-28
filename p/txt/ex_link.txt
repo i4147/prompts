@@ -1,0 +1,37 @@
+Create a Python script that uses the Telethon library to scan all Telegram channels
+and groups the authenticated user account is part of,
+and extract direct links to every file/media message found,
+saving the results into per-chat text files.
+Key requirements and behavior: 1. **Setup & Configuration**:
+- Load credment variables using `python-dotenv` (`load_dotenv()`), or define them as constants:
+`API_ID` (int), `API_HASH` (string),
+and `SESSION_NAME` (string) for the Telethon session file. - Define an `OUTPUT_DIR` constant
+(e.g. `"./telegram_links"`)
+where result filesved;n't exist. - Define a `TARGETS` list (e.g. `[]`) that ac if empty,
+all file are included; if populdf", ".zching file extensions are processed.
+2. **Core function `extract_links()terate over all dialogsats).iter_dialogs()`. - Only process
+dialogs where `` or `dialog.is_group` is TrueMs). - For each q - Sripping illegal filesystem
+characters (`\ / * ? : " < > |`);
+fall back to `"Unknown_{dialog.id}"` if the title is empty after sanitization,
+or `"Unnamed_Chat"` if the title is missing.
+- Build an output file path inside `OUTPUT_DIR` named `"{safe_title}.txt"`. - Print aat is currently
+  being scanned through **all** messages in that d `client.iter_messages(dNone)`. - For each message
+  that contains a file
+  ( and sk is non-empty
+  and the extension doesn't match (case-insensitive). - Extract the file name
+  (fallback to `"Unnamed_File{ext}"` if missing)
+  and file size in bytes (fallback to `0`). - Construct a direct Telegram link to the message:
+  - If the chat has a public username,
+  use the format `https://t.me/{username}/{message_id}`. - Otherwise,
+  use the private channel format `https://t.me/c/{chat_id_without_-100_prefix}/{message_id}`. -
+  Format a line combining file name, file size, and link (e.g. `"Name: {file_name} | Size:
+{file_size} bytes | Link:
+{link}"`) and collect it into a list of extracted entries for that chat. - After scanning the chat,
+write/save the collected entries to the chat's corresponding text file in `OUTPUT_DIR`.
+3. **Output**: One `.txt` file per scanned channel/group inside `OUTPUT_DIR`,
+each containing one line per discovered file with its name, size, and direct message link.
+4. **Notable behavior**:
+The script should rely on an authenticated Telethon `TelegramClient` instance
+(already connected/logged in) to perform the iteration,
+print console progress logs as it scans dialogs and messages,
+and handle both public (username-based) and private (numeric ID-based) chat link formats correctly.

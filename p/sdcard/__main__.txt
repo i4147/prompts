@@ -1,0 +1,1 @@
+Allow running the package as a module: ``python -m shfmt``.

@@ -1,0 +1,34 @@
+Write a Python script that uses the Telethon library to connect to a Telegram account
+and extract all URLs shared in messages across group chats and channels,
+saving the results into separate text files.
+Requirements and behavior: 1. **Authentication/Setup**:
+- Use `TelegramClient` from Telethon with hardcoded `API_ID`
+and `API_HASH` constants (placeholder values are fine)
+and a session name constant (e.g., "url_extractor"). - Start the client asynchronously
+(this will prompt for phone/login on first run, using Telethon's standard interactive login flow).
+2. **Output location**:
+- Create an output directory named `extracted_links` in the current working directory if it doesn't
+already exist.
+3. **URL detection**:
+- Define a regex pattern that matches `http://` and `https://` URLs,
+including percent-encoded characters.
+4. **Main ext - Print a message indicating dialogs are being fetched. - Iterate over all dialogs
+using `client.iter_dialogs()`. - Skip any dialog whose entity is not a `Channel`
+or `Chat` (i.e., skip private/user chats). - For each valid group/channel dialog:
+- Sanitize the dialog's display name into a safe filename by replacing any character that isn't a
+word character, hyphen, underscore, period,
+or space with an underscore. - Print a progress message showing
+which dialog is currently being processed. - Fetch up to the last 100 messages from that dialog
+using `client.iter_messages(..., limit=100)`. - For each message that has text,
+apply the URL regex to extract all links found
+and add them to a set (to deduplicate) for that dialog. - If any links were found,
+write them (one per line) to a `.txt` file named after the sanitized dialog title inside the output
+directory, and print how many links were saved and the filename. - If no links were found,
+print a message indicating that. - Wrap the per-dialog processing in a try/except block so that an
+error on one dialog (printed with its error message) doesn't stop processing of the remaining
+dialogs. - After all dialogs are processed, print a completion message.
+5. **Entry point**: - Run the async extraction function using `asyncio`
+when the script is executed directly.
+The script should be self-contained, robust against per-chat errors,
+and produce one text file per group/channel containing the unique URLs found in its recent
+message history.

@@ -1,0 +1,34 @@
+Write a Python module for a code-deduplication utility package that detects duplicate Python source
+files based on normalized content comparison
+(ignoring superficial differences like whitespace, comments,
+or formatting as implemented in a companion `_core` module).
+The module should: 1.
+Re-export core functionality from an internal `_core` submodule, including:
+`compare_files`, `digest_file`, `digest_source`, `duplicate_files`, `normalize_source`,
+and `remove_duplicates`.
+These functions presumably handle normalizing Python source code, computing content digests/hashes,
+comparing files, and removing duplicates,
+but their implementations live elsewhere — this module only needs to import and re-expose them.
+2. Provide a `get_python_files` function that:
+- Accepts a directory path (as a string or `Path` object). - Accepts a keyword-only `recursive` flag
+(default `True`) to control whether to search subdirectories recursively (using `rglob`)
+or only the top-level directory (using `glob`). - Returns a sorted list of `Path` objects pointing
+to all `.py` files found,
+filtering out any non-file matches (e.g., directories matching the pattern).
+3. Provide a `find_duplicates` function that:
+- Accepts a directory path
+and the same keyword-only `recursive` flag. - Uses `get_python_files` to collect all Python files in
+the directory. - Passes them to `duplicate_files` (from the core module) to identify duplicates
+based on normalized content. - Returns a dictionary mapping some duplicate-group key
+(e.g., a digest or hash string) to a list of `Path` objects that are duplicates of each other.
+4. Use `from __future__ import annotations` for postponed evaluation of type hints,
+and include proper type annotations throughout
+(e.g., `str | Path` union syntax, `Iterable` where relevant, `list[Path]`, `dict[str, list[Path]]`).
+5. Define an `__all__` list that explicitly exports all public functions:
+`compare_files`, `digest_file`, `digest_source`, `duplicate_files`, `find_duplicates`,
+`get_python_files`, `normalize_source`, and `remove_duplicates`,
+keeping the list alphabetically sorted.
+6. Include concise docstrings for each public function describing its purpose in a single line.
+The code should be clean, idiomatic modern Python (3.10+ style unions),
+suitable as the public-facing interface of a package
+whose heavy-lifting logic resides in a private `_core` module. ---

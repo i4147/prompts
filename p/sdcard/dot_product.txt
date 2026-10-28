@@ -1,0 +1,13 @@
+Write a Python function named `dot_product` that computes the dot product of two one-dimensional
+numeric sequences (e.g., lists or arrays) using NumPy.
+Requirements: - Include `from __future__ import annotations` at the top of the module. - The
+function must accept two parameters, `x` and `y`,
+representing the two input vectors. - Validate that both inputs have the same length;
+if their lengths differ,
+raise a `ValueError` (with no message/arguments). - Convert both inputs into NumPy arrays using
+`np.array()`. - Compute
+and return the dot product of the two arrays using `np.dot()`. - Assume `numpy` is already imported
+as `np` in the surrounding context (do not include the import statement for numpy itself). - Do not
+add any additional error handling, type checking, docstrings,
+or extra logic beyond what is described above. - Keep the function minimal
+and exactly matching this behavior, with no extra print statements or comments. ---

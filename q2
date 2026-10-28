@@ -3,4 +3,3 @@ i have trouble installing rust backend python libs that use maturin
 i installed maturin and rust via (pkg i rust maturin)
 maturin biulds .so library file but fails st building wheel, coz it says android is unsupported
 any workaround
-

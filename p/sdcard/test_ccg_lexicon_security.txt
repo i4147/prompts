@@ -1,0 +1,9 @@
+Regression test for ReDoS in CCG lexicon parsing (CWE-1333). ``LEX_RE`` parses each lexicon line.
+Its identifier group ``[\S_]+`` and the arrow alternative ``[-=]+>`` both match ``-``/``=``,
+so a line with a long ``-``/``=`` run
+and no closing ``>`` made the engine slide the boundary across the run
+and re-scan for the absent arrow, quadratically.
+Requiring whitespace before the separator fixes the boundary, making parsing linear.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun,
+so a regression to the quadratic regex cannot keep burning CPU for the rest of the suite.

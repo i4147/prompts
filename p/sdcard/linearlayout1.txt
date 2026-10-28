@@ -1,0 +1,27 @@
+Write a Python script that uses the `termuxgui` library (imported as `tg`) to display a simple
+native Android GUI via Termux:GUI.
+The script should: 1.
+Open a connection to the Termux:GUI plugin using `tg.Connection()` as a context manager.
+2. Create an `Activity` bound to that connection.
+3. Create a `LinearLayout` as the root layout for the activity.
+4. Add three `TextView` widgets to the layout, with text contents "TextView 1", "TextView 2",
+and "TextView 3" respectively, each parented to the root layout.
+5. For each of the three TextViews,
+configure their layout parameters so they only take up as much space as they need rather than
+expanding to fill available space:
+- Set the linear layout weight of each TextView to 0 (via `setlinearlayoutparams(0)`),
+preventing them from consuming extra free space in the layout. - Set the height of each TextView to
+`WRAP_CONTENT` (using the `tg.View.WRAP_CONTENT` constant) so each view's height shrinks to fit its
+content, since they are displayed in a vertical list.
+6. Include comments explaining the three ways width/height can be specified for a View
+(as an integer in dp, `"WRAP_CONTENT"`, or `"MATCH_PARENT"`),
+and note that `WRAP_CONTENT`
+and `MATCH_PARENT` are also available as constants on the `View` class to avoid typos.
+7. After setting up the UI,
+pause execution for 5 seconds (using `time.sleep(5)`) so the GUI remains visible before the script
+(and connection) ends.
+The script has no external inputs and produces no textual output/return value
+— its only output is the rendered native GUI showing three stacked,
+content-sized text labels for a brief period.
+The purpose is to demonstrate basic usage of `termuxgui`'s `LinearLayout`, `TextView`,
+and layout-sizing behavior (layout weight and WRAP_CONTENT height) in a minimal example. ---

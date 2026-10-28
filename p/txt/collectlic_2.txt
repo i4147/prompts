@@ -1,0 +1,1 @@
+Script to find text files with 'license' in their names and store contents in SQLite database.

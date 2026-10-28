@@ -1,0 +1,28 @@
+Write a Python script that scans a directory tree of C and C++ source files and
+identifies all comments in each file, using a syntax-aware parser so that
+comment detection is accurate (ignoring comment-like text inside string
+literals).
+The tool should accept a root path (file or directory) as a command-line
+argument, recursively discover source and header files by their common C/C++
+extensions (such as .c, .h, .cc, .cpp, .cxx, .hpp, .hh, .hxx, .inl), and process
+them in parallel using a configurable number of worker processes to keep
+throughput high on large codebases.
+For each file, the script should determine the language dialect from the file
+extension, parse the content, and collect the exact location (line and column or
+byte range) and text of every comment, distinguishing between line comments and
+block comments where useful.
+Its purpose is to support downstream tasks such as comment statistics,
+translation or spell-checking preparation, license-header auditing, or
+stripping/normalizing comments, so the output should be structured and
+machine-readable (for example, a JSON or CSV report written to a file or stdout,
+grouped by source file).
+The script should handle errors gracefully: unreadable files, encoding problems,
+and parse failures should be logged as warnings without aborting the overall
+run, and a summary of files processed, files skipped, and total comments found
+should be reported at the end.
+Logging should be clear and configurable in verbosity.
+Provide a command-line interface with options for the input path, output
+destination and format, the number of workers, and optionally filtering by file
+extension or excluding certain paths.
+The script should be a single, self-contained, runnable file with a helpful
+`--help` message and sensible defaults. ---

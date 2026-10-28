@@ -1,0 +1,55 @@
+Write a Python utility module that provides `concurrent.futures`-style helper functions for working
+with `multiprocessing.pool.AsyncResult` objects,
+filling the gap that the standard `multiprocessing` module lacks equivalents to
+`concurrent.futures.wait()` and `concurrent.futures.as_completed()` for waiting on
+or iterating over multiple async results as they complete.
+Requirements: 1. **Module setup**:
+- Include `from __future__ import annotations` at the top. - Use modern Python 3.12+ generic syntax
+(`type` statement) for type aliases. - Import `Any`, `Iterable`, `Iterator`,
+`TypeVar` from `typing`, `time` module, and `AsyncResult` from `multiprocessing.pool`.
+2. **Constants**: - `MAX_WORKERS = 8` — default worker pool size. - `POLL_INTERVAL_SECONDS = 0.01`
+— polling interval (in seconds) used
+when checking whether a result is ready. - `FIRST_COMPLETED = "FIRST_COMPLETED"`
+and `ALL_COMPLETED = "ALL_COMPLETED"` — string constants mirroring `concurrent.futures` semantics,
+intended for use as values of a `return_when` parameter.
+3. **Type aliases/generics**:
+- A generic `TypeVar` named `T`. - A type alias `AsyncResults` representing
+`Iterable[AsyncResult[Any]]`, defined using the Python 3.12+ `type` statement syntax.
+4. **Internal helper functions**: - `_deadline(timeout: float | None) -> float | None`:
+Converts a relative timeout in seconds into an absolute deadline based on `time.monotonic()`.
+Returns `None` if `timeout` is `None`.
+Raises `TimeoutError` if `timeout` is negative. - `_check_timeout(deadline: float | None) -> None`:
+Raises `TimeoutError` with the message "timed out waiting for multiprocessing results" if the
+current monotonic time has passed `deadline`.
+Does nothing if `deadline` is `None` or hasn't been reached yet.
+5. **Public function `as_completed`**: - Signature:
+`as_completed(results: AsyncResults, timeout: float | None = None) -> Iterator[AsyncResult[Any]]`. -
+A generator function that computes an absolute deadline from `timeout` using `_deadline`,
+then repeatedly polls the pending `AsyncResult` objects
+(using `.ready()` and sleeping `POLL_INTERVAL_SECONDS` between poll passes)
+and yields each `AsyncResult` as soon as it becomes ready,
+without yielding duplicates and without blocking indefinitely on any single result.
+It should call `_check_timeout` on each polling pass so a `TimeoutError` is raised if the deadline
+is exceeded before all results complete.
+It should stop once every result in `results` has been yielded.
+6. **Public function `wait`**:
+- Should mirror `concurrent.futures.wait()` behavior for an iterable of `AsyncResult` objects:
+accepts `results: AsyncResults`, `timeout: float | None = None`,
+and `return_when: str = ALL_COMPLETED`. - Returns two sets
+(e.g., a tuple or named tuple of `done` and `not_done` sets of `AsyncResult` objects),
+polling with `POLL_INTERVAL_SECONDS`
+and respecting the computed deadline via `_deadline`/`_check_timeout`. -
+When `return_when == FIRST_COMPLETED`, it should return as soon as at least one result is ready.
+When `return_when == ALL_COMPLETED` (default),
+it should block (subject to timeout)
+until every result is ready. - Raises `TimeoutError` if the timeout elapses before the required
+condition is met.
+7. **Style/behavior notes**:
+- All waiting/polling must be non-blocking per-item
+(use `.ready()` checks rather than calling `.get()` with blocking behavior) combined with short
+sleeps (`POLL_INTERVAL_SECONDS`) to avoid busy-looping too aggressively
+while remaining responsive. - Keep the module dependency-free (standard library only). - Include
+clear docstrings for the module and each public function explaining parameters, return values,
+and raised exceptions,
+following `concurrent.futures` naming
+and semantic conventions so it feels like a drop-in analog for `multiprocessing` async results. ---

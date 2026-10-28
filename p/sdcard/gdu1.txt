@@ -1,0 +1,49 @@
+Build a Python 3.12 command-line disk usage analyzer with an interactive,
+ncdu-style terminal UI (built using the curses module).
+The script should be a single, self-contained,
+executable module (with a `#!/usr/bin/env python3.14` shebang) that recursively scans a directory
+tree, computes sizes, and lets the user browse the results interactively,
+similar in spirit to tools like `ncdu` or `du`.
+Core requirements: 1. **Scanning engine** - Implement a `Scanner` class that walks a given root path
+recursively using `pathlib`/`os` filesystem APIs,
+building a tree of `Node` objects (use `@dataclass(slots=True)`) that store:
+path, whether it's a directory, whether it's a symlink, its own size, its total recursive size,
+item count, child nodes,
+and optional error/skipped reason fields. - Track scan statistics
+(`ScanStats`: directories, files, errors counted, plus a computed `entries` property)
+and collect a list of human-readable error messages encountered during scanning
+(e.g., permission errors). - Support an `apparent_size` option
+(use logical file size vs. actual disk usage/blocks)
+and a `one_file_system` option (don't cross filesystem/device boundaries, similar to `du -x`). -
+Support an `excludes` list of glob-style patterns (via `fnmatch`) to skip matching files/directories
+during the scan. - Correctly detect
+and avoid infinite loops from hard-linked files/symlinked directories by tracking seen
+(device, inode) pairs. - Gracefully handle and record errors such as permission denied
+or broken symlinks, storing an `error`
+or `skipped` reason on the affected `Node` instead of crashing. - Support a `ProgressCallback`
+(a callable taking the current path and the `ScanStats`) that can be invoked periodically during the
+scan (throttled, e.g., based on elapsed time) so a caller can display live progress. - Raise a
+custom `ScanFailure` exception for unrecoverable errors
+(e.g., the root path doesn't exist or isn't accessible).
+2. **Interactive curses UI** - After scanning,
+launch a full-screen curses interface that displays the directory tree starting at the root,
+showing each entry's name, type (file/dir/symlink), size (human-readable, e.g., KB/MB/GB),
+percentage/bar relative to parent or total, and item counts. - Allow keyboard navigation:
+moving up/down through entries, entering/expanding a directory, going back to the parent directory,
+sorting options (by size, name, items),
+and possibly deleting files/directories with confirmation. - Show a header/status bar with current
+path, scan statistics,
+and a footer with available keybindings/help. - Handle terminal resizing
+and clean exit (restoring terminal state properly on quit or error).
+3. **CLI interface** - Use `argparse` to accept:
+the target directory path (defaulting to current directory if omitted), flags for `--apparent-size`,
+`--one-file-system` (or `-x`), repeatable `--exclude PATTERN` options,
+and a `--version` flag that prints `VERSION` ("1.0.0") and exits. - On startup,
+perform the scan (optionally showing textual/live progress before entering curses mode),
+then launch the interactive browser on the resulting tree. - Handle errors gracefully at the top
+level: print a clear error message to stderr
+and exit with a non-zero status code if the scan fails (e.g., invalid path)
+or if curses initialization fails, rather than producing a raw traceback.
+The output should be a complete, working Python script implementing all of the above in one file,
+well-structured with clear separation between the scanning logic, data model,
+and the curses-based presentation layer. ---

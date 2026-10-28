@@ -1,0 +1,28 @@
+Write a Python script that reads a list of package names from a text file given
+as a single command-line argument, then downloads source distribution archives
+for each listed package from the Python Package Index (PyPI) into a local output
+folder.
+The script should: - Accept exactly one command-line argument, the path to a
+package-list file.
+If the argument is missing or extra arguments are supplied, print a short usage
+message and exit with an error. - Read the package-list file as UTF-8 text,
+ignoring blank lines and lines that begin with a comment marker (#), and
+stripping surrounding whitespace from each entry. - Create a "downloads" output
+directory in the current working directory if it does not already exist. - For
+each package name, query PyPI's public JSON metadata API to retrieve the list of
+available distribution files for the latest release.
+Package names must be safely URL-encoded before being placed in the request. -
+Identify the source distribution file for each package, preferring archive
+formats in this order: .tar.gz, then .tar.bz2, then .zip.
+Skip packages that have no archive in these formats and report that they were
+skipped. - Download the chosen archive file and save it into the output
+directory using its original filename, following redirects and using a
+descriptive custom User-Agent header and a generous request timeout. - Handle
+errors gracefully per package: if one package fails (network error, HTTP error,
+missing metadata, or unexpected response), log a clear message describing the
+failure and continue processing the remaining packages rather than aborting the
+whole run. - Print concise progress output to the console for each package,
+indicating whether it was downloaded, skipped, or failed, and finish with a
+summary of the total counts of successes, skips, and failures. - Reuse a single
+persistent HTTP session for all requests to be efficient, and ensure network
+resources are properly released when the run completes. ---

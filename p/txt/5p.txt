@@ -1,0 +1,25 @@
+Create a Python script that defines a single module-level variable named `a`,
+which is a list of strings representing the names of Python packages/libraries
+(e.g., PyPI package names such as "ExtensionClass", "absl-py", "aiodns", "fastapi", "flask", "dask",
+"cython", etc.).
+Requirements and notable behavior:
+- The variable must be named `a`
+and assigned a Python list literal. - Each element in the list is a string representing a package
+name, exactly as it would appear on PyPI
+(preserving original casing, hyphens, underscores, and dots, e.g., "boolean.py", "curl-cffi",
+"curl_cffi" both appearing as separate entries,
+"ExtensionClass" and "extensionclass" both present as distinct case-variant entries). - The list
+should be sorted in case-sensitive ASCII/lexicographic order
+(uppercase letters sort before lowercase letters),
+matching standard Python string sort order. - The list should contain several hundred entries
+(a large, flat list) with no duplicates removed intentionally—near-duplicate names differing only in
+case or separator style (hyphen vs underscore, dot vs no dot) should be kept as separate list items
+if they appear that way in the source data. - No other logic, functions, classes, comments,
+or imports should be included—just the single list assignment. - The output should be valid,
+directly executable Python code with proper list syntax
+(each string on its own line, comma-separated, enclosed in double quotes,
+matching PEP 8 style indentation of 4 spaces for list items). - Do not truncate the list;
+include all entries completely so the file is syntactically valid
+and parses without errors. - The purpose of this script is to serve as a static data file / constant
+list (likely used elsewhere for tasks such as dependency auditing, package iteration, testing,
+or generating reports) rather than performing any computation, I/O, or producing printed output.

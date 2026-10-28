@@ -1,0 +1,47 @@
+Write a prompt for an AI coding agent that will generate a Python command-line file download utility
+(a "pyget"-style tool).
+The prompt should specify the following requirements: **Purpose**:
+Create a robust, multi-threaded/multi-connection file downloader (similar to `wget`/`axel`) that
+uses `pycurl` as the underlying HTTP client,
+supports downloading a single file via multiple parallel connections
+(splitting the file into byte-range chunks) to maximize throughput,
+and provides real-time progress feedback with ETA estimation. **Main Inputs**:
+- A URL (or list of URLs) passed via command-line arguments,
+pointing to the file(s) to download. - Optional command-line flags/arguments for:
+number of parallel connections/threads, output filename or output directory, timeout settings,
+and verbosity/logging level. **Main Outputs**:
+- The downloaded file saved to disk
+(either a user-specified filename or one derived from the URL path). - Console output showing a live
+progress indicator per download, including:
+percentage complete, downloaded size vs. total size (in MB), download speed,
+and estimated time remaining (ETA),
+using a spinner-style animation for visual feedback. - A log file (`pyget_errors.log`) that captures
+error-level events with timestamps, with automatic log rotation (e.g., at 10 MB),
+separate from the colored,
+formatted console logging
+(which should show INFO-level and above with timestamps, log level, and module name). **Notable
+Behavior / Implementation Details**:
+- Use the `loguru` library for logging, configured with two sinks:
+one for colorized console output (stderr) at INFO level,
+and one for a rotating error log file at ERROR level. - Use `pycurl` with `BytesIO` buffers to
+perform HTTP requests/downloads,
+including support for HTTP range requests so multiple threads can download different byte segments
+of the same file concurrently. - Use `concurrent.futures.ThreadPoolExecutor`
+and `as_completed` to manage parallel download tasks (one task per connection/chunk),
+then reassemble the chunks into the final file
+(e.g., by writing to the correct offsets or concatenating temporary files). - Implement a
+`DownloadProgress` class that tracks total size, bytes downloaded so far, elapsed time,
+and computes download speed and ETA;
+it should expose an `update()` method to accumulate downloaded bytes
+(safe for use from multiple threads, e.g., with a lock)
+and a `display()` method that renders/refreshes the progress line in the terminal
+(percentage, MB downloaded/total, speed, ETA, and a rotating spinner character). - Use `tempfile` to
+store intermediate chunk data during multi-connection downloads before merging into the final output
+file. - Parse the URL with `urlparse` to derive a sensible default output filename
+when none is specified. - Handle errors gracefully
+(network failures, invalid URLs, HTTP error codes, partial/interrupted downloads) by logging them to
+the error log file while keeping console output clean,
+and ensure threads are properly joined/cleaned up on completion
+or failure. - Support running as a standalone CLI script (invoked via `sys.argv`),
+with a clear entry point (e.g., `if __name__ == "__main__":`) that parses arguments
+and orchestrates the multi-threaded download process. ---

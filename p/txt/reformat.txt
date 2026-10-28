@@ -1,0 +1,4 @@
+Reformat a PyPI download-count JSON file so each package is on one line,
+sorted by all-time download count (descending).
+Usage: python format_pkgs.py <path-to-json> Input: [["blacksock", 10], ["math-demo", 10]] Output:
+[ ["blacksock", 10], ["math-demo", 10] ]

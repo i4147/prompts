@@ -1,0 +1,29 @@
+Write a Python command-line script that uses `docopt` for argument parsing
+and `schema` for input validation.
+The script should define a docopt-style usage string specifying the following CLI interface:
+- Program name: `prog.py` - Positional arguments: - `PATH`: an output directory - `FILE...`:
+one or more input files (variadic) - Optional option: - `--count=N`:
+number of operations Behavior requirements: 1.
+Parse command-line arguments using `docopt(__doc__)`.
+2. Attempt to import the `schema` library (`Schema`, `And`, `Or`, `Use`, `SchemaError`).
+If the import fails,
+exit the program with a clear error message instructing the user to install it via
+`pip install schema`, including a link to its GitHub repository (https://github.com/halst/schema).
+3. Define a `Schema` object that validates the parsed arguments as follows: - `FILE`:
+a list of files that must be successfully opened using `open` (as a readability check);
+if any file cannot be opened,
+raise a validation error with the message "FILE should be readable". - `PATH`:
+must exist on the filesystem (validated via `os.path.exists`);
+if not, raise a validation error with the message "PATH should exist". - `--count`: optional;
+if provided, must be convertible to an integer and satisfy `0 < N < 5`;
+if invalid, raise a validation error with the message "--count=N should be integer 0 < N < 5".
+If not provided, it should be allowed to be `None`.
+4. Validate the parsed arguments against the schema inside a `try/except` block catching
+`SchemaError`.
+If validation fails, exit the program printing the exception.
+5. If validation succeeds,
+print the validated and transformed arguments dictionary
+(where `FILE` entries are now open file objects, `PATH` is confirmed to exist,
+and `--count` is either `None` or a validated integer).
+The script should only execute this logic
+when run as the main module (`if __name__ == "__main__":`). ---

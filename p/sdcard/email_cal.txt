@@ -1,0 +1,52 @@
+Provide a prompt for ai agent that can produce the following Python code. --- Create a Python module
+that parses personal information management (PIM) file formats — `.eml`, `.mbox`, `.msg`, `.ics`,
+and `.vcf` — covering email messages, mailboxes, calendar events, and contact cards,
+converting each into a unified internal document representation. **Purpose**:
+The module acts as a set of format-specific parsers plugged into a document-conversion framework.
+Each parser reads a file of a given PIM format
+and transforms it into a `Document` object composed of a list of `Block` objects
+(each block has a `kind` such as "meta", "heading", "paragraph", or "code",
+plus text and optional metadata like heading level),
+along with a `metadata` dict and the original file `path`/`format`. **Framework integration**:
+- Import `Block` and `Document` from a sibling `..model` module. - Import a `register` decorator
+from a sibling `..registry` module,
+and decorate each parser function with `@register([list_of_extensions], format_name)` so it gets
+registered for its file extension(s). - Each parser function has the signature
+`(path: Path) -> Document`
+and a short docstring describing its approach. - Use third-party libraries where appropriate:
+`extract_msg` for `.msg` files, `icalendar` for `.ics` files, and `vobject` for `.vcf` files.
+Use Python's standard library `email` module for `.eml`
+and `mailbox` module for `.mbox`. - Include a module-level docstring summarizing the file:
+`""".eml .mbox .msg .ics .vcf -- email, calendar, contacts."""`. **Behavior per format**:
+1. **`.eml` (parse_eml)**:
+Parse a single email file using `email.message_from_binary_file` with `policy.default`.
+Extract header fields (From, To, Subject, Date) into the headers dict
+and emit them as "meta" blocks.
+Get the preferred body part (plain text preferred, falling back to HTML) via `get_body`,
+and emit it as a single block — "code" kind if it's HTML content,
+otherwise "paragraph" kind — with the text stripped.
+Store all message headers as the document's metadata.
+2. **`.mbox` (parse_mbox)**: Open the mbox file with `mailbox.mbox`, iterate over every message.
+For each message (1-indexed), emit a level-2 "heading" block labeled "Message N",
+followed by "meta" blocks for any of From/To/Subject/Date headers present,
+then decode the message payload as bytes
+and emit the body content as well
+(handling decoding errors gracefully, e.g., trying UTF-8 with fallback/ignore).
+3. **`.msg` (parse via extract_msg)**:
+   Open the Outlook `.msg` file with `extract_msg`, extract sender, recipients, subject,
+   date as "meta" blocks, and the message body as a "paragraph" block.
+   4. **`.ics` (parse via icalendar)**:
+Parse the calendar file with `icalendar`, iterate over calendar components/events,
+and emit each event's key properties
+(summary, start/end time, location, description, organizer/attendees) as structured blocks
+(e.g., heading per event plus meta/paragraph blocks for details).
+5. **`.vcf` (parse via vobject)**:
+Parse the vCard file(s) with `vobject`, iterate over each contact entry,
+and emit contact fields (name, email, phone, organization, address, etc.) as structured blocks
+(e.g., heading per contact plus meta blocks for each field). **Error handling**:
+Parsers should be defensive about missing/optional fields (check presence before accessing)
+and handle encoding issues in text decoding without raising exceptions for malformed
+or partially missing data. **Output**:
+Each parser returns a single `Document` instance representing the full parsed content of the input
+file, ready for downstream consumption (e.g., rendering, indexing, or conversion to another format)
+by the rest of the framework. ---

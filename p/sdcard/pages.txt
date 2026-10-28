@@ -1,0 +1,44 @@
+Write a prompt for an AI coding agent to generate a Python script that implements a swipeable tabbed
+interface on Android using the `termuxgui` library.
+The script purpose, inputs/outputs, and behavior should be described as follows:
+**Purpose:** Build a simple Termux:GUI Android app demonstrating a tab bar synchronized with a
+horizontally swipeable page view (similar to a typical mobile app's tab navigation),
+where swiping between pages updates the selected tab
+and tapping a tab scrolls to the corresponding page. **Main structure/inputs:** - Use
+`termuxgui.Connection()` as a context manager to establish the GUI connection,
+and create a `termuxgui.Activity` within it. - Build a root `LinearLayout` as the activity's base
+view. - At the top of the root layout, add a `TabLayout` with three tabs labeled "Page 1", "Page 2",
+"Page 3" (set via `setlist`).
+Configure it to wrap its content height
+and sit at the top of the linear layout (layout param index 0). - Below the tab layout,
+add a `HorizontalScrollView` that fills the viewport,
+has snapping enabled (snaps to the nearest page),
+and has no visible scrollbar. - Wait in a loop (polling with a small sleep, e.g. 1ms)
+until the scroll view's dimensions are available (width > 0),
+then use that width as the fixed "page width" for each page. - Inside the scroll view,
+add a horizontal (non-vertical) `LinearLayout` container. - Inside that container,
+add three `TextView` widgets labeled "Page 1", "Page 2", "Page 3",
+each representing one swipeable page,
+and set each one's width explicitly to the page width (in pixels, true/exact sizing).
+**Concurrency/behavior requirements:** - Since GUI object access must be synchronized across
+threads, create a `threading.Lock()` to guard all reads/writes to shared GUI state. - Maintain
+shared state: a boolean flag indicating whether a tab was just manually selected by the user
+(to avoid feedback loops),
+and an integer tracking the currently active tab index. - Implement a background thread function
+that continuously polls the scroll view's current horizontal scroll position,
+divides it by the page width and rounds to determine which page is currently centered/active,
+and — while holding the lock
+— if the tab wasn't just manually selected
+  and the computed page differs from the currently tracked tab,
+  programmatically select the corresponding tab in the `TabLayout` to keep the tab bar in sync with
+  the swipe position. - The design should allow a tab click handler
+  (implied by the `tabselected` flag) to set the flag when the user manually taps a tab,
+  so the scroll-watching thread temporarily ignores scroll-based tab updates during that action
+  (preventing jitter/conflicts between manual tab selection and scroll-driven updates),
+  then clear the flag appropriately. - Use standard Python imports
+  (`sys`, `termuxgui as tg`, `time`, `threading`)
+  and run the scroll-watching logic in a separate daemon-like thread
+  while the main thread handles the Termux:GUI event loop/connection context.
+The output should be a single runnable Python script (no explanation needed) that cleanly sets up
+this synchronized swipeable tab/page UI using the termuxgui API,
+following the structural and concurrency behavior described above. ---

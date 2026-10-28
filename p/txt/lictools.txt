@@ -1,0 +1,4 @@
+Unified License Manager CLI Provides tools to collect, clear, and strip license text from files.
+Usage Examples: python merged.py collect python merged.py collect -o /custom/path/all.txt -e .git
+node_modules python merged.py clear python merged.py clear --exts .md .txt .rst python merged.py
+strip python merged.py strip -p /path/to/lic/file -g 3

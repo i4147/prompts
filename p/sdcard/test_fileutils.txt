@@ -1,0 +1,60 @@
+Create a comprehensive pytest test suite (`tests/test_fileutils.py`) for a Python file-utilities
+module named `dh`.
+The test suite must validate the behavior of a wide set of filesystem-related helper functions
+exported from `dh`, covering file/directory traversal, file reading/writing, file metadata,
+filename utilities, and miscellaneous helpers.
+The script must import the following names from `dh`:
+`append_text, atomic_write, fsz, get_dirs, get_fast, get_file_age, get_files, get_files4,
+get_files_iter, get_files_iter_config, get_files_pathlib, get_files_scandir, get_installed_packages,
+get_installed_pkgs, get_mime_type, get_nobinary, get_pyfiles, get_pyfiles_iter, get_random_filename,
+get_removed_lines, getfiles, gext, gsz, is_empty, is_image, is_python_file, is_text_file, is_within,
+normalize_filename, normalize_path, read_lines, remove_blank_lines, restore_bak, reverse_dict, rrs,
+runcmd, safe_delete, should_skip, unique_path, walk_files, walk_paths, walkfiles, write_txt_file`.
+Use standard imports:
+`from __future__ import annotations`, `os`, `time`, `pathlib.Path`, `unittest.mock`, and `pytest`.
+Define reusable pytest fixtures using `tmp_path`:
+- A `sample_tree` fixture that builds a small, realistic directory tree for traversal tests,
+including: - a plain text file (`a.txt`) with multi-line content, - a Python source file (`b.py`),
+- a subdirectory (`sub`) containing a nested text file (`c.txt`)
+and a binary file (`d.bin`) with non-UTF8 byte content,
+- a `__pycache__` directory containing a compiled `.pyc`-like binary file (`e.pyc`),
+to test that cache/ignorable directories
+and files are properly detected/skipped. - Returns the root `tmp_path` of this tree. - A
+`binary_file` fixture (to be defined similarly) that creates a standalone binary file for tests
+related to binary/text detection, MIME type detection, and image detection.
+The suite should be organized to test each imported function's core behavior,
+including (but not limited to):
+- Directory/file walking
+and listing functions
+(`get_files`, `get_files4`, `get_files_iter`, `get_files_iter_config`, `get_files_pathlib`,
+`get_files_scandir`, `get_dirs`, `getfiles`, `walk_files`, `walk_paths`, `walkfiles`, `get_pyfiles`,
+`get_pyfiles_iter`) — verifying they correctly enumerate files/directories in `sample_tree`,
+respect filtering/skip rules (e.g. skipping `__pycache__`),
+and return expected file types/paths. - File content utilities
+(`append_text`, `atomic_write`, `read_lines`, `write_txt_file`, `remove_blank_lines`,
+`get_removed_lines`) — verifying correct read/write semantics, atomic write safety,
+and line-removal logic. - File metadata/inspection utilities
+(`fsz`, `gsz`, `get_file_age`, `is_empty`, `is_text_file`, `is_python_file`, `is_image`,
+`get_mime_type`, `get_nobinary`) — verifying correct detection of file size,
+age (using `time`/mocking where needed), emptiness, text/binary/python/image classification,
+and MIME type resolution. - Filename/path utilities
+(`normalize_filename`, `normalize_path`, `get_random_filename`, `unique_path`, `is_within`, `gext`,
+`reverse_dict`) — verifying normalization rules, uniqueness guarantees, extension extraction,
+path containment checks,
+and dictionary reversal. - Backup/cleanup/safety utilities
+(`restore_bak`, `safe_delete`, `should_skip`, `rrs`) — verifying backup restoration,
+safe deletion behavior
+(e.g. not raising on missing files, respecting confirmation/dry-run logic if applicable),
+and skip-pattern logic. - System/environment utilities
+(`get_installed_packages`, `get_installed_pkgs`, `get_fast`, `runcmd`)
+— verifying package listing and command execution,
+using `unittest.mock` to avoid real subprocess/environment side effects where appropriate.
+Each test should use `tmp_path`-based isolation (no writes outside pytest's temp directories),
+use `mock` to stub out external/system calls
+(subprocess execution, installed package queries, time-based checks)
+where real execution would be slow, non-deterministic, or environment-dependent,
+and include clear assertions on return values, file states,
+and side effects (file creation, content correctness, exceptions raised or avoided).
+Favor small, focused test functions (one logical behavior per test),
+consistent naming (`test_<function>_<scenario>`),
+and reuse of the fixtures above wherever applicable. ---

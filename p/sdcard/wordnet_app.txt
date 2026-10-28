@@ -1,0 +1,15 @@
+A WordNet Browser application which launches the default browser (if it is not already running)
+and opens a new tab with a connection to http://localhost:port/ .
+It also starts an HTTP server on the specified port and begins serving browser requests.
+The default port is 8000.
+(For command-line help, run "python wordnet -h") This application requires that the user's web
+browser supports Javascript.
+BrowServer is a server for browsing the NLTK Wordnet database It first launches a browser client to
+be used for browsing and then starts serving the requests of that and maybe other clients Usage::
+browserver.py -h browserver.py [-s] [-p <port>] Options::
+-h or --help Display this help message. -l <file>
+or --log-file <file> Logs messages to the given file,
+If this option is not specified messages are silently dropped. -p <port>
+or --port <port> Run the web server on this TCP port,
+defaults to 8000. -s or --server-mode Do not start a web browser,
+and do not allow a user to shutdown the server through the web interface.

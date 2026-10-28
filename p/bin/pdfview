@@ -48,7 +48,7 @@ whitespace, and collapse excessive blank lines.
 Treat pages with no extractable text (e.g., scanned images) by showing a
 placeholder message rather than crashing. 3.
 Wrap text to the current terminal width (obtained via `shutil.get_terminal_size`
-with a fallback of 80×24 when not a TTY).
+with a fallback of 80Ă—24 when not a TTY).
 Split each page into parts that fit the usable height, reserving rows for a
 header line and separator. 4.
 Build a flat list of screens across all files and pages.
@@ -86,8 +86,8 @@ screen rendering, key reading, and the navigation loop. - Use `WORKERS` and
 `PDF_SUFFIXES` as module-level constants (`PDF_SUFFIXES` a frozenset of
 `".pdf"`). - Write concise docstrings and comments only where logic is
 non-obvious; match a clean, typed, idiomatic style. **Usage examples to
-support** - `pager.py book.pdf` — open an interactive pager for one file. -
-`pager.py a.pdf b.pdf --pages 1-10` — several files with a page range (if the
-option is implemented). - `pager.py report.pdf | less` — non-interactive output
+support** - `pager.py book.pdf` â€” open an interactive pager for one file. -
+`pager.py a.pdf b.pdf --pages 1-10` â€” several files with a page range (if the
+option is implemented). - `pager.py report.pdf | less` â€” non-interactive output
 when piped.
 Deliver the complete script as a single file. ---

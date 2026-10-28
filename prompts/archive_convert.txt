@@ -1,0 +1,39 @@
+Write a Python script that acts as a batch archive compression tool for a
+directory tree.
+The script should accept a root directory (or a set of paths) and recursively
+find files that are candidates for compression, then compress each one into
+several archive formats in parallel, reporting the size savings for each output.
+Core behavior: - Walk a given directory tree, skipping version-control metadata
+directories (such as `.git`), and process every regular file found.
+Files that are already archives or compressed outputs produced by the tool
+should be ignored to avoid re-processing. - For each input file, produce
+compressed variants using multiple codecs and container formats, including
+common ones such as gzip, bzip2, xz/LZMA, zip, and Brotli, with tar-based
+wrappers where appropriate (for example tar.gz, tar.xz, tar.bz2, tgz, tbz2, txz,
+zip).
+Some formats may depend on optional external tools or libraries; the script
+should detect availability and gracefully skip unavailable formats with a clear
+log message. - Choose compression levels sensibly: use maximum-effort settings
+for small files and faster, lower-effort settings for large files (for example
+above roughly 10 MB) so that processing remains practical.
+Use a configurable chunk size for streaming large files rather than loading them
+fully into memory. - Run compression jobs concurrently across multiple worker
+processes, with a configurable number of workers (default around 8).
+Each job should write to a temporary location and atomically move the result
+into place only on success, so partial outputs never remain behind on failure. -
+Skip outputs that already exist and are up to date, and allow the user to force
+regeneration via a flag. - Support a dry-run mode that reports what would be
+done without writing any files. - Provide a command-line interface with options
+for the target path, number of jobs, format selection or exclusion, force
+overwrite, dry-run, and verbosity level. - Log progress and results using a
+structured logging approach.
+For each produced archive, report the original size, the compressed size, and
+the percentage saved in human-readable units (B, KiB, MiB, GiB, TiB).
+At the end, print a summary with totals, number of files processed, number of
+failures, and total space saved. - Handle errors robustly: a failure in one file
+or one format must not abort the whole run; collect failures, report them at the
+end, and returnonzero exit status if any job failed. - Respect Ctrl+C by cleanly
+terminating worker processes and removing any temporary files.
+The script should be a self-contained, production-quality command-line utility
+with clear help text, sensible defaults, and well-structured code that is easy
+to extend with additional compression formats. ---

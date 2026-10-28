@@ -1,0 +1,28 @@
+Write a Python script that backs up files from a user's Google Drive to a local
+directory.
+The tool should authenticate the user with Google OAuth using a read-only Drive
+scope, remember the authorization between runs so the user does not have to log
+in every time, and load optional settings such as credential file locations,
+token storage, and backup destination from a configuration file or environment
+variables, falling back to sensible defaults when they are absent.
+The script should accept command-line options that let the user choose which
+Drive content to back up, such as a specific folder, the entire "My Drive," or
+files matching certain criteria, and should allow the user to specify the local
+output directory.
+It should walk through Drive folders recursively, recreate the folder hierarchy
+locally, and download regular files.
+Google-native documents (such as Docs, Sheets, and Slides) should be exported to
+standard formats like PDF, DOCX, XLSX, or PPTX, while binary files should be
+downloaded as-is.
+Large files should be downloaded in chunks with progress reporting.
+The tool should handle pagination of Drive listings, skip files that are already
+up to date by comparing modification timestamps with previously downloaded
+copies, and resume or safely retry after transient network or API errors.
+It should record a summary of what was downloaded, skipped, and failed, and
+report clear, human-readable error messages for authentication failures,
+permission issues, missing files, and quota limits.
+It should support a dry-run mode that lists what would be backed up without
+writing any files, and a verbose mode that shows detailed progress.
+The script should be runnable from the command line, exit with meaningful status
+codes on success or failure, and include helpful usage documentation so a user
+can understand every option without reading the source. ---

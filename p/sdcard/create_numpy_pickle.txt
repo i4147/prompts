@@ -1,0 +1,1 @@
+This script is used to generate test data for joblib/test/test_numpy_pickle.py

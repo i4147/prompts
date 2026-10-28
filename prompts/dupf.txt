@@ -1,0 +1,33 @@
+Write a Python script that scans a directory tree for duplicate files and
+reports groups of identical files.
+The tool should accept a root directory path from the command line and walk
+through all files beneath it, skipping symbolic links, empty files, unreadable
+or inaccessible files, and anything located inside common tooling or
+version-control directories such as version control metadata folders, Python
+bytecode caches, and linter or type-checker caches.
+For each remaining file, compute a fast, non-cryptographic content hash,
+streaming the file in fixed-size chunks so that large files do not exhaust
+memory.
+Hashing should be parallelized across multiple worker processes to speed up
+scanning of large trees, with a sensible default number of workers that the user
+can override from the command line.
+Files that cannot be read or hashed should be logged as warnings and excluded
+from results without stopping the overall run.
+Group files by their content hash and identify every group containing two or
+more files as duplicates.
+The output should list each duplicate group clearly, showing the shared hash and
+the full paths of all files in that group, with groups ordered in a readable
+manner.
+Include a summary at the end reporting the total number of files scanned, the
+number of duplicate groups found, and the total number of redundant copies.
+Optionally, the tool should be able to report the total disk space that could be
+reclaimed by removing the redundant copies, using human-readable size
+formatting.
+Use proper structured logging for progress and diagnostic messages, keeping
+standard results separate from log output so the results can be redirected
+cleanly.
+Provide a clear command-line interface with helpful help text, sensible
+defaults, and input validation that exits with a meaningful error message when
+the provided path does not exist or is not a directory.
+The script should be runnable directly as a standalone program with a main entry
+point. ---

@@ -3,16 +3,13 @@ def runcmd(
 ) -> tuple[int, str, str]:
     import subprocess
     import sys
-
     if not cmd:
         msg = "cmd must be a non-empty list (e.g., ['ls', '-l'])"
         raise ValueError(msg)
-
     def fail(code: int, msg: str) -> tuple[int, str, str]:
         if show_output and not run_silently:
             print(msg, file=sys.stderr)
         return (code, "", msg)
-
     try:
         if run_silently:
             result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=timeout)
@@ -34,11 +31,9 @@ def runcmd(
         return fail(124, f"Command timed out after {timeout}s: {' '.join(cmd)}")
     except Exception as e:
         return fail(1, f"Unexpected error running '{cmd[0]}': {e}")
-
 in above code when we set show_output=True
 but stream dont contain any valid utf-8 string
 try to clean it using following code
-
 def clean_response(text: str) -> str:
     text = ANSI_RE.sub("", text)
     text = text.replace("\r\n", "\n").replace("\r", "\n")

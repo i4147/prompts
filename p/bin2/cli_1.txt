@@ -1,0 +1,1 @@
+Validated JSON configuration and safe command-line entry point.

@@ -1,0 +1,22 @@
+Write a Python script that generates human-readable, pronounceable passphrases
+or identifiers from a built-in default wordlist, with support for customizable
+word counts, separators, and alternative wordlists supplied by the user.
+The tool should be usable from the command line and should accept options that
+control how many passphrases are produced and how they are formatted, such as
+the number of words per phrase, the delimiter placed between words, and whether
+a numeric or random suffix is appended for added uniqueness.
+It should be able to draw from a provided file of words when the user does not
+want the default list, validating that the supplied list is non-empty and
+contains usable entries.
+The script should also offer a way to derive a deterministic identifier from a
+given input string, using a cryptographic hash to map that input onto the
+wordlist so the same input always yields the same phrase, with an option to
+choose the hash algorithm and output length.
+Additionally, it should be able to generate random UUIDs and optionally render
+them alongside or in place of word-based identifiers.
+Key behaviors: print results to standard output one per line by default, with an
+option to write them to a file; handle invalid arguments gracefully with clear
+error messages and nonzero exit codes; never produce empty output silently; and
+keep the generation logic clean, modular, and reusable as an importable module
+as well as a standalone command-line program.
+Include a concise help message describing every option. ---

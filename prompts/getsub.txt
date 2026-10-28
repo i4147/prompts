@@ -1,0 +1,21 @@
+Write a Python script that acts as a command-line subtitle downloader for video
+files.
+It should accept a media title (or a path to a video file from which a title can
+be derived), an optional season and episode number, and a preferred subtitle
+language and file extension.
+The tool should normalize the title by replacing separators such as underscores
+and dots with spaces, then search a configurable set of online subtitle
+providers (defaulting to OpenSubtitles, Podnapisi, Addic7ed, and TVSubtitles)
+for matching subtitle files.
+It should support two modes: a file mode that takes a local video file, infers
+its metadata, and downloads a matching subtitle saved alongside the video, and a
+search mode that queries by title alone and saves the best result under a
+sanitized, filesystem-safe filename derived from the title, ensuring the correct
+file extension is appended.
+The script should validate user inputs such as the extension (rejecting empty
+values and normalizing a leading dot), handle missing optional dependencies
+gracefully with clear error messages, use a realistic browser user-agent when
+making web requests, log progress and failures using standard logging levels,
+respect a verbose flag for debug output, and return meaningful exit codes.
+It should fail gracefully on network errors, unmatched results, or unsupported
+providers, and report to the user which subtitle file was saved and where. ---

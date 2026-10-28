@@ -1,0 +1,22 @@
+Write a Python script that scans a user-specified folder (including its
+subfolders) for image files, detects human faces in each image using a classical
+computer vision approach, and sorts or copies the images into separate output
+folders based on whether faces were found.
+The tool should accept a source directory and an output directory as inputs,
+process images in parallel to take advantage of multiple CPU cores, and resize
+large images before analysis to speed up processing while keeping detection
+accurate.
+It should support common image formats such as JPEG, PNG, BMP, TIFF, and WebP,
+and gracefully skip files that cannot be read or decoded.
+The script should try several pre-trained frontal-face detection models in
+order, falling back to the next one if a model cannot be loaded, and should exit
+with a clear message if the required vision library is missing.
+Progress should be displayed to the user with a visual progress indicator, and
+all activity, warnings, and errors should be recorded both to the console and to
+a persistent log file in the user's home directory.
+At the end, the script should print a summary reporting how many images were
+processed, how many contained faces, how many did not, how many failed, and the
+total elapsed time.
+Original files should be left untouched, with the sorting performed by copying,
+and the output should be organized so the user can easily review the results.
+---

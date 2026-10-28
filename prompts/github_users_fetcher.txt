@@ -1,0 +1,11 @@
+GitHub Users Extractor & Fetcher Step 1: Recursively scan files (and supported
+archives, including tar.* variants) under a folder, keep GitHub URLs only, write
+sorted unique logins to users.txt.
+Step 2: Load GITHUB_TOKEN from ~/.env and store GitHub API data in SQLite.
+Parallelism (step 1) is selected with --mp-method (default:
+cf.ProcessPoolExecutor) and --workers (default: 4).
+Errors go to loguru.
+Both steps show a rich progress bar.
+Archive support stdlib (3.14 zstd via compression.zstd, else the zstandard
+package): zip, whl, xz/lzma, gz, bz2, zlib, zstd, tar and
+tar.(gz|bz2|xz|zst|lz4|br|zlib) third-party: 7z (py7zr), lz4, br/brotli

@@ -1,0 +1,3 @@
+WOFF2 Compression Benchmark - Full Quality Comparison Compares Google's woff2_compress vs fontTools
+with different brotli quality levels (1-11) Runs recursively through all TTF files in
+current directory

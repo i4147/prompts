@@ -1,0 +1,2 @@
+Usage: ssplit [options] -i FILE -o FILE Options:
+--newline Whether to treat newlines as sentence breaks. -o FILE -i FILE

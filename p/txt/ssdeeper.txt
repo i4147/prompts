@@ -1,0 +1,1 @@
+Recursively hash files with ssdeep and report similar pairs.

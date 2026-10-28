@@ -1,0 +1,24 @@
+Write a Python script that scans a Neovim configuration directory and produces a report describing
+which popular Neovim plugins and related tooling the configuration uses.
+The tool should accept a path to a config directory (or a single file) from the command line,
+walk through the relevant configuration source files,
+and detect plugin usage by matching a built-in catalog of known plugins,
+each identified by a set of recognizable textual signatures such as setup calls, require statements,
+plugin manager declarations, or plugin names.
+It should tally how many times each plugin is referenced,
+record which files and line locations contain the matches, and summarize the findings.
+The output should be available in both a human-readable text format
+and a machine-readable JSON format, selectable by a flag,
+and optionally written to a file or printed to standard output.
+The tool should also support a mode that reports only the plugins detected,
+with a clear message when nothing is found.
+Handle missing paths, unreadable files,
+and unusual encodings gracefully with informative error messages
+and a non-zero exit status for invalid input,
+while continuing to process other files when a single file fails.
+Ignore common non-configuration directories such as version control folders and caches,
+and skip binary or excessively large files.
+Where useful, the tool may optionally verify the presence of external command-line utilities
+relevant to the detected plugins and report which are installed.
+Keep the design modular, well-documented,
+and suitable for use as both a command-line utility and an importable module. ---

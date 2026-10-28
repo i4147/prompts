@@ -1,0 +1,27 @@
+Write a Python class for the Termux:GUI Python bindings library that implements a
+`SwipeRefreshLayout` widget,
+representing the native Android SwipeRefreshLayout (the pull-to-refresh container view) within a
+Termux:GUI activity.
+Requirements: - Create a class named `SwipeRefreshLayout` that inherits from `ViewGroup`
+(imported from `termuxgui.viewgroup`).
+Also import `View` from `termuxgui.view`, `Activity` from `termuxgui.activity`, and `Optional`,
+`Literal` from `typing`. - Include a class docstring stating "This represents a SwipeRefreshLayout."
+Constructor (`__init__`): - Parameters:
+`activity` (required, type `Activity`), `parent` (optional, type `View`, defaults to `None`),
+`visibility` (optional, `Literal[0, 1, 2]`, defaults to `None`). - Build a `params` dict
+(named `args`) containing `aid` (from `activity.aid`) and `visibility`. - If `parent` is not `None`,
+add `parent` (using `parent.id`) to the `args` dict. - Send a synchronous request via
+`activity.c.send_read_msg` with method `"createSwipeRefreshLayout"` and the `args` as params,
+to create the view on the Termux:GUI server side
+and obtain its id. - Call the parent `ViewGroup.__init__` with the activity
+and the id returned from the creation call to properly initialize the view group.
+Method `setrefreshing(self, refreshing: bool)`: - Docstring:
+explain that it sets whether the SwipeRefreshLayout displays the refresh animation,
+and note that you must call this with `False` once you've finished refreshing the contents. - Sends
+an asynchronous message via `self.a.c.send_msg` with method `"setRefreshing"`
+and params containing `aid` (`self.a.aid`), `id` (`self.id`),
+and `refresh` (the `refreshing` argument). - No return value.
+Keep the code concise,
+consistent with typical Termux:GUI widget binding style
+(similar to other View/ViewGroup subclasses in this library),
+with proper type hints and docstrings as described. ---

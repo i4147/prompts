@@ -1,0 +1,1 @@
+A theorem prover that makes use of the external 'Prover9' package.

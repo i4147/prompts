@@ -1,0 +1,2 @@
+Convert a VCF (Variant Call Format) file to JSON.
+Usage: python vcf_to_json.py input.vcf

@@ -1,0 +1,52 @@
+Write a Python module that provides a `LoadDataset` utility class for loading
+and converting raw JSON-based data into standardized train/validation/test dataset splits for
+various NLP task types.
+The module should import `defaultdict`
+and `Counter` from the `collections` module
+(used for aggregating or counting dataset entries in the underlying generator functions).
+It must define a class `LoadDataset` with the following members: 1.
+A class method `load_dataset(cls, path, task, split=0.5, text="text", label="label")`: - Inputs:
+a file `path` to the dataset, a `task` type string,
+an optional `split` ratio (default 0.5) for dividing data into train/validation/test portions,
+and optional field names `text` and `label` indicating which JSON keys hold the input text
+and the label. - Purpose:
+entry point for loading a dataset from disk and preparing it according to the specified task.
+Implementation body intentionally left as a placeholder (`pass`), to be completed later.
+2. A static method `has_split(js)`: - Input:
+a parsed JSON object (`js`), which may be a `dict` or a `list`. - Behavior:
+if `js` is a `dict`,
+check whether its first key's value is itself a `dict`
+(indicating the data already contains nested split structure, e.g. train/valid/test sections)
+and return a boolean accordingly.
+If `js` is a `list`, raise `NotImplemented` since list-based split detection is not supported yet.
+3. A static method `generate_datasets(js, task, train, valid, test, text, label, sep=" ",
+label_as_key=False)`: - Inputs:
+the parsed JSON data `js`, a `task` string identifying the dataset task type,
+three container objects `train`, `valid`, `test` to be populated with the respective data splits,
+the `text` and `label` field names,
+an optional `sep` separator string (default a single space, used for keyword-style tasks),
+and a boolean flag `label_as_key` indicating whether labels should be treated as dictionary keys
+when parsing the JSON structure. - Behavior:
+acts as a dispatcher that routes the input data to the appropriate dataset-generation helper
+function based on the `task` value:
+- If `task == "CLUENER"`,
+always call `generate_cluener_datasets(js, train, valid, test, text, label)` regardless of
+`label_as_key`. - Otherwise, branch depending on `label_as_key`: - If `label_as_key` is `False`:
+- `"CLS"` â†’ call `generate_cls_datasets(js, train, valid, test, text, label)` - `"REG"` â†’ call
+`generate_reg_datasets(js, train, valid, test, text, label)` - `"MCLS"` â†’ call
+`generate_mcls_datasets(js, train, valid, test, text, label)` - `"KW"` â†’ call
+`generate_keyword_datasets(js, train, valid, test, text, label, sep)` - `"NER"` â†’ call
+`generate_keyword_datasets(js, train, valid, test, text, label)` (without `sep`) - any other task
+value â†’ raise `NotImplemented` - If `label_as_key` is `True`:
+- `"CLS"` â†’ call `generate_cls_datasets_label_as_key(js, train, valid, test, text, label)` - `"REG"`
+â†’ call `generate_reg_datasets_label_as_key(js, train, valid, test, text, label)` - `"NER"` â†’
+(handle analogously with a label-as-key NER generator; continue the same branching pattern as above)
+- Note: there is a commented-out line (`# task = _unify_task(task)`) suggesting an intended
+but currently disabled normalization step for the `task` parameter before dispatching. - The method
+relies on several external helper functions that are assumed to be defined elsewhere inebase:
+`generate_cluener_datasets`, `generate_cls_datasets`, `generate_reg_datasets`,
+`generate_mcls_datasets`, `generate_keyword_datasets`, `generate_cls_datasets_label_as_key`,
+`generate_reg_datasets_label_as_key`, and a label-as-key NER equivalent.
+These are not implemented in this module but are called by name.
+Preserve this exact dispatch logic, method signatures, default parameter values,
+and the use of `NotImplemented` as a placeholder/error indicator in the unimplemented branches. ---

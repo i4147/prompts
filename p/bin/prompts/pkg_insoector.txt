@@ -1,0 +1,30 @@
+Write a Python script that inspects the Python packages installed in the current environment
+(including system-wide and user site-packages directories)
+and produces a structured inventory report of them.
+The tool should accept command-line options to control what is scanned
+and how results are presented,
+and should support exporting results in at least two common machine-readable formats
+(for example, JSON and CSV) as well as a human-readable console summary.
+For each discovered package, the script should gather identifying metadata such as name, version,
+and install location,
+and should determine whether the package is pure Python
+or contains compiled binary extensions
+(for example shared libraries with common platform-specific extensions).
+It should also detect and classify the package's origin where possible,
+such as whether it appears to be installed from a public software hosting service
+(such as GitHub, GitLab, Bitbucket, SourceHut, or Codeberg), from a local or editable source,
+or from a standard package index.
+Where available, it should read the package's declared metadata
+(e.g., author, license, summary, home page) and any recorded direct URL or VCS information.
+The script should aggregate the results into useful summaries,
+such as counts of packages by install location, by binary versus pure-Python status,
+and by detected origin,
+and should flag duplicate installations of the same package across different site directories.
+It should handle errors gracefully:
+unreadable directories, malformed metadata, and permission problems must not crash the run,
+and should instead be reported as warnings or skipped entries.
+Optionally, the tool should allow filtering results by name pattern or category,
+sorting by different fields, and writing output to a file path specified by the user,
+with a clear exit status indicating success or failure.
+The implementation should be cross-platform (Linux, macOS, and Windows), require no network access,
+and be runnable as a standalone command-line program with built-in help documentation. ---

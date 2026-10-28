@@ -1,0 +1,54 @@
+_count = len(pagedcontent) pagecount = (b_count + pagesize - 1) // pagesize if pagecount < 1:
+pagecount = 1 if p < 0: p = 0 if p > pagecount - 1: p = pagecount
+- 1 pagedpageview.settext(f"{p+1}/{pagecount}") start = p * pagesize for i in range(0, pagesize):
+  idx = start + i if idx < b_count:
+pagedviews[i].settext(pagedcontent[idx]) pagedviews[i].setvisibility(tg.View.VISIBLE) else:
+pagedviews[i].settext("") pagedviews[i].setvisibility(tg.View.GONE) topage(0)
+a.setonbacksubscribe(True) while True:
+event = c.events.get() if event.type == tg.Event.destroy and event.value["finished"]:
+sys.connection.close() sys.exit() if event.type == tg.Event.click:
+if event.value["id"] == pagedback.id: topage(page - 1) elif event.value["id"] == pagedforward.id:
+topage(page + 1) if event.type == tg.Event.back:
+a.finish() break Write a prompt that could have produced this code.
+Create a prompt for an AI coding agent to write a Python script using the `termuxgui` library
+(the Termux:GUI Python bindings) that implements a simple paginated list viewer running as a native
+Android GUI activity.
+The prompt should specify: - **Purpose**:
+Build a Termux:GUI activity that displays a large list of text items split into pages,
+with "-" and "+" buttons to navigate backward/forward through pages,
+and a label showing the current page number out of the total page count (e.g., "1/1"). -
+**Setup/connection**:
+Use `termuxgui.Connection` as a context manager
+and create a `termuxgui.Activity` tied to that connection. - **Content/inputs**:
+Generate sample content as a list of 200 string items (e.g., "Item 1" through "Item 200").
+Define a configurable page size constant (e.g., 20 items per page). - **Layout structure**:
+- A root vertical `LinearLayout` containing everything. - A horizontal `LinearLayout` at the top
+holding the navigation controls:
+a "-" button, a centered `TextView` showing "current page/total pages", and a "+" button.
+The controls row should wrap its height and the buttons should wrap their width.
+The page indicator TextView should have left/right margins
+and centered text gravity. - Below the controls,
+a `NestedScrollView` containing a vertical `LinearLayout` that holds the actual list item views. -
+**Performance behavior**:
+Pre-create all the `TextView` widgets needed for one page (a count equal to the page size) ahead of
+time instead of creating/destroying them on every page change,
+so switching pages is fast and avoids flicker.
+Each item TextView should use a larger text size (e.g., 25).
+Set text size to a larger size (e.g. 25). - **Pagination logic**:
+Implement a `topage(p)` function that:
+- Clamps the requested page index to a valid range based on total content length
+and page size. - Updates the page indicator text view to show "current/total" (1-indexed display). -
+Fills the pre-created item views with the correct slice of content for that page,
+setting unused views' text to empty and hiding them (visibility GONE)
+when there isn't enough content to fill the page,
+and showing (VISIBLE) populated ones. - Uses a module/global page variable to track current page
+state. - Initialize the view by calling this function for page 0 after setup. - **Event loop**:
+Subscribe to back-button events.
+Run an infinite loop reading events from the connection:
+- On a destroy event where the activity reports it finished,
+close the connection and exit the process. - On click events,
+check whether the "-" or "+" button was clicked
+and advance/retreat the page accordingly via the pagination function. - On a back-button event,
+finish the activity and break out of the loop.
+Ensure the script is self-contained, runnable as-is,
+and relies only on the `termuxgui` and `sys` modules. ---

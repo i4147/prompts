@@ -1,0 +1,34 @@
+Write a Python script that implements a Git command-line interface dispatcher,
+mimicking the structure and usage output of the real `git` command,
+using the `docopt` library for argument parsing.
+The script must: - Be a standalone executable (include a `#!/usr/bin/env python` shebang). - Define
+a module-level docstring that serves as both the documentation and the docopt usage specification.
+The docstring must describe the general `git` usage pattern, including options like `--version`,
+`--exec-path=<path>`, `--html-path`, `-p`/`--paginate`/`--no-pager`, `--no-replace-objects`,
+`--bare`, `--git-dir=<path>`, `--work-tree=<path>`, `-c name=value`,
+and a `<command> [<args>...]` positional pattern,
+plus a `git [--help]` alternative form. - Include a short descriptive section in the docstring
+listing the most commonly used git commands (add, branch, checkout, clone, commit, push, remote)
+with brief one-line descriptions,
+and a closing line pointing to `git help <command>` for more details. - Parse top-level arguments
+using `docopt(__doc__, version="git version 1.7.4.4", options_first=True)`. - Build an `argv` list
+combining the parsed `<command>` with its `<args>`. - Dispatch behavior based on the parsed
+`<command>`: - If the command is `"add"`,
+import a separate module named `git_add` and call `docopt(git_add.__doc__, argv=argv)`,
+printing the resulting parsed arguments. - If the command is `"branch"`,
+invoke an external script `git_branch.py` via `subprocess.call`, passing `argv`,
+using `python` as the interpreter,
+and exit with its return code. - If the command is one of `"checkout"`, `"clone"`, `"commit"`,
+`"push"`, or `"remote"`,
+invoke the corresponding external script (named `git_<command>.py`) via `subprocess.call` with
+`argv`, and exit with its return code. - If the command is `"help"`
+or no command was given (`None`),
+invoke `git.py --help` via `subprocess.call`
+and exit with its return code. - For any other/unrecognized command,
+exit the program with an error message in the form: `"%r is not a git.py command.
+See 'git help'." % args["<command>"]`. - Guard the main execution logic under `if __name__ ==
+"__main__":`. - Use only the `subprocess.call` function (imported directly as `call`)
+and the `docopt` function from the `docopt` package as external dependencies.
+The purpose of the script is to act as the main entry point for a toy/demo reimplementation of the
+git CLI, routing subcommands to separate per-command Python scripts/modules,
+similar to how real git dispatches to `git-<command>` binaries. ---

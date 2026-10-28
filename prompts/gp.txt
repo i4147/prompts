@@ -1,0 +1,27 @@
+Write a Python script that automatically stages and commits all changes in the
+Git repository the user is currently working in.
+The tool should locate the enclosing repository even if the user runs it from a
+subdirectory, and it should fail gracefully with a clear message on stderr and a
+non-zero exit status if the current location is not inside a valid Git
+repository or the repository cannot be accessed.
+Before committing, the script should check whether a `.gitignore` file exists in
+the current working directory.
+If none exists, it should attempt to seed the project with the user's global
+`.gitignore` from the home directory, silently skipping this step if the global
+file is missing or unreadable, and never overwriting an existing local
+`.gitignore`.
+Once the repository is ready, the script should stage all tracked and untracked
+changes (including deletions) and create a single commit whose message is
+"Auto-commit" followed by the current local date and time in the format
+YYYY-MM-DD HH:MM:SS.
+Its behavior should be non-interactive, suitable for running from scripts, cron
+jobs, or a shell alias.
+Any errors during staging or committing should be reported to stderr with a
+descriptive message and a non-zero exit status, without leaving the repository
+in a partially modified state where feasible.
+The output should be minimal: on success, the script should print nothing to
+stdout or only a brief confirmation, while all diagnostic and error information
+goes to stderr.
+The script should be a single, self-contained file that runs with a standard
+Python 3 interpreter and relies only on widely available third-party Git tooling
+for repository operations. ---

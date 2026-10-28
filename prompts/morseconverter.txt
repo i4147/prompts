@@ -1,0 +1,18 @@
+Write a Python script that converts text to Morse code and Morse code back to
+text, usable both as a command-line tool and as an importable module.
+The tool should accept input either directly as a command-line argument or from
+a file, and write the result to standard output or to an output file if one is
+specified.
+It should support two modes: encoding plain text (letters, digits, and spaces)
+into Morse code, where letters are case-insensitive, and decoding Morse code
+back into readable text.
+In encoding mode, characters without a Morse equivalent should be passed through
+unchanged rather than causing an error.
+In decoding mode, Morse symbols are separated by spaces, words are separated by
+a slash, and unrecognized codes should be handled gracefully, for example by
+preserving them in the output or reporting them clearly.
+The script should provide helpful usage messages, validate that the input file
+exists and is readable, and exit with a meaningful non-zero status code on
+errors.
+Include a clear help description, and ensure the core conversion logic is
+reusable as functions that other Python code can call directly. ---

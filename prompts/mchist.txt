@@ -1,0 +1,18 @@
+Write a Python script that reads a Midnight Commander command history file,
+extracts the commands stored in its command-line section, removes duplicates,
+and appends the unique commands to a shell history file so they become available
+in the user's terminal history.
+The script should: - Read a Midnight Commander history file from a fixed input
+location on an Android/Termux-style environment, using UTF-8 encoding. - Locate
+the section labeled as the command-line history block and collect every entry
+within it, stopping when the section ends at an empty line. - For each entry,
+strip surrounding whitespace and keep only the command text that follows the
+first equals sign in the line, discarding any key or prefix before it. -
+Eliminate duplicate commands so each command appears only once in the output,
+with no particular ordering requirement. - Append the resulting unique commands,
+one per line, to the end of a bash history file at a fixed output location,
+preserving any existing content in that file. - Run only when executed directly
+as a standalone program. - Handle the case where the input file is missing or
+the command-line section is absent by exiting gracefully with a clear message
+rather than crashing with an unhandled error. - Produce no output to the console
+on success other than optional, minimal status information. ---

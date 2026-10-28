@@ -1,0 +1,28 @@
+Write a Python script that demonstrates the usage of the `docopt` library for command-line argument
+parsing based on a docstring-defined interface.
+The script must: 1.
+Define a module-level docstring (which also serves as the help/usage text for `docopt`) named
+`counted_example.py` that specifies the following usage patterns:
+- `counted_example.py --help` - `counted_example.py -v...`
+(allowing the `-v` flag to be repeated multiple times, e.g., for verbosity levels) -
+`counted_example.py go [go]`
+(the literal command `go`, optionally followed by a second optional `go`) -
+`counted_example.py (--path=<path>)...`
+(the `--path` option, which takes a value and can be repeated one or more times) -
+`counted_example.py <file> <file>` (exactly two positional file arguments) 2.
+Include an "Examples"-style section in the docstring (introduced with "Try:") showing sample
+invocations, such as:
+- `counted_example.py -vvvvvvvvvv` - `counted_example.py go go` -
+`counted_example.py --path ./here --path ./there` - `counted_example.py this.txt that.txt` 3.
+Import `docopt` from the `docopt` library.
+4. Call `docopt(__doc__)` to parse the command-line arguments according to the docstring's usage
+patterns, and print the resulting dictionary of parsed arguments to standard output.
+Notable behavior: - The script relies entirely on `docopt` to parse `sys.argv` based on the patterns
+declared in the docstring;
+there is no additional argument-handling logic in the code itself. - Running the script with
+`--help` or `-h` will automatically print the docstring and exit,
+as is standard `docopt` behavior. - Repeated flags (`-v...`)
+and repeated options (`(--path=<path>)...`) are counted/collected by docopt,
+illustrating how docopt handles counted
+and repeated arguments. - The output is simply the dictionary produced by `docopt`,
+printed via `print()`, showing how each pattern maps command-line input to parsed values. ---

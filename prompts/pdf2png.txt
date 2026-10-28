@@ -1,0 +1,18 @@
+Write a Python script that converts a PDF file into a set of PNG images, one per
+page.
+The script should accept a path to an input PDF, an optional output directory
+(defaulting to a folder named after the PDF in the current location), and an
+optional resolution setting in dots per inch (defaulting to 200).
+It should validate that the input file exists and that the required external PDF
+rendering tool is available on the system, reporting a clear error message to
+the standard error stream and exiting with a non-zero status if either check
+fails.
+The output directory should be created if it does not already exist.
+Page images should be named using the PDF's base name followed by a page
+identifier, so that pages appear in order.
+The script should report the command it runs, handle failures of the rendering
+process by showing its error output and exiting with a non-zero status, and on
+success list the generated PNG files in page order, printing their paths.
+It should be usable both as a command-line tool (taking the PDF path and
+optional arguments) and as an importable function that other Python code can
+call. ---

@@ -1,0 +1,4 @@
+excode.py - Extract Python code from text/metadata files recursively.
+Supports markdown code blocks, inline code, and REPL-style sessions.
+Usage: python excode.py myfile.md myotherfile.txt python excode.py mydir1 mydir2 python excode.py #
+processes current directory

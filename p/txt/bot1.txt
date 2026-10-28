@@ -1,0 +1,38 @@
+Design a Telegram bot application written in Python using the python-telegram-bot library thatows
+users to search for and retrieve information about Python packages hyPI (the Python Package Index)
+directly within a Telegram chat.
+The script should be structured as follows:
+**Purpose:** Build a conversational Telegram bot that queries the PyPI JSON API to fetch
+and display metadata about Python packages, such as name, latest version, release date,
+summary/description, author, license, homepage, and project URLs. **Core Components:** 1.
+A `PyPIBot` class that encapsulates all PyPI-related logic:
+- Maintains a persistent `requests.Session` with a custom User-Agent header for all HTTP calls. - A
+method `get_package_info(package_name)` that calls `https://pypi.org/pypi/{package_name}/json`ns the
+parsed JSON on a 200 response,
+returches any `requests.RequestException`. - A method `format_package_info(data, package_name)` that
+extracts fields from the JSON response (`info` and `releases` sections) — including version,
+release date (parsed/formatted from the upload tim), summary, author, license, home page,
+and project URLs — and formats them into a cl/HTML formatting). with
+`python-telegram-s `Application`, including:
+- A `/start` command handler that greets the user
+and explains how to use the bot. - A `/help` command handler listing available commands
+and usage examples. - A command (e.g., `/package <name>` or similar)
+and/or plain text message handler that takes a package name as input,
+calls `PyPIBot.get_package_info`,
+and replies with the formatted package details
+or an error message if the package isn't found. - Optional inline keyboard buttons
+(using `InlineKeyboardButton`/`InlineKeyboardMarkup`) for additional actions,
+such as viewing more details, opening the package's PyPI page, or searching again,
+handled via a `CallbackQueryHandler`. **Configuration & Inputs:** - The bot token should be read
+from the environment variable `TELEGRAM_BOT_TOKEN`,
+with a placeholder fallback string if not set. - User input comes from Telegram messages/commands
+(the package name to look up). **Outputs:** - Telegram chat replies containing formatted package
+information, error messages for invalid/nonexistent packages,
+or help/greeting text. **Notable Behavior:** - Use the `logging` module configured at INFO level
+with a timestamped formatter to log bot activity
+and errors. - Handle network/API errors gracefully without crashing,
+informing the user when a package cannot be found or an error occurs.
+- Parse and reformat ISO-style upload timestamps from the PyPI API into a readable date format using
+  `datetime`. - Use regular expressions (`re`) where needed for input validation
+  or text parsing (e.g., sanitizing package names). - The bot should run via long polling
+  (typical `Application.run_polling()` pattern) as the main entry point.

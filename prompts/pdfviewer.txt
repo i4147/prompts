@@ -1,0 +1,34 @@
+Write a Python script that acts as an interactive terminal PDF viewer.
+It should open a PDF file given as a command-line argument and render its pages
+directly inside the terminal, using colored text-cell graphics so that each page
+appears as an image in a standard terminal emulator without any external GUI.
+The tool should take over the full terminal screen while running (switching to
+an alternate screen buffer and hiding the cursor), and restore the original
+terminal state cleanly on exit, including when interrupted or when an error
+occurs.
+It should read single keypresses in raw mode, including arrow keys and other
+escape sequences, so the user can navigate without pressing Enter.
+Core behaviors to support: - Page navigation: move forward and backward one page
+at a time, jump to the first and last pages, and jump directly to a page by
+number. - Zoom and scrolling: zoom in and out, and pan the visible area when a
+page is larger than the terminal window, using the keyboard. - Rendering:
+rasterize each PDF page to fit the current terminal dimensions, preserving the
+page's aspect ratio as closely as the character grid allows, and redraw
+efficiently when the window is resized or the view changes. - Status
+information: display a status bar or line showing the file name, current page
+number, total page count, zoom level, and a short key-binding help hint. - Help
+and quit: provide a key to show a brief help overlay listing controls, and a key
+to quit the viewer. - Graceful handling: if the file does not exist, is not a
+valid PDF, or is encrypted, print a clear error message and exit with a non-zero
+status instead of crashing.
+Handle terminal resize events gracefully. - Command-line interface: accept the
+PDF path as a required positional argument and optional arguments for an initial
+page number and an initial zoom or fit mode.
+Provide a help message describing usage.
+Dependencies and environment: the script should rely on a PDF rendering library
+and fail with a helpful installation hint if it is missing.
+It should target Unix-like terminals that support ANSI escape codes and
+256-color or truecolor output, and should degrade gracefully when the terminal
+is too small to display content, showing a message instead of corrupted output.
+The output is an interactive terminal session; the script should produce no
+extraneous output beyond the viewer interface and any error messages. ---

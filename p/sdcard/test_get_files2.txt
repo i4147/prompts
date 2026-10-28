@@ -1,0 +1,35 @@
+Write a Python command-line script that benchmarks three different directory-listing/file-retrieval
+implementations to determine which one performs fastest.
+The script should import three functions — `get_files`, `get_files2`,
+and `get_filez` — from a local module named `dh`,
+each of which presumably scans
+or lists files in a given directory using a different implementation strategy.
+Key requirements: 1.
+Include a helper function `process_dir(fp, func)` that takes a directory path
+and one of the three functions,
+times how long it takes to execute that function on the path using `time.perf_counter`,
+and returns the elapsed time in seconds as a float
+(the function's return value itself is discarded).
+2. Include a function `run_func(path)` that:
+- Uses the `secrets` module to generate a cryptographically random integer (via `secrets.randbelow`)
+within a range up to 1024*1024,
+then computes its value modulo 3 to randomly decide execution order. - If the remainder is 0,
+it calls `process_dir` on `get_files`, `get_files2`, and `get_filez` in that order. - Otherwise,
+it calls `process_dir` on `get_filez`, `get_files2`, and `get_files` in that order (reversed order),
+to help avoid ordering bias/caching effects in the benchmark. - Stores each function's timing result
+in a dictionary keyed by the elapsed time (float) with the function name (string) as the value. -
+Determines the minimum elapsed time among the three results
+and prints the name of the function that achieved that minimum time.
+3. Include a `main()` function that:
+- Gets the current working directory using `Path.cwd()`. - Runs `run_func` on that directory 10
+times in a loop (so it prints 10 results total, one per iteration).
+4. The script should be executable as a standalone program:
+use `if __name__ == "__main__": sys.exit(main())` as the entry point,
+and `main()` should return `None`.
+5. Use `pathlib.Path` for path handling,
+and `time.perf_counter` (imported as `pff`) for high-resolution timing.
+Note: the script assumes a local module `dh.py` exists in the same directory or on the Python path,
+providing the three file-retrieval functions being benchmarked.
+The purpose of the randomized call order is to reduce the effect of filesystem
+caching or warm-up bias on the comparative timing results across repeated runs.
+---

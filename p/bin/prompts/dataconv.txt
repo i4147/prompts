@@ -1,0 +1,32 @@
+Write a Python script that acts as a multi-format data table converter and loader.
+It should accept one
+or more input files (or a directory of files) containing tabular data in common formats such as CSV,
+JSON, and SQLite databases,
+parse their contents into a unified in-memory representation of named tables made up of uniform
+records, and then either export or inspect that data.
+The tool should be driven from the command line and provide options to specify the input path(s),
+the desired input format
+(with automatic detection based on file extension or content when not specified),
+the output format and destination,
+and optional filters such as selecting specific tables or columns.
+Supported output should include at least CSV, JSON, and a SQLite database,
+with a clear summary
+or preview mode for quick inspection of the parsed tables
+(table names, row counts, and column names).
+Key behaviors to honor: - Gracefully handle files of very different sizes;
+large text files should be read efficiently,
+while small ones should be read simply. -
+When an optional third-party library is needed for a particular format,
+the script should check for it at the moment it is needed and, if missing,
+raise a clear error that tells the user exactly
+which package to install. - Derive the set of columns for each table from the union of keys across
+all its records, preserving first-seen order,
+and fill in missing values sensibly on output. - Support parallel processing
+when converting multiple input files,
+with a sensible default worker count and an option to override it. - Log progress
+and diagnostic information through a logging facility at configurable verbosity levels,
+keeping normal output clean. - Validate inputs
+and fail with informative messages on unsupported formats, missing files, malformed records,
+or write conflicts, returning meaningful exit codes. - Keep the design modular so that
+new input or output formats can be added with minimal changes to the core logic.
+---

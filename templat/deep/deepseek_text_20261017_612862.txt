@@ -1,0 +1,34 @@
+# Task: Reimplement the Linux `{{COMMAND}}` command in Python
+## Objective
+Implement a faithful, working equivalent of the Linux `{{COMMAND}}` command in
+Python 3.11+. Match GNU/coreutils behavior for the flags listed below on Linux.
+## Hard constraints (apply always)
+- Language: Python 3.11+.
+- **Standard library only.** No `pip install`, no `requirements.txt`, no third-party
+  packages. Use `os`, `sys`, `argparse`, `pathlib`, `re`, `stat`, `signal`,
+  `struct`, `select`, `subprocess` (for spawning, not for doing the work), etc.
+- No shelling out to the real command or to any external program to do the real work.
+- Must be invocable as `python -m {{PACKAGE}} ...` (a proper package, not a loose script).
+## Functional requirements (FILL IN)
+{{FILL_IN: same guidance as Rust — bullets, exact flags, exit codes, edge cases.}}
+## Quality bar (apply always)
+- Package layout: `{{PACKAGE}}/__init__.py`, `{{PACKAGE}}/core.py` (logic),
+  `{{PACKAGE}}/cli.py` (argparse entry point). Core logic importable and unit-testable.
+- Type hints throughout; `mypy --strict` clean is a bonus.
+- Docstrings on every public function/class.
+- Unit tests with `unittest` (stdlib only — no pytest).
+- Integration test that runs the CLI via `subprocess` against a fixture.
+- Non-zero exit + stderr on error; no bare `except:`; no `sys.exit()` inside library code.
+## Deliverables (apply always)
+1. Full source tree + `pyproject.toml` with `dependencies = []`.
+2. `README.md`: design overview, supported flags, **deviations from GNU behavior**,
+   how to run.
+3. `scripts/demo.sh` (or `Makefile` target) with a synthetic fixture and 5+
+   representative invocations.
+4. Final message: what you implemented, what you skipped and why, known limitations.
+## Known pitfalls to handle (FILL IN)
+{{FILL_IN: command-specific traps.}}
+## Reporting back
+Before you start, reply with: (1) the flags you will implement, (2) any requirement
+you believe is infeasible under stdlib-only, (3) how you'll handle non-UTF-8 paths.
+Then proceed.

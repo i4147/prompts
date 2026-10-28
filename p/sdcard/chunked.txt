@@ -1,0 +1,1 @@
+A reader for corpora that contain chunked (and optionally tagged) documents.

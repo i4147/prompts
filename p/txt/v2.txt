@@ -1,0 +1,4 @@
+monolith: Save webpages as single HTML files with embedded resources.
+Usage: monolith [OPTIONS] <URL|FILE> -e,
+--encoding ENCODING Set output encoding (default: utf-8) -i,
+--no-images Strip all images from output

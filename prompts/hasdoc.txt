@@ -1,0 +1,23 @@
+Write a Python script that scans a given Python source file (or a directory tree
+of Python files) and reports comments that are likely to be low-quality,
+misleading, or redundant.
+The tool should accept a file or folder path from the command line, process
+files in parallel to remain fast on large codebases, and print a clear, per-file
+summary of each issue found, including the file path and line number.
+The script should understand Python source structure well enough to distinguish
+genuine comments from text inside string literals and docstrings, so that
+documentation strings are not mistakenly flagged.
+It should flag comments that merely restate the code they sit beside, comments
+that are empty or consist only of decorative characters, comments containing
+placeholder or unfinished markers such as TODO-style notes left without context,
+and any other obvious signs of stale or noisy commentary that a reviewer would
+want to clean up.
+Keep the detection rules sensible and conservative so that normal, helpful
+comments are not reported.
+The tool should handle files that cannot be read or parsed gracefully, skipping
+them with a brief warning rather than crashing.
+Provide an option to output results in a machine-readable format (such as JSON)
+as well as the default human-readable text, and an option to set the process
+count.
+It should exit with a non-zero status code when issues are found so it can be
+used in continuous integration pipelines, and zero when the code is clean. ---

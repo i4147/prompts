@@ -1,0 +1,38 @@
+Write a Python test/demo script that exercises a custom `folder_hash` extension module exposing
+three functions: `hash_folder`, `hash_folder_contents`, and `get_folder_stats`.
+The script should: 1.
+Define a `create_test_data()` helper that creates a temporary directory
+(using `tempfile.TemporaryDirectory`) containing a small nested folder structure with subdirectories
+(e.g., `subdir1`, `subdir2/nested`) and several files with distinct binary/text content,
+writing each file's content to disk.
+It should return the path to the created temporary directory
+(note: since it's created inside a `with` block that returns the path,
+be mindful this means the directory context manager behavior should be preserved as in the
+original design
+— i.e., return the directory path for use by the caller).
+  2.
+Define a `main()` function that:
+- Prints a header message indicating the extension is being tested. - Calls `create_test_data()` to
+generate the test folder and prints its path. - **Test 1 – Basic folder hashing**:
+Calls `hash_folder(test_dir)`, times the call using `time.time()`,
+and prints the resulting hash value and elapsed time (formatted to 4 decimal places). - **Test 2
+– Content-only hashing**:
+Calls `hash_folder_contents(test_dir)`, times it the same way,
+and prints the hash and elapsed time. - **Test 3 – Multiple hash algorithms**:
+Iterates over a list of algorithms (`"md5"`, `"sha1"`, `"sha256"`),
+calling `hash_folder(test_dir, hash_algorithm=algo)` for each, timing each call,
+and printing the algorithm name (uppercased), its resulting hash,
+and the elapsed time for each. - Additional tests (implied by the pattern) should also cover
+`get_folder_stats(test_dir)` to retrieve
+and print folder statistics (such as file count, total size, etc.),
+following the same print/timing style as the previous tests.
+3. Use clear numbered section headers in the printed output (e.g., "1.
+Testing basic folder hashing:", "2.
+Testing content-only hashing:", "3.
+Testing different algorithms:", etc.) with blank lines between sections for readability.
+4. Include a standard `if __name__ == "__main__": main()` entry point to run the script directly.
+The overall purpose is to serve as a lightweight benchmark/verification script that confirms the
+`folder_hash` module's functions work correctly on a realistic nested folder structure,
+reports computed hash values,
+and measures the execution time of each operation for performance comparison across different
+hashing modes and algorithms. ---

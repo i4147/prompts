@@ -1,0 +1,31 @@
+Write a Python script that identifies
+and separates near-duplicate quotes from a dataset of quotes grouped by author.
+The script should: 1. **Read input** from a JSON file named `quotes.json` located in the
+working directory.
+The file should contain a list of quote objects, where each object has at least two keys:
+`"author"` and `"quote"` (the quote text).
+2. **Compute text similarity** between quotes using Python's built-in `difflib.SequenceMatcher`,
+comparing lowercased versions of the quote text and returning a similarity ratio between 0 and 1.
+3. **Group quotes by author**, then for each author with two or more quotes,
+compare every pair of quotes belonging to that author.
+If the similarity ratio between a pair exceeds a configurable threshold (default `0.5`),
+mark both quotes as "similar."
+4. **Produce two result sets**: - `similar_quotes`:
+a list of quote objects that were flagged as similar to at least one other quote by the same author.
+- `remaining_quotes`:
+all other quotes from the original input that were not flagged as similar
+(including quotes from authors with only a single quote,
+and quotes from authors with multiple quotes but no pair exceeding the threshold).
+5. **Handle errors gracefully** when reading the input file (e.g., missing file, invalid JSON),
+so the script does not crash unexpectedly and instead reports a clear error to the user.
+6. **Structure the code** with reusable functions:
+- A function to calculate similarity between two text strings. - A function that takes the full list
+of quotes and an optional similarity threshold, groups them by author, finds similar pairs,
+and returns both the similar
+and remaining quote lists. - A `main()` entry point that loads the JSON data,
+invokes the similarity-finding logic,
+and is intended to further process
+or output the results (e.g., saving or printing `similar_quotes` and `remaining_quotes`).
+Use only standard library modules (`json`, `difflib`),
+include type-hinting-friendly syntax (`from __future__ import annotations`),
+and keep the logic self-contained in a single script without external dependencies. ---

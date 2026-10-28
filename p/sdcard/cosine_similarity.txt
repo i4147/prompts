@@ -1,0 +1,21 @@
+Write a Python script that defines a function `cosine_similarity(a, b)` to compute the cosine
+similarity between two numeric vectors (e.g., NumPy arrays or array-like sequences).
+Requirements and behavior:
+- Include `from __future__ import annotations` at the top of the file. - The function must depend on
+an external `np` object (assumed to be the NumPy module, e.g. `import numpy as np`) for the dot
+product computation via `np.dot(a, b)`. - The function must also depend on an external helper
+function named `ecludian_norm(x)` (note the specific spelling "ecludian_norm") that computes the
+Euclidean (L2) norm of a vector.
+This helper is referenced but not defined in this snippet. - Edge case handling:
+if the sum of elements of `a` is 0, or the sum of elements of `b` is 0,
+the function must immediately return `0.0`
+(to avoid division by zero or meaningless results for zero vectors). - Otherwise, compute:
+- `dot` as the dot product of `a`
+and `b` using `np.dot(a, b)`. - `l2_a` as the Euclidean norm of `a` using `ecludian_norm(a)`. -
+`l2_b` as the Euclidean norm of `b` using `ecludian_norm(b)`. - `res` as `dot / (l2_a * l2_b)`. -
+Return `res` as the final result.
+Inputs: two vectors `a` and `b`arrays of the same length).
+Output: a float representing the cosine similarity between `a` and `b`,
+or `0.0` if either input vector sums to zero.
+Keep the implementation minimal and matching this exact logic
+and variable naming (`dot`, `l2_a`, `l2_b`, `res`). ---

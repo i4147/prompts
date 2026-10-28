@@ -1,0 +1,40 @@
+Write a Python command-line script that merges two JSON files containing bilingual quote data
+(English and Farsi) into a single combined JSON file.
+Requirements: - The script reads two input JSON files located in the current working directory:
+`quotes.json` (English quotes) and `quotes_fa.json` (Farsi/Persian translations of the same quotes),
+each containing a JSON array of objects
+where each object represents a quote with fields such as "author"
+and other text fields (e.g., "quote", "text", etc.). - Before processing,
+the script must check that both `quotes.json` and `quotes_fa.json` exist.
+If either file is missing, print the message "Error:
+quotes.json or quotes_fa.json not found"
+and exit with status code 1. - The script should merge the two lists by matching entries at the same
+index (position-based pairing, not by content matching). - For each English quote object,
+create a merged object that starts with all the key-value pairs from the English quote
+(unchanged keys). - Then,
+for the corresponding Farsi quote at the same index (if one exists at that index),
+add its fields into the merged object with each key renamed by appending a "_fa" suffix
+(e.g., "quote" becomes "quote_fa"), except for the "author" key,
+which should be skipped/excluded from the Farsi side entirely
+(so the author field only comes from the English entry). - If the Farsi list is shorter than the
+English list, entries beyond the Farsi list's length should simply not get any "_fa" fields,
+but still be included in the output based on the English data alone. - Collect all merged objects
+into a single list, preserving the original order of the English quotes. - Write the resulting
+combined list to an output file named `quotes_bilingual.json` in the current directory,
+as JSON with UTF-8 encoding,
+`ensure_ascii=False` (to preserve non-ASCII characters like Persian script),
+and indented with 2 spaces for readability. - After writing,
+print a confirmation message in the format:
+`Combined {N} quotes to {output_file}`,
+where N is the number of quotes in the English input file
+and output_file is the path to the generated file. - Use only Python's standard library
+(e.g., `json`, `pathlib`, `sys`).
+Include a `#!/usr/bin/env python3` shebang line
+and use `from __future__ import annotations`. - Structure the code with a helper function to load a
+JSON file given a filepath,
+a core function that performs the combination logic given the English file path, Farsi file path,
+and output file path,
+and a `main()` function that defines the three file paths
+(`quotes.json`, `quotes_fa.json`, `quotes_bilingual.json`), performs the existence check,
+calls the combination function, and prints the final summary message.
+Use the standard `if __name__ == "__main__": main()` entry point pattern. ---

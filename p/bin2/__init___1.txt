@@ -1,0 +1,1 @@
+pycspell — a CLI spell checker for source code and documentation.

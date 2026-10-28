@@ -1,0 +1,10 @@
+Write a Python script that takes a single web page URL from the command line,
+opens it in a headless browser, and captures the page in three ways: a
+screenshot saved as an image file, the visible text content of the page saved as
+a plain-text file named after the URL, and the page's viewport metrics (width,
+height, and device pixel ratio) printed to the console.
+The script should run as a command-line tool, wait for the page to load before
+capturing, and release the browser cleanly when finished.
+Keep the output filenames predictable and make the text file encoded in UTF-8.
+Handle the case where the URL argument is missing or the page fails to load by
+reporting a clear error message rather than crashing silently. ---

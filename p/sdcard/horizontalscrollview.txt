@@ -1,0 +1,24 @@
+Write a Python prompt describing a script that implements a `HorizontalScrollView` wrapper class for
+the `termuxgui` library's object-oriented API.
+The prompt should request code that:
+- Imports `Optional` and `Literal` from `typing`, imports the `termuxgui` package as `tg`,
+and imports `Activity` from `termuxgui.activity`, `FrameLayout` from `termuxgui.oo.framelayout`,
+and `ViewGroup` from `termuxgui.oo.viewgroup`. - Defines a class named `HorizontalScrollView` that
+inherits from both `FrameLayout` and `tg.HorizontalScrollView`,
+representing a horizontally scrollable container view in the Termux GUI object-oriented wrapper
+layer. - Includes a docstring briefly describing the class as representing a HorizontalScrollView. -
+Implements an `__init__` method accepting:
+`activity` (an `Activity` instance, required), `parent` (an `Optional[ViewGroup]`, default `None`),
+`fillviewport` (a `bool`, default `False`), `snapping` (a `bool`, default `False`),
+`nobar` (a `bool`, default `False`),
+and `visibility` (an `Optional[Literal[0, 1, 2]]`, default `None`). - Inside `__init__`,
+calls `tg.HorizontalScrollView.__init__` passing `activity`, `parent`, `fillviewport`, `snapping`,
+`nobar`, and `visibility` to initialize the underlying native view. - Also calls
+`ViewGroup.__init__` passing `activity`, `self.id`,
+and `parent` to properly initialize the view group behavior/mixin so the object can manage child
+views. - Ensures the class integrates with the existing object-oriented wrapper hierarchy
+(`FrameLayout`/`ViewGroup`) so instances behave consistently with other OO-wrapped views in terms of
+parent/child management,
+while still relying on the underlying `tg.HorizontalScrollView` for the native widget functionality.
+Provide the complete, correctly structured Python code implementing exactly this behavior,
+matching the described imports, class definition, inheritance, docstring, and constructor logic. ---

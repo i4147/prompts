@@ -1,0 +1,1 @@
+Test the numpy pickler as a replacement of the standard pickler.

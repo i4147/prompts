@@ -1,0 +1,23 @@
+Write a Python script that recursively scans the current working directory for C
+and C++ source files (.c and .cpp), compiles each one in parallel using an
+external compiler command supplied to the program, and reports the outcome of
+every compilation.
+The script should: - Accept the compiler to use (for example gcc, g++, clang, or
+clang++) as an input, choosing an appropriate compiler for each source type when
+a sensible default is available, while allowing the user to override it. -
+Search all subdirectories of the starting directory, collecting every C source
+file and every C++ source file it finds. - Produce an executable for each source
+file, named after the source file without its extension and placed alongside it
+in the same directory. - Run the compilations concurrently across multiple
+worker processes to take advantage of available CPU cores, with a reasonable
+upper bound on the number of workers. - Enforce a per-file time limit so that a
+hanging compilation is terminated and reported as a timeout rather than blocking
+the whole run. - Capture compiler diagnostics so that failures display the
+relevant error output to the user. - Print a live or summarized status line for
+each file as it finishes, using clear success and failure markers, and print the
+scanned root directory at the start. - Handle unexpected errors for individual
+files gracefully so that one failure never stops the remaining compilations. -
+Finish with a summary showing how many files compiled successfully and how many
+failed, and exit with a non-zero status code if any compilation failed. - Be
+runnable as a standalone command-line program with a main entry point, and
+include brief usage guidance for the user. ---

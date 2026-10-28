@@ -1,0 +1,1 @@
+Centralized I/O security sentinel for NLTK.

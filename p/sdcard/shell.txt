@@ -1,0 +1,96 @@
+I'll analyze this code to create a comprehensive prompt.
+[Tool: think] Params:
+{"content":"The code appears to be truncated but I have enough to understand its purpose.
+Let me analyze what I can see:
+1. It's a shell command execution utility module 2.
+Has PathLike type alias 3.
+Platform detection (IS_POSIX, IS_WINDOWS) 4.
+EDITORS dict - mapping of editor programs to their \"wait\" flags,
+used for finding/launching text editors (like git commit editors) 5.
+Git command constants for both unix and windows 6.
+ShellCommand class - wraps a command string, can run it with subprocess, supports:
+ - shell mode
+ - cwd (working directory)
+ - run() method that joins additional args, logs the command,
+   supports a \"pretend\" mode (dry-run that returns a fake CompletedProcess without executing)
+ - Uses subprocess.PIPE for stdout, STDOUT for stderr (merging output),
+   universal_newlines=True, custom env
+This looks like it's part of a larger library
+(imports from .exceptions and .log suggest it's a package).
+It likely has additional functions like `join` (for shlex joining args),
+`edit` and `get_editor` functions (mentioned in the EDITORS docstring),
+lru_cache usage likely for caching editor lookup or git executable lookup.
+Given the imports: functools, os, shlex, shutil, subprocess, sys, lru_cache, Path,
+typing - this suggests:
+- shlex for command joining/escaping
+- shutil likely for shutil.which to find executables
+- Path for path operations
+- lru_cache for caching results like which editor is available or which git executable
+I should write a prompt that describes:
+- Purpose: a utility module for running shell commands and finding/invoking text editors,
+  with git integration
+- Main inputs/outputs: command strings, args, cwd, environment; outputs CompletedProcess results
+- Notable behaviors: pretend/dry-run mode, logging, editor fallback list,
+  cross-platform git executable handling,
+  shell command joining via shlex "} Create a Python utility module
+  (part of a larger package, e.g., a project scaffolding/CLI tool) that provides helper functions
+  and classes for running shell commands and interacting with external programs like Git
+  and text editors from Python code.
+The module should include the following: 1. **Imports and type setup**:
+Use `functools`, `os`, `shlex`, `shutil`, `subprocess`, `sys`, `lru_cache`, `pathlib.Path`,
+and `typing` constructs.
+Define a `PathLike` type alias as `Union[str, os.PathLike]`.
+Define platform-detection constants `IS_POSIX` (True on POSIX systems)
+and `IS_WINDOWS` (True on Windows, via `sys.platform == "win32"`).
+Import a custom `ShellCommandException` from a sibling `exceptions` module
+and a `logger` object from a sibling `log` module
+(the logger should support a `.report(action, command,
+context=...)` style call for logging executed commands).
+2. **Editor registry**:
+Define a module-level dictionary `EDITORS` mapping common text editor executable names
+(e.g., `sensible-editor`, `nvim`, `nano`, `vim`, `subl`, `code`, `mate`, `atom`, `notepad`, `vi`) to
+a list of extra CLI arguments needed to make that editor block/wait
+until the file is closed
+(e.g., `subl` â†’ `["-w"]`, `code` â†’ `["--wait"]`, `atom` â†’ `["--wait"]`, `mate` â†’ `["-w"]`,
+others â†’ empty list).
+Include a docstring explaining these are the programs tried in sequence by an `edit`/`get_editor`
+function when the `EDITOR`/`VISUAL` environment variables aren't set.
+3. **Git command constants**:
+Define `_GIT_CMD = "git"`
+and `_GIT_CMD_WIN = "git.exe"` for resolving the git executable name depending on platform.
+4. **`ShellCommand` class**:
+A wrapper around `subprocess` for running a fixed base command (e.g., a git command) with additional
+arguments each time it's invoked. - Constructor takes `command: str` (the base command string),
+`shell: bool = True`, and `cwd: Optional[str] = None` (working directory),
+storing them as private attributes. - A `run(*args, **kwargs)` method that:
+- Joins the base command with additional positional `args`
+(quoted/joined appropriately, e.g., via a `join` helper using `shlex`) to build the full command
+string. - Logs the command being run (action "run") together with the working directory context via
+`logger.report`. - Supports a `pretend` keyword argument (popped from kwargs, default `False`):
+when `True`, skips actual execution and returns a `subprocess.CompletedProcess` with the command,
+return code 0, and `None` for stdout/stderr (dry-run mode). - Otherwise builds an options dictionary
+for `subprocess.run`/`subprocess.Popen`-style invocation including `shell`, `cwd`,
+`stdout=subprocess.PIPE`, `stderr=subprocess.STDOUT`, `universal_newlines=True`,
+and a custom `env` (e.g.,
+merging the current process environment with any executes the command
+and returns a `subprocess.CompletedProcess`-like result, raising `ShellCommandException` on failure.
+Additionally, implement supporting helper functions implied by the above
+(not necessarily shown in full), such as:
+- A `join(args)` helper that safely joins/quotes a list
+or iterable of command-line arguments into a single string
+(cross-platform aware, using `shlex.join` or manual quoting depending on `IS_POSIX`/`IS_WINDOWS`). -
+A function to locate the git executable (`find_git` or similar) using `shutil.which`,
+trying `_GIT_CMD` and `_GIT_CMD_WIN` as appropriate,
+optionally cached with `lru_cache`. - An `get_editor()` function that determines
+which text editor to use by checking the `VISUAL` and `EDITOR` environment variables first,
+then falling back to probing the `EDITORS` dictionary (using `shutil.which`) to find an available
+editor on the system `PATH`,
+returning the command
+and its required wait/block arguments. - An `edit(filepath)` function that opens the given file path
+in the detected editor, waiting for the editor process to close before returning,
+raising an appropriate exception if no editor could be found or if the edit subprocess fails.
+The module should be robust across POSIX and Windows platforms,
+handle missing commands/editors gracefully with clear exceptions,
+and support a "pretend"/dry-run mode for testing
+or previewing commands without actually executing them.
+Include appropriate docstrings and type hints throughout. ---

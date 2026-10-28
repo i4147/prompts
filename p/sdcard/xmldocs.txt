@@ -1,0 +1,3 @@
+Corpus reader for corpora
+whose documents are xml files.
+(note -- not named 'xml' to avoid conflicting w/ standard xml package)

@@ -1,0 +1,30 @@
+Write a Python script that recursively scans the current working directory and
+all of its subdirectories for log files (files ending in the ".log" extension),
+then cleans each one in place by stripping terminal control and escape-sequence
+artifacts from its contents.
+The script should: - Search the current directory tree for every file with a
+".log" extension and report how many were found.
+If none are found, print a clear message stating that no log files exist and
+exit gracefully. - For each discovered log file, read its contents using UTF-8
+encoding while silently ignoring any undecodable bytes, so that malformed files
+do not stop processing. - Remove a predefined set of noise patterns commonly
+left behind by terminal output and ANSI escape codes.
+These include ANSI color and cursor control sequences (such as color codes,
+cursor movement, and character-set selection sequences), carriage return
+characters, shift-in and shift-out control characters, and stray caret or
+bracket fragments that result from captured escape sequences.
+Design the pattern list so it is easy to extend. - After removing those
+artifacts, collapse runs of two or more consecutive spaces within each line into
+a single space, while preserving line breaks and the overall line structure. -
+Overwrite each cleaned file with its sanitized content, writing back using UTF-8
+encoding. - Print a concise status message for each file as it is processed: a
+success indicator with the file path when cleaning succeeds, and an error
+indicator with the file path and the error description when it fails.
+A failure on one file must not prevent the remaining files from being processed.
+- Handle errors robustly so that permission problems, missing files, or encoding
+issues are reported without crashing the entire run. - Use clear, user-friendly
+console output so a user can see at a glance how many files were found and what
+happened to each one.
+The tool is intended as a simple command-line utility that a user runs from
+within a project folder to batch-clean terminal-captured log files, making them
+readable for review or further analysis. ---

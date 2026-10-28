@@ -1,0 +1,27 @@
+Write a Python script that scans a local directory tree (and optionally archive
+files within it) to discover and collect URLs and repository references from
+text-based content, then writes the findings into separate output files.
+The script should accept command-line arguments specifying the root directory to
+scan, an optional maximum file size limit in megabytes (with a sensible default
+of 15 MB), and options controlling how archives are handled.
+It should skip common version-control and cache directories such as those used
+by git and Python bytecode caches.
+Key behaviors: - Recursively walk the target directory, ignoring excluded
+directories, and read only files that are small enough to fit under the size
+limit. - Extract and search the contents of supported archive formats (including
+compressed tarballs, zip files, wheels, and other common compressed formats)
+using temporary working space that is cleaned up afterward, without leaving
+residue on disk. - Detect HTTP and HTTPS URLs in text, normalize them by
+stripping trailing punctuation and closing brackets, and de-duplicate results. -
+Identify git-style repository links (for example, entries referencing git
+submodules or repository remotes) and separate them from ordinary URLs. -
+Validate discovered URLs before recording them, using a helper for validity
+checking, and skip any that are malformed. - Append newly found URLs and
+repository references to two designated output text files, avoiding duplicates
+already present in those files from earlier runs. - Handle encoding errors,
+unreadable files, corrupt archives, and permission problems gracefully by
+logging a short warning and continuing the scan. - Print a concise summary at
+the end reporting how many files were scanned, how many archives were processed,
+and how many new URLs and repository links were added. - Keep all output
+messages and console feedback clear and minimal, suitable for use in automated
+pipelines. ---

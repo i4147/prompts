@@ -1,0 +1,3 @@
+Convert CRLF and CR line endings to LF, like dos2unix.
+Usage: python dos2unix.py FILE [FILE ...] python dos2unix.py - # read stdin,
+write stdout

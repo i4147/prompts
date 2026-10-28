@@ -1,0 +1,38 @@
+Write a Python module that defines an `Expander` class for resolving filesystem glob patterns into
+concrete file paths, with support for both absolute and relative patterns.
+Requirements: 1.
+Use `from __future__ import annotations` and import `sys` and `Path` from `pathlib`.
+2. Define a class `Expander` with an `__init__` method accepting two boolean parameters:
+- `recursive` (default `False`):
+when enabled, glob patterns should be expanded recursively (using `**`). - `follow_symlinks`
+(default `True`): when enabled,
+symlinked paths encountered during expansion should be resolved to their real target.
+3. Implement a method `expand_glob_patterns(self, patterns: list[str]) -> set[Path]` that:
+- Takes a list of glob pattern strings. - Returns a `set` of resolved `Path` objects (deduplicated).
+- For each pattern: - If the pattern is an absolute path:
+determine the root appropriately depending on platform
+(use the drive/first part as root on Windows via `sys.platform == "win32"`,
+otherwise use `/` as root), compute the remaining path portion,
+and glob from that root
+— applying a recursive `**/` prefix to the remaining portion if `recursive` is enabled,
+otherwise globbing the remaining portion directly.
+If there is no remaining portion,
+glob `**/*` from the root when recursive. - If the pattern is relative and `recursive` is enabled:
+glob the pattern from the current working directory with a `**/` prefix. - If the pattern is
+relative and not recursive:
+glob the pattern directly from the current working directory. - For each matched path:
+- If `follow_symlinks` is enabled and the path is a symlink:
+attempt to resolve it to its real path, and if the resolved path exists, add it to the result set;
+silently skip entries that raise `RuntimeError`
+or `OSError` during resolution (e.g., broken symlinks or symlink loops). - Otherwise,
+add the absolute form of the path to the result set.
+4. Implement a method `expand_directory(self, directory: Path) -> list[Path]` that:
+- Checks whether the given directory exists. - If it does not exist,
+  raises an appropriate error (e.g., `FileNotFoundError`) with a descriptive message such as
+  `"Directory not found: {directory}"`. - If it exists,
+  returns a list of file paths contained within that directory
+  (walking it according to the `recursive` setting established in the constructor,
+  and applying the same symlink-following behavior as `expand_glob_patterns`).
+Ensure the code is syntactically valid Python
+(proper exception handling syntax using `except (RuntimeError, OSError):`), well-structured,
+and includes type hints throughout as shown in the method signatures. ---

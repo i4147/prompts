@@ -1,0 +1,12 @@
+Write a Python script that locates the current user's bash history file in their
+home directory, reports how many entries it contains, and then removes duplicate
+entries so that each distinct command line appears only once, preserving the
+original order of first occurrences.
+The script should handle the case where the history file does not exist by
+informing the user and exiting gracefully.
+It should read the file tolerantly, ignoring any undecodable bytes, compare
+lines while ignoring trailing newline characters, overwrite the same file with
+the deduplicated content, and finally print a summary stating how many lines
+were removed.
+The script should be runnable directly from the command line and exit cleanly on
+completion. ---

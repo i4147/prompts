@@ -1,0 +1,49 @@
+Generate a Python command-line automation script named something like "auto_git_fmt" with the
+following purpose and behavior:
+**Purpose:** A developer utility that automatically formats Python code with Black,
+runs optional pre-commit hooks, ensures proper .gitignore setup (both global and per-repository),
+and commits/pushes the resulting changes to a Git repository — all in one automated pass,
+intended to be run manually or via a scheduler/cron job on one
+or more project directories. **Main inputs:** - One
+or more target directory paths passed as command-line arguments
+(the Git repositories/projects to process). - An optional user-level JSON config file at
+`~/.auto_git_fmt_config.json` that can override defaults such as:
+directories to skip (e.g. venv, .venv, .git, __pycache__, .mypy_cache, .ruff_cache),
+whether to do a dry run, whether to run pre-commit, extra arguments to pass to Black,
+the commit message prefix, logging level, max number of parallel worker threads/processes,
+and a timeout (in seconds) for py_compile syntax checks. - Command-line flags (via argparse) to
+override config values at runtime, such as enabling dry-run mode, verbosity/logging level,
+disabling pre-commit, limiting concurrency,
+and specifying a custom commit message prefix. - A global gitignore template file at
+`~/.gitignore_global`
+(created with sensible Python/editor defaults such as `.vscode/`, `.idea/`, `*.pyc`, `__pycache__/`,
+`venv/`, `.ipynb_checkpoints/`, log files, etc.,
+if it doesn't already exist). **Main outputs / behavior:** - Sets up logging (configurable level)
+with timestamped, leveled log messages to the console. - For each target repository/directory
+provided: - Skips configured directories (e.g. virtual envs, caches, `.git`). - Verifies the
+directory is a valid Git repository (and that `git` is available on PATH). - Ensures the global
+gitignore file exists and is configured via `git config --global core.excludesfile`;
+ensures a local `.gitignore` exists in the repo
+(creating/merging default ignore patterns if missing). - Runs a Python syntax check
+(via `py_compile` in a subprocess) on relevant `.py` files, with a per-file timeout,
+to catch files that would break Black
+or committing. - Runs `black` (with configurable extra arguments) on the repository to auto-format
+code, unless `dry_run` is enabled
+(in which case it should only report what would change, without modifying files or committing). -
+Optionally runs `pre-commit run --all-files` (or similar) if pre-commit is enabled
+and configured in the repo. - Stages changes (`git add`),
+checks if there are any actual changes to commit, and if so,
+creates a commit using a message that includes the configurable prefix (e.g. `[AUTO]`) plus a
+timestamp and/or summary of changes. - Optionally pushes the commit to the remote
+(if applicable/configured). - Logs clear success/failure/skip status for each repository,
+and continues processing the remaining repositories even if one fails. - Processes multiple
+repositories concurrently using a thread/process pool (`concurrent.futures`),
+with a configurable maximum number of workers,
+to speed up handling many repos at once. - Provides a helper function to run external shell commands
+(e.g. `git`, `black`, `pre-commit`) via `subprocess`, capturing stdout/stderr,
+supporting an optional working directory and timeout,
+and returning/logging the result in a consistent way,
+including honoring the global `dry_run` flag by skipping actual execution of mutating commands. -
+Exits with an appropriate process exit code reflecting overall success
+or failure across all processed repositories,
+and is safe to invoke repeatedly (idempotent) since it only commits when there are real changes. ---

@@ -1,0 +1,56 @@
+json_files): merged_data.extend(data) seen_prompts: List[str] = [] unique_data:
+List[Dict[str, Any]] = [] duplicates_count = 0 for item in merged_data:
+prompt = item.get("prompt", "") if isinstance(item, dict) else "" if not prompt:
+unique_data.append(item) continue is_duplicate = False for seen in seen_prompts:
+if partial_ratio(prompt, seen) >= 95:
+is_duplicate = True duplicates_count += 1 break if not is_duplicate:
+seen_prompts.append(prompt) unique_data.append(item) if not unique_data:
+print("No data to write.") return output_path = get_safe_output_path() with
+open(file_padth, "w", encoding="utf-8") as f:
+json.dump(unique_data, f, indent=2, ensure_ascii=False)
+print(f"Fuzzy-deduplicated {len(duplicates_config)}") Write a Python 3 command-line script that
+merges multiple JSON files containing lists of records (e.g., dataset entries with a "prompt" field)
+into a single deduplicated JSON file.
+Requirements: 1.
+Input handling: - Accept zero or more file/directory paths as command-line arguments.
+If none are given, default to the current working directory. - For each path:
+if it's a file with a ".json" suffix, include it directly;
+if it's a directory,
+recursively search it for all "*.json" files. - Return the resulting list of JSON file paths sorted
+and deduplicated. - Exclude any files named "merged.json" or
+whose filename starts with "merged_" (to avoid re-processing previous output files).
+2. Reading files: - For each JSON file, attempt to parse it as JSON.
+The expected top-level structure is a list of objects/records. - If the parsed content is not a
+list, treat it as empty (skip it). - If the file cannot be read
+or parsed (IOError or JSON decode error),
+silently treat it as an empty list rather than crashing. - Read
+and parse all discovered JSON files concurrently using a thread pool
+(e.g., ThreadPoolExecutor with a small number of workers, such as 4) for better performance on
+many files.
+3. Merging: - Concatenate all records from all successfully read files into one combined list,
+preserving order of files and items within each file.
+4. Deduplication: - Each record is expected to be a dictionary that may contain a "prompt" field
+(string). - If a record has no "prompt" field or an empty prompt,
+keep it automatically (do not attempt fuzzy comparison). - For records with a non-empty "prompt",
+compare it against all previously seen unique prompts using fuzzy string matching
+(use rapidfuzz's partial_ratio).
+If the similarity score is 95 or higher against any previously seen prompt,
+consider it a duplicate and discard it;
+otherwise keep it and remember its prompt for future comparisons. - Keep a running count of how many
+records were discarded as duplicates.
+5. Output: - If no JSON files were found,
+print a message like "No JSON files found."
+and exit without writing anything. - If after deduplication there is no data to write,
+print "No data to write." and exit without writing anything. - Otherwise,
+write the deduplicated list of records as pretty-printed JSON (indent=2, ensure_ascii=False) to a
+file. - The default output filename is "merged.json" in the current directory.
+To avoid overwriting an existing file, if "merged.json" already exists,
+generate a safe alternative name by appending an incrementing numeric suffix before the extension
+(e.g., "merged_1.json", "merged_2.json", etc.) until an unused filename is found. - After writing,
+print a summary message indicating how many duplicate records were removed during the fuzzy
+deduplication process.
+6. General: - Use only standard library modules plus "rapidfuzz" for fuzzy matching. - Structure the
+code with clear, small,
+reusable functions (e.g., for reading a JSON file, finding JSON files, computing a safe output path)
+and a "main" entry point guarded by "if __name__ == '__main__':". - Ensure the script runs as a
+standalone command-line tool with a shebang line for Python 3. ---

@@ -1,0 +1,22 @@
+Write a Python script that acts as a command-line utility for scanning,
+auditing, and reporting on package and file-system contents, with a focus on
+identifying and excluding large or unwanted compiler/toolchain packages.
+The script should accept command-line arguments to specify target paths or
+package sources, a set of default exclusion patterns (for example, compiler
+toolchains and related libraries) that users can extend or override, and
+optional size thresholds written in human-readable form (such as KB, MB, or GB).
+It should compute and display file and package sizes in a human-friendly format,
+parse size strings from user input, and support multiple output modes, including
+a readable console summary and machine-readable exports in CSV and JSON formats
+written to a user-specified file.
+The tool should be able to run long operations in parallel to keep processing
+fast, handle external system commands safely with timeouts and error reporting,
+compute content fingerprints (such as checksums) for files when requested, and
+gracefully report progress and errors without crashing on individual failures.
+It should produce a sorted report of the largest items, show totals and how much
+space would be saved by applying the exclusion rules, optionally perform a
+dry-run that only reports what would be removed or excluded, and exit with clear
+status codes indicating success, partial failures, or invalid arguments.
+The script must be runnable on the command line with help text describing every
+option, and it should be structured so it works correctly when launched as a
+standalone program on multiple platforms. ---

@@ -1,0 +1,22 @@
+Write a Python class for the Termux:GUI Python bindings that implements a `RadioGroup` widget,
+representing the native Android RadioGroup UI element.
+Requirements: - The class is named `RadioGroup`
+and must inherit from `LinearLayout` (imported from `termuxgui.linearlayout`). - Import `Optional`
+and `Literal` from `typing`, and import `View` from `termuxgui.view`,
+`Activity` from `termuxgui.activity`, `LinearLayout` from `termuxgui.linearlayout`,
+and `ViewGroup` from `termuxgui.viewgroup`. - Include a class docstring explaining that a RadioGroup
+is a container where only one contained RadioButton can be checked at a time,
+and that the RadioGroup emits events
+when the checked button changes. - Implement an `__init__` method with the following signature
+and behavior: - Parameters:
+`self`, `activity: Activity`, `parent: Optional[View] = None` (defaults to `None`),
+`visibility: Optional[Literal[0, 1, 2]] = None` (defaults to `None`). - Build a dictionary named
+`args` containing `"aid"` (set to `activity.aid`)
+and `"visibility"` (set to the `visibility` parameter). - If `parent` is not `None`,
+add a `"parent"` key to `args` set to `parent.id`. - Call `ViewGroup.__init__`
+(the grandparent class's init, bypassing `LinearLayout`'s own init) passing `self`, `activity`,
+and the result of `activity.c.send_read_msg(...)`. - The `send_read_msg` call must be invoked with a
+dictionary payload: `{"method": "createRadioGroup", "params": args}`,
+which sends a request to create the native RadioGroup view
+and reads back its view ID/response. - No other methods
+or attributes should be included beyond this constructor. ---

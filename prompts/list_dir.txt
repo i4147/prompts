@@ -1,0 +1,32 @@
+Write a Python script that acts as an enhanced directory listing tool, similar
+to the Unix `ls` command but with richer display and sorting options.
+The script should accept a target directory path (defaulting to the current
+directory) and command-line flags that control how entries are presented.
+Core behaviors to include: - Scan a directory and list its contents, with an
+option to recurse into subdirectories and display them as a nested tree or
+grouped sections. - Support multiple sorting strategies, such as by name, size,
+modification time, or extension, with options to reverse the order and to place
+directories or files first. - Allow hiding hidden entries by default and
+optionally including them, and provide a way to exclude common cache and tooling
+directories (for example version control, bytecode cache, and linter cache
+folders) from the listing. - Offer a detailed "long" format showing permissions,
+owner information, size, timestamps (with a configurable time format), and
+symbolic link targets. - Optionally display Git status indicators for each entry
+when the target lies within a Git repository, gracefully handling cases where
+Git is unavailable or the directory is not a repository. - Provide an icon mode
+that assigns simple visual symbols to entries based on type, such as
+directories, images, source code, archives, and executables. - Use ANSI terminal
+colors to distinguish directories, symbolic links, and executable files, with an
+option to disable colors entirely; color output must be automatically suppressed
+when writing to a non-terminal stream. - Support multiple output layouts,
+including a name-first column layout that fits the terminal width and a
+single-entry-per-line layout. - Provide a machine-readable JSON output mode that
+emits structured data for every entry, including name, path, type, size,
+timestamps, and any Git status. - Handle errors such as missing paths,
+permission-denied directories, and broken symbolic links gracefully, reporting
+them clearly without crashing the entire listing. - Include a clear command-line
+interface with help text describing every option, and return appropriate exit
+codes for success, invalid arguments, and runtime errors.
+The script should be self-contained, cross-platform where reasonable (with
+graceful fallbacks for platform-specific features such as owner lookup), and
+designed for readability and maintainability. ---

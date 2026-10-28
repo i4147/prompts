@@ -1,0 +1,16 @@
+Write a Python script that takes a text file path and a target character from
+the command line, then cleans the file in place.
+The script should read the file line by line, remove leading and trailing
+whitespace from each line, and skip lines that are empty after trimming.
+For each remaining non-empty line that contains the target character, it should
+discard everything before the first occurrence of that character, keeping the
+character itself and everything after it.
+Lines that do not contain the target character should be kept, trimmed of
+surrounding whitespace.
+The script should then overwrite the original file with the processed lines
+joined by newline characters, encoded as UTF-8, but only if at least one line
+remains after processing; otherwise the file should be left unchanged.
+The script should be runnable from the command line with the file path as the
+first argument and the target character as the second argument, and it should
+handle the input as plain text suitable for simple log or data cleanup tasks.
+---

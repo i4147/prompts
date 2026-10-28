@@ -1,0 +1,20 @@
+Write a Python module that serves as a public re-export interface for an SVG optimization library
+called `svgo`.
+The script must import three specific members from the `svgo` package:
+the `optimize` function (used to perform SVG optimization),
+the `builtinPlugins` object
+or collection (representing the set of default/built-in optimization plugins available in the
+library), and the `VERSION` constant (representing the version string or identifier of the library).
+The script's sole purpose is to act as a thin wrapper/facade that exposes these three imported
+members as the public API of this module.
+It must define an `__all__` list containing exactly the string names `"optimize"`,
+`"builtinPlugins"`, and `"VERSION"`, in that order,
+so that wildcard imports (`from module import *`) only expose these three symbols and nothing else.
+Notable behavior and constraints:
+- No additional logic, functions, classes,
+or transformations should be added
+— the module only imports
+and re-exports. - The import must be a single-line
+`from svgo import optimize, builtinPlugins, VERSION` statement. - The `__all__` variable must be a
+list of strings matching exactly the imported names. - The output should contain no comments,
+no docstrings, and no extra code beyond the import statement and the `__all__` definition. ---

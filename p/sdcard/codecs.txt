@@ -1,0 +1,46 @@
+Write a Python module that provides utilities for streaming binary data copying
+and compression using multiple codecs.
+The module should expose: 1.
+A type alias `BinaryIO` representing `IO[bytes]`,
+and a module-level constant `CHUNK_SIZE` defaulting to 1 MiB (1024 * 1024),
+used as the default chunk size for streaming operations.
+2. A function `copy_stream(source, destination, chunk_size=CHUNK_SIZE)` that:
+- Takes a readable binary stream (`source`)
+and a writable binary stream (`destination`). - Reads from `source` in chunks of `chunk_size` bytes
+using a loop (e.g., via the walrus operator with `source.read(chunk_size)`),
+stopping when an empty chunk (EOF) is returned. - Writes each chunk to `destination` as it is read.
+- Keeps a running total of the number of bytes read/written. - Returns the total number of bytes
+copied as an integer.
+3. A function `compress_stream(source, destination, codec, *, level=None, threads=None,
+chunk_size=CHUNK_SIZE)` that:
+- Reads binary data from `source`, compresses it according to the specified `codec`,
+and writes the compressed output to `destination`. - Supports three codec values via a `match`
+statement: `"gz"`, `"bz2"`, and `"xz"`. - For `"gz"`:
+uses `gzip.GzipFile` wrapping `destination` in writebinary mode,
+with `compresslevel` set to `level` if provided, otherwise defaulting to `9`.
+Delegates the actual copying to `copy_stream`, passing the source, the gzip writer,
+and `chunk_size`, and returns the result of that call. - For `"bz2"`:
+creates a `bz2.BZ2Compressor` with the given `level` (default `9` if not provided).
+Reads from `source` in a loop using the same chunked-read pattern, compresses each chunk,
+and writes the compressed bytes to `destination`.
+Tracks the total number of *uncompressed* bytes read (not compressed bytes written) as the
+running total.
+After the loop, flushes the compressor and writes any remaining compressed bytes to `destination`.
+Returns the total of uncompressed bytes processed. - For `"xz"`:
+creates an `lzma.LZMACompressor` with `format=lzma.FORMAT_XZ`
+and `preset` set to `level` if provided, otherwise defaulting to `6`.
+Uses the same chunked read/compress/write loop pattern as the `"bz2"` branch,
+tracking total uncompressed bytes read,
+flushing the compressor at the end and writing the flushed bytes to `destination`.
+Returns the total of uncompressed bytes processed. - Accepts a `threads` keyword-only parameter
+(for potential multi-threaded compression support, e.g., for codecs that support it),
+and a `level` keyword-only parameter to control compression level/preset across all codecs. - Use
+`from __future__ import annotations` for annotation handling,
+and type hints throughout
+(using the `BinaryIO` alias for binary stream parameters,
+`int | None` for optional numeric parameters).
+The purpose of this module is to provide a reusable,
+memory-efficient way to copy
+and compress binary streams of arbitrary size without loading the entire content into memory,
+supporting gzip, bzip2,
+and xz/lzma compression formats with configurable compression levels and chunk sizes. ---

@@ -1,0 +1,13 @@
+Regression tests for symlink-based path escape in IPIPANCorpusReader (CWE-22 / CWE-59).
+``channels()``, ``domains()``,
+``categories()`` and ``fileids(channels=...)`` route through ``_get_tag()``,
+which used to call the builtin ``open()`` on a plain string produced by
+``.replace("morph.xml", "header.xml")`` on the result of ``self.abspath()``.
+Since ``FileSystemPathPointer`` subclasses ``str``,
+that ``.replace()`` call silently discarded the ``PathPointer`` wrapper,
+so the resulting ``open()`` never went through ``nltk.pathsec`` at all, not even the global,
+non-scoped check.
+A symlink planted inside the corpus root, with a name containing no separators or "..",
+passed the existing traversal guard cleanly and could point anywhere on the filesystem.
+Paths are built with ``os.path.join`` / ``os.pardir`` so the tests behave the same on POSIX
+and Windows.

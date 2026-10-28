@@ -1,0 +1,44 @@
+Write a prompt for an AI coding agent to generate a Python script with the following specifications:
+The script should provide a low-level Python ctypes binding/wrapper for the native C-Blosc2
+compression library (libblosc2),
+enabling compression
+and decompression of binary data without requiring the official python-blosc2 package to
+be installed.
+Main requirements: 1. **Custom Exceptions**:
+Define a base exception class `Blosc2Error`,
+with two subclasses `CompressionError` and `DecompressionError` for handling compression
+and decompression failures respectively.
+2. **Library Discovery (`_find_library_paths`)**:
+Implement a function that builds a list of candidate filesystem paths
+and library names to locate the `libblosc2` shared library across different environments, including:
+- Termux on Android (using the `PREFIX` environment variable,
+defaulting to `/data/data/com.termux/files/usr`, checking paths like `lib/libblosc2.so`,
+`lib/libblosc2.so.2`,
+`local/lib/libblosc2.so`) - Standard Linux locations
+(`/usr/lib`, `/usr/local/lib`, `/usr/lib64`, `/usr/lib/x86_64-linux-gnu`),
+checking both `libblosc2.so`
+and `libblosc2.so.2` - A list of generic library names
+(`blosc2`, `libblosc2`, `libblosc2.so`, `libblosc2.so.2`) for fallback lookup 3. **Library Loading
+(`_load_library`)**: Implement a function that:
+- Iterates through the candidate paths returned by `_find_library_paths`,
+checking existence with `Path.exists()`, and attempts to load each via `ctypes.CDLL`,
+silently skipping any that fail with `OSError` - If no direct path succeeds,
+falls back to using `ctypes.util.find_library` with each of the candidate library names,
+attempting to load the resolved path via `ctypes.CDLL` - If all attempts fail, raises a clear,
+descriptive exception (e.g., `OSError` or `Blosc2Error`) explaining that the native libblosc2
+library could not be found,
+including guidance on how to install it
+(e.g., via Termux's `pkg install` or the system package manager) - Returns the loaded `ctypes.CDLL`
+object on success 4. **Platform considerations**:
+The code should be written with cross-platform awareness (primarily Linux/Termux),
+using `pathlib.Path` for path manipulation, and `os.environ` for environment variable access.
+Imports should include `ctypes`, `sys`, `os`, and `pathlib.Path`.
+5. **Design intent**:
+This module is intended to serve as the foundational layer
+(library discovery/loading and error types) for a larger ctypes-based wrapper that will subsequently
+define function signatures (e.g., `blosc2_compress`, `blosc2_decompress`) on the loaded library
+object and expose higher-level Python functions for compressing and decompressing byte buffers,
+raising `CompressionError`/`DecompressionError` on failure.
+Ensure the generated code is well-structured, includes appropriate comments,
+and gracefully handles the case where the library is not installed on the system,
+producing an actionable error message rather than a raw traceback. ---

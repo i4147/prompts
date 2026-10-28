@@ -1,0 +1,27 @@
+Write a Python script that extracts a range of lines from a text file given on
+the command line and saves that excerpt to a new output file.
+The tool should accept a file path, a starting line number, and an optional
+ending line number.
+If the end line is omitted, the excerpt should run from the start line through
+the end of the file.
+Requirements: - **Inputs:** A source filename, a 1-based start line, and an
+optional inclusive end line, all supplied as command-line arguments.
+Print a short usage message to standard error and exit with a non-zero status if
+the required arguments are missing. - **Validation:** Reject non-integer line
+numbers, a start line below 1, and an end line smaller than the start line.
+Report each problem with a clear error message on standard error and exit with a
+non-zero status.
+Also report an error if the source file does not exist or is not a regular file.
+- **Output:** Write the selected lines to a new file in the current working
+directory that keeps the original file's extension.
+Name the output by the line range, using the form `<start><ext>` when no end
+line is given and `<start>_<end><ext>` when one is given. - **Text handling:**
+Read the source as UTF-8 text, tolerating invalid byte sequences without
+crashing, and write the output as UTF-8. - **Behavior:** Copy lines exactly as
+they appear, preserving their original line endings and content.
+Handle files shorter than the requested range gracefully by copying whatever
+lines exist.
+Exit with status 0 on success. - **Robustness:** Handle file read and write
+errors gracefully with informative messages rather than unhandled exceptions. -
+**Style:** Keep the script self-contained, runnable as a standalone command-line
+program, and clearly documented with a brief usage description. ---

@@ -1,0 +1,41 @@
+Create a dependency-free,
+best-effort Markdown formatter module in Python
+(using `from __future__ import annotations` and the `re` module) that exposes a single public
+function `format_markdown(text: str, options: Options) -> str`,
+where `Options` is imported from a sibling module via `from ..api import Options`.
+The formatter must be conservative
+and idempotent (running it multiple times on already-formatted text should produce no
+further changes).
+Its purpose is to clean up whitespace
+and spacing issues in Markdown without altering the actual content or inline markup.
+Specifically it should: 1. **Preserve fenced code blocks verbatim**:
+detect fences opened with ``` ```
+``` or `~~~` (allowing leading whitespace before the marker), track whether theently inside a fence,
+and pass through every line inside the fence unchanged
+(no trailing-whitespace stripping or other modification)
+until the matching closing fence marker is found.
+2. **Strip trailing whitespace** from every line outside of fenced code blocks.
+3. **Collapse multiple consecutive blank lines into a single blank line**,
+tracking the "type" of the previous emitted line (e.g. `block`, `blank`, `heading`, `list`, `fence`)
+so blank-line collapsing and spacing rules can be applied consistently.
+4. **Normalize heading syntax**:
+for lines matching ATX headings
+(`#` through `######` followed by optional whitespace and text, with trailing whitespace trimmed),
+reformat them to exactly one `#`-level marker followed by a single space
+and the trimmed heading text.
+5. **Normalize list item spacing**:
+recognize list items via a regex capturing leading indentation,
+the bullet marker (`-`, `*`, `+`, or a numbered marker like `1.` or `1)`), and the item text,
+ensuring consistent single-space formatting after the marker.
+6. **Do not reflow paragraph text or rewrite inline markup** (emphasis, links, inline code, etc.)
+— only structural/whitespace normalization is performed.
+The function should split the input text into lines,
+iterate through them building an output list of formatted lines,
+and finally return the reconstructed Markdown string.
+Include a module docstring explaining that this is a conservative, dependency-free,
+idempotent Markdown formatter that preserves code fences, normalizes heading/list spacing,
+strips trailing whitespace, and keeps a single blank line between block elements,
+without reflowing text or rewriting inline markup.
+Also include a helper function `_format_heading(line)` that matches
+and reformats a single heading line (returning `None` if the line is not a heading),
+and a module-level compiled regex `_LIST_RE` for detecting list items. ---

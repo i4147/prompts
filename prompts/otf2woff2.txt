@@ -1,0 +1,16 @@
+Write a Python script that converts font files to the WOFF2 web font format.
+The tool should accept one or more font file paths as command-line arguments; if
+no arguments are given, it should automatically find all OpenType (.otf) font
+files in the current working directory.
+For each input font, it should produce a WOFF2 file placed alongside the
+original, using the same base name with a .woff2 extension.
+If a WOFF2 file with that name already exists and is non-empty, the tool should
+generate a unique alternative filename instead of overwriting it.
+Print a short confirmation message for each successfully converted file, and
+print an error message identifying the file when a conversion fails, without
+stopping the processing of the remaining files.
+When a single file is provided, process it directly and exit with a non-zero
+status code.
+When multiple files are provided, process them in parallel to improve speed.
+The script should be runnable from the command line as a standalone program and
+should exit cleanly once all work is complete. ---

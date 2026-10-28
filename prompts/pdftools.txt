@@ -1,0 +1,36 @@
+Write a Python script that acts as a command-line PDF text extraction and
+merging tool.
+It should accept one or more input paths, where each path can be either a PDF
+file or a directory that contains PDFs, and it should gather all readable PDF
+files fromputs.
+For each readable document, the tool should extract the plain text of every
+page, processing pages in parallel across multiple worker processes so that
+large documents and large batches finish quickly.
+The script should produce a single consolidated text output, written to a
+specified output location (with a sensible default), in which the extracted
+content from all documents is combined in a clear, predictable order.
+Each document's section should be clearly delimited so a reader can tell where
+one file ends and the next begins, and page boundaries should be preserved or
+marked so the reader can trace text back to its original page number.
+Trailing form-feed or page-break artifacts from the extraction should be removed
+so the output is clean.
+The tool should be robust in its handling of inputs: it must skip files that are
+encrypted or password-protected, files with no pages, and files that cannot be
+opened at all, while reporting each skipped file with a brief reason rather than
+crashing.
+It should also sanitize any names derived from file paths before using them in
+output labels or temporary artifacts, so that unusual characters in filenames do
+not cause problems.
+Parallel work should be divided into balanced chunks so the workload is spread
+evenly across the available CPU cores, and the number of workers should be
+configurable from the command line, defaulting to the machine's available cores.
+Provide a clear command-line interface with helpful help text, options for the
+output path, the worker count, and an optional flag to suppress progress
+messages.
+The tool should print a concise summary at the end showing how many files were
+processed, how many pages were extracted, and how many files were skipped.
+It should exit with a non-zero status code on fatal usage errors such as no
+valid input being found, and zero on success.
+Use the PyMuPDF library for PDF access.
+Keep the design modular and readable, with the main entry point guarded so the
+script can also be imported without side effects. ---

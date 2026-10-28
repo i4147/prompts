@@ -1,0 +1,23 @@
+Write a Python command-line script named `quick_example.py` that uses the `docopt` library to parse
+command-line arguments based on a defined usage pattern.
+The script must support two mutually exclusive subcommands:
+1. `tcp <host> <port> [--timeout=<seconds>]` — for connecting via TCP, requiring a host and port,
+with an optional timeout flag.
+2. `serial <port> [--baud=9600] [--timeout=<seconds>]` — for connecting via a serial port,
+requiring a port argument, with an optional baud rate (default 9600) and an optional timeout flag.
+The script must also support standard help and version flags: `-h`, `--help`, and `--version`.
+Behavior and requirements:
+- Define the usage/help text as the module's docstring,
+following the exact docopt syntax format shown above
+(including the `Usage:` section listing all three invocation patterns). - Import `docopt` from the
+`docopt` package. - In the `if __name__ == "__main__":` block,
+call `docopt(__doc__, version="0.1.1rc")` to parse `sys.argv` automatically using the docstring as
+the usage pattern, and set the version string to `"0.1.1rc"` (so `--version` prints this string). -
+Store the parsed result in a variable named `arguments`
+and simply `print(arguments)` to display the parsed arguments dictionary
+(mapping each option/argument/command to its parsed value). - The script should not do anything else
+beyond parsing and printing the arguments
+— no actual TCP or serial connection logic needs to be implemented. - Ensure the docstring is
+formatted precisely so that `docopt` can correctly parse it
+(correct indentation, option descriptions, and blank line structure),
+since `docopt` relies on exact text parsing of the usage string. ---

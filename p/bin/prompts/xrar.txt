@@ -1,0 +1,31 @@
+Write a Python script that recursively scans a given root directory for RAR archives
+and extracts them, handling multi-part archives correctly.
+The script should locate every RAR file beneath the root folder,
+but only treat the first volume of a multi-part set
+(for example, files following a ".part1" or ".part01" naming pattern) as an extraction target,
+so that each archive set is processed exactly once.
+For each archive, it should identify all related volumes that belong to the same set by matching
+their shared base name in the same directory,
+and then extract the contents into a sensibly named output location associated with that archive.
+The script should accept a root directory path as its main input,
+either from the command line or an interactive prompt,
+and validate that the path exists and is a directory before proceeding.
+It should be able to process multiple archives in parallel to speed up work on large collections,
+while keeping the number of concurrent workers configurable
+and defaulting to a reasonable value based on the machine's available resources.
+Before and after extraction,
+the script should report useful information such as the number of archives found,
+the total size of the data involved, the progress of each extraction,
+and a summary of successes and failures at the end.
+It should handle errors gracefully:
+a corrupted or password-protected archive should be logged
+and skipped without stopping the rest of the batch,
+and any extraction problems should be clearly reported with the archive's name
+and the reason for failure.
+The script should produce a human-readable console output with clear status messages,
+optionally write a log file recording every action and error,
+and exit with a non-zero status code if any archive failed.
+It should be safe to run on Windows, macOS, and Linux,
+handle paths with spaces and non-ASCII characters correctly,
+and avoid overwriting existing extracted content
+unless explicitly allowed by a configurable option. ---

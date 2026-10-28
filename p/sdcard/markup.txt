@@ -1,0 +1,50 @@
+Write a prompt for an AI coding agent that generates a Python module implementing parsers for
+multiple lightweight markup/document formats
+(`.md`/`.markdown`, `.rst`, `.html`/`.htm`, `.tex`, `.org`, `.adoc`/`.asciidoc`, `.textile`,
+`.wiki`), converting each into a shared internal `Document`/`Block` representation for a
+document-processing pipeline.
+The module should: - Start with a module-level docstring listing the supported file extensions
+and describing them as "markup formats." - Use `from __future__ import annotations` and import `re`,
+`Path` from `pathlib`, `BeautifulSoup` from `bs4`, the `markdown` library,
+and `pypandoc`. - Import shared internals from the parent package:
+a `Block` and `Document` data model from `..model`,
+a `register` decorator from `..registry`
+(used to associate file extensions and a format name with each parser function),
+and a `read_text` helper from `.._util` for reading file contents as text. - Define one parser
+function per format (or group of related extensions),
+each decorated with `@register([...extensions...], "<format_name>")`,
+accepting a `Path` argument
+and returning a `Document` instance populated with `Block` objects. - Each `Document` should carry
+the original `path` and a `format` string identifying the parser used,
+along with a list of parsed `Block` objects. - Each `Block` should have a `kind`
+(e.g., "heading", "paragraph", "code"), a `text` payload,
+and optionally `level` (for headings) and `meta` (e.g., `{"language": ...}` for fenced code blocks).
+For the Markdown parser specifically:
+- Read the file as text via `read_text`. - Perform a manual line-by-line scan
+(not using the `markdown`/`pypandoc` libraries for structural splitting) to split the document into
+blocks at the line level:
+- Detect fenced code blocks delimited by triple backticks
+(optionally followed by a language identifier), toggling an "in code block" state;
+capture the optional language identifier. - Detect ATX-style headings
+(lines starting with 1-6 `#` characters followed by a space and heading text,
+with optional trailing `#` characters), but only when not currently inside a fenced code block;
+record the heading text
+and its level (number of `#` characters). - Accumulate all other lines into a buffer representing
+the current paragraph or code block content. - Implement a `flush` helper that, when called,
+joins the buffered lines, strips surrounding whitespace, and if non-empty,
+appends a new `Block` to the list
+— using kind `"code"` with a `meta` dict containing the detected language when inside a code block,
+or kind `"paragraph"` otherwise
+— then clears the buffer. - Call `flush` whenever a fence toggle
+or heading is encountered (to close out the preceding block),
+and once more at the end of the loop to flush any trailing content. - Return a `Document` with
+`format="markdown"` and the collected blocks.
+For the remaining formats
+(`.rst`, `.html`/`.htm`, `.tex`, `.org`, `.adoc`/`.asciidoc`, `.textile`, `.wiki`),
+define analogous `@register`-decorated parser functions
+(following the same signature and `Document`/`Block` construction pattern as the Markdown parser)
+that convert each format's content into structured blocks
+— leveraging `BeautifulSoup` for HTML parsing
+and `pypandoc` for converting other markup formats as appropriate
+— so that every supported extension maps to a registered parser producing a consistent `Document`
+object. ---

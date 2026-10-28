@@ -1,0 +1,11 @@
+Regression tests for the RecursiveDescentParser wall-clock DoS bound
+(CVE-2026-12876 / GHSA-ff5c-cp5c-9wjf).
+Top-down recursive-descent search is unbounded on a left-recursive or highly ambiguous grammar:
+a tiny crafted grammar makes a short input consume CPU forever (CWE-407 / CWE-674).
+Both payloads below were reproduced hanging on the unpatched parser
+(killed after 8s on a 24-token input).
+The fix arms a wall-clock deadline on the first parse step and checks it on every recursive entry,
+raising ``TimeoutError`` when exceeded;
+``max_time=None`` disables it. ``max_time`` is a Python-level check
+(not subject to the ``re``-style GIL problem),
+so the exploits raise in-process and the tests need no subprocess.

@@ -1,0 +1,31 @@
+Write a Python script that scans the directories listed in the system's PATH
+environment variable, identifies every executable file found in them, and
+reports any executable names that appear more than once across different
+directories, flagging which copies are true duplicates (identical content) and
+which are conflicting variants (same name, different content).
+The tool should: - Read the PATH environment variable, split it into individual
+directory entries, and skip empty or invalid entries gracefully. - Visit each
+directory safely, ignoring directories that do not exist, cannot be read, or are
+not directories, and never crashing on permission errors. - Treat only regular
+files that are marked executable for the current user as executables; ignore
+subdirectories, symbolic links that point to nothing, and non-executable files.
+- Compute a content fingerprint for each executable so that byte-identical
+copies can be recognized even when they live in different locations.
+Handle large files efficiently by reading them in chunks, and treat empty or
+unreadable files as having no fingerprint. - Group all discovered executables by
+their file name, preserving the full path and fingerprint of every occurrence,
+and preserve the order in which PATH directories are searched so that precedence
+is clear. - Report, for each name that exists in more than one location, the
+full ordered list of locations, which location would be resolved first by a
+shell (the earliest PATH entry), and whether the copies are identical or differ
+in content. - Accept command-line options that let the user choose an output
+format (human-readable text by default and a machine-readable JSON option),
+limit the report to only conflicting or only duplicate names, optionally include
+single-occurrence executables, and specify a custom list of directories to scan
+instead of PATH. - Print results to standard output and use clear, consistent
+messages on standard error for warnings such as unreadable directories.
+Exit with status code zero when no conflicts are found and a non-zero code when
+conflicts exist, so the tool can be used in scripts and continuous integration
+checks. - Remain fast on systems with many executables and large binaries, and
+produce deterministic, sorted output so repeated runs can be compared. - Include
+a brief help message describing all options and their defaults. ---

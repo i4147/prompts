@@ -1,0 +1,8 @@
+autoall — lazily generate ``__all__`` for any package on first import.
+Public API ---------- ensure_all(pkg_name, *, persist=True) → list[str] Called at the *bottom* of a
+package's ``__init__.py``.
+Sets ``__all__`` from the directory contents
+and writes the block once (see markers). install(target) → Path
+(inject the ``ensure_all`` call into __init__.py) uninstall(target) → Path
+(remove the injection and the generated block) is_installed(target)→ bool regenerate(name) →
+list[str] (force re-scan) main(argv=None) → int (CLI entry point)

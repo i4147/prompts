@@ -1,0 +1,4 @@
+Render a tree listing (text) into a PNG that looks like a terminal screenshot.
+Useful for testing tree2fs' image input without an actual terminal:
+python make_screenshot.py sample_tree.txt -o screenshot.png [--dark] [--size 16] For real usage,
+just take an actual screenshot of `tree` output.

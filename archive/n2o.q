@@ -1,5 +1,4 @@
 You are an expert Python packaging engineer.
-
 Context:
 - I have an existing Python project with a pyproject.toml already present.
 - I need you to generate a setup.py file for this project.
@@ -8,9 +7,7 @@ Context:
 - Build backend declared in pyproject.toml: one of [setuptools.build_meta, poetry-core, hatchling, flit_core, pdm-backend]
 Task:
 Generate a setup.py that is consistent with the existing pyproject.toml.
-
 Rules:
-
 1. If the build backend is setuptools and pyproject.toml already contains all metadata, generate the minimal shim:
    from setuptools import setup
    setup()
@@ -22,9 +19,7 @@ Rules:
 6. Preserve compatibility with [target Python version].
 7. Add brief comments explaining any non-obvious logic.
 8. Ensure the result supports pip install -e . and python -m build if applicable.
-
 Output:
-
 · First, provide the complete setup.py in a code block.
 · Then, a short section titled "Assumptions / Notes" listing any assumptions and any changes I should make.
 · If you need more files or information, ask for them before generating.

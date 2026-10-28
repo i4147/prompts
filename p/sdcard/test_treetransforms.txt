@@ -1,0 +1,9 @@
+Regression tests for the quadratic-time DoS in ``nltk.tree.Tree.un_chomsky_normal_form`` (CWE-407).
+The un-binarisation pass removed each artificial Chomsky-Normal-Form node from its parent with
+``parent.index(node)`` / ``parent.remove(...)``.
+Because ``Tree`` subclasses ``list``,
+those compare children by value via the recursive ``Tree.__eq__``,
+rescanning a child list that grows wide as nodes are spliced out
+-- O(n^2) over the artificial nodes (worse with deep subtrees).
+The pass now rebuilds each parent's child list in a single left-to-right sweep (O(n)),
+producing identical output for any tree in Chomsky Normal Form.

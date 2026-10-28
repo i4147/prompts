@@ -1,0 +1,39 @@
+Write a Python script that normalizes file permissions across a directory tree,
+so that files and folders end up with consistent, sensible modes based on their
+type, location, and name.
+The tool should walk a target directory (recursively, with options to limit
+depth or skip certain directories), and for each regular file and directory
+decide the appropriate permission bits.
+Key requirements: - **Purpose:** Bring permissions in a project or extracted
+archive into a predictable state: regular directories get a standard directory
+mode, ordinary files get a standard non-executable mode, and files that should
+be executable (shell scripts, shared libraries, files inside
+bin/sbin/scripts/tools-style folders) are marked executable.
+Optionally, Python source files found in such places should have their
+executable bits removed unless they live in designated executable locations. -
+**Inputs:** A root path (defaulting to the current directory), plus command-line
+options to control behavior, such as a dry-run mode that only reports intended
+changes, a verbose mode, a flag to include or exclude hidden entries, a set of
+directory names to skip entirely, glob patterns for files to de-executable, a
+set of suffixes that should always be executable, and a worker count for
+parallel processing. - **Outputs:** Changes applied to the filesystem (or only
+reported in dry-run mode), a progress indicator when the optional progress
+library is available and a plain fallback otherwise, and a concise summary at
+the end listing counts of files and directories examined, changed, and skipped,
+plus elapsed time.
+Errors on individual paths should be reported without aborting the whole run. -
+**Behavior:** Skip symbolic links rather than following them.
+Skip default-excluded directories such as version control and virtual
+environment folders.
+Use parallel workers for speed when the file count is large, while keeping the
+sequential path for small trees.
+Optionally support a binary-detection helper if available; if not, fall back to
+treating all files as non-binary.
+Handle platform differences gracefully, and avoid changing permissions on paths
+the user lacks rights to modify, reporting them instead. - **Robustness:**
+Validate the root path exists and is a directory before starting, exit with a
+clear error message and non-zero status on invalid input, and handle keyboard
+interrupts cleanly with a partial summary.
+Design the command-line interface, internal structure, and specific mechanisms
+freely, prioritizing correctness, safety (never follow symlinks outside the
+tree), and clear, readable output. ---

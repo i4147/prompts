@@ -1,0 +1,27 @@
+Write a Python test suite using pytest that validates the `compress`
+and `decompress` functions from a module named `plz4` (an LZ4-based compression library).
+The test suite should cover the following behaviors: 1. **Round-trip correctness with random data**:
+Using `pytest.mark.parametrize`,
+test that compressing
+and then decompressing random byte data (generated via `os.urandom`) returns the original
+data unchanged.
+Test this across multiple sizes: 0, 1, 10, 1024, and 1,048,576 (1 << 20) bytes.
+2. **Round-trip correctness with highly compressible data**:
+   Create a 1,000,000-byte buffer of repeated identical bytes (e.g., `b"a" * 1_000_000`),
+   compress it, and assert that:
+   - The compressed output is significantly smaller than the original
+   (less than 1/100th of the original size),
+   verifying effective compression. - Decompressing the compressed data returns the original
+   data exactly.
+   3. **Error handling for invalid compressed data**:
+   Verify that calling `decompress` on a byte string that is not valid LZ4-compressed data
+   (e.g., `b"\x00\x01\x02\x03not-lz4"`) raises a `ValueError`.
+   4. **Type checking on input**:
+   Verify that calling `compress` with a non-bytes argument (e.g., a plain string instead of bytes)
+   raises a `TypeError`.
+Use `pytest.raises` as a context manager to assert exceptions are raised where expected.
+Each test should be a standalone function with a descriptive name indicating what it verifies
+(e.g., `test_roundtrip_random`, `test_roundtrip_highly_compressible`, `test_invalid_data_raises`,
+`test_type_errors`).
+Include necessary imports (`os`, `pytest`, and the `compress`/`decompress` functions from `plz4`).
+Use type annotations for function signatures (e.g., `-> None`, `size: int`). ---

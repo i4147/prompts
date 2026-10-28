@@ -1,0 +1,48 @@
+Write a Python module for the PreTeXt project named `core/pretext/utils/common.py`
+(or similarly placed shared low-level utilities module) that serves as a foundational,
+dependency-free helper module in a layered import architecture.
+Context and purpose:
+- This module was created by splitting shared low-level helper code out of a larger `pretext.py`
+file, dated 2026-06-03. - It must import nothing from its sibling modules within the project;
+it sits at the base of a strictly one-way import graph:
+`common` is imported by `webwork`, `stack`, and `pretext`,
+but `common` itself never imports from them. - Include the standard GNU GPL
+(v2 or v3, licensee's choice) license header for the PreTeXt project, copyright "Robert A. Beezer,
+2010-2026", referencing that PreTeXt is free software distributed without warranty,
+with a link to <http://www.gnu.org/licenses/>. - Include a "History" comment block noting the
+creation date and reason (split from pretext.py on 2026-06-03). - Import Python's built-in `logging`
+module, since this module centralizes logging configuration for the whole PreTeXt toolchain via a
+shared logger object (referred to as `ptxlogger`).
+Main functionality to implement: 1.
+Define a shared logger instance (`ptxlogger`) that all other PreTeXt modules will use to
+emit messages.
+2. Define a set of named message severity levels that every log message passed through
+`ptxlogger` will use.
+These severities represent "what happened and who should act," and should include at least:
+debug, info, warning, error, and a special "fatal" level.
+Document clearly that "fatal" is unique in being both a severity level and an action
+— emitting a fatal-level message should actually halt/abort the build process
+(e.g., by raising an exception or calling `sys.exit`), unlike the other levels which just log.
+3. Provide helper functions
+(e.g., `ptxlogger.debug`-style wrappers or standalone functions like `debug(msg)`, `info(msg)`,
+`warning(msg)`, `error(msg)`,
+`fatal(msg)`) that format and dispatch messages at each severity level through the shared logger,
+with `fatal` additionally terminating execution after logging.
+4. Include logic to configure the logger (handler, formatter, and log level) suitable for a
+command-line build tool,
+so that messages are displayed to the user appropriately based on severity
+(e.g., writing to console/stderr, with level-appropriate formatting or color/prefix conventions).
+5. Keep the module free of any dependency on other PreTeXt submodules
+— only standard library imports
+(such as `logging`, and potentially `sys`, `os`, `subprocess`,
+or `shutil` if needed for other shared low-level utilities) are allowed.
+Notable behavior/constraints: - The module is purely a low-level utility/helper layer:
+no business logic specific to WeBWorK, STACK,
+or the main PreTeXt build process should live here. - Must preserve the strict one-way dependency
+direction described above. - The "fatal" severity must be clearly distinguished in both
+documentation/comments and implementation from the other severities,
+since it changes control flow (stopping the build) rather than just producing output. - Code
+and comments should match the style
+and tone of the existing PreTeXt codebase
+(detailed header comments, explanatory prose comments above major sections,
+GPL licensing boilerplate). ---

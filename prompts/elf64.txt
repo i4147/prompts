@@ -1,0 +1,20 @@
+Write a Python script that scans a given directory tree for binary files and
+identifies 64-bit ELF executables and libraries, reporting each one's file type,
+target machine architecture, and size.
+The tool should accept a directory path from the command line, walk the
+directory recursively, and skip files that are not binary or cannot be read due
+to permission or I/O errors.
+For each qualifying file, it should determine the ELF file type (such as
+executable, shared object/PIE, relocatable object, or core dump) and the CPU
+architecture it targets (such as x86-64, ARM, AArch64, RISC-V, MIPS, PowerPC,
+and similar), falling back to a clear "unknown" label for unrecognized values.
+Malformed or non-ELF files should be silently ignored rather than crashing the
+run.
+Use parallel processing with a fixed pool of worker processes to speed up
+scanning of large trees.
+Collect the results and print them in a readable, aligned summary showing the
+path, file type, architecture, and size, followed by a total count of matching
+files.
+Include sensible error handling for an invalid or missing directory argument,
+and make sure the script exits with a non-zero status code on fatal errors and
+zero on success. ---

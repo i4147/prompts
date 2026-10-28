@@ -1,0 +1,2 @@
+Find top directory footprints or largest files recursively.
+Optimized with pathlib, os.scandir caching, and formatted with Rich.

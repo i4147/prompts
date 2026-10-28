@@ -1,0 +1,4 @@
+Configuration management setup Some terminology:
+- name As written in config files. - value Value associated with a name - key Name combined with
+it's section (section.name) - variant A single word describing
+where the configuration key-value pair came from

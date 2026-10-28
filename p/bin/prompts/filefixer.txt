@@ -1,0 +1,28 @@
+Write a Python script that acts as a command-line file-type detection and triage tool.
+It should accept one or more file paths or directories as input,
+recursively discover the files to inspect,
+and determine each file's true content type and a normalized file extension,
+regardless of what the file name claims.
+The tool should rely on multiple detection strategies with graceful fallbacks,
+so that it still works when some optional detection libraries are not installed:
+it should use content signatures and magic bytes where available,
+consult the file's shebang line for scripts,
+and distinguish text from binary content by sampling the data.
+For archives such as zip and tar files,
+it should be able to look inside and report what they contain.
+The script should produce a clear, structured report for each file, showing the detected type,
+the confidence or method used, whether the file is text or binary,
+and whether its extension matches the detected content.
+It should support an option to rename or flag mismatched files without overwriting existing data,
+a dry-run mode that only reports intended changes,
+and filters that let the user include or exclude file types or patterns.
+Recognize Python source files specifically and, where useful, report basic information about them.
+Processing of many files should be efficient, optionally using parallel workers,
+and the tool should handle unreadable files, broken symlinks,
+and permission errors gracefully by logging a warning and continuing.
+Provide output in a human-readable table or summary by default,
+with an option to emit machine-readable JSON.
+Use standard logging with adjustable verbosity, return a meaningful exit code reflecting success,
+partial failure, or invalid usage, and include helpful command-line help text.
+Keep the design modular and well documented so that individual detection strategies can be added
+or replaced easily. ---

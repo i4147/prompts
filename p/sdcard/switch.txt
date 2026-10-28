@@ -1,0 +1,21 @@
+Write a Python module that defines a `Switch` class representing a Switch UI widget for the
+Termux:GUI framework (using the `termuxgui` package).
+The class should: - Be named `Switch`
+and inherit from both a local `View` base class (imported from `termuxgui.oo.view`)
+and `tg.Switch` (from the `termuxgui` package, imported as `tg`). - Have a docstring describing it
+as representing a Switch. - Implement an `__init__` method with the following parameters:
+- `activity`: a `tg.Activity` instance (required). - `text`:
+a string label for the switch (required). - `parent`:
+an optional `View` instance, defaulting to `None`. - `checked`:
+a boolean indicating the initial checked state, defaulting to `False`. - `visibility`:
+an optional literal value restricted to `0`, `1`, or `2`, defaulting to `None`. - In `__init__`,
+first call `tg.Switch.__init__` passing `activity`, `text`, `parent`, `checked`,
+and `visibility` to properly initialize the underlying Termux:GUI switch widget. - Then call
+`View.__init__` passing `activity`, `self.id`,
+and `parent` to initialize the base view wrapper functionality. - Use proper type hints throughout,
+importing `Optional` and `Literal` from the `typing` module.
+The purpose of this module is to provide an object-oriented wrapper class that combines the
+low-level `termuxgui` Switch widget with the higher-level local `View` abstraction,
+so that a Switch instance behaves both as a native
+Termux:GUI switch and as a `View` within the application's own view hierarchy.
+---

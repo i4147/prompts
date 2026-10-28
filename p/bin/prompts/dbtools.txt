@@ -1,0 +1,23 @@
+Write a Python script that merges the contents of multiple data files
+and database sources into a single consolidated output.
+The tool should be a command-line utility that accepts one or more input locations,
+which may be individual files, directories, compressed archives, or SQLite/ODBC database sources.
+It should walk through the inputs, detect how each source is structured,
+and extract its records or text content in a robust way:
+handle different text encodings with sensible fallbacks,
+skip or safely truncate overly large text content,
+and tolerate unreadable or malformed items without aborting the whole run.
+The script should support parallel processing where it helps throughput,
+so that many independent sources can be handled concurrently
+while keeping the final output deterministic and well-ordered.
+It should provide optional verbose logging to show progress and per-source outcomes,
+and it should report a clear summary at the end indicating how many sources were processed, merged,
+skipped, or failed.
+The merged result should be written to a single output file in a clearly structured,
+machine-readable format, with each record traceable to its original source.
+Include options for choosing the output destination, controlling concurrency, setting verbosity,
+and limiting or filtering which inputs or tables are included.
+Handle the case where optional third-party modules are not installed by degrading gracefully
+and informing the user which source types are unavailable.
+Ensure the tool runs correctly when packaged or invoked from a frozen executable,
+and that it exits with a meaningful status code reflecting success, partial success, or failure. ---

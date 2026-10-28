@@ -1,0 +1,26 @@
+Write a Python command-line script that converts the entire content of a text file to uppercase
+and saves the result to a new file.
+Requirements: 1. **Purpose**:
+Read an input text file line by line, convert each line to uppercase,
+and write the converted lines to an output file.
+2. **Inputs**: - Use the `argparse` module to accept two required positional command-line arguments:
+- `input_file`: path to the input file to be processed.
+- `output_file`: path to the file where the processed (uppercase) content will be saved.
+  3. **Core functionality**:
+  - Implement a function (e.g., `to_uppercase(input_file, output_file)`) that opens the input file
+  for reading and the output file for writing, iterates over each line of the input file,
+  converts it to uppercase using the string `.upper()` method, and writes it to the output file.
+  4. **Timing behavior**:
+  - Measure the execution time of the file-processing function using the `time` module
+  (record a start time before processing and an end time after processing). - After processing
+  completes, print a message showing the input file name
+  and the elapsed processing time formatted to two decimal places, e.g.:
+  `"{input_file} processed in {el.2f} seconds"`.
+  5. **Structure**: - Organize the code with a `main()` function that sets up the argument parser,
+  parses the arguments, calls the processing function, times it,
+  and prints the result. - Use the standard `if __name__ == "__main__": main()` entry point guard.
+  6. **Behavior notes**:
+  - The script should not perform any additional validation
+  or error handling beyond the default behavior of Python's file I/O
+  and argparse. - Output should preserve line structure
+  (i.e., write each line as-is after uppercasing, without altering newlines). ---

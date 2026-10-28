@@ -1,0 +1,2 @@
+Fetch Neovim plugin lists from multiple sources and merge them into a single JSON file.
+Uses pycurl for HTTP requests and pathlib for file handling.

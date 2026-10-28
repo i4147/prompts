@@ -1,0 +1,50 @@
+Create a Python module that implements a configurable,
+multi-language text/code tokenizer intended to split source code (and plain prose) into meaningful
+"word" tokens, with awareness of each language's naming conventions (snake_case, camelCase, etc.)
+and lexical structure (comments, strings, identifiers).
+Requirements for the script: 1. **Language support**:
+Define an `Enum` called `Language` that lists supported languages/formats, including at minimum:
+English (plain text), Python, JavaScript, TypeScript, Java, C#, Go, Rust, Markdown, JSON, and YAML.
+2. **Token data structure**:
+Define an immutable (frozen) `dataclass` called `Token` representing a single extracted token.
+It must include: - `word`: the token text itself. - `line`:
+the line number where it was found. - `column`: the column number where it was found. - `context`:
+a string describing what kind of region the token came from
+(e.g., `"code"`, `"text"`, `"comment"`, `"string"`), defaulting to `"text"`.
+3. **Tokenizer configuration**:
+Define a `TokenizerConfig` class that encapsulates language-specific tokenization rules, with:
+- `word_pattern`: a regex (string or compiled `re.Pattern`) used to match word-like tokens;
+store it compiled. - `compound_separator`:
+the character used to join compound identifier parts (default `"_"`). - `split_camel_case`:
+boolean flag indicating whether camelCase identifiers should be split into sub-words
+(default `False`). - `split_snake_case`:
+boolean flag indicating whether snake_case identifiers should be split into sub-words
+(default `True`). - `allowed_prefixes`:
+an optional `frozenset` of allowed prefixes (e.g., for recognizing special identifier prefixes),
+defaulting to an empty frozenset.
+4. **Predefined configurations**:
+Provide ready-made `TokenizerConfig` instances for different languages, starting with:
+- `DEFAULT_CONFIG`: generic configuration for plain natural-language text,
+matching Unicode alphabetic words (including accented Latin characters)
+and allowing internal apostrophes/hyphens (e.g., for contractions and hyphenated words),
+with no camelCase/snake_case splitting behavior implied. - `PYTHON_CONFIG`:
+configuration tailored for Python source code,
+matching valid Python identifier syntax (`[A-Za-z_][A-Za-z0-9_]*`),
+using underscore as the compound separator,
+and enabling both snake_case
+and camelCase splitting. - Additional language-specific configs
+(e.g., for Java, JavaScript/TypeScript, C#, Go, Rust, Markdown, JSON, YAML) following the same
+pattern, adapting the word pattern
+and casing-split flags to each language's typical naming conventions.
+5. **Imports and typing**:
+Use `from __future__ import annotations`, the `re` module for pattern handling,
+`dataclasses.dataclass` for `Token`, `enum.Enum` for `Language`,
+and `typing.Callable`/`typing.Iterator` for type hints used elsewhere in the module
+(e.g., in tokenizer functions that consume these configs and yield `Token` objects).
+The overall purpose of the script is to serve as the foundational configuration
+and data-model layer for a multi-language tokenizer:
+it standardizes how words/identifiers are recognized
+and decomposed differently depending on the source language,
+enabling downstream logic (not necessarily shown here) to iterate over text or code
+and yield properly contextualized `Token` instances for further processing such as spell-checking,
+linting, or word-frequency analysis. ---

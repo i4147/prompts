@@ -27,7 +27,6 @@ you can freely process these file groups:
 · .npmrc, .pylintrc, many dotfiles
 · Puppet, Ansible (YAML-based)
 · .desktop files
-
 -you should skip any of following Programming languages that use # as comment char
 · YAML
 · TOML
@@ -64,5 +63,4 @@ you can freely process these file groups:
 · VimL
 · SQL
 · MySQL
-
 return full type-annotated code, no comments, no docstrings

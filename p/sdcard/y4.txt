@@ -1,0 +1,22 @@
+Write a Python script that uses the `process_archive` function from the `pyarchive` module to
+process an archive file and remove blank lines from its contents.
+The script must include: 1.
+A function `remove_blank_lines(data: bytes) -> bytes` that:
+- Accepts raw byte content as input. - Splits the content into individual lines using
+`splitlines()`. - Filters out any lines that are blank
+or contain only whitespace (checked via `strip()`). - Rejoins the remaining non-blank lines using a
+newline byte separator (`b" "`). - Returns the resulting cleaned byte content.
+2. A main call that:
+- Imports `process_archive` from the `pyarchive` package. - Calls `process_archive` with three
+arguments: the source archive path `"data.tar.gz"`,
+the `remove_blank_lines` function as the processing callback,
+and the destination archive path `"cleaned.tar.gz"`. - Stores the return value in a variable named
+`new_archive`.
+Notable behavior: - The script assumes `process_archive` handles opening the tar.gz archive,
+iterating over its file entries, applying the given callback function to each file's byte content,
+and writing the transformed content into a new tar.gz archive at the specified output path. - The
+blank-line removal logic operates purely on bytes (not strings),
+so it must work directly with byte-string methods and byte literals. - The script does not print
+or return any
+additional output beyond assigning the new archive path/object to `new_archive`.
+---

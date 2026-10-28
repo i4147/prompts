@@ -1,0 +1,95 @@
+Design a Python module that implements a `SpellChecker` class for checking spelling in text with
+language-specific tokenization and compound word support.
+The module should include: 1.
+A frozen dataclass `SpellingIssue` representing a single spelling issue found in text, with fields:
+`filename` (str), `word` (str, the misspelled word), `line` (int), `column` (int),
+`suggestions` (tuple of str, default empty),
+and `context` (str, default "text", indicating where the word was found, e.g.,
+in regular text vs. a compound word).
+It should provide an `as_dict()` method that converts the issue into a plain dictionary
+(converting the suggestions tuple to a list) suitable for serialization (e.g., JSON output).
+2. A `SpellChecker` class that:
+- Accepts an optional `Dictionary` instance in its constructor
+(instantiating a default `Dictionary` if none is provided). - Accepts a `language` parameter
+(either a `Language` enum value or a string, defaulting to English),
+converting strings to the `Language` enum as needed,
+and uses it to create a `LanguageTokenizer` for that language. - Accepts an `suggestions` boolean
+flag (default True) to enable/disable generating spelling suggestions. - Accepts a
+`suggestion_limit` integer (default 5) capping the number of suggestions returned per misspelled
+word. - Accepts a `compound_support` boolean flag (default True) to enable/disable special handling
+of compound words (e.g.,
+hyphenated or concatenated words that may be valid even if not found directly in the dictionary,
+by checking their constituent parts). - Exposes a `check_text(text, *, filename="<text>")` method
+that tokenizes the input text using the language-specific tokenizer,
+checks each resulting word token against the dictionary,
+and returns a list of `SpellingIssue` instances for every word not found in the dictionary.
+For misspelled words, if suggestions are enabled,
+it should call a `suggest` function (from a sibling module) to compute up to `suggestion_limit`
+candidate corrections and attach them to the issue.
+Each issue should record the word's line and column position (as determined by the tokenizer)
+and the provided filename.
+When compound word support is enabled,
+words that fail the direct dictionary check should additionally be checked as compounds
+(e.g., splitting on hyphens or attempting to decompose concatenated words into valid sub-words)
+before being flagged as an error,
+and the issue's context should reflect whether the problem was found in plain text
+or within a compound word.
+The module relies on sibling modules:
+`.dictionary` (providing a `Dictionary` class with word-lookup capability),
+`.suggestions` (providing a `suggest` function for generating spelling correction candidates),
+and `.tokenizer_langs`
+(providing a `Language` enum, a `LanguageTokenizer` class for language-aware tokenization,
+and a `Token` type representing a word with its position metadata).
+Use modern Python typing conventions (`from __future__ import annotations`), dataclasses,
+and `pathlib.Path` where filesystem paths are relevant.
+The design should make it straightforward to later extend `check_text`
+or add file-checking methods that read from disk and reuse the same checking logic,
+reporting issues per file with accurate line/column information.
+[Tool: think] Params:
+{} Design a Python module that implements a `SpellChecker` class for checking spelling in text with
+language-specific tokenization and compound word support.
+The module should include: 1.
+A frozen dataclass `SpellingIssue` representing a single spelling issue found in text, with fields:
+`filename` (str), `word` (str, the misspelled word), `line` (int), `column` (int),
+`suggestions` (tuple of str, default empty),
+and `context` (str, default "text", indicating where the word was found, e.g.,
+in regular text vs. a compound word).
+It should provide an `as_dict()` method that converts the issue into a plain dictionary
+(converting the suggestions tuple to a list) suitable for serialization (e.g., JSON output).
+2. A `SpellChecker` class that:
+- Accepts an optional `Dictionary` instance in its constructor
+(instantiating a default `Dictionary` if none is provided). - Accepts a `language` parameter
+(either a `Language` enum value or a string, defaulting to English),
+converting strings to the `Language` enum as needed,
+and uses it to create a `LanguageTokenizer` for that language. - Accepts a `suggestions` boolean
+flag (default True) to enable/disable generating spelling suggestions. - Accepts a
+`suggestion_limit` integer (default 5) capping the number of suggestions returned per misspelled
+word. - Accepts a `compound_support` boolean flag (default True) to enable/disable special handling
+of compound words (e.g.,
+hyphenated or concatenated words that may be valid even if not found directly in the dictionary,
+by checking their constituent parts). - Exposes a `check_text(text, *, filename="<text>")` method
+that tokenizes the input text using the language-specific tokenizer,
+checks each resulting word token against the dictionary,
+and returns a list of `SpellingIssue` instances for every word not found in the dictionary.
+For misspelled words, if suggestions are enabled,
+it should call a `suggest` function (from a sibling module) to compute up to `suggestion_limit`
+candidate corrections and attach them to the issue.
+Each issue should record the word's line and column position (as determined by the tokenizer)
+and the provided filename.
+When compound word support is enabled,
+words that fail the direct dictionary check should additionally be checked as compounds
+(e.g., splitting on hyphens or attempting to decompose concatenated words into valid sub-words)
+before being flagged as an error,
+and the issue's context should reflect whether the problem was found in plain text
+or within a compound word.
+The module relies on sibling modules:
+`.dictionary` (providing a `Dictionary` class with word-lookup capability),
+`.suggestions` (providing a `suggest` function for generating spelling correction candidates),
+and `.tokenizer_langs`
+(providing a `Language` enum, a `LanguageTokenizer` class for language-aware tokenization,
+and a `Token` type representing a word with its position metadata).
+Use modern Python typing conventions (`from __future__ import annotations`), dataclasses,
+and `pathlib.Path` where filesystem paths are relevant.
+The design should make it straightforward to later extend `check_text`
+or add file-checking methods that read from disk and reuse the same checking logic,
+reporting issues per file with accurate line/column information. ---

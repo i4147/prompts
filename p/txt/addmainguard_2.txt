@@ -1,0 +1,37 @@
+Create a Python command-line utility script that scans a directory tree for Python source files
+and checks whether each file contains a `if __name__ == "__main__":` guard block,
+optionally adding one (along with a `main()` function stub) if it is missing. **Purpose:** The
+script should recursively walk a given root directory, find all `.py` files,
+and for each file determine if it already has a main guard.
+It supports two modes:
+a "check" mode that reports which files are missing the guard,
+and an "add" mode that actually inserts a `main()` function
+and the `if __name__ == "__main__": raise SystemExit(main())` block into files that lack one.
+A "dry-run" mode should also be supported,
+which simulates adding the guard
+and reports what would change without writing any files. **Inputs:** - A root directory path to scan
+(via CLI argument). - An `--add` flag to enable modifying files in place
+(inserting the main function/guard). - A `--dry-run` flag to preview changes without writing to
+disk. - A list of directory names to exclude from the scan
+(with sensible defaults such as `.git`, `__pycache__`, `venv`, `.venv`, `env`, `dist`, `build`,
+`.pytest_cache`, `.mypy_cache`),
+configurable via CLI. - Use `argparse` for CLI argument parsing. **Outputs:** - Log messages
+(via `loguru`) reporting, per file, one of the statuses:
+`skipped` (already has a guard), `missing` (no guard, check mode only),
+`would_add` (dry-run mode, guard would be added), `added` (guard successfully inserted),
+or `error` (file could not be read/processed, e.g. encoding issues). - A final summary of counts per
+status. - An appropriate process exit code
+(e.g., non-zero if files are missing guards in check mode, or on errors). **Notable behavior:** -
+Use a regex to detect the existing main guard pattern
+(`if __name__ == "__main__":`, allowing for whitespace/quote variations). -
+When adding a `main()` function, skip insertion if a `def main(` already exists in the file;
+otherwise insert a templated `main()` function stub
+(with a docstring, a TODO comment, and a placeholder `print` statement) after the initial block of
+top-level import statements. - When adding the guard,
+append it to the end of the file content (after stripping trailing whitespace) using a fixed
+template that calls `raise SystemExit(main())`. - Process files concurrently using a multiprocessing
+`Pool` (e.g., pool size of 8) with `AsyncResult` for parallel file processing to speed up scanning
+of large codebases. - Handle file read errors gracefully per file
+(e.g., catching exceptions during `path.read_text(encoding="utf-8")`) without crashing the whole
+run, reporting them as `error` status instead. - Use type hints throughout,
+including a `TypedDict` for structured per-file results and a `Literal` type for the status values.

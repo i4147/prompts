@@ -1,0 +1,48 @@
+generate a Python command-line script with the following specifications:
+**Purpose:** Build a tool that scans a directory tree for Python files,
+detects unused imports using `pyflakes`,
+and automatically removes the lines containing those unused imports,
+processing multiple files in parallel for speed. **Core requirements:** 1. **Input:** A single
+command-line argument specifying a directory path to scan recursively for `.py` files.
+2. **Unused import detection:** - For each Python file,
+run `pyflakes` as a subprocess
+and capture its stderr output. - Parse each output line that mentions "imported but unused"
+or "unused import" using a regex that extracts the line number, column number,
+and the imported name (e.g., matching a pattern like `path:line:col: message 'name' ...`). -
+Represent each finding as a small data class (e.g., `UnusedImport`) holding `name`,
+`line`, and `col`.
+3. **Import removal logic:**
+- Encapsulate per-file logic in a class (e.g., `ImportRemover`) that stores the file path
+  and the list of detected unused imports. - Provide an `analyze()` method that runs the detection
+  described above and stores/returns the list of `UnusedImport` instances.
+Handle subprocess errors and unexpected exceptions gracefully by printing an error message to stderr
+and returning an empty list. - Provide a `remove_unused_imports()` method that:
+- Returns an empty list immediately if no unused imports were found. - Reads the full file content
+and splits it into lines. - For each unused import,
+checks if the corresponding line (by line number) actually starts with `import`
+or `from` (using a regex, allowing leading whitespace) before marking it for removal
+— this avoids accidentally removing non-import lines. - Builds a new version of the file excluding
+the marked lines, then writes it back to disk. - Returns a list of human-readable change
+descriptions (e.g., `"Removed line <N>"`) for each removed line.
+4. **Parallel processing:** - Implement a top-level `process_file(file_path)` function that
+instantiates `ImportRemover`, calls `analyze()` then `remove_unused_imports()`,
+and returns a tuple of `(file_path_as_string, list_of_change_descriptions)`. - Implement a
+`find_python_files(directory)` helper that recursively globs for `*.py` files under the given
+directory and returns them as a list. - In `main()`:
+- Validate that exactly one command-line argument is provided (the directory);
+otherwise print usage instructions and exit with a non-zero status.
+- Validate that the given path is an existing directory;
+  otherwise print an error
+  and exit with a non-zero status. - Find all Python files in the directory,
+  print how many were found. - Use a `ProcessPoolExecutor` (sized to the number of available CPUs)
+  to run `process_file` over all found files in parallel. - After processing,
+  iterate over the results and, for each file that had changes,
+  print the file path followed by each change description on its own line.
+  5. **Entry point:** Standard `if __name__ == "__main__":` guard calling `main()`. **Output
+  behavior:** The script should print the count of discovered Python files,
+  then for each modified file print its path followed by a list of removed-line messages;
+  files with no changes produce no per-file output.
+Ensure the final code is syntactically correct, uses proper variable names throughout (avoid typos),
+and correctly imports all needed modules
+(`sys`, `re`, `pathlib.Path`, `concurrent.futures.ProcessPoolExecutor`, `multiprocessing.cpu_count`,
+`subprocess`, `dataclasses.dataclass`, and `typing` helpers).

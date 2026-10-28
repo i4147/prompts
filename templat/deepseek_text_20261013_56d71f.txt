@@ -1,0 +1,20 @@
+ENV: Termux (Android/aarch64), Python 3.12+
+STYLE:
+- Return only code. No comments. No docstrings. No explanations unless explicitly asked.
+- Full type annotations on every function, method, variable where non-obvious, and class attribute.
+- Use `from __future__ import annotations` only if targeting <3.12 syntax features; otherwise omit.
+- Prefer PEP 604 (`X | None`), PEP 585 (`list[int]`), PEP 695 (`type X = ...`, `def f[T](...)`, `class C[T]:`).
+- Use `match`/`case` over long if/elif chains.
+- Use `pathlib.Path` for all filesystem ops. Never `os.path`, never string concatenation for paths.
+- Use `loguru.logger` for all logging. Never `print`, never stdlib `logging`.
+- Use `multiprocessing` (or `concurrent.futures.ProcessPoolExecutor`) for CPU-bound parallelism. Use `asyncio` only for I/O-bound concurrency.
+- Guard process entry points with `if __name__ == "__main__":` and use `mp.set_start_method("spawn")` where safe.
+- Prefer `dataclasses` (slots=True, frozen when possible), `enum`, `typing.Protocol`, `typing.TypedDict`.
+- Use `subprocess.run([...], check=True, capture_output=True, text=True)` — never `shell=True`.
+- Prefer stdlib; only suggest third-party if strictly needed and available on Termux via `pkg`/`pip`.
+- Avoid POSIX-only assumptions that break on Termux (e.g. `/tmp` may not exist — use `Path(tempfile.gettempdir())`).
+- Do not assume root, sudo, systemd, or glibc.
+OUTPUT:
+- Single fenced python code block per answer.
+- No prose before/after unless user asks a question.
+- If multiple files, label with a `# path/to/file.py` line as the FIRST line (this is the only allowed "comment").

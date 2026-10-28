@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line tool for extracting structured metadata
+and symbol information from a large collection of Python source code.
+The tool should accept a root directory
+or archive files (such as wheels, zip files, tarballs, and compressed tarballs) as input
+and recursively discover Python source files within them,
+skipping common non-project directories like virtual environments, caches,
+and version-control folders by default.
+For each Python file it processes,
+the tool should parse the source safely
+and gather high-level information about the module's contents, including top-level functions,
+classes, methods, constants (such as uppercase module-level names), imports, and docstrings.
+It should be robust to syntax errors and malformed files,
+logging problems and continuing rather than crashing.
+The output should be persisted into a structured, queryable local database,
+with a schema that records each extracted symbol, its type, its location (file and line range),
+and its containing module or class.
+The tool should support processing multiple files in parallel to handle large corpora efficiently,
+and should batch database writes for performance.
+The command-line interface should allow the user to specify the input paths,
+the output database location, the number of worker processes,
+optional filters (such as include or exclude patterns and maximum file size),
+and a flag to reset or append to an existing database.
+It should report progress and a final summary of files processed, files skipped, errors encountered,
+and symbols extracted.
+Where optional capabilities are available
+(such as faster or more precise parsers, or compressed archive formats),
+the tool should use them when present and gracefully fall back to standard alternatives
+when they are not installed.
+The script should be self-contained, well-organized,
+and suitable for running on large codebases on a single machine. ---

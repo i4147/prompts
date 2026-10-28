@@ -1,0 +1,15 @@
+CorpusReader for the Comparative Sentence Dataset. - Comparative Sentence Dataset information -
+Annotated by: Nitin Jindal and Bing Liu, 2006.
+Department of Computer Sicence University of Illinois at Chicago Contact:
+Nitin Jindal, njindal@cs.uic.edu Bing Liu,
+liub@cs.uic.edu (https://www.cs.uic.edu/~liub) Distributed with permission.
+Related papers: - Nitin Jindal and Bing Liu.
+"Identifying Comparative Sentences in Text Documents".
+Proceedings of the ACM SIGIR International Conference on Information Retrieval (SIGIR-06),
+2006. - Nitin Jindal and Bing Liu.
+"Mining Comprative Sentences and Relations".
+Proceedings of Twenty First National Conference on Artificial Intelligence (AAAI-2006),
+2006. - Murthy Ganapathibhotla and Bing Liu.
+"Mining Opinions in Comparative Sentences".
+Proceedings of the 22nd International Conference on Computational Linguistics (Coling-2008),
+Manchester, 18-22 August, 2008.

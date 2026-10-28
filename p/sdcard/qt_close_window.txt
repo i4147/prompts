@@ -1,0 +1,1 @@
+Close dialog with option to not ask again.

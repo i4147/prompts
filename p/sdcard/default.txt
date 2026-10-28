@@ -1,0 +1,34 @@
+Write a Python module for the flake8 linting tool that implements several built-in output formatter
+classes, extending flake8's `flake8.formatting.base.BaseFormatter`.
+Requirements: 1.
+Import `Optional` and `Set` from `typing`,
+use `TYPE_CHECKING` to conditionally import `Violation` from `flake8.style_guide`
+(only for type checking, to avoid circular imports),
+and import the `base` module from `flake8.formatting`.
+2. Create a base class `SimpleFormatter` extending `base.BaseFormatter` that:
+- Declares a class attribute `error_format: str` (a format string template). - Implements a `format`
+method taking an error of type `"Violation"` and returning `Optional[str]`,
+which formats the error using `%`-style string formatting with a dict containing the error's `code`,
+`text`, `path` (from `error.filename`), `row` (from `error.line_number`),
+and `col` (from `error.column_number`).
+3. Create a `Default` class extending `SimpleFormatter` that:
+- Sets `error_format` to `"%(path)s:%(row)d:%(col)d: %(code)s %(text)s"`. - Implements an
+`after_init` method that checks if `self.options.format.lower()` is not `"default"`, and if so,
+overrides `self.error_format` with the user-provided `self.options.format` string.
+4. Create a `Pylint` class extending `SimpleFormatter` with `error_format` set to
+`"%(path)s:%(row)d: [%(code)s] %(text)s"` (mimicking pylint's output style).
+5. Create a `FilenameOnly` class extending `SimpleFormatter` that:
+- Sets `error_format` to `"%(path)s"`. - Implements `after_init` to initialize an instance attribute
+`filenames_already_printed` as an empty `set[str]` to track
+which filenames have already been reported. - Implements `show_source` that takes an error
+and returns `Optional[str]`, doing nothing (always returns `None`),
+effectively suppressing source code display. - Overrides `format` so that it only outputs a filename
+once: if the error's filename is not already in `filenames_already_printed`,
+add it to the set and return the formatted result via `super().format(error)`;
+otherwise return `None` to suppress duplicate output.
+6. Create a `Nothing` class extending `base.BaseFormatter` directly that implements both `format`
+and `show_source` methods to simply do nothing
+and return `None` in both cases (a formatter that suppresses all output).
+All methods should use proper type hints with `Optional[str]` return types
+and `"Violation"` as the error parameter type
+(as a forward reference/string literal due to the conditional import). ---

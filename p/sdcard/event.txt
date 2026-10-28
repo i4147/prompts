@@ -1,0 +1,29 @@
+Write a Python script that defines an `Event` class representing GUI/application events for an
+Android automation or UI-testing framework (similar to SL4A/Android scripting environments).
+The class should serve purely as a container/namespace of string constants representing different
+event types, organized into logical categories: 1. **View events**:
+click, longClick, focusChange, key, touch, refresh, selected (for RadioGroups), itemselected, text,
+notification, notificationDismissed, notificationaction, webviewNavigation, webviewHTTPError,
+webviewError, webviewDestroyed, webviewProgress, webviewConsoleMessage, remoteclick.
+2. **Activity lifecycle events**:
+create, start, resume, pause, stop, destroy, userleavehint (mapped to "UserLeaveHint"), pipchanged,
+config, back.
+3. **General system events**:
+screenon (mapped to "screen_on"), screen_off, timezone, locale, airplane.
+4. **Special overlay events**: overlaytouch, overlayScale.
+5. **Touch event action sub-types**:
+touch_up ("up"), touch_down ("down"), touch_pointer_up ("pointer_up"),
+touch_pointer_down ("pointer_down"), and similar touch action constants.
+Each constant should be a class-level attribute assigned to its corresponding string literal value
+(the attribute name and string value are often identical, but some differ intentionally, e.g.,
+`screenon = "screen_on"` and `userleavehint = "UserLeaveHint"`).
+Include a class docstring explaining that:
+- This class represents an Event in the GUI. - The class variables are the available event types. -
+Instances of this event (commonly named `ev`) should be checked for type using
+`ev.type == Event.eventtype`. - Each event instance has a `type` attribute holding the event type
+string, and a `value` attribute holding a dictionary of event-specific data (if any).
+No methods, constructors,
+or logic are required
+— the class is only a structured collection of string constants grouped by comments indicating their
+category, intended to be imported
+and used elsewhere in the codebase to compare against an event object's `type` field. ---

@@ -1,0 +1,48 @@
+Write a prompt for an AI coding agent to generate a Python module
+(intended as part of the PyScaffold package, e.g. `exceptions.py`) with the following purpose,
+inputs/outputs, and behavior: **Purpose**:
+Define a centralized collection of custom exception classes
+and a decorator utility used throughout PyScaffold to convert internal exceptions into clean,
+user-friendly command-line error messages (instead of raw Python tracebacks)
+and to exit the process with an appropriate status code. **Key requirements**:
+1. **Imports and compatibility**:
+- Import `functools`, `logging`, `sys`, `traceback`, `Path` from `pathlib`,
+and typing helpers (`Optional`, `Sequence`, `Union`, `cast`). - Handle
+`importlib.metadata.EntryPoint` import with a version check:
+use `importlib.metadata` for Python 3.8+,
+otherwise fall back to the `importlib_metadata` backport package. - Import the package's own
+`__version__` from the parent module (relative import).
+2. **`exceptions2exit` decorator factory**:
+- Takes a list/sequence of exception classes as argument. - Returns a decorator that wraps a
+function so that if any exception in the given list is raised during execution, it:
+- Imports `get_log_level` from the CLI module
+(relative import, done lazily inside the except block to avoid circular imports). - If the current
+log level is `DEBUG` or lower,
+prints the full traceback. - Prints a formatted `"ERROR: {exception}"` message to stdout. - Exits
+the program with status code 1 via `sys.exit(1)`. - Must use `functools.wraps` to preserve the
+wrapped function's metadata.
+3. **Custom exception classes**: - `ActionNotFound(KeyError)`:
+raised when a named action/extension cannot be found.
+Its `__init__` builds an error message using the class's docstring (minus the trailing period/char)
+concatenated with the missing name in backticks (e.g. `` `name` ``),
+then passes it to the parent constructor. - `DirectErrorForUser(RuntimeError)`:
+a base class for errors that should be shown directly to the user with a friendly message.
+Its `__init__` accepts an optional `message` argument;
+if not provided, falls back to the class's docstring as the default message. - Several subclasses of
+`DirectErrorForUser`, each representing a specific user-facing error condition,
+each with a descriptive docstring that serves as the default error message:
+- `DirectoryAlreadyExists` - `DirectoryDoesNotExist` - `GitNotInstalled`:
+overrides `__init__` to accept a custom `DEFAULT_MESSAGE` class attribute string
+(e.g., instructing the user to ensure git is installed
+and suggesting the `--very-verbose` flag for more info),
+using it as the default message if none is passed.
+4. **General style**:
+- Use clear, concise docstrings for each exception class describing the error condition in plain
+language (these docstrings double as default user-facing messages). - Follow idiomatic Python
+exception design: all custom exceptions should be easily catchable and distinguishable,
+suitable for use with the `exceptions2exit` decorator in CLI entry points. - Code should be
+compatible with Python 3.6+ (hence the conditional import for `importlib.metadata`).
+Produce the complete Python source code implementing this module accordingly,
+continuing in the same pattern for any additional PyScaffold-specific error classes
+(e.g., related to git operations, directory state, or extension/action lookup failures) that
+logically fit this exception hierarchy. ---

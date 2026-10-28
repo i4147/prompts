@@ -1,0 +1,1 @@
+Countdown timer widget that notifies users of upcoming updates or changes.

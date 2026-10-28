@@ -1,0 +1,46 @@
+Build a Python module (part of flake8's internal engine) that implements the "style guide" layer
+responsible for deciding whether a reported lint violation should be shown to the user
+or suppressed, and for coordinating how violations are reported/formatted and counted.
+Purpose: - Provide a `StyleGuide` class (and supporting helper classes) that flake8's checker
+machinery calls for every discovered violation
+(error code, filename, line/column number, text message, and the physical source line). - For each
+violation, determine whether it is "selected" (reported) or "ignored" (suppressed), based on:
+the user's configured `select`/`ignore`/`extend-select`/`extend-ignore` options,
+per-line `# noqa` / `# noqa: CODE1,CODE2` comments,
+and any file-level `--per-file-ignores` configuration. - If a violation is not suppressed,
+forward it to the configured formatter (from `flake8.formatting.base`) for output,
+and record it in the shared `flake8.statistics` Statistics collector. - Support "decision caching"
+so that repeated codes/filenames don't need to be recomputed every time,
+improving performance on large codebases. - Expose a context manager / method that processes a
+single error and returns whether it was reported
+(used by the checker to decide whether to count it as a found error, e.g. for exit-code purposes),
+plus support for handling the special case of `# noqa` with disabled noqa processing via a CLI flag.
+Main inputs: - An `argparse.Namespace`-like options object containing flake8 configuration
+(selected codes, ignored codes, extended select/ignore lists, per-file-ignores,
+whether `--disable-noqa` is set, verbosity,
+etc.). - A formatter instance (subclass of `flake8.formatting.base.BaseFormatter`) used to
+print/format violations. - For each violation:
+an error code, filename, line number, column number, violation text,
+and (optionally) the raw physical source line (fetched via `linecache` if not provided).
+Main outputs/behavior:
+- A `Violation` namedtuple encapsulating a single violation's data,
+with a method `is_inline_ignored(disable_noqa)` that uses a compiled/cached regex
+(`flake8.defaults.NOQA_INLINE_REGEXP`, memoized via `functools.lru_cache`) to detect `# noqa`
+comments on the physical line and determine, optionally per specific code,
+whether that line's violation should be suppressed;
+it should log a debug/info message when a line is skipped due to `noqa`. - `Decision`, `Selected`,
+and `Ignored` enums that represent the possible outcomes (and reasons) of the select/ignore matching
+logic (explicitly vs. implicitly selected/ignored) used to implement flake8's longest-prefix-match
+style logic between codes and select/ignore lists. - A `StyleGuide` class exposing methods to:
+initialize from options/formatter (and optionally decision cache/stats),
+handle a single error (`handle_error`),
+decide whether a given code should be reported in a given filename context,
+process per-file-ignore patterns,
+and manage/report statistics summaries at the end of a run. - Should integrate with `flake8.utils`
+for helper utilities (e.g. parsing comma-separated code lists, matching filenames against patterns)
+and `flake8.statistics` for aggregating counts of violations by code. - Use `logging` for
+debug-level tracing of decisions (e.g., why a violation was selected or ignored), and use `copy`,
+`itertools`, `collections` as needed for internal bookkeeping
+(e.g., building decision caches, grouping statistics). - Include appropriate type hints
+(`Dict`, `List`, `Optional`, `Sequence`, `Set`, `Tuple`, `Union`, `Match`, `Generator`) throughout
+for clarity and static analysis compliance. ---

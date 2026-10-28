@@ -1,0 +1,34 @@
+Write a Python script that acts as an interactive terminal-based PDF viewer for
+reading documents directly in the console.
+The tool should take a PDF file path from the command line and render its pages
+as text inside a full-screen, keyboard-driven interface that restores the
+terminal cleanly on exit.
+Key requirements: - **Input:** A PDF file path supplied as a command-line
+argument, with a clear error message and non-zero exit if the file is missing,
+unreadable, or not a valid PDF.
+Required third-party dependencies should be checked at startup, and the script
+should exit with a helpful installation hint if any are absent. - **Output:** An
+interactive full-screen text view of the document, not a file.
+The display should show the current page's text, wrapped to fit the terminal
+width and truncated or paginated to fit the terminal height, along with a status
+bar showing the file name, current page number, total pages, and available keys.
+- **Navigation:** Support keyboard controls for moving to the next and previous
+page, jumping to the first and last page, scrolling line-by-line within a long
+page, going to a specific page number, searching for text across the document
+with next/previous match navigation and highlighted matches, and quitting.
+Arrow keys, Page Up/Down, Home/End, and common letter shortcuts should all work.
+- **Terminal handling:** Use the alternate screen buffer, hide and restore the
+cursor, and put the terminal into raw/cbreak input mode.
+Always restore the original terminal settings, cursor visibility, and screen
+state on exit, including on Ctrl-C or unexpected errors. - **Rendering:** Handle
+terminal resize events gracefully by re-wrapping and redrawing the view.
+Use reverse-video styling for the status bar and search highlights.
+Avoid flicker by redrawing efficiently rather than clearing the whole screen on
+every keystroke. - **Robustness:** Cope with pages that have no extractable text
+(display a placeholder message), very long lines, tabs, and empty pages.
+Keep the viewer responsive, and handle escape sequences for keys without
+treating a lone Escape press as a navigation command. - **Command-line
+options:** Optionally accept a starting page number and a flag to disable line
+wrapping or set a custom margin.
+Keep the implementation self-contained in a single script with a `main` entry
+point, and make it usable on Unix-like terminals. ---

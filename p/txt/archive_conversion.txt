@@ -1,0 +1,61 @@
+Produce an AI-agent prompt (text only) describing a Python command-line utility whose purpose
+and behavior are as follows, so the agent can regenerate equivalent code:
+--- **Prompt:** Write a Python 3 script (using `from __future__ import annotations`) that acts as a
+multi-format archive/compression and decompression utility, operating on files in a directory,
+with multiprocessing support for parallel batch processing. **Purpose:** The script compresses
+and decompresses files using multiple codecs,
+with special handling for `.tar.<codec>` archives
+(e.g., `archive.tar.gz`, `archive.tar.bz2`, `archive.tar.xz`, `archive.tar.zst`, `archive.tar.lz4`,
+`archive.tar.7z`).
+It should support both compressing arbitrary files/directories into these formats
+and decompressing/extracting them back,
+while reporting size statistics
+(original size, compressed size, compression ratio, human-readable sizes). **Supported
+codecs/libraries:** - gzip (`gzip`) - bzip2 (`bz2`) - lzma/xz
+(`lzma`, with preset level 9 for maximum compression) - brotli (`brotli`) - zstandard
+(`zstandard` / `zstd`) - lz4 (`lz4.frame`) - 7z (`py7zr`) **Key constants/helpers:** - A fixed chunk
+size (`CHUNK = 1024 * 1024`, i.e., 1 MiB) used for streaming reads/writes to handle large files
+efficiently without loading them fully into memory. - An `XZ_PRESET_9` constant for maximum LZMA
+compression. - `human_bytes(n)`:
+converts a byte count into a human-readable string (e.g., "1.23 MiB", "512 B"),
+correctly handling negative values
+and scaling through B/KiB/MiB/GiB/TiB/PiB. - `dir_files_total_bytes(p)`:
+sums the sizes of all files directly inside a given directory (non-recursive). -
+`decode_filename_to_tar_path(src)`:
+strips the last suffix from a filename to recover the underlying `.tar` path
+(e.g., `archive.tar.gz` -> `archive.tar`). - `tar_stem_and_codec(p)`:
+parses a filename like `name.tar.codec` into its `(stem, codec)` components by splitting on dots,
+validating that the second-to-last segment is literally "tar";
+returns `None` if the pattern doesn't match,
+defaults the stem to `"archive"` if empty. - `tar_output_from_codec(stem, codec)`:
+reconstructs the output path `stem.tar.codec`. - `safe_unlink(path)`:
+deletes a file if it exists,
+silently ignoring any errors (e.g., permission issues, already deleted). -
+`open_tar_bytes_reader(src)`:
+a thin pass-through helper returning the source path
+(placeholder for a future/alternate reading mechanism). -
+`write_tar_bytes_with_decoder_to_file(src, dst, codec)`:
+given a compressed `.tar.<codec>` file and a codec name,
+creates parent directories for the destination as needed,
+then streams-decodes the source using the codec-appropriate decompressor
+(gzip/bz2/lzma/brotli/zstandard/lz4/py7zr)
+and writes the decoded tar bytes to the destination file in chunks (using the `CHUNK` size) rather
+than loading the entire file into memory. **Expected overall program behavior
+(to be implemented following the same style):** - Provide functions/CLI logic to compress a file
+or directory into a `.tar.<codec>` archive
+and to decompress/extract a `.tar.<codec>` archive back into a tar file or extracted contents,
+using the appropriate library per codec consistently with the helpers above. - Use
+`ProcessPoolExecutor`
+and `as_completed` from `concurrent.futures` to process multiple files/archives concurrently
+(e.g., batch-compress or batch-decompress a list of files in parallel),
+collecting and reporting results (success/failure, sizes, compression ratio) as each task completes.
+- Print or return clear,
+human-readable summaries for each processed file (original size, compressed size, ratio, codec used)
+using `human_bytes`. - Handle errors per-file gracefully (so one failure doesn't stop the batch),
+and clean up any partial/temporary output files on failure using the safe-unlink helper. - Organize
+imports at the top: `os`, `gzip`, `bz2`, `lzma`, `brotli`, `pathlib.Path`,
+`concurrent.futures.ProcessPoolExecutor`/`as_completed`, `zstandard as zstd`, `lz4.frame`, `py7zr`.
+Ensure the code is modular, reuses the helper functions described above,
+follows consistent naming conventions,
+and is suitable for both compressing/decompressing single files
+and batch/directory-level operations from a command-line entry point.

@@ -1,0 +1,3 @@
+Filter piwheels packages.json: drop packages with monthly < 10 AND alltime < 10.
+Updates the input file in place
+and writes removed records to removed.json (same one-per-line custom format).

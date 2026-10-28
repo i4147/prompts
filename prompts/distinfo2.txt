@@ -1,0 +1,20 @@
+Write a Python script that cleans up installed package metadata directories
+inside a Python site-packages environment, removing files that are not needed at
+runtime while keeping the essential metadata.
+The script should accept a target directory (or default to the current Python
+version's site-packages location), scan for installed distribution metadata
+folders, and for each one remove any files that are not on a predefined list of
+essential metadata files, such as the core metadata, the file record, the wheel
+info, and the top-level module list.
+It should also remove any bundled license or author documentation folders found
+inside these metadata directories, and delete unnecessary installer and request
+marker files.
+The script should report each removal to the user as it happens, handle missing
+or already-cleaned directories gracefully, and print a final summary of how many
+files and folders were removed and how much disk space was freed.
+It should support a dry-run mode that lists what would be deleted without
+modifying anything, and it should log any errors without stopping the entire
+run.
+Include clear command-line options for the target path and dry-run mode, and
+make sure the script is safe by only operating within directories whose names
+indicate they are distribution metadata. ---

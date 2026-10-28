@@ -1,0 +1,82 @@
+Write a prompt for an AI coding agent to generate a Python module for loading, sampling,
+and unifying NLP datasets within a larger NLP toolkit/library.
+The module should fulfill the following requirements:
+**Purpose:** Create a utility module that provides a generic,
+flexible interface for loading training/validation/test datasets in multiple formats
+(e.g., JSON-based, with train/valid/test splits or a flat structure),
+along with helper functions for random dataset sampling and task-name normalization.
+This module is part of a package that also includes a `load_dataset` submodule
+and a sibling `files` module providing a `FileConfig` class. **Structure requirements:** 1.
+The module should import everything from a local `load_dataset` submodule
+(relative import `.load_dataset`), use `collections.defaultdict`,
+and import `FileConfig` from a sibling `files` package (relative import `..files`).
+2. Implement a function `sampler_dataset(dataset, p=0.5)`: - Input:
+a `dataset` dict structured as `{"train": {...}, "valid": {...}, "test": {...}}`,
+where each split's value is itself a dict mapping field names (e.g., "text", "label") to parallel
+lists of values. - Behavior:
+randomly sample rows (not individual fields) from each split independently,
+keeping aligned values across fields for each sampled row,
+using probability `p` per row (via Python's `random.random() < p`).
+Import `random` locally inside the function. - Output:
+a new dataset dict with the same three-split structure
+(built with `defaultdict(list)` for each split), containing only the sampled rows,
+with fields still aligned/parallel across each split.
+3. Implement a private helper function `_unify_task(task)`: - Purpose:
+normalize/unify various user-provided task name strings
+or numeric codes into a small set of canonical task identifiers. - Behavior:
+given a `task` argument
+(expected to have a `.lower()` string-like method, or compared against ints),
+check membership in several alias lists
+(case-insensitive lowercased comparisons mixed with integer codes)
+and return one of the following canonical codes:
+- `"CLS"` for classification-related aliases (e.g., 0, "cls", "classification", "classify") -
+`"REG"` for regression/sentiment-analysis-related aliases
+(e.g., 1, "reg", "regression", "regressor", "sa", "sentitive analysis") - `"NER"` for named entity
+recognition aliases (e.g., 2, "ner", "namely entity recognition") - `"KW"` for keyword-extraction
+aliases (e.g., 2, "key", "kw", "key word", "keyword", "keywords", "key words") - `"MCLS"` for
+multi-class/multi-choice aliases
+(e.g., 3, "mcls", "multi-class", "multiclass", "multiclasses", "mc", "multi-choice", "multichoice")
+- `"CLUENER"` for CLUE-NER aliases (e.g., 4, "cluener", "clue_ner", "clue ner") - Implicitly return
+`None` if nothing matches. - Note:
+preserve the exact alias lists
+and matching logic (including the quirk that both "NER"
+and "KW" branches check against the numeric code 2).
+4. Implement a public function
+`load_dataset(path, task=None, format=None, sampler=1, split=0.5, label_as_key=False, sep=" ",
+dataset="dataset", train="train", valid="valid", test="test", text="text",
+label="label")`: - Purpose:
+serve as a generic/universal entry point to read and parse a training dataset from `path`,
+supporting multiple input formats and dataset layouts. - Parameters: - `path`:
+file or directory path to the dataset source. - `task`:
+optional task type indicator to be unified via `_unify_task`
+(e.g., classification, regression, NER, keyword extraction, multi-class, CLUE-NER). - `format`:
+expected data format, notably `'json'`, which supports two accepted JSON shapes: - A nested shape:
+`{'train': {'text': [...], 'label': [...]}, 'valid': {...}, 'test': {...}}` - A flat shape:
+`{'text': [...], 'label': [...]}` (no explicit split keys),
+which should be handled/split according to the `split` parameter and other arguments. - `sampler`:
+controls whether/how to apply sampling to the loaded dataset (e.g., via `sampler_dataset`),
+default `1`.
+- `split`: ratio or indicator used to split a flat dataset into train/valid/test
+  when no explicit split structure is provided, default `0.5`. - `label_as_key`:
+boolean flag indicating whether labels should be used as dictionary keys in some alternate data
+layout. - `sep`: separator string used when parsing delimited text formats,
+default `" "`. - `dataset`, `train`, `valid`, `test`, `text`, `label`:
+string keys/names used to locate the respective fields
+or splits within the raw loaded data structure
+(allowing callers to adapt the function to differently-named JSON/data keys),
+with sensible defaults matching common key names
+(`"dataset"`, `"train"`, `"valid"`, `"test"`, `"text"`, `"label"`). - Docstring:
+include a Chinese-language docstring (as in the style of this toolkit) explaining that this is a
+general-purpose interface for reading training datasets and handling various input formats,
+with at least the `format = 'json'` case documented,
+describing both accepted JSON shapes (nested per-split dict vs. flat dict) as shown above. -
+Behavior: the function should use `FileConfig` (from the sibling `files` module)
+and the imported contents of the `load_dataset` submodule to actually read/parse the raw file(s) at
+`path`, then normalize/restructure the result according to the format
+and the various naming parameters, optionally unify the task via `_unify_task`,
+optionally apply sampling via `sampler_dataset`,
+and return the final structured dataset
+(dict-like, split into train/valid/test with text/label fields per the configured key names).
+Ensure all function names, parameter names, defaults,
+and the alias-matching logic described above are preserved exactly as specified,
+since other code in the package depends on this exact interface. ---

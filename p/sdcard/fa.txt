@@ -1,0 +1,38 @@
+Write a Python module that provides a `FileCompressor` utility class for creating
+and extracting ZIP archives,
+built on top of custom `FileHandler`
+and `FolderHandler` abstraction classes for file/folder operations.
+The module should include a static method
+`create_zip(source_path: str, output_path: str, include_base_dir: bool = True) -> bool` that:
+- Determines whether the source path is a file or a folder (using `os.path.isfile`)
+and wraps it with the appropriate `FileHandler`
+or `FolderHandler` instance. - Raises a `FileNotFoundError` if the source does not exist
+(checked via the handler's `exists()` method). - Creates a ZIP archive at `output_path` using
+`zipfile.ZipFile` with `ZIP_DEFLATED` compression. - If the source is a single file:
+writes it to the archive,
+using either the handler's name (if `include_base_dir` is True)
+or just the base filename (if False) as the archive name. - If the source is a folder:
+recursively lists all files (via the handler's `list_files(recursive=True)` method)
+and writes each to the archive,
+computing the archive name relative toder's parent directory
+(if `include_base_dir` is True, preserving the base folder in the archive)
+or the source folder itself (if False, so contents are stored without the base folder).
+- Returns `True`/`False` based on whether the output ZIP file exists after creation
+  (checked via `FileHandler`).
+Also include a static method
+`extract_zip(zip_path: str, extract_path: str, overwrite: bool = True) -> bool` that:
+- Validates the ZIP file exists via `FileHandler`,
+raising `FileNotFoundError` if not. - Ensures the extraction destination folder exists,
+creating it via `FolderHandler.create()` if necessary. - Opens the ZIP file in read mode
+and extracts its contents into `extract_path`,
+with behavior controlled by the `overwrite` flag
+(handling existing files differently depending on whether overwriting is allowed, e.g.,
+checking/removing existing entries before extraction when `overwrite` is True).
+Use `from __future__ import annotations` and rely on the `os`
+and `zipfile` standard library modules.
+Assume `FileHandler`
+and `FolderHandler` are pre-existing helper classes elsewhere in the codebase that expose methods
+like `exists()`, `get_name()`, `get_parent_dir()`, `list_files(recursive: bool)`, and `create()`.
+Keep the implementation as static methods within the `FileCompressor` class,
+with clear, robust path handling for both archiving and extraction scenarios.
+---

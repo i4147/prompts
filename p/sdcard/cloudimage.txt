@@ -1,0 +1,30 @@
+Write a Python command-line script that generates
+and saves a word cloud image from word-frequency data extracted from input text.
+The script must: - Use `argparse` to accept command-line parameters, including an output save path,
+image width/height, an optional font path,
+and an optional mask image path. - Use `matplotlib` with the "Agg" backend
+(for headless/non-interactive rendering) along with `numpy`, `PIL.Image`,
+and the `wordcloud` library's `WordCloud` class to build the visualization. - Import a `word_tags`
+function from a module `SmiToText.frequency.word` to extract keywords
+and their frequencies
+(as a dictionary of word -> count, likely via tokenization/POS tagging and a `Counter`) from a given
+Korean text string. - Import `__ROOT_DIR__` from the `SmiToText` package to resolve a default font
+path located inside a `SmiToText/fonts` (or similar) directory relative to the package root,
+so that Korean characters render correctly by default. - Define a function
+`wordcloud_gen(keywords, save_path, width=1000, height=1000, font_path="", image="")` that:
+- If an `image` path is provided,
+loads it with `PIL.Image` and `numpy` to use as a mask shape for the word cloud;
+otherwise generates a standard rectangular word cloud. - Configures `WordCloud` with white
+background, specified width/height, margin,
+and font path. - Calls `generate_from_frequencies` on the `keywords` dictionary to build the cloud.
+- Renders the result using `matplotlib` (figure size 8x8, dpi 300), hides the axes,
+applies tight layout,
+and saves the final image to `save_path` using `fig.savefig`. - In the `if __name__ == "__main__":`
+block, demonstrate usage with a sample Korean sentence as default input text,
+construct a default font path using `__ROOT_DIR__` and `os.sep`, parse command-line arguments,
+derive keyword frequencies from the sample text via `word_tags` and `Counter`,
+and call `wordcloud_gen` to produce and save the word cloud image based on the parsed arguments.
+The script's primary purpose is to provide a reusable command-line utility/function for turning
+Korean (or general) text into a frequency-weighted word cloud visualization,
+optionally shaped using a custom image mask,
+with configurable size and font support for proper Korean character rendering. ---

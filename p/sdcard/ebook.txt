@@ -1,0 +1,49 @@
+Write a prompt for an AI coding agent to generate a Python module that implements ebook format
+parsers (.epub, .mobi, .azw, .azw3, .fb2, .cbz) within a larger document-parsing library/framework.
+The module should: 1.
+Start with a module-level docstring stating it handles ebook formats:
+.epub, .mobi, .azw, .azw3, .fb2, .cbz.
+2. Use `from __future__ import annotations` and import:
+`zipfile`, `Path` from `pathlib`, `ebooklib` and `epub` from `ebooklib`, `BeautifulSoup` from `bs4`,
+`etree` from `lxml`.
+3. Import shared internal modules from the parent package:
+`Block` and `Document` data models from `..model`, a `register` decorator from `..registry`,
+and an existing `parse_html` function from `..parsers.markup`
+(to be reused for HTML-derived content).
+4. Implement a function `parse_epub(path: Path) -> Document` decorated with
+`@register([".epub"], "epub")`: - Load the EPUB using `ebooklib.epub.read_epub`.
+- Iterate over all spine document items (`ebooklib.ITEM_DOCUMENT`) in reading order,
+  producing one group of blocks per spine document. - For each document item,
+  parse its HTML content with BeautifulSoup and find all `h1`-`h4`
+  and `p` tags in document order. - For each matched tag, extract stripped text;
+  skip empty text. - For heading tags (`h1`-`h4`), append a `Block` with `kind="heading"`, the text,
+  and a `level` integer derived from the tag name (e.g., `h2` → level 2). - For `p` tags,
+  append a `Block` with `kind="paragraph"`
+  and the text. - Extract the book title from Dublin Core metadata (`DC`, `title`);
+  if present use the first title value, otherwise `None`. - Return a `Document` with `path=path`,
+  `format="epub"`, the collected `blocks`, and `metadata={"title": <extracted title or None>}`.
+  5.
+Implement a function `parse_mobi(path: Path) -> Document` decorated with
+`@register([".mobi", ".azw", ".azw3"], "mobi")`:
+- Import the third-party `mobi` library locally inside the function (aliased as `mobi_lib`) to avoid
+a hard dependency at module load time. - Use `mobi_lib.extract(str(path))` to extract the MOBI/AZW
+file into a temporary directory,
+returning `(temp_dir, extracted)`
+where `extracted` is the path to the extracted file. - If the extracted file's suffix
+(case-insensitive) is `.epub`,
+delegate to `parse_epub` on the extracted path and return its result. - Otherwise,
+call `parse_html` on the extracted path to build a `Document`. - Use a `try/finally` (or equivalent)
+pattern around the extraction-dependent logic to ensure the temporary extraction directory is
+cleaned up afterward, regardless of success or failure.
+Note: only part of the `parse_mobi` function body is shown/needed
+(the extraction, delegation to `parse_epub` for epub-derived mobi files,
+and fallback to `parse_html`);
+the agent should implement the full logic consistent with this described behavior,
+including proper cleanup of the temporary directory
+and returning the resulting `Document`
+(adjusting its `format`/`path` metadata as appropriate for consistency with other parsers in
+the library).
+Keep code style consistent with a modular parser-registry pattern
+where each parser function is registered for specific file extensions
+and returns a unified `Document` object composed of `Block` instances
+(headings with levels, paragraphs, etc.). ---

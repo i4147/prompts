@@ -1,0 +1,32 @@
+Write a Python script that gathers the text contents of files from a directory
+tree and combines them into a single merged output suitable for pasting into an
+AI chat or clipboard.
+The script should be a command-line tool that accepts a starting directory
+(defaulting to the current working directory) and optional filters such as file
+extensions to include, names or patterns to exclude, and whether to skip binary
+files.
+Key behaviors: - Recursively walk the target directory, skipping common
+irrelevant or noisy content (for example, version control folders, dependency
+caches, build outputs, and other generated artifacts) using sensible default
+exclusion rules that can be extended by the user. - Read each candidate file as
+text using forgiving decoding so that files with stray invalid bytes are still
+processed, and silently skip files that cannot be read. - For every included
+file, emit a header line identifying its path relative to the starting
+directory, followed by the file's full contents, ensuring each file's block ends
+with a newline so blocks remain cleanly separated. - Produce a single merged
+document in deterministic order (sorted by path) containing all included files.
+- Compute the total size of the merged output in bytes before delivering it, and
+enforce a maximum clipboard-friendly size limit of about one megabyte.
+If the output exceeds the limit, warn the user clearly and provide a way to
+proceed anyway, or to write the output to a file instead. - Support copying the
+merged output to the system clipboard using the appropriate native mechanism for
+the current operating system (such as pbcopy on macOS, clip on Windows, or
+xclip/xsel/wl-copy on Linux), with a clear error message and non-zero exit
+status if no clipboard tool is available. - Optionally write the merged output
+to a file with a randomly generated, unique filename when requested, and print
+the resulting path. - Print a concise summary to the console: the number of
+files included, the number skipped, and the total size of the output. - Handle
+keyboard interruption and unexpected errors gracefully with clear messages and
+appropriate exit codes, and return a zero exit code on success. - Provide
+helpful `--help` documentation describing every option, and keep the interface
+simple and well-documented for end users. ---

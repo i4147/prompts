@@ -1,0 +1,14 @@
+Resolves (downloading if necessary) a pinned Godot version and its export templates,
+then runs addons/gdpractice/export_packs.gd against the project.
+Godot binary resolution order:
+1. `godot` on PATH -- used as-is if its version matches GODOT_VERSION.
+If it's a *different* version, a warning is printed and it is NOT used;
+we fall through to steps 2/3 instead,
+so a mismatched PATH install can't silently reintroduce a version-mismatch bug.
+2. A previously downloaded copy in this script's cache directory
+(~/.godot_versions/<GODOT_VERSION>/).
+3. Downloaded fresh from the official godotengine/godot GitHub release for GODOT_VERSION,
+into that same cache directory.
+Export templates are checked against (and installed into) based on system-standard per-OS
+directories.
+Dependencies: pip install certifi

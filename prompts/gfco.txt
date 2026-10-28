@@ -1,0 +1,27 @@
+Write a Python script that converts font files between common web and desktop
+font formats.
+The tool should accept one or more font files (or a directory containing font
+files) as input, along with a target format chosen from TTF, OTF, WOFF, WOFF2,
+and EOT.
+For each input file, it should produce a converted copy in the requested format,
+preserving the font's glyphs, metrics, and naming data as faithfully as
+possible.
+The user should be able to specify an optional output directory; if none is
+given, the converted file should be saved alongside the original.
+The tool should validate that the target format is supported and that each
+source file exists and is a recognized font type, skipping or reporting
+unsupported files without stopping the entire batch.
+It should also offer an option to delete the original source file after a
+successful conversion, and should only do so when the conversion has completed
+successfully.
+For large batches, the script should process files concurrently to reduce total
+runtime, using a reasonable degree of parallelism that is safe for CPU-bound
+font processing.
+It should report progress and a clear summary at the end, listing which files
+converted successfully, which were skipped, and which failed along with a brief
+reason for each.
+If a required dependency for font processing is missing, the script should exit
+with a clear, human-readable message explaining how to install it.
+The command-line interface should be simple and self-documenting, with help text
+describing each argument, and it should return a non-zero exit status if any
+conversion fails. ---

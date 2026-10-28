@@ -1,0 +1,2 @@
+Usage: collect [options] --phrases FILE -i FILE -o FILE Options:
+--phrases FILE -o FILE -i FILE --start_with_findings

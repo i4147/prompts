@@ -1,0 +1,38 @@
+Write a Python script that recursively scans the current working directory for source code files
+and extracts a preview snippet from each one,
+saving the deduplicated results into a single output file.
+Requirements: 1. **File discovery**:
+Recursively walk through all files
+and subdirectories starting from the current working directory
+(use `Path.cwd().rglob("*")` or equivalent).
+2. **File filtering**:
+- Only process files whose extension matches a predefined set of source code extensions:
+`.py`, `.h`, `.c`, `.cpp`, `.cc`, `.cxx`, `.hh`, `.hpp`,
+`.hxx`. - Skip directories (only process actual files). - Skip the output file itself (`all.txt`) if
+it happens to match the resolved path, to avoid self-inclusion.
+3. **Snippet extraction**:
+- For each matching file, read its content as text using UTF-8 encoding,
+ignoring decode errors. - Extract the first 23 lines of the file (preserving line endings)
+and join them into a single string snippet. - If reading the file fails due to an OS-level error
+(e.g., permission issues),
+handle it gracefully and treat the snippet as empty (skip it) instead of crashing.
+4. **Deduplication**:
+Collect all non-empty snippets,
+then remove exact duplicate snippets (e.g., using a set) so each unique snippet block appears only
+once in the final output.
+5. **Output**: - Write all unique snippets to a file named `all.txt` located in the current working
+directory (resolved to an absolute path). - Separate each snippet block with three newlines
+(i.e., join blocks with `"\n\n\n"`). - Use UTF-8 encoding when writing the output file.
+6. **Console feedback**:
+After writing the output,
+print a confirmation message showing the absolute path of the saved output file,
+and print the total count of unique snippet blocks that were saved.
+7. **Script structure**:
+- Encapsulate the logic in a `main()` function. - Use the `pathlib.Path` module for all filesystem
+operations (no `os.path`). - Run `main()` under a standard `if __name__ == "__main__":` guard,
+calling `raise SystemExit(main())` so the function's return value (if any) becomes the
+process exit code.
+The purpose of this script is to quickly gather a preview/sample of the beginning of every source
+file in a project tree into one consolidated,
+de-duplicated text file — useful for quickly reviewing file headers, license/boilerplate comments,
+or getting a condensed overview of a codebase's structure without opening every file individually.

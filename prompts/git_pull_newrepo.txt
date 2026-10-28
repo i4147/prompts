@@ -1,0 +1,22 @@
+Write a Python script that scans a local root directory recursively for Git
+repositories (ignoring hidden folders), and for each discovered repository
+creates a matching public repository on the user's GitHub account using an
+access token loaded from environment configuration.
+The script should read the token from a local `.env` file or environment
+variables, use the directory name as the repository name, and add a default
+description to each new repository without initializing it with any files.
+After creating each remote repository, it should register it as a remote named
+"origin" in the local repository (or update the existing remote if one already
+exists) and push the current branch to GitHub.
+Handle failures gracefully: if a GitHub repository with that name already exists
+or the API request fails, report the error clearly and continue processing the
+remaining repositories rather than stopping.
+Print clear, human-readable progress messages with success and failure
+indicators for each repository, along with a final summary showing how many
+repositories were processed, created, pushed, and failed.
+The script should accept the root directory to scan as a command-line argument
+(defaulting to the current working directory if none is provided) and should
+validate that the path exists before starting.
+Ensure that no credentials are printed to the console or written to logs, and
+make the script safe to re-run without duplicating remotes or corrupting
+existing repositories. ---

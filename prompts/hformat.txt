@@ -1,0 +1,17 @@
+Write a Python script that formats HTML files in place by pretty-printing their
+markup for readability.
+The tool should accept one or more HTML file paths as command-line arguments; if
+no paths are given, it should automatically discover all HTML files within the
+current working directory and process them.
+Each file should be read using UTF-8 encoding, reformatted with consistent
+indentation and line breaks so the markup is easier to read, and rewritten to
+the same location only when the formatted result differs from the original
+content, avoiding unnecessary writes.
+Processing should run across multiple files concurrently to speed up batch
+operations.
+If an error occurs while handling any individual file (such as an unreadable or
+unwritable file), the script should report a clear message identifying that file
+and the problem, continue processing the remaining files, and never crash the
+whole batch.
+The script should be self-contained and runnable directly from the command line.
+---

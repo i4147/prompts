@@ -1,0 +1,20 @@
+Write a Python script that formats JavaScript (or similar) source code using the
+`jsbeautifier` library.
+The script should define a function named `format` that accepts two parameters:
+1. `text` — a string containing the raw source code to be formatted.
+   2. `opts` — a dictionary of formatting options.
+The function should:
+- Create a default `jsbeautifier` options object via `jsbeautifier.default_options()`. - Set the
+indentation size from `opts.get("tabWidth", 2)`,
+defaulting to 2 if not provided. - Set the maximum line wrap length from
+`opts.get("printWidth", 80)`,
+defaulting to 80 if not provided. - Enable inner HTML indentation by setting
+`indent_inner_html = True` on the options object. - Call `jsbeautifier.beautify(text, o)` with the
+input text and the configured options, and return the resulting beautified code string.
+The function should not print anything or raise custom exceptions;
+it should simply return the formatted string output from `jsbeautifier.beautify`.
+The purpose of this script is to provide a lightweight,
+reusable formatting utility that can be integrated into a larger toolchain
+(e.g., a code formatter plugin or build pipeline) where `tabWidth`
+and `printWidth` style options are passed in from an external configuration dictionary,
+mapping common formatter option names to the equivalent `jsbeautifier` settings. ---

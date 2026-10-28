@@ -1,0 +1,13 @@
+Write a Python script that converts a text file's encoding using command-line input.
+Requirements: - Use `from __future__ import annotations` at the top of the file.
+- The script should only execute its logic
+  when run as the main module (use the `if __name__ == "__main__":` guard). - Accept a single
+  command-line argument representing the path to an input file (retrieved via `sys.argv[1]`),
+  so the `sys` module must be imported. - Open
+  and read the entire contents of the specified input file using `latin1` encoding. - Write the
+  exact content that was read into a new file named `out.json` in the current working directory,
+  encoding it as `utf-8`. - After successfully writing the output file,
+  print the message `done` to standard output. - Keep the implementation minimal
+  and straightforward—no error handling, no additional arguments,
+  and no extra processing of the file content beyond reading it as text
+  and re-writing it with the new encoding. ---

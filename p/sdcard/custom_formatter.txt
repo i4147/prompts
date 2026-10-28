@@ -1,0 +1,24 @@
+Write a Python command-ats a JSON file in place,
+so that the file contains a top-level JSON array with exactly one record per line
+(instead of fully pretty-printed or fully minified JSON).
+Requirements: - Use `from __future__ import annotations`,
+and import `json` and `sys`. - Implement a function `format_json_file_inplace(input_file)` that:
+- Opens the given file path for reading with UTF-8 encoding
+and loads its contentexpected to be a list of records). - Builds the output as a list of text lines:
+- The first line is `[`. - For each record in the loaded list,
+serialize it to a single-line JSON string using `json.dumps` with `ensure_ascii=False`
+(so non-ASCII characters are preserved as-is, not escaped). - Append a comma to each serialized
+record's string except for the last one. - The final line is `]`. - Writes the result back to the
+same input file path (overwriting it), joining all lines with ` `,
+and ensures the file ends with a trailing newline. - Prints a confirmation message in the form:
+`Formatted {input_file} successfully!`. - In the `if __name__ == "__main__":` block:
+- Read the input file path from `sys.argv[1]`. - If no file path argument is provided
+(i.e., `len(sys.argv) < 2`),
+print a usage message in the form `Usage: python script.py <input_file.json>`
+and exit with status code 1. - Otherwise,
+call `format_json_file_inplace` with the provided file path.
+The script takes a single JSON file as both input and output (modifying it in place),
+and its notable behavior is producing a compact-but-readable JSON array format with one record per
+line, preserving non-ASCII characters unescaped, and
+automatically adding trailing commas between records except after the last one.
+---

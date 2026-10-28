@@ -1,0 +1,25 @@
+Write a Python script that tokenizes a block of text into individual words,
+tracking each word's exact position within the source text. **Purpose:** Provide a reusable
+tokenizer utility that scans multi-line text and extracts word tokens,
+preserving line number and column information for each match, which is useful for text analysis,
+linting, or search tools that need to report precise locations of words. **Main inputs:** - A single
+string `text`, which may contain multiple lines (using standard line breaks). **Main outputs:** - An
+iterator (generator) of token objects.
+Each token must be an immutable, frozen dataclass named `Token` with three fields: - `word` (str):
+the matched word text. - `line` (int):
+the 1-based line number where the word occurs. - `column` (int):
+the 1-based column number
+where the word starts. **Notable behavior/requirements:** - Use `from __future__ import annotations`
+for forward-compatible type hints. - Define a module-level compiled regular expression
+(e.g., `WORD_RE`) that matches words composed of ASCII
+and Latin-accented letters (covering ranges equivalent to À-Ö, Ø-ö, ø-ÿ),
+allowing internal apostrophes (straight or curly)
+and hyphens as word-internal connectors (e.g., "don't", "well-known"),
+but not as leading/trailing characters in a way that breaks the sequence. - Split the input text
+into lines using `splitlines()` so no trailing newline characters are included,
+and number lines starting at 1. - For each line,
+find all non-overlapping regex matches in order of appearance, and for each match,
+compute the column as the match's start offset plus 1 (to make it 1-based). - Implement the core
+function as a generator (`Iterator[Token]`) named `tokenize` that yields one `Token` per matched
+word, in the order encountered (line by line, left to right within each line). - Keep the
+implementation dependency-free, using only the standard library (`re`, `dataclasses`, `typing`). ---

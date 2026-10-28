@@ -1,0 +1,8 @@
+Regression tests for decompression-bomb protection in NLTK (CWE-409).
+NLTK reads whole zip members into memory
+(``ZipFilePathPointer.open`` / ``OpenOnDemandZipFile.read``)
+and extracts them to disk (``nltk.downloader``) without any cap,
+so a tiny archive whose member decompresses to gigabytes exhausts RAM
+or disk. ``nltk.data._check_decompression_bomb`` now rejects a member that expands beyond
+``MAX_UNZIP_RATIO`` (above an activation size) or past the optional absolute cap ``MAX_UNZIP_SIZE``.
+Ordinary corpora compress only a few-fold, so the guard does not affect legitimate data.

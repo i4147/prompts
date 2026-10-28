@@ -1,0 +1,13 @@
+Regression tests for the cubic-blowup DoS in ``nltk.translate.phrase_based.phrase_extraction``
+(CWE-770; CVE-2026-12870).
+With ``max_phrase_length`` left at its default (0) it expands to the full sentence length,
+so the function enumerates O(n**2) phrase pairs,
+each holding an O(n)-word string -- O(n**3) total work/memory.
+A few-hundred-word sentence pair then pins the CPU and exhausts memory.
+The defaulted length is now capped by ``MAX_PHRASE_EXTRACTION_DEFAULT_LEN``;
+a longer sentence with the default raises ``ValueError`` asking for an explicit
+``max_phrase_length``.
+An explicitly supplied ``max_phrase_length`` is never capped.
+The "must not run" test runs in a spawned process with a hard timeout,
+and the worker reports its outcome through its exit code
+(no queue/thread, so it is robust on free-threaded builds), so a regression cannot hang the suite.

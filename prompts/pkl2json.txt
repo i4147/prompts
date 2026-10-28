@@ -1,0 +1,18 @@
+Write a Python script that scans the current working directory for all pickle
+files (with a .pkl extension), loads each one, and gathers the pandas DataFrames
+they contain.
+For every file, it should report progress to the user, including the file name
+and, when successful, the number of rows and columns loaded.
+Files that fail to load or that contain something other than a DataFrame should
+be skipped with a clear warning or error message, without stopping the overall
+process.
+Files should be processed in a consistent, alphabetical order.
+If no pickle files are found, the script should inform the user and exit
+gracefully.
+After processing, the script should summarize how many files were found and how
+many DataFrames were successfully loaded, and then combine the valid DataFrames
+into a single consolidated dataset for further use.
+Handle the case where no valid DataFrames were loaded by reporting that nothing
+could be combined.
+The script should be robust, readable, and provide a simple, user-friendly
+command-line experience. ---

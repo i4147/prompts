@@ -1,0 +1,27 @@
+Write a Python module that provides a thin,
+type-safe abstraction layer over the `tomlkit` library for parsing, serializing,
+and manipulating TOML data while preserving formatting and comments.
+The module should: 1.
+Define a `NewType` called `TOMLMapping` based on `MutableMapping`,
+representing the dict-like object returned when parsing TOML text.
+Include a docstring explaining that this is an abstraction over the value returned by the `loads`
+function, which should behave like a dict while preserving the original formatting
+and comments of the TOML source.
+2. Define a generic `TypeVar` named `T` for use in type annotations.
+3. Implement a `loads(text: str) -> TOMLMapping` function that parses a TOML-formatted string using
+`tomlkit.loads` and returns the result cast to `TOMLMapping`.
+4. Implement a `dumps(obj: Union[TOMLMapping, dict]) -> str` function that serializes a
+`TOMLMapping` or plain dict back into a TOML-formatted string using `tomlkit.dumps`.
+5. Implement a `setdefault(obj: MutableMapping, key: str, value: T) -> T` function that mimics
+`dict.setdefault` but supports dotted key paths (e.g., `"a.b.c"`) for accessing/creating
+nested mappings.
+For each segment of the dotted key except the last, if the key doesn't exist in the current mapping,
+it should be created as an empty dict (`{}`);
+for the last segment, if it doesn't exist, it should be set to the provided `value`.
+The function should traverse/create the nested structure level by level
+and return the final value found
+or set at the full key path (with the same type as `value`, i.e., `T`).
+Use appropriate type hints throughout
+(including `Any`, `List`, `MutableMapping`, `Tuple`, `Union`, `cast`) to ensure static type-checking
+compatibility.
+The module should import `tomlkit` as its only external dependency. ---

@@ -1,0 +1,25 @@
+Write a Python script that scans one or more user-supplied file or directory
+paths for Python source files, analyzes each file's structure, and extracts its
+classes, top-level functions, and constants into separate organized output
+files.
+The tool should: - Accept a list of input paths (command-line arguments) that
+may be individual files or directories.
+When a directory is given, search it recursively for Python sources, skipping
+common non-source folders such as test, example, and output directories. -
+Identify Python files either by their `.py` extension or by a Python shebang
+line on the first line, so that extensionless executable scripts are also
+included. - Parse each discovered file safely, tolerating files that have syntax
+errors or unreadable encodings by reporting and skipping them without stopping
+the whole run. - Extract three categories of definitions: class definitions
+(with their source code), function definitions (with their source code), and
+module-level constant assignments (with their source code), recording the
+originating file for each item. - Write each category to its own dedicated
+output directory under a common `output` folder, producing one file per
+extracted item in a readable, consistently named format that avoids filename
+collisions across source files. - Process files in parallel using a pool of
+multiple worker processes to speed up work on large codebases, and ensure the
+output is safe on all platforms. - Print a concise progress and summary report
+at the end, including the number of files scanned, items extracted per category,
+and any files that failed to process. - Handle edge cases gracefully: empty
+inputs, nonexistent paths, and duplicate names across files should not crash the
+program. ---

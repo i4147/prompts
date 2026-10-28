@@ -1,0 +1,3 @@
+Sanity check installed Python packages by attempting to import them.
+Uses parallel processing for faster execution and logs failed imports to a file.
+Compatible with Python 3.12+ (no pkg_resources dependency).

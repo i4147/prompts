@@ -1,0 +1,18 @@
+Data classes and parser implementations for "chart parsers",
+which use dynamic programming to efficiently parse a text.
+A chart parser derives parse trees for a text by iteratively adding "edges" to a "chart."
+Each edge represents a hypothesis about the tree structure for a subsequence of the text.
+The chart is a "blackboard" for composing and combining these hypotheses.
+When a chart parser begins parsing a text, it creates a new (empty) chart, spanning the text.
+It then incrementally adds new edges to the chart.
+A set of "chart rules" specifies the conditions under which new edges should be added to the chart.
+Once the chart reaches a stage where none of the chart rules adds any new edges,
+parsing is complete.
+Charts are encoded with the ``Chart`` class,
+and edges are encoded with the ``TreeEdge`` and ``LeafEdge`` classes.
+The chart parser module defines three chart parsers:
+- ``ChartParser`` is a simple and flexible chart parser.
+Given a set of chart rules,
+it will apply those rules to the chart
+until no more edges are added. - ``SteppingChartParser`` is a subclass of ``ChartParser`` that can
+be used to step through the parsing process.

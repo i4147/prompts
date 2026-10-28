@@ -1,0 +1,30 @@
+Write a Python script that scans a local directory for Python package
+distribution archives (source tarballs, wheels, and zip files), evaluates each
+archive's contents, and reports which archives contain real, usable Python
+source code versus those that are essentially empty, metadata-only, or consist
+mainly of documentation, tests, or examples.
+The script should accept a root directory path from the command line and
+recursively discover all matching archive files.
+For each archive, it should inspect the internal file listing without fully
+extracting anything to disk, skipping archives that are unreasonably small.
+It should classify the contents by examining the files inside: ignore common
+metadata and packaging boilerplate files (such as package info, license, readme,
+changelog, and build configuration files), ignore files located under
+documentation, example, test, or benchmark folders, and then determine whether
+the remaining members contain meaningful Python code.
+To judge meaningfulness, the script should parse Python source files to confirm
+they are syntactically valid and contain substantive definitions or statements
+rather than being empty or comment-only.
+The script should process archives in parallel using a fixed pool of worker
+processes to keep throughput high on large collections, and it should handle
+corrupted or unreadable archives gracefully by recording them as errors without
+stopping the overall run.
+The output should be a clear summary report listing the total archives scanned,
+how many were classified as containing real code, how many were rejected and why
+(too small, metadata-only, non-code only, invalid Python, or unreadable), and an
+optional list of the accepted archive paths.
+Allow the user to optionally move or copy rejected archives into a separate
+destination folder via a command-line flag, and provide a dry-run mode that
+reports intended actions without modifying the filesystem.
+Ensure the script exits with a meaningful status code and prints progress
+information to the console during long scans. ---

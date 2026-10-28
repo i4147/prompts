@@ -1,0 +1,20 @@
+Write a Python script that defines a function `calculate_eigenvalues(matrix)` for computing the
+eigenvalues of a square matrix using NumPy.
+Requirements: - Include `from __future__ import annotations` at the top of the file. - The function
+should accept a single parameter `matrix`,
+which can be any array-like input (e.g., a list of lists or a NumPy array). - Inside the function,
+convert the input `matrix` into a NumPy array using `np.asarray`. - Check whether the resulting
+array is square by comparing its number of rows (`shape[0]`) to its number of columns (`shape[1]`).
+- If the matrix is not square, the function should return `None`. - If the matrix is square,
+use `np.linalg.eig` to compute both eigenvalues and eigenvectors,
+but only return the eigenvalues
+(discard the eigenvectors,
+assigning them to a variable named `_eigenvectors` to indicate they are intentionally unused). - The
+function should return the eigenvalues as the output (typically a NumPy array). - Assume `numpy` is
+imported as `np` elsewhere in the script
+(do not add the import inside the function itself,
+but ensure the code relies on `np` being available).
+- Do not include any additional error handling, input validation beyond the square-matrix check,
+  docstrings, or print statements
+  unless necessary to match the described behavior. - Keep the implementation minimal
+  and focused solely on this functionality. ---

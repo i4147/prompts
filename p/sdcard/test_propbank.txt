@@ -1,0 +1,12 @@
+Regression tests for uncaught crashes on a malformed line in the PropBank instance parser
+(CWE-248 uncaught exception). ``PropbankInstance.parse`` converted the sentence/word-number fields
+with ``int(...)``, split each argument on ``-``,
+and parsed the inflection and tree-pointer fields without catching their ``ValueError``s,
+so a malformed corpus line raised a cryptic,
+uncaught ``ValueError``
+(``invalid literal for int()``, ``not enough values to unpack``, ``Bad propbank inflection string``,
+or ``bad propbank pointer``). ``parse`` is called by ``PropbankCorpusReader.instances()`` via
+``_read_instance_block`` with no surrounding handler,
+so one bad line aborted iteration over the whole corpus.
+It now fails with the same clear ``"Badly formatted propbank line"`` ``ValueError`` the parser
+already raises for other malformed lines; valid lines are unchanged.

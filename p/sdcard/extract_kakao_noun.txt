@@ -1,0 +1,60 @@
+Write a prompt instructing an AI coding agent to build a Python script with the following purpose
+and behavior: Purpose:
+Create a Korean noun/keyword extractor that uses the Kakao Khaiii Korean morphological analyzer to
+extract meaningful nouns and related morphemes (noun-like words) from input text,
+intended as part of a text summarization/NLP toolkit
+(e.g., for keyword extraction from summary text).
+Requirements: 1.
+Use argparse, os, gc,
+and time as standard imports for script setup
+(argument parsing, file/OS operations, garbage collection, and timing),
+even if not all are heavily used in the core logic.
+2. Import and use `KhaiiiApi` from the `khaiii` package as the core morphological analysis engine.
+3. Import a custom sentence tokenizer `nltkSentTokenizer` from a module path
+`SmiToText.tokenizer.nltk` (for potential sentence splitting of input text).
+4. Import and instantiate a custom `Util` helper class from `SmiToText.util.util`,
+which provides helper methods such as `is_alpha` (and presumably `is_int`) for checking
+character/token types.
+5. Instantiate a global `KhaiiiApi` object named `api`
+and a global `Util` object named `util` at module level.
+6. Add a module-level Korean docstring describing the script as "카카오 한글 형태소 분석기를 이용한 명사 추출기"
+(a noun extractor using the Kakao Korean morphological analyzer).
+7. Implement a function `kakao_postagger_nn_finder(summay_text)` that:
+- Opens the Khaiii API connection,
+analyzes the input text (`summay_text`) to get morphological analysis results,
+then closes the API connection. - Iterates over each analyzed word/token in the result. - For each
+word, builds a string representation of its morphemes joined by " + ",
+where each morpheme is formatted as "lexeme/tag" (using the morph's `lex` and `tag` attributes). -
+Splits this string back into a list of individual "lexeme/tag" morpheme strings.
+- For each word, concatenates (without separators) the lexeme parts of morphemes
+  whose tag starts with any of:
+  "N" (noun tags), "MM" (determiner), "SN" (number),
+  or "SL" (foreign/alphabet)
+  — building a `complex_morphs` string. - If the resulting `complex_morphs` string has length
+  greater than 1, append it to a result list `nn_word_list`. - Separately
+  (as a secondary/additional pass for the same word), if the word has more than one morpheme,
+  reset `complex_morphs` and iterate again over the morpheme list:
+  for morphemes whose tag starts with "SL" and whose lexeme passes the `util.is_alpha` check,
+  concatenate the lexeme into `complex_morphs`
+  (this logic appears to be a work-in-progress extension,
+  possibly intended to also handle "SN" numeric tokens via `util.is_int`,
+  as suggested by a commented-out line
+  — include this as commented-out/incomplete code matching that intent). - Include commented-out
+  debug print statements showing the word's original lexeme
+  and its morphs string (wrapped with '-- kakao_postagger --' markers)
+  and the extracted `complex_morphs`, left in place as inactive debug code. - Return `nn_word_list`,
+  the list of extracted noun-like concatenated strings per word/token.
+Notable behavior/style notes to replicate:
+- The function manages the Khaiii API lifecycle manually per call
+(open before analyze, close after). - Morpheme tag matching uses simple `startswith` checks rather
+than exact tag matching,
+to broadly capture noun-related
+and symbolic categories. - The code includes leftover commented debugging print statements
+and an unfinished/commented branch for handling numeric ("SN") tokens via an `is_int` utility
+method, indicating the function is a work-in-progress noun-extraction utility. - No explicit
+`main`/CLI argument usage is required inside this function,
+but the script should still import `argparse`, `os`, `gc`,
+and `time` at the top as part of its standard structure.
+Produce the complete Python script matching this specification,
+preserving the Korean comments/docstring
+and the described (including partially commented-out) logic. ---

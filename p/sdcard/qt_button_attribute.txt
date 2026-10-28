@@ -1,0 +1,1 @@
+Compact pill editor for typed key-value attributes.

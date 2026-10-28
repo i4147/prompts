@@ -1,0 +1,28 @@
+Write a Python script that reads a Markdown document and extracts embedded file
+contents from it, then recreates those files on disk as a project tree.
+The script should accept a path to a Markdown file as input and an output
+directory where the extracted files will be written.
+Each file in the Markdown is marked by a level-two heading that contains a
+relative file path wrapped in backticks, followed by a fenced code block holding
+that file's contents.
+The script should locate every such heading, pair it with the first code fence
+beneath it, and capture the enclosed text as the file body, correctly handling
+fences with or without language tags, trailing whitespace, and both Unix and
+Windows line endings.
+If a heading has no code block beneath it, the script should log a warning and
+skip that entry without stopping.
+The script should create any necessary parent directories, write each extracted
+file using UTF-8 encoding, and preserve the content exactly as it appears inside
+the fence, without adding or stripping meaningful whitespace beyond the trailing
+newline that precedes the closing fence.
+It should guard against path traversal by refusing to write any file whose
+resolved location falls outside the chosen output directory, logging an error
+for such entries instead.
+Use a structured logging approach to report progress, including the number of
+files successfully written, warnings for malformed or skipped sections, and
+errors for failed writes.
+The script should run from the command line, print a clear summary at the end,
+and exit with a nonzero status code if the input file is missing, unreadable, or
+if no valid file sections are found.
+Handle encoding and I/O errors gracefully with informative messages rather than
+unhandled tracebacks. ---

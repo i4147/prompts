@@ -1,0 +1,6 @@
+Recent files integration for Meld's multi-element comparisons The GTK+ recent files mechanism is
+designed to take only single files with a limited set of metadata.
+In Meld, we almost always need to enter pairs or triples of files or directories,
+along with some information about the comparison type.
+The solution provided by this module is to create fake single-file registers for multi-file
+comparisons, and tell the recent files infrastructure that that's actually what we opened.

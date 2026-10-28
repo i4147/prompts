@@ -1,0 +1,26 @@
+Write a Python script that converts vCard (.vcf) contact files into a structured JSON output.
+The tool should accept a path to a vCard file as input
+and produce a JSON file (or print to standard output) containing one record per contact.
+Requirements and expected behavior:
+- Read a vCard file encoded as UTF-8 text, handling standard line-folding,
+where a continuation line starting with a space
+or tab is appended to the previous logical line. - Parse each contact block
+(delimited by BEGIN and END markers) into a structured record,
+capturing all standard contact properties such as name, formatted name, phone numbers,
+email addresses, postal addresses, organization, title, notes, birthday, and URLs,
+along with any associated type parameters (for example, home, work, mobile). - Support
+quoted-printable encoded values, decoding them correctly using the declared character set,
+falling back to UTF-8 with replacement characters if the charset is unknown. - Tolerate malformed
+or incomplete entries gracefully:
+skip or flag invalid blocks without crashing,
+and never lose valid data from the rest of the file. - Preserve multiple occurrences of repeatable
+properties (for example, several phone numbers or emails) as lists within each contact record. -
+Output the result as well-formed,
+human-readable JSON with proper Unicode support
+(non-ASCII characters should not be escaped unnecessarily). - Accept the input file path
+and an optional output file path from the command line;
+if no output path is given, write the JSON to standard output. - Report clear,
+user-friendly error messages for missing files, unreadable input, or invalid arguments,
+and exit with a non-zero status code on failure. - Keep the script self-contained,
+runnable as a standalone command-line tool,
+and include brief usage instructions in its help output. ---

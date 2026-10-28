@@ -1,0 +1,20 @@
+Write a Python module for a PyScaffold extension named `NoTox` that disables the generation of the
+`tox.ini` file in a scaffolded project.
+Requirements: - Import `List` from `typing`. - Import the `structure` module from the parent package
+(two levels up), and `Action`, `ActionParams`, `ScaffoldOpts`,
+`Structure` from the parent package's `actions` module. - Import the base `Extension` class from the
+local `.` package (the extensions package).
+- Define a class `NoTox` that subclasses `Extension`. - Implement an `activate` method on `NoTox`
+  that takes a list of `Action` objects and returns a list of `Action` objects.
+It should register a function named `remove_files` into the actions pipeline,
+scheduled to run `after="define_structure"`,
+using the extension's inherited `register` helper method. - Define a module-level function
+`remove_files(struct: Structure, opts: ScaffoldOpts) -> ActionParams` that removes the `tox.ini`
+entry from the project structure by calling `structure.reject(struct, "tox.ini")`,
+and returns a tuple of the modified structure
+and the unchanged `opts`. - Include full type hints matching the signatures described above. - Keep
+the code concise, matching the style of a small PyScaffold built-in extension
+(no extra logic, no docstrings required beyond what's necessary).
+The purpose of this script is to provide a toggle-able PyScaffold extension that, when activated,
+removes the default `tox.ini` scaffolding file from the generated project structure by hooking into
+the scaffold action pipeline right after the project structure is defined. ---

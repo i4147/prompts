@@ -1,0 +1,46 @@
+Create a command-line Python tool that applies type annotations from a `.pyi` stub file onto a
+corresponding `.py` source file,
+using `libcst` (specifically `ApplyTypeAnnotationsVisitor` from `libcst.codemod`) for AST-based code
+transformation. **Purpose:** The script takes a Python stub file
+and a target Python source file as input,
+merges the type annotations from the stub into the source file,
+and writes the annotated result back out (or previews the diff),
+while being robust to typeshed-specific constructs that `libcst` cannot resolve on its own. **Key
+behaviors / requirements:** 1. **Typeshed sanitization**:
+Before applying annotations,
+the stub file's CST must be sanitized by a custom `cst.CSTTransformer`
+(e.g., named `TypeshedSanitizer`) that rewrites typeshed-only symbols into standard `typing`
+equivalents so the stub can be parsed and applied without errors:
+- Rewrite `from _typeshed import X` style imports to import from `typing` instead
+(e.g., mapping to `Any`). - Rewrite `import _typeshed` statements similarly. - Rewrite attribute
+access like `_typeshed.Incomplete` into `typing.Any`. - Rewrite bare `Incomplete` name references
+into `Any`.
+2. **Parsing and transformation pipeline**:
+- Parse the stub file into a `libcst` module/tree. - Apply the sanitizer transform to clean up
+typeshed references. - Parse the target `.py` source file into a `libcst` module using a
+`CodemodContext`. - Use `ApplyTypeAnnotationsVisitor`
+(registering the sanitized stub tree with the context) to apply the stub's annotations onto the
+source module, producing a new annotated source tree.
+3. **CLI interface** (via `argparse`):
+- Accept a positional/required argument for the stub file path (`.pyi`). - Accept a
+positional/required argument for the target source file path (`.py`). - Support an option to write
+changes in place to the target file vs. just printing/showing a unified diff (using `difflib`) of
+the proposed changes without modifying the file. - Use temporary files/directories (`tempfile`) as
+needed when staging intermediate output,
+and `shutil` for file copying when writing results back safely.
+4. **Validation and error handling**: - Validate that input files exist and are readable;
+exit with a clear error message
+and non-zero exit code (`sys.exit`) if not. - Optionally use `ast` to sanity-check that the
+resulting transformed source is syntactically valid Python before writing it out
+or reporting success. - Optionally shell out via `subprocess`
+(e.g., to run a formatter like `black` or `isort` on the result) after applying annotations,
+handling failures gracefully.
+5. **Output**:
+- When in diff/dry-run mode:
+  print a unified diff between the original and annotated source to stdout. -
+  When in write/apply mode:
+  overwrite the target `.py` file with the newly annotated source code
+  and confirm success to the user.
+Write the complete, runnable implementation including imports, the `TypeshedSanitizer` class,
+the `sanitize_stub_cst` helper function, the main annotation-application logic,
+and the `argparse`-based CLI entry point (`if __name__ == "__main__":` block).

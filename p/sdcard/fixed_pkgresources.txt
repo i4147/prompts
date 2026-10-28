@@ -1,0 +1,2 @@
+Fixed version: defensive multiprocessing, ordered replacements, None-guards in result loops,
+safe regex insertion.

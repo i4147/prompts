@@ -1,0 +1,30 @@
+Write a Python script that extracts proxy connection links (URIs) from a text file.
+Purpose: - Read the contents of a file named "config.txt"
+(UTF-8 encoded that contains an arbitrary block of text,
+which may include proxy URIs mixed with other text, whitespace,
+or line breaks. - Identify
+and extract all substrings that represent proxy connection links using common proxy URI schemes:
+vless, vmess, trojan, ss, ssr, hysteria, hysteria2, hy2, and tuic.
+Main functions required: 1.
+A function `extract_proxies(text)` that uses a case-insensitive regular expression to find all proxy
+URIs in the given text,
+matching from the scheme (e.g., "vless://") up to the next whitespace character,
+returning a list of matched strings.
+2. A function `extract_proxies_multiline(text)` that handles cases
+where a single proxy URI might be split across multiple lines or contain embedded whitespace:
+- First, remove all whitespace characters from the entire text so that broken/multiline URIs are
+rejoined into continuous strings. - Then split the resulting joined string into separate proxy
+entries by locating each occurrence of a supported scheme prefix
+(using a lookahead split on the scheme patterns, case-insensitive) so that each split segment starts
+at a new proxy URI. - Filter out any empty or whitespace-only segments
+and return the list of proxy URI strings.
+Main script behavior:
+- Open and read "config.txt" as UTF-8 text. - Call `extract_proxies_multiline` on the file's content
+to get the list of extracted proxy links. - Print the total count of extracted proxies. - Then print
+each extracted proxy URI on its own line.
+Notable details: - The scheme matching must be case-insensitive and should support the schemes:
+vless, vmess, trojan, ss, ssr, hysteria, hysteria2, hy2,
+tuic. - The multiline extraction approach is designed to handle proxy links that got broken across
+multiple lines (e.g., due to copy-paste or text wrapping) by stripping all whitespace before
+splitting, ensuring complete URIs are reconstructed. - No external dependencies are required beyond
+Python's built-in `re` module. ---

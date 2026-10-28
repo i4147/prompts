@@ -1,0 +1,4 @@
+Unified C/C++ Compiler CLI Provides utilities to recursively compile C/C++ files in a directory
+or compile and strip a single file.
+Usage Examples: python merged.py scan python merged.py scan --workers 8 --timeout 120 --size-diff
+python merged.py single main.c python merged.py single utils.cpp --no-strip

@@ -1,0 +1,4 @@
+Unified File Utilities CLI This script consolidates various file management operations into a
+single CLI.
+Usage Examples: python merged.py clean-bak python merged.py extinfo py python merged.py find-scripts
+python merged.py prefix "data_" python merged.py search "config" -s

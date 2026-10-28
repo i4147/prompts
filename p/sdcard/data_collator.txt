@@ -1,0 +1,39 @@
+Write a Python module that implements custom Hugging Face Transformers-compatible data collators for
+Chinese masked language modeling (MLM) and whole-word masking (WWM),
+building on `transformers.DataCollatorForWholeWordMask`,
+`transformers.DataCollatorForLanguageModeling`, and `transformers.BatchEncoding`.
+The module must import Chinese character utilities `_is_chinese_char`
+and `_is_chinese` from a relative module path `..utils.chinese`.
+Include the following components: 1.
+A helper function `tolist(x)` that normalizes an input into a Python list:
+if `x` is already a list, return it as-is;
+if `x` has a `numpy()` method (e.g., a TensorFlow tensor), convert it to a NumPy array first;
+then call `.tolist()` on it to produce the final list
+(this also handles PyTorch tensors and NumPy arrays that have `.tolist()`).
+2. A helper function `_torch_collate_batch(examples, tokenizer, pad_to_multiple_of)` that collates a
+list of examples into a single padded batch tensor for PyTorch,
+replicating the internal padding logic used by Transformers' data collators:
+- Import `numpy` and `torch` locally inside the function. - If the examples are lists, tuples,
+or NumPy arrays, convert each to a `torch.long` tensor. - Determine the length of the first example
+and check whether all examples already share that same length. - If all examples are the same length
+and either `pad_to_multiple_of` is `None`
+or the length is already a multiple of `pad_to_multiple_of`,
+simply stack the examples along a new batch dimension (`torch.stack(..., dim=0)`)
+and return the result directly without padding. - Otherwise,
+verify the tokenizer has a valid padding token (`tokenizer._pad_token`);
+if not, raise a `ValueError` with a descriptive message naming the tokenizer class
+and explaining that padding was attempted
+but no pad token is configured. - Compute the maximum sequence length among all examples,
+and if `pad_to_multiple_of` is specified and the max length isn't already a multiple of it,
+round the max length up to the nearest multiple of `pad_to_multiple_of`. - Allocate a new result
+tensor shaped `(number_of_examples, max_length)` using `examples[0].new_full(...)`,
+filled with the tokenizer's pad token id,
+matching the dtype of the examples. - Copy each example's data into the result tensor,
+respecting the tokenizer's padding side (left or right padding) based on `tokenizer.padding_side`. -
+Return the fully padded batch tensor.
+This module is intended to serve as a foundational utility layer for building Chinese-aware
+whole-word-masking and language-modeling data collators
+(used later in the same module or by subclasses) that need low-level control over batch collation
+and padding behavior beyond what the default Transformers collators provide,
+with special handling for Chinese character/word boundaries via the imported Chinese text
+utilities. ---

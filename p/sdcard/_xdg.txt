@@ -1,0 +1,1 @@
+XDG environment variable mixin for Unix and macOS.

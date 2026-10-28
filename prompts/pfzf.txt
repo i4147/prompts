@@ -1,0 +1,23 @@
+Write a Python script that runs as an interactive terminal picker for choosing
+an item from a list using fuzzy search.
+The user types a query, and the list is filtered and ranked in real time: items
+whose characters match the query's characters in order are shown, with better
+scores for matches that are consecutive or that fall at word boundaries (after
+separators such as spaces, slashes, dashes, underscores, or dots).
+Matched characters should be visually highlighted in the displayed results.
+The tool should take a list of candidate strings (for example, from standard
+input, command-line arguments, or a file) and present them in a scrollable,
+keyboard-driven interface that works directly in the terminal without a
+graphical environment.
+Users navigate the filtered results with arrow keys or common shortcuts, refine
+the query by typing and deleting characters, and confirm or cancel the selection
+with the Enter or Escape keys.
+Upon confirmation, the script prints the chosen item to standard output and
+exits with a success status; on cancellation it exits without printing a
+selection and with a non-success status.
+The terminal state must be restored cleanly on exit, including after errors or
+interruptions, and the interface should adapt gracefully to terminal size
+changes and very long lists.
+Include a sensible scoring approach so that the most relevant matches appear
+first, and keep the interface responsive for lists containing thousands of
+entries. ---

@@ -1,0 +1,18 @@
+Write a Python script that acts as a command-line CSS minifier batch tool.
+It should accept one or more CSS file paths as command-line arguments; if no
+arguments are given, it should automatically discover all CSS files (including
+minified CSS files) in the current working directory.
+For each file, the script should skip files that don't exist or that consist of
+only a single line, and otherwise run an external CSS optimization utility at a
+high optimization level with options that remove unused or duplicate rules,
+overwriting the file in place.
+Report progress to the console as it works: print each file name, then a status
+indicator showing whether the file was optimized (with the amount of bytes saved
+and the percentage of size reduction, shown in a distinct color), whether no
+change occurred, or whether an error happened (shown in red).
+Before processing begins, record the total size of the working directory, and
+after all files are processed, report the overall size savings in a clear
+summary.
+Handle failures gracefully so that an error on one file does not stop processing
+of the remaining files, and ensure the script reports human-readable file sizes
+throughout. ---

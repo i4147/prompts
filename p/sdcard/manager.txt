@@ -1,0 +1,53 @@
+Write a prompt for an AI coding agent to generate a Python module that implements a plugin
+management system for the flake8 linting tool.
+Theover, load, categorize,
+and manage flake8 plugins (checkers and report formatters) using Python's `importlib_metadata` entry
+points API. **Key classes to implement**:
+1. **`Plugin`** â€” Wraps a single plugin's entry point metadata:
+- Constructor takes `name` (str), `entry_point` (an `importlib_metadata.EntryPoint`),
+  and `local` (bool, default `False`). - `__repr__` returns a readable string showing name
+  and entry point value. - `to_dictionary()` returns a dict with `name`, `parameters`,
+  `parameter_names`, `plugin`,
+  and `plugin_name`. - `is_in_a_group()` returns whether the plugin name contains a dotted group
+  prefix (e.g., `"pycodestyle.ambiguous_identifier"` belongs to group `"pycodestyle"`). - `group()`
+  lazily computes and caches the group name by splitting `name` on the first `.`;
+  returns `None` if there's no group. - `parameters` property:
+  lazily inspects the loaded plugin's `__init__` signature
+  (using `utils.parameters_for` or equivalent inspection)
+  and caches the result as a dict of parameter name â†’ whether it's required. - `parameter_names`
+  property: lazily returns a list of parameter names derived from `parameters`. - `plugin` property:
+  lazily loads the entry point (calls `.load()`)
+  and caches the resulting object/class. - `plugin_name` property:
+  lazily returns the plugin's module/class name for display purposes. - `version` property:
+  lazily resolves the plugin's version
+  (e.g., via `entry_point.dist.version` or a `__version__` attribute), caching the result;
+  raise a clear `flake8.exceptions` error (e.g., `ExecutionError` or similar) if the version cannot
+  be determined. - `display_name` property
+  or similar for human-readable plugin identification in error messages/logs.
+  2. **`Checkers`** â€” A container/dataclass-like structure holding categorized checker plugins:
+  separate lists for tree-based (AST) checkers and logical-line/physical-line checkers.
+  3. **`ReportFormatters`** â€” A container holding report formatter plugins keyed by name.
+  4. **`PluginManager`**
+â€” Discovers all installed flake8 plugins via entry points for defined groups
+  (e.g., `flake8.extension`, `flake8.report`), builds `Plugin` instances for each,
+  supports local/explicit plugin registration,
+  and provides methods to retrieve/filter plugins by group, name, or type (checkers vs. formatters).
+Should expose methods to convert discovered plugins into `Checkers`
+and `ReportFormatters` instances. **Inputs/Outputs**: - Inputs:
+entry point metadata from the Python environment (via `importlib_metadata`),
+optional manually-specified local plugins. - Outputs:
+structured, queryable collections of plugin objects (`Checkers`, `ReportFormatters`) ready for use
+by flake8's core checking engine. **Notable behavior**:
+- Use lazy evaluation with internal caching (`_cache` pattern) for expensive properties
+(`parameters`, `plugin`, `version`, etc.) to avoid repeated reflection/loading. - Use a module-level
+`LOG = logging.getLogger(__name__)` for debug/info logging of plugin discovery
+and loading. - Raise `flake8.exceptions` custom exceptions (not generic `Exception`) for
+plugin-related errors (e.g., failed to load, version not found, duplicate plugin names). - Define
+`__all__ = ("Checkers", "Plugin", "PluginManager", "ReportFormatters")`. - Use a sentinel object
+(e.g., `NO_GROUP_FOUND`) to distinguish "not yet computed" from "no group exists" in lazy group
+resolution.
+- Rely on `flake8.utils` helper functions
+  where applicable (e.g., for parameter introspection). - Code should include full type hints using
+  `typing` (`Any`,
+`Dict`, `List`, `Optional`, `Set`) and work with Python 3.6+ compatible syntax.
+---

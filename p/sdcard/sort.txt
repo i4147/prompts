@@ -1,0 +1,3 @@
+This module provides a variety of list sorting algorithms,
+to illustrate the many different algorithms (recipes) for solving a problem,
+and how to analyze algorithms experimentally.

@@ -1,0 +1,32 @@
+Write a Python script that reverses an input string and converts it into its "mirrored" form,
+such that the mirrored string, when read,
+looks like the visual mirror reflection of the original string. **Purpose:** The script should take
+a string containing bracket-like characters
+(parentheses, square brackets, curly braces, angle brackets) along with any other characters,
+and produce a new string that represents how the original would appear if reflected in a mirror.
+This involves two operations:
+reversing the character order
+and swapping each mirrorable character with its opposite counterpart
+(e.g., `(` becomes `)`, `[` becomes `]`, and vice versa). **Main Input:** - A string that may
+contain any characters, including the bracket pairs:
+`(`, `)`, `[`, `]`, `{`, `}`, `<`,
+`>`. **Main Output:** - A string that is the reversed version of the input,
+with every bracket character replaced by its corresponding mirror counterpart as defined
+by a mapping.
+Characters without a mirror counterpart (e.g., letters, digits, spaces, punctuation) should remain
+unchanged in value but still appear in reversed order. **Notable Behavior:** - Define a dictionary
+(e.g., `MIRROR_MAP`) that maps each bracket character to its mirrored equivalent:
+- `(` ↔ `)` - `[` ↔ `]`
+- `{` ↔ `}` - `<` ↔ `>` - Process the input string by first reversing it,
+  then iterating through each character:
+  if the character exists as a key in the mirror map, replace it with its mapped value;
+  otherwise, keep the character as-is. - The function should handle strings with no bracket
+  characters gracefully,
+  simply returning the reversed string unchanged in content. - The function should handle empty
+  strings by returning an empty string. - Include a demonstration
+  (e.g., in a `main` function or script entry point) that applies this transformation to one
+  or more example strings and prints both the original
+  and the resulting mirrored string for clarity. - Ensure the solution is efficient and readable,
+  using clear variable names
+  and possibly a helper function (e.g., `mirror_string(s)`) that performs the transformation
+  and returns the result. ---

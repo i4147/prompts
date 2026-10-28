@@ -1,0 +1,1 @@
+Minimal Pac-Man-like game dialog.

@@ -1,0 +1,8 @@
+A set of functions used to interface with the external megam_ maxent optimization package.
+Before megam can be used, you should tell NLTK where it can find the megam binary,
+using the ``config_megam()`` function.
+Typical usage: >>> from nltk.classify import megam >>> megam.config_megam() # pass path to megam if
+not found in PATH # doctest: +SKIP [Found megam: ...]
+Use with MaxentClassifier.
+Example below, see MaxentClassifier documentation for details.
+nltk.classify.MaxentClassifier.train(corpus, 'megam') .. _megam: http://hal3.name/megam/

@@ -1,0 +1,29 @@
+Write a Python script that merges the contents of multiple input data files into
+a single consolidated output, supporting a variety of source formats including
+plain text files, structured data files, SQLite databases, and compressed
+archives, with optional support for ODBC database connections when the
+appropriate driver is available.
+The tool should be runnable from the command line with flexible options that
+control input locations, output destination, verbosity of logging, and how text
+encodings are detected and applied, falling back gracefully through a list of
+candidate encodings when a file cannot be decoded with the first attempt.
+It should respect a configurable size limit when reading large text content so
+that oversized files are truncated or skipped with a clear warning rather than
+exhausting memory.
+For databases, it should enumerate the tables present, extract their rows, and
+write them into the merged output in a readable, consistently structured form,
+handling common data types such as dates, times, decimals, and binary values in
+a way that produces safe, human-readable text.
+For archives, it should be able to inspect and read the member files they
+contain, including handling nested or temporary extraction where needed, and
+clean up any temporary resources afterward.
+Where multiple files are processed, the tool should take advantage of parallel
+processing to improve throughput, while keeping the overall output deterministic
+and complete.
+The script should report progress and per-file errors through logging without
+stopping the entire run when a single source fails, and should finish by
+summarizing how many sources were processed, skipped, or failed.
+Optional dependencies should be treated as optional: if a required library is
+not installed, the tool should skip only the affected source types and continue.
+Ensure the output is safely encoded, uses a clear section header for each merged
+source, and never silently discards data without a logged reason. ---

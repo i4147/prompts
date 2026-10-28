@@ -1,0 +1,15 @@
+[package]
+name = "locate-rs"
+version = "0.1.0"
+edition = "2021"
+publish = false
+[lib]
+name = "locate_core"
+path = "src/lib.rs"
+[[bin]]
+name = "locate"
+path = "src/bin/locate.rs"
+[[bin]]
+name = "updatedb"
+path = "src/bin/updatedb.rs"
+[dependencies]

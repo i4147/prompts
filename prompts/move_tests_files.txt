@@ -1,0 +1,27 @@
+Write a Python script that scans a project directory tree for test files and
+relocates them into a single centralized test folder in the user's home
+directory, while keeping an auditable record of every move.
+The script should accept a source directory as input (for example via
+command-line arguments) and recursively search it for Python files whose names
+indicate they are tests, using common naming conventions such as names
+containing "test_" or "_test".
+Each matching file should be moved into a dedicated tests directory under the
+user's home folder, preserving its relative structure from the original source
+directory where practical, and creating any missing destination folders
+automatically.
+If a file cannot be moved, the script should record the failure and continue
+processing the remaining files rather than stopping.
+Moves should be performed concurrently using a small pool of worker processes to
+speed up processing of large trees, with a fixed, reasonable worker count.
+Each operation should report back its source path, whether it succeeded, and a
+human-readable status message describing the destination or the error
+encountered.
+After processing, the script should write a JSON log file in the user's home
+folder listing every file that was successfully moved, including its original
+and new locations, so the operation can be audited or reversed later.
+The script should also print or log a clear summary showing how many test files
+were found, how many were moved successfully, and how many failed, with failures
+listed individually.
+Use structured, informative logging for progress and errors.
+Handle invalid or nonexistent input directories gracefully with a clear error
+message and a non-zero exit status. ---

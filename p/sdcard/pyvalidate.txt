@@ -1,0 +1,55 @@
+Write a prompt for an AI coding agent that generates a Python utility module for validating
+and sanitizing function call arguments (positional `args` and keyword `kwargs`),
+intended to be used as a reusable validation layer before executing a function's actual logic.
+The module must: 1.
+Define a base exception class `ValidationException`, and the following subclasses,
+each representing a specific validation failure:
+- `ArgumentTypeException`
+– raised when positional arguments don't match expected types or count. - `MandatoryException`
+– raised when a required keyword argument is missing. - `DenialException`
+– raised when an argument matches a denied pattern/value. - `ParameterTypeException`
+– raised when a keyword argument's type doesn't match the expected type. - `ParameterValueException`
+– raised when a keyword argument's value doesn't match an allowed pattern.
+2. Implement a single core function
+`validate_parameters(args, kwargs, arg_types=None, deny_match=None, requires=None, deny=None,
+deny_except=None, types=None, values=None, ignore=None, json_decode=None,
+defaults=None)` that returns a tuple of `(args, kwargs)` (possibly modified),
+with the following behaviors controlled by each optional parameter: - `arg_types`:
+a list of expected types for positional arguments, in order.
+If `args` has fewer elements than `arg_types`,
+raise `ArgumentTypeException` with a message listing the expected type names.
+Each positional argument should be validated/coerced against its corresponding type
+(and raise `ArgumentTypeException` if incompatible). - `deny_match`:
+a string or list of regex patterns.
+Any string in `args` that fully/partially matches (via `re.match`) any pattern should raise
+`DenialException` with a message like `"the argument {arg} was not allowed"`. - `requires`:
+a list of keyword names that must be present in `kwargs`;
+if missing, raise `MandatoryException`. - `deny`:
+a regex pattern (or similar) applied to keyword argument values to reject matching values,
+raising `DenialException`. - `deny_except`:
+the inverse of `deny` — reject keyword values that do NOT match the given pattern. - `types`:
+a dict mapping keyword names to expected types;
+validate each present keyword's value against its expected type,
+raising `ParameterTypeException` on mismatch
+(with support for coercion where sensible, e.g., casting strings to int/float/bool). - `values`:
+a dict mapping keyword names to allowed value patterns (regex strings);
+if a keyword's value doesn't match its pattern, raise `ParameterValueException`. - `ignore`:
+a pattern or key name specifying
+which keyword(s) should be skipped during validation. - `json_decode`:
+a boolean or list of keyword names indicating
+which keyword values (if strings) should be parsed from JSON into native Python objects before
+further validation/use. - `defaults`:
+a dict of default values to inject into `kwargs` for any keys not already present.
+3. Use type hints throughout
+(leveraging `typing.Any`, `Callable`, `Dict`, `List`, `Optional`, `Pattern`, `Tuple`, `Type`,
+`Union`) and the `re` module for pattern matching.
+4. Ensure the function processes checks in a logical order
+(denial checks first, then type/length checks on positional args,
+then keyword requirement/type/value/JSON-decoding/default-injection checks),
+raising the most specific exception immediately when a validation rule is violated,
+and otherwise returning the validated/normalized `(args, kwargs)` tuple for use by the
+calling function.
+The goal is a defensive,
+reusable parameter-validation helper suitable for wrapping public API functions or decorators,
+where strict and descriptive exceptions help callers quickly identify
+which argument failed validation and why. ---

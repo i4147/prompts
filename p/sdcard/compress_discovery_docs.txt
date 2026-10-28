@@ -1,0 +1,19 @@
+Write a Python script that compresses all JSON discovery document files using Brotli compression.
+The script should: - Use the `brotli` library along with `os`
+and `pathlib.Path` for file handling. - Define a directory constant `DOCS_DIR` pointing to
+`"googleapiclient/discovery_cache/documents/"`. - Iterate over every file matching the pattern
+`*.json` within that directory. - For each JSON file found:
+- Print a status message indicating the file currently being compressed
+  (e.g., `Compressing <filename>...`). - Read the file's full contents in binary mode. - Compress
+  the binary data using Brotli compression at the maximum quality level (quality=11). - Write the
+  compressed output to a new file in the same directory,
+  with the same name but an additional `.br` extension appended
+  (so `example.json` becomes `example.json.br`). - After all files have been processed,
+  print a final confirmation message indicating that all files were successfully compressed
+  (e.g., `✅ All files compressed!`).
+The script has no command-line arguments or return values
+— it operates directly on the filesystem relative to the hardcoded `DOCS_DIR` path,
+reading each `.json` file and producing a corresponding `.json.br` compressed file alongside it.
+The main input is the collection of `.json` files in the discovery cache documents directory,
+and the main output is the set of newly created `.json.br` Brotli-compressed files plus console log
+messages tracking progress and completion. ---

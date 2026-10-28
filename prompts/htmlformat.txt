@@ -1,0 +1,35 @@
+Write a Python script that formats and beautifies HTML files in bulk, using a
+structured HTML parser to re-indent and normalize markup while preserving the
+meaning of the document.
+The tool should accept one or more HTML files or whole directories as input,
+recognize the common HTML file extensions, and skip files that are unsupported
+or exceed a sensible size limit (around 50 MB), logging a clear warning for each
+skipped file.
+Key requirements: - **Purpose:** Produce consistently indented, readable HTML
+output, with block-level elements placed on their own lines, inline elements
+kept compact, and nested structure visually reflected through indentation.
+Attributes, text content, and inline scripts or styles should remain
+semantically unchanged. - **Inputs:** File paths and/or directory paths supplied
+on the command line, with an option to process directories recursively.
+Input files may be large, so reading and writing should be done efficiently in
+chunks where appropriate. - **Outputs:** Either overwrite the original files in
+place or write formatted copies to a specified output location, selectable by a
+flag.
+Provide a summary at the end reporting how many files were processed, how many
+were modified, how many tags were reformatted, total bytes handled, and any
+errors encountered. - **Parsing:** Rely on a robust, error-tolerant HTML parsing
+library so that malformed markup does not crash the process.
+If a file cannot be parsed, record the error for that file and continue with the
+rest. - **Concurrency:** Process multiple files in parallel using a configurable
+number of worker processes (default around 8), so that large batches complete
+quickly without corrupting output. - **Safety:** Never leave a partially written
+file behind; write results atomically or to a temporary file first.
+Leave files unchanged when formatting would produce no difference. -
+**Dependency handling:** If required third-party packages are missing, print a
+concise installation hint to standard error and exit with a non-zero status. -
+**Logging:** Use timestamped, level-tagged log messages so the user can follow
+progress, with informational output for normal operation and warnings or errors
+for problems. - **Command-line usability:** Provide a clear help message
+describing all options, a dry-run mode that reports what would change without
+writing anything, and sensible defaults so the tool works with a single command.
+---

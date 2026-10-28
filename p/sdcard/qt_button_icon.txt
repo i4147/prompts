@@ -1,0 +1,1 @@
+Custom image button class.

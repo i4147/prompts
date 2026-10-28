@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line package-inspection and cleanup
+tool for the Python environment it runs in.
+The tool should discover installed Python packages across the relevant
+site-packages locations (the system site directories, the user site directory,
+and optionally any directories listed in the PYTHONPATH environment variable),
+and let the user list, inspect, search, and report on them.
+Key requirements: - **Purpose:** Provide a safe, scriptable way to audit
+installed distributions, including their names, versions, install locations, and
+whether they appear to be orphaned or duplicated across locations. - **Inputs:**
+Command-line arguments controlling the operation (such as which locations to
+include, glob-style name filters, verbosity, and an output format choice).
+Optionally accept a path for writing results to a file. - **Outputs:** A
+human-readable table by default, plus machine-friendly CSV output on request.
+Results should be sorted consistently and include at minimum package name,
+version, and location.
+Progress and diagnostic messages must go to standard error, while results go to
+standard output or the chosen file. - **Behavior:** Scan locations concurrently
+where it helps performance, skip locations that do not exist without failing,
+and handle unreadable or malformed package metadata gracefully by logging a
+warning and continuing.
+Verbose mode should emit debug-level detail; the default should be concise
+informational logging. - **Safety:** Any operation that would remove or modify
+packages must require an explicit confirmation flag and must default to a
+dry-run that only reports what would change.
+Never touch files outside the discovered site-packages locations. - **Error
+handling:** Return meaningful non-zero exit codes for invalid arguments or fatal
+errors, and zero on success.
+Provide clear, user-facing error messages rather than raw tracebacks for
+expected failure conditions. - **Usability:** Include built-in help text
+describing every option, and make the tool importable so its core discovery
+functions can be reused by other code without triggering the command-line
+interface. ---

@@ -1,0 +1,21 @@
+Write a Python script that loads environment-based configuration for a Telegram API client.
+The script's purpose is to locate
+and load a `.env` file from the same directory as the script itself
+(using `pathlib.Path(__file__).parent`),
+then read Telegram API credentials from environment variables using `python-dotenv`
+and the `os` module.
+Main behavior and requirements:
+- Use `pathlib.Path` to build the path to a `.env` file located in the same directory as the script.
+- Use `load_dotenv` from the `dotenv` package to load environment variables from that `.env` file
+path. - Read an environment variable named `TELEGRAM_API_ID`, convert it to an integer,
+and default to `"0"` (as a string, then cast to int) if it is not set.
+- Read an environment variable named `TELEGRAM_API_HASH` as a string,
+  defaulting to an empty string `""` if it is not set. - Store these values in two module-level
+  variables: `API_ID` (int) and `API_HASH` (str).
+Inputs: a `.env` file (not included/created by the script) containing `TELEGRAM_API_ID`
+and `TELEGRAM_API_HASH` key-value pairs.
+Outputs: two in-memory variables
+(ported and used by other parts of ae.g., with to authenticate with the Telegram API.
+Notableavior: the script must not raise an error if the `.env` file or the variables are missing
+— it should gracefully fall back to the default values
+(`0` for `API_ID` and an empty string for `API_HASH`).

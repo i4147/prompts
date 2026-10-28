@@ -1,0 +1,22 @@
+Write a Python script that plays an audio file from either a local file path or
+a remote web URL (http or https), blocking the caller until playback has fully
+finished.
+The tool should expose a simple reusable function that accepts the sound source
+and a blocking flag, and it should also be runnable from the command line by
+passing a single audio file path or URL as an argument.
+Behavior requirements: - Accept both local file paths (resolved to absolute
+paths and converted to a valid file location) and remote URLs starting with
+http:// or https://. - By default, wait until playback completes before
+returning.
+If a non-blocking mode is requested, it is acceptable to reject it with a clear
+error stating that this mode is not yet supported on the current platform. - Use
+the GStreamer multimedia framework through Python bindings for playback,
+initializing it before use and releasing playback resources once the sound
+finishes. - Detect failures to start playback and raise a custom, descriptive
+exception that clearly communicates the problem. - Wait for the end-of-stream
+signal (or an error) from the media pipeline before finishing, so the caller can
+rely on playback being complete. - Provide a clear command-line entry point that
+reads the target file or URL from the arguments, plays it, and exits cleanly,
+with a helpful usage message if no argument is supplied. - Keep the design
+dependency-light, cross-platform where feasible, and robust to common audio
+formats supported by the underlying media framework. ---

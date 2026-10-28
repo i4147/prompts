@@ -1,0 +1,16 @@
+Write a Python script that fetches the public repositories of a given GitHub
+user and saves a readable summary of them to a text file.
+The tool should accept a GitHub username and an optional output file path,
+retrieving the user's repository list from GitHub's public API and handling
+network or API errors gracefully with informative messages.
+If the user has no public repositories, the tool should report that clearly and
+exit without creating a misleading output file.
+For each repository, the summary should include key details such as its name,
+description (with a sensible fallback when none is provided), web URL, star
+count, fork count, and primary programming language (with a fallback when
+unspecified).
+The output file should begin with a header identifying the GitHub user and be
+written using UTF-8 encoding so that non-ASCII descriptions are preserved.
+The script should be robust to missing or null fields in the API response,
+produce a clean and easy-to-scan layout, and be usable both as a standalone
+command-line utility and as a reusable function that other code can call. ---

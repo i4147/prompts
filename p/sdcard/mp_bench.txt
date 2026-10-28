@@ -1,0 +1,42 @@
+Write a prompt for an AI coding agent to generate a Python benchmarking script with the following
+characteristics: **Purpose**:
+Create a command-line benchmark harness that compares the performance of multiple
+parallel/concurrent execution utilities
+(imported from a local module named `dh`, which exposes helpers such as `mpf`, `mpf2`, `mpf3`,
+`mpf_async`, `mpf_imap`, `mpf_imapu`, `mpf_joblib`, `mpf_map`, `mpf_ppe`, `mpf_ppe_ac`,
+`mpf_starmap`, `mpf_tpe`, and a constant `MAX_WORKERS`) when applied to a real-IO-bound task:
+computing SHA-256 hashes of a list of files. **Core work functions**:
+1. `hash_file(path: Path) -> tuple[str, str]`:
+Opens a file in binary mode, reads it in 1MB chunks, computes its SHA-256 digest,
+and returns a tuple of `(path as string, hex digest)`.
+2. `hash_file_maybe_fail(path: Path) -> tuple[str, str | None]`:
+A wrapper around `hash_file` that catches exceptions
+and returns a `(result, error)`-shaped tuple
+(digest on success with `None` error, or empty string with a formatted error message on failure)
+— designed to match the input/output contract expected by the `mpf3` helper. **Benchmark harness**:
+- A helper function `_run(name, fn, files)` that:
+- Prints a header with the benchmark name
+and number of files. - Times the execution of a zero-argument callable `fn` using
+`time.perf_counter()`. - Catches
+and reports exceptions gracefully (printing elapsed time and error),
+returning a result dict with `ok: False` and the error message instead of crashing. - On success,
+validates that the result is not `None`, counts/reports the number of results obtained,
+and returns a result dict with timing, success flag,
+and other diagnostic info (e.g., elapsed time, name, ok status, count of results). **Main
+inputs/outputs**: - Uses `argparse` to accept command-line arguments
+(e.g., target directory or list of files to hash, number of workers/concurrency level,
+which benchmarks to run, repeat count,
+etc.). - Gathers a list of files (e.g., from a directory tree) to use as the workload for all
+benchmarks. - Runs each of the imported `mpf*` parallelization strategies against the hashing
+workload, collecting timing results for each. - Aggregates
+and prints/report summary statistics
+(using the `statistics` module, e.g., mean/median/stdev of elapsed times across repeated runs)
+comparing the different concurrency approaches. - Exits with an appropriate status code via
+`sys.exit` on failure conditions. **Notable behavior**:
+- Designed to be run as a standalone script
+(uses `from __future__ import annotations` and a `sys.exit`-based CLI entry point). - Emphasizes
+robustness: benchmark failures in one strategy should not crash the whole run;
+each is isolated and reported independently. - Uses `MAX_WORKERS` from `dh` as a default/reference
+concurrency level. - Designed for comparing thread-based, process-based, async,
+and joblib-based parallel map implementations on identical file-hashing workloads for
+apples-to-apples performance comparison. ---

@@ -1,0 +1,43 @@
+Punkt Sentence Tokenizer This tokenizer divides a text into a list of sentences by using an
+unsupervised algorithm to build a model for abbreviation words, collocations,
+and words that start sentences.
+It must be trained on a large collection of plaintext in the target language before it can be used.
+The NLTK data package includes a pre-trained Punkt tokenizer for English. >>> from nltk.tokenize
+import PunktTokenizer >>> text = ''' ...
+Punkt knows that the periods in Mr. Smith and Johann S. Bach ... do not mark sentence boundaries.
+And sometimes sentences ... can start with non-capitalized words. i is a good variable ... name. ...
+''' >>> sent_detector = PunktTokenizer() >>>
+print('
+-----
+'.join(sent_detector.tokenize(text.strip()))) Punkt knows that the periods in Mr. Smith
+and Johann S. Bach do not mark sentence boundaries. -----
+And sometimes sentences can start with non-capitalized words. ----- i is a good variable name.
+(Note that whitespace from the original text, including newlines, is retained in the output.)
+Punctuation following sentences is also included by default (from NLTK 3.0 onwards).
+It can be excluded with the realign_boundaries flag. >>> text = ''' ...
+(How does it deal with this parenthesis?)
+"It should be part of the ... previous sentence."
+"(And the same with this one.)"
+('And this one!') ...
+"('(And (this))
+'?)" [(and this. )] ... ''' >>> print('
+-----
+'.join( ... sent_detector.tokenize(text.strip()))) (How does it deal with this parenthesis?) -----
+"It should be part of the previous sentence." ----- "(And the same with this one.)" -----
+('And this one!') ----- "('(And (this)) '?)" ----- [(and this.
+)] >>> print('
+-----
+'.join( ... sent_detector.tokenize(text.strip(), realign_boundaries=False)))
+(How does it deal with this parenthesis? ----- ) "It should be part of the previous sentence. -----
+" "(And the same with this one. ----- )" ('And this one! ----- ') "('(And (this)) '? ----- )"
+[(and this. ----- )] However,
+Punkt is designed to learn parameters (a list of abbreviations, etc.) unsupervised from a corpus
+similar to the target domain.
+The pre-packaged models may therefore be unsuitable:
+use ``PunktSentenceTokenizer(text)`` to learn parameters from the given text. :class:`.PunktTrainer`
+learns parameters such as a list of abbreviations (without supervision) from portions of text.
+Using a ``PunktTrainer`` directly allows for incremental training
+and modification of the hyper-parameters used to decide what is considered an abbreviation, etc.
+The algorithm for this tokenizer is described in:: Kiss, Tibor and Strunk, Jan (2006):
+Unsupervised Multilingual Sentence Boundary Detection.
+Computational Linguistics 32: 485-525.

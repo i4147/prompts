@@ -1,0 +1,31 @@
+Write a Python function named `open_stream_reader` that opens a file at a given path for reading
+and wraps it with the appropriate decompression stream reader based on a specified compression
+format, enabling transparent streaming decompression without loading the entire file into memory.
+**Function signature:** `def open_stream_reader(path: str, fmt: str):` **Inputs:** - `path` (str):
+The filesystem path to the compressed file to be opened. - `fmt` (str):
+A string identifier indicating the compression format of the file.
+Must support the following values:
+`"gz"`, `"xz"`, `"bz2"`, `"lz4"`, `"zstd"`,
+and `"br"`. **Output:** - Returns a readable binary stream/file-like object that, when read,
+yields the decompressed data corresponding to the chosen format:
+- `"gz"` → a `gzip.GzipFile` object wrapping the raw file handle. - `"xz"` → an `lzma` stream opened
+in binary read mode wrapping the raw file handle. - `"bz2"` → a `bz2.BZ2File` object wrapping the
+raw file handle. - `"lz4"` → an `lz4.frame` stream opened in binary read mode wrapping the raw file
+handle. - `"zstd"` → a `zstandard.ZstdDecompressor` stream reader wrapping the raw file handle. -
+`"br"` → a `brotli.Decompressor` object configured with the raw file handle. **Notable behavior:** -
+The function always opens the file at `path` in binary read mode (`"rb"`) first,
+obtaining a raw file handle. - Based on the value of `fmt`,
+it wraps this raw file handle with the corresponding decompression library's stream/reader class
+or function, so the caller can read decompressed bytes directly without manually decompressing. - If
+`fmt` does not match any of the supported format identifiers,
+the function must close the raw file handle immediately (to avoid leaking an open file descriptor)
+and then raise a `ValueError` indicating that the format is unsupported/unrecognized. - The function
+relies on the standard library modules `gzip`, `lzma`, and `bz2`,
+as well as third-party libraries `lz4` (specifically `lz4.frame`), `zstandard`, and `brotli`,
+all of which must be imported/available in the script. - The function does not read
+or decompress any data itself—it only constructs
+and returns the appropriate lazy/streaming reader object,
+deferring actual decompression to
+when the caller reads from the returned object. - The function does not handle exceptions raised by
+the underlying libraries during wrapping (e.g., malformed files);
+it only manages cleanup of the raw handle in the unsupported-format case. ---

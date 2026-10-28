@@ -1,0 +1,46 @@
+Write a Python module that provides utilities for parsing Python source files at the top level
+(functions, classes, constants, and imports) and reorganizing/merging their contents,
+intended as an internal helper module within a larger package
+(it imports `_optimize_imports`, `parse_name_from_block`,
+and `topological_sort` from a sibling `.utils` module).
+The module must include: 1.
+A module-level docstring: "Functions for parsing and reorganizing Python source files."
+2. Required imports:
+`ast`, `pathlib`, `defaultdict` from `collections`, `ThreadPoolExecutor` from `concurrent.futures`,
+`lru_cache` from `functools`, and the three helpers from the local `.utils` module.
+3. A `make_all(names: list[str]) -> str` function that:
+- Takes a list of name strings. - Deduplicates
+and sorts them. - Returns a formatted Python source string defining `__all__ = [...]` with each name
+quoted, comma-separated, and indented with 4 spaces, each on its own line, ending with a newline.
+4. A `_parse_import_line(imp: str) -> list[str]` function, decorated with `@lru_cache(maxsize=256)`,
+that: - Parses a single import statement string. - If it starts with `"import "`,
+splits on commas and returns the first whitespace-separated token of each comma-separated part
+(the module names),ripping whitespace. - If it starts with `"from "`,
+returns a single-element list containing the module name
+(the second whitespace-separated token of the line). - Otherwise returns an empty list.
+5. A `_get_block(lines: list[str], node) -> str` helper function that:
+- Takes the full file split into lines
+and an AST node. - Uses `node.lineno` (1-indexed, converted to 0-indexed)
+and `node.end_lineno` (falling back to start+1 if missing) toice out the exact source lines
+belonging to that node. - Returns the joined lines as a string with a trailing newline.
+6. A `parse_top_level_items(path: str)` function with a docstring expl file
+and extracts top-level functions, constants, classes, and imports.
+It should: - Read the file at `path` as UTF-8 text
+and parse it into an AST using `ast.parse`. - On any exception (file read or parse error),
+return a tuple of four empty lists. - Split the source into lines for block extraction. - Iterate
+over the top-level nodes in `tree.body`, categorizing each into one of:
+imports (for `ast.Import`/`ast.ImportFrom` nodes,
+storing the extracted source block via `_get_block`),
+functions (for `ast.FunctionDef`/async function definitions), classes (for `ast.ClassDef`),
+and constants/other top-level assignments,
+each stored as extracted source blocks. - Return the four collected lists
+(functions, constants, classes, imports) in that order.
+The code should be designed to support downstream logic
+(implied but not necessarily included in this snippet) that would use `defaultdict`,
+`ThreadPoolExecutor`, `topological_sort`,
+and `parse_name_from_block` for concurrently parsing multiple files
+and merging/deduplicating/reordering their top-level definitions
+(e.g., for combining several Python source files into one consolidated file with proper import
+optimization and dependency-ordered declarations).
+Preserve exact function names, signatures,
+and behavior as described so the generated code matches the original implementation precisely. ---

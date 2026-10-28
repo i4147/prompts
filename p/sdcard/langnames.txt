@@ -1,0 +1,13 @@
+Translate between language names and language codes.
+The iso639-3 language codes were downloaded from the registration authority at
+https://iso639-3.sil.org/ The iso639-3 codeset is evolving,
+so retired language codes are kept in the "iso639retired" dictionary,
+which is used as fallback by the wrapper functions "langname" and "langcode",
+in order to support the lookup of retired codes.
+The "langcode" function returns the current iso639-3 code if there is one,
+and falls back to the retired code otherwise.
+As specified by BCP-47, it returns the shortest (2-letter) code by default,
+but 3-letter codes are also available:
+>>> import nltk.langnames as lgn >>> lgn.langname('fri') #'fri' is a retired code 'Western Frisian'
+The current code is different from the retired one:
+>>> lgn.langcode('Western Frisian') 'fy' >>> lgn.langcode('Western Frisian', typ = 3) 'fry'

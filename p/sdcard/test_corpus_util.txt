@@ -1,0 +1,5 @@
+Combined tests for nltk.corpus.util:
+- Original _make_bound_method unit tests (ensure binding semantics). - New LazyCorpusLoader
+behavioral tests (lazy load/unload cycle, dunder attribute guard, representation before load).
+Retaining both suites ensures we preserve earlier guarantees
+while validating the newer unload & dunder-guard behavior.

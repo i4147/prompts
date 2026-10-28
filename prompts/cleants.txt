@@ -1,0 +1,29 @@
+Write a Python script that acts as a multi-language comment remover for source
+code files.
+The tool should accept a file or directory path (and optionally a list of file
+extensions or language names to target) from the command line, locate the source
+files to process, and strip out comments while leaving the rest of each file's
+code intact and functional.
+Core behavior: - Support a broad set of common programming and markup languages
+(such as shell scripts, C, C++, CSS, Go, HTML, Java, and others), with each
+language mapped to the appropriate comment syntax and the set of node types that
+represent comments in its parsed syntax tree. - Use a syntax-aware approach so
+that comment-like text inside string literals or other non-comment contexts is
+not mistakenly removed. - Recurse through directories when given a folder,
+skipping hidden directories and common dependency or build folders, and handle
+symbolic links and unreadable files gracefully. - Preserve file encodings and
+line endings where possible, and avoid corrupting code structure; remove any
+leftover blank lines created by comment removal in a sensible way. - Provide a
+dry-run or preview mode that shows a unified diff of the proposed changes
+without writing to disk, and an option to write changes in place or to a
+separate output location. - Process multiple files in parallel when there are
+many of them, and report a summary at the end (files scanned, files changed,
+comments removed per language, and any errors encountered). - Exit with a clear
+status code: zero on success, non-zero if errors occurred or if a check mode
+detects files that would change. - Print helpful, concise progress and error
+messages, and include a `--help` option that documents all arguments. - Handle
+missing or unavailable language parsers gracefully by warning the user and
+skipping those files rather than crashing.
+The script should be self-contained, robust against malformed input, and written
+with clean, readable structure so that a developer can easily add support for
+new languages by describing their comment syntax. ---

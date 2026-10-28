@@ -1,0 +1,57 @@
+Create a Python utility module for detecting whether a file is binary or text,
+combining two complementary detection strategies:
+file extension checking
+and byte-content inspection. **Purpose** Build a self-contained module that reliably classifies
+files as "binary" or "text" by (1) checking the file's extension against an extensive,
+categorized list of known binary extensions,
+and (2) reading a sample chunk of the file's raw bytes
+and analyzing it for binary signatures (magic bytes)
+and other telltale binary patterns (null bytes, control characters, invalid UTF-8 sequences, etc.).
+**Required public exports (define `__all__`)** - `BINARY_EXTENSIONS`:
+a `frozenset[str]` of lowercase, dot-less binary file extensions,
+organized into clearly commented categories, including at least: - 3D/CAD models:
+3ds, blend, dae, fbx, glb, gltf, stl, usdz, obj (if binary variant), dwg, dxf, step, stp, iges,
+igs - Archives/compressed:
+7z, zip, rar, tar, gz, bz2, xz, zst, lz4, cab, iso-related archive formats - Audio:
+mp3, wav, flac, aac, ogg, wma, m4a, opus - Video: mp4, mkv, avi, mov, webm, flv, wmv
+- Compiled code/binaries:
+  class, dll, so, dylib, pyc, pyo, wasm, exe, msi, bin, o, a, lib - Databases:
+  db, sqlite, sqlite3, mdb, accdb - Disk images: iso, dmg, vmdk, img, vhd - Document formats:
+  doc, docx, pdf, ppt, pptx, xls, xlsx, odt, ods, odp - Fonts:
+  ttf, woff, woff2, otf, eot - Game ROMs/saves: nes, sfc, gba, nds, n64, gb, gbc - GIS shapefiles:
+  shp, shx, dbf - Images:
+  bmp, gif, ico, png, jpg, jpeg, heic, cr2, dng, nef, arw, avif, jp2, tiff, webp,
+  psd (The list should be as extensive and well-organized as possible,
+  with a comment header above each category.) - `BINARY_SIGNATURES` (or similarly named collection):
+  a set/list/tuple of known binary byte signatures (magic bytes) to detect at the start of a file,
+  including at least: ELF header (`\x7fELF`), PNG (`\x89PNG`), ZIP/Office formats (`PK\x03\x04`),
+  PDF (`%PDF`), gzip (`\x1f\x8b`),
+  and other common magic numbers (e.g., JPEG, GIF87a/GIF89a, BMP "BM", RIFF for WAV/AVI). -
+  `CHUNK_SIZE`: an integer constant specifying how many bytes to read
+  when sampling a file's content for binary detection (e.g., 1024). -
+  `get_starting_chunk(path_or_file)`:
+  a function that opens the given file in binary mode
+  and reads/returns the first `CHUNK_SIZE` bytes
+  (handle short files gracefully, close the file properly, and handle I/O errors). - A function to
+  check the extension against `BINARY_EXTENSIONS` (case-insensitive, strips the leading dot). - A
+  function to inspect a byte chunk and determine if it looks binary:
+  check if it starts with any of the known signatures, check for the presence of null bytes,
+  check for a significant proportion of non-printable/control characters,
+  and attempt a UTF-8 decode to catch invalid text encoding. - A main/top-level function
+  (e.g., `is_binary_file(path)`) that combines both strategies:
+  it should first try the extension check as a fast path,
+  then fall back to (or additionally confirm via) content inspection reading the file with
+  `get_starting_chunk`, returning a `bool`. **Inputs/Outputs** - Inputs:
+  a file path (string or `Path`) or an already-opened file object,
+  depending on the function. - Outputs: booleans indicating binary/text classification;
+  `get_starting_chunk` returns `bytes`. **Notable behavior/requirements** - All extension
+  and signature matching should be case-insensitive
+  where applicable. - The module should handle edge cases gracefully:
+  empty files, files shorter than `CHUNK_SIZE`, non-existent files,
+  and permission/IO errors (raise or return sensible defaults, document the choice). - Use type
+  hints throughout and include docstrings for the module
+  and each public function/constant explaining their purpose. - Keep the design dependency-free
+  (standard library only),
+  efficient (avoid reading the entire file when only a small sample is needed),
+  and easily extensible (easy to add new extensions or signatures later). - Include clear inline
+  comments grouping extensions by category as specified above. ---

@@ -1,0 +1,36 @@
+Write a Python 3 command-line script that processes JSON files to swap the values of "author"
+and "quote" fields in each object. **Purpose:** Scan one
+or more input paths (files or directories) for `.json` files,
+and for every JSON object found that contains both an "author" and a "quote" key,
+swap their values—so that the "quote" field ends up holding the original "author" value,
+and the "author" field ends up holding the original "quote" value.
+The object's key order should be reset so "quote" appears before "author". **Inputs:** -
+Command-line arguments:
+zero or more paths (files and/or directories). - If no arguments are provided,
+default to the current working directory. - For each path:
+if it's a `.json` file, include it directly;
+if it's a directory,
+recursively search it for all `.json` files. - Deduplicate the collected file list. **Processing
+behavior:** - Each JSON file is expected to contain a top-level list of objects
+(if not a list, the file is left unchanged but still rewritten as-is). - For each dictionary item in
+the list that has both "author" and "quote" keys:
+clear the dictionary
+and reinsert the keys in the order "quote" (set to the original author value) then "author"
+(set to the original quote value).
+Items without both keys are left untouched. - Process files concurrently using a process pool
+(e.g., `ProcessPoolExecutor`) for parallel execution across multiple CPU cores. - After processing,
+overwrite each JSON file in place with the updated data,
+pretty-printed with 2-space indentation
+and with non-ASCII characters preserved (not escaped). **Output:** - If no JSON files are found
+under the given paths, print a message like "No JSON files found." and exit. - Otherwise,
+as each file finishes processing,
+print a confirmation line showing a checkmark
+and the file path (e.g., "✓ /path/to/file.json"). **Notable behavior/requirements:** - Use
+`pathlib.Path` for all filesystem path handling.
+- Use `json` module for loading/dumping with `ensure_ascii=False`. - Use
+  `concurrent.futures.ProcessPoolExecutor` with `as_completed` to process files in parallel
+  and report results as they complete, not necessarily in original order.
+- The script should be runnable directly as a CLI tool
+  (include a `#!/usr/bin/env python3` shebang
+  and a `if __name__ == "__main__":` entry point calling a `main()` function). - Keep the
+  implementation in plain standard library Python with no external dependencies. ---

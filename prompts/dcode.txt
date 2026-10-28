@@ -1,0 +1,26 @@
+Write a Python script that acts as an automatic multi-layer decoder and
+deobfuscation tool for encoded or compressed text payloads.
+The tool should accept an input string (or content from a file or URL) and
+repeatedly attempt to peel away layers of common encodings and compression
+formats until it recovers readable plaintext.
+It should support a range of standard text encodings (such as Base64,
+hexadecimal, URL percent-encoding, and similar schemes) as well as common
+compression containers (such as gzip, zlib, bzip2, and LZMA), and it should also
+be able to handle simple classical ciphers like Caesar/ROT-style shifts and
+single-byte XOR by brute-forcing candidate keys.
+Key behaviors: - Automatically detect which layers are likely present, trying
+each candidate transformation and keeping the one that produces the most
+plausible output. - Rank candidate outputs using a statistical plausibility
+measure based on English letter frequency, so that the best-scoring
+interpretation is selected over noisy or random results. - Continue decoding
+iteratively until no further meaningful transformation improves the result, with
+a sensible maximum depth to prevent infinite loops. - Provide a command-line
+interface that accepts input via argument, file, or standard input, with options
+to control verbosity, output destination, and the maximum number of layers to
+attempt. - Log each successful decoding step with the transformation name and a
+short preview of the intermediate result so the user can follow the decoding
+chain. - Handle malformed or non-applicable inputs gracefully, reporting
+failures without crashing, and return a clear final result that includes the
+recovered text and the ordered list of applied layers. - Output the final
+decoded text to standard output (or a specified file) and exit with an
+appropriate status code indicating success or failure. ---

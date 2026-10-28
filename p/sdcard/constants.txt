@@ -1,0 +1,18 @@
+Write a Python script (using `from __future__ import annotations`) that serves as a
+configuration/constants module for a PyPI package-related tool
+(e.g., a package metadata fetcher, dependency checker, or mirror/index utility).
+The script should define the following module-level constants: - `PYPI_INDEX`:
+the base URL for the PyPI JSON API ("https://pypi.org/pypi") - `PYPI_SIMPLE`:
+the base URL for the PyPI Simple API ("https://pypi.org/simple") - `DEFAULT_TIMEOUT`:
+an integer representing the default network request timeout in seconds, set to 100 - `MAX_WORKERS`:
+an integer representing the default maximum number of concurrent worker threads/processes for
+parallel operations, set to 8 Notable behavior/requirements:
+- Use `from __future__ import annotations` at the top of the file to enable postponed evaluation of
+type annotations. - These constants are intended to be imported by other modules in the project as
+shared configuration defaults
+(e.g., for making HTTP requests to PyPI and controlling concurrency levels in batch operations). -
+No functions, classes,
+or executable logic should be included—only the import statement
+and the constant definitions. - Keep variable names, values, and types exactly as
+specified so downstream code relying on these names continues to work correctly.
+---

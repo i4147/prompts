@@ -1,0 +1,27 @@
+Write a Python script that analyzes the source code of other Python files to
+detect import statements that are not placed at the module's top level, and
+reports them.
+The tool should accept one or more file or directory paths as input.
+When given a directory, it should recursively find all Python source files
+within it.
+For each file, it should parse the source into a syntax tree without executing
+it, then walk the tree to identify every import statement (both regular and
+"from ... import" forms) that appears nested inside a function, async function,
+class body, or control-flow block such as a loop, conditional, try/except, or
+with statement.
+Imports that sit directly at module level should be ignored.
+For each non-top-level import found, the script should output the file path, the
+line number, the import statement's source text or a normalized representation
+of the imported module names, and the enclosing context (such as the function or
+class name where it occurs), if feasible.
+Results should be printed in a clear, human-readable report grouped by file,
+with a summary count of total files scanned and total nested imports found.
+The script should handle errors gracefully: files that cannot be read or contain
+syntax errors should be reported as warnings without stopping the scan of other
+files.
+It should exit with a non-zero status code when nested imports are found, so it
+can be used in continuous integration pipelines, and zero when none are found.
+Provide an optional flag to output results as JSON for machine consumption.
+The script should be runnable from the command line, include a help message
+describing its usage, and be designed to be fast enough to scan large codebases.
+---

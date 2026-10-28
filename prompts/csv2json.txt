@@ -1,0 +1,18 @@
+Write a Python script that converts a two-column CSV file into a JSON object
+mapping keys to values.
+The script should accept a single CSV file path as a command-line argument and
+produce a JSON file with the same base name and location as the input file.
+It should read the first column as keys and the second column as values,
+skipping the header row, ignoring rows that have fewer than two columns,
+trimming surrounding whitespace from both keys and values, and omitting rows
+whose key is empty.
+If a later row repeats an existing key, the later value should replace the
+earlier one.
+The output JSON should be human-readable with indentation and preserve non-ASCII
+characters without escaping them, using UTF-8 encoding.
+Handle errors gracefully: if the input file does not exist, print a clear error
+message and exit with a non-zero status; if the CSV has fewer than two columns
+in its header, print an error explaining the requirement and exit with a
+non-zero status; if the script is run with the wrong number of arguments, print
+a usage message showing the expected invocation and exit with a non-zero status.
+On success, print a short confing the input and output paths. ---

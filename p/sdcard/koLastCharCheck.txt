@@ -1,0 +1,36 @@
+Write a Python module that defines a class named `koLastCharCheck` for analyzing
+and decomposing the final (last) character of Korean (Hangul) text into its constituent jamo
+components (initial consonant/초성, medial vowel/중성, and final consonant/종성, i.e., batchim).
+The script should: 1.
+Import `re`, `os`, and a `Util` helper class from `SmiToText.util.util`.
+2. In the class `__init__` method,
+set up the core constants needed for Hangul Unicode decomposition:
+- `BASE_CODE` = 44032 (0xAC00, the Unicode code point of the first complete Hangul syllable '가') -
+`CHOSUNG` = 588 (28 × 21, the number of possible combinations per initial consonant) - `JUNGSUNG` =
+28 (the number of possible final consonants/batchim, including "no batchim") - A `CHOSUNG_LIST`
+containing all 19 possible initial consonants (초성) in their standard Unicode order,
+from "ㄱ" to "ㅎ" (e.g., ㄱ, ㄲ, ㄴ, ㄷ, ㄸ, ㄹ, ㅁ, ㅂ, ㅃ, ㅅ, ㅆ, ㅇ, ㅈ, ㅉ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ) - A `JUNGSUNG_LIST`
+containing all 21 possible medial vowels (중성) in their standard Unicode order,
+from "ㅏ" to "ㅣ" (e.g., ㅏ, ㅐ, ㅑ, ㅒ, ㅓ, ㅔ, ㅕ, ㅖ, ㅗ, ㅘ, ㅙ, ㅚ, ㅛ, ㅜ, ㅝ, ㅞ, ㅟ, ㅠ, ㅡ, ㅢ, ㅣ) - A
+`JONGSUNG_LIST` containing all 28 possible final consonants/batchim (종성) in their standard Unicode
+order, starting with an empty string "" (representing no batchim) followed by ㄱ, ㄲ, ㄳ, ㄴ, ㄵ, ㄶ, ㄷ,
+ㄹ, ㄺ, ㄻ, ㄼ, ㄽ, ㄾ, ㄿ, ㅀ, ㅁ, ㅂ, ㅄ, ㅅ, ㅆ, ㅇ, ㅈ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ 3.
+Include detailed Korean-language comments/docstring explaining the mathematical formula used for
+Hangul decomposition: - The Unicode value of a Hangul character X relates to its components via:
+`code = ((chosung_index * 21) + jungsung_index)
+* 28 + jongsung_index + 0xAC00` - To extract indices: `chosung_index = ((X - 0xAC00) // 28) //
+  21`, `jungsung_index = ((X - 0xAC00) // 28) % 21`, `jongsung_index = (X - 0xAC00) %
+  28` - Note that these indices represent positional order (not actual character codes),
+  and provide the additional offsets needed to convert indices back to individual jamo Unicode code
+  points if required (초성 + 0x1100, 중성 + 0x1161, 종성 + 0x11A8 - 1,
+  accounting for the "no jongsung" case).
+  4.
+Beyond initialization,
+the class is intended to provide methods (to be implemented) that take a Korean word/string as
+input, extract the last character, decompose it using the above tables and formulas,
+and determine properties such as whether the last character has a final consonant (batchim) or not
+— useful for tasks like correctly selecting Korean particles (e.g., 을/를, 이/가, 은/는) based on whether
+the preceding word ends in a consonant or vowel.
+The output should be a single importable Python class ready to be extended with such
+last-character-checking logic, following the exact structure, constant names, list orderings,
+and bilingual (Korean comment / English-friendly code) style shown. ---

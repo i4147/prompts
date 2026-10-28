@@ -1,0 +1,11 @@
+Multi-Word Expression Tokenizer A ``MWETokenizer`` takes a string
+which has already been divided into tokens and retokenizes it,
+merging multi-word expressions into single tokens, using a lexicon of MWEs:
+>>> from nltk.tokenize import MWETokenizer >>> tokenizer =
+MWETokenizer([('a', 'little'), ('a', 'little', 'bit'), ('a', 'lot')]) >>>
+tokenizer.add_mwe(('in', 'spite', 'of'))
+>>> tokenizer.tokenize('Testing testing testing one two three'.split())
+['Testing', 'testing', 'testing', 'one', 'two', 'three'] >>>
+tokenizer.tokenize('This is a test in spite'.split()) ['This', 'is', 'a', 'test', 'in', 'spite'] >>>
+tokenizer.tokenize('In a little or a little bit or a lot in spite of'.split())
+['In', 'a_little', 'or', 'a_little_bit', 'or', 'a_lot', 'in_spite_of']

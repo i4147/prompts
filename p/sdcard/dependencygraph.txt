@@ -1,0 +1,3 @@
+Tools for reading and writing dependency trees.
+The input is assumed to be in Malt-TAB format
+(https://stp.lingfil.uu.se/~nivre/research/MaltXML.html).

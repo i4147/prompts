@@ -1,0 +1,30 @@
+Create a Python command-line script named "naval_fate.py" that implements a simple "Naval Fate" game
+command interface using the `docopt` library for argument parsing.
+The script's purpose is to parse command-line arguments according to a well-defined usage
+specification and print the parsed arguments dictionary to the console.
+It does not implement actual game logic beyond parsing and displaying input.
+Requirements: - Use a module-level docstring that follows the `docopt` format,
+including a "Naval Fate." title, a "Usage:" section, and an "Options:" section.
+- The "Usage:" section must support the following command patterns:
+  - `naval_fate.py ship new <name>...`
+  — register one or more new ships by name. -
+  `naval_fate.py ship <name> move <x> <y> [--speed=<kn>]`
+  — move a named ship to coordinates `<x> <y>`,
+  with an optional `--speed` flag. - `naval_fate.py ship shoot <x> <y>`
+  — shoot at coordinates `<x> <y>`. -
+  `naval_fate.py mine (set|remove) <x> <y> [--moored|--drifting]`
+  — set or remove a mine at coordinates `<x> <y>`,
+  optionally specifying whether it is moored or drifting. - `naval_fate.py -h | --help`
+  — show the help screen. - `naval_fate.py --version`
+— show the version string. - The "Options:" section must document:
+  - `-h --help` to show the help screen. - `--version` to show the version. - `--speed=<kn>` for
+  speed in knots, with a default value of `10`. - `--moored` for a moored (anchored) mine. -
+  `--drifting` for a drifting mine. - In the main execution block
+  (guarded by `if __name__ == "__main__":`),
+  call `docopt` passing the module docstring as the usage pattern
+  and set the version string to `"Naval Fate 2.0"`. - Store the parsed result in a variable named
+  `arguments` and print it directly to standard output. - Import `docopt` from the `docopt` package
+  at the top of the script. - The script should rely entirely on `docopt`'s automatic parsing,
+  validation, help generation,
+  and version display behavior
+  — no additional argument validation or custom logic should be added. ---

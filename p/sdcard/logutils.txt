@@ -1,0 +1,38 @@
+Write a Python utility function named `init_logger` that creates
+and configures a `logging.Logger` instance with flexible options for console and/or file output.
+Requirements: - Use `from __future__ import annotations` and import `logging`, `sys`,
+and `Path` from `pathlib`. - Define a function `init_logger` with the following parameters:
+- `name`: `str | None` — the logger name (passed to `logging.getLogger`). - `level`:
+`int`, default `logging.INFO`
+— the logging level applied to the logger and all created handlers. - `log_file`: `str | Path
+| None`, default `None` — optional path to a log file.
+If provided, ensure the parent directory is created (using `mkdir(parents=True, exist_ok=True)`)
+before creating the file handler. - `fmt`:
+`str`, default `"[%(levelname)s] %(message)s"` — the log message format string. - `datefmt`:
+`str | None`, default `None` — the date format string for the formatter. - `console`:
+`bool`, default `True` — whether to add a `StreamHandler` writing to `sys.stdout`. - `file_mode`:
+`str`, default `"w"` — the file open mode used for the `FileHandler`. - `encoding`:
+`str`, default `"utf-8"` — the encoding used for the `FileHandler`. - `propagate`:
+`bool`, default `False` — sets the logger's `propagate` attribute. - `handlers`:
+`list[logging.Handler] | None`,
+default `None` — optional pre-built list of handlers to attach instead of auto-creating console/file
+handlers. - Behavior: 1.
+Retrieve the logger via `logging.getLogger(name)` and set its level to `level`.
+2. Set `logger.propagate` to the `propagate` argument.
+3. If the logger already has handlers attached,
+remove all of them first (to avoid duplicate logging on repeated calls).
+4. If `handlers` is `None`, build a new list of handlers:
+- If `console` is `True`, create a `StreamHandler(sys.stdout)`, set its level to `level`,
+set its formatter using `logging.Formatter(fmt=fmt, datefmt=datefmt)`,
+and append it to the list. - If `log_file` is provided, convert it to a `Path`,
+create parent directories as needed, create a `FileHandler` with the given path, `file_mode`,
+and `encoding`, set its level to `level`, set its formatter the same way, and append it to the list.
+5. If `handlers` was explicitly provided (not `None`),
+skip the auto-creation step and use the provided handlers directly.
+6. Attach all handlers (whether auto-created or user-provided) to the logger via
+`logger.addHandler`.
+7. Return the configured `logger`.
+The function should be reusable for setting up consistent logging across a script or application,
+supporting both console-only, file-only, combined console+file,
+or fully custom handler configurations,
+and should return the ready-to-use `logging.Logger` object. ---

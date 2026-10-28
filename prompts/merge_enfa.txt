@@ -1,0 +1,26 @@
+Write a Python script that merges translation results from multiple batch files
+into a single master English-to-Persian dictionary file, while tracking words
+that failed to translate.
+The tool should work within a given base directory and accept configurable names
+for the master dictionary file and the failed-words log file, using sensible
+defaults.
+On startup, it should load any existing master dictionary and any existing list
+of previously failed words, and it must gracefully handle cases where either
+file is missing, malformed, or unreadable by warning the user and continuing
+with an empty starting state rather than crashing.
+Each run should report how many entries were loaded from the existing files,
+using clear, friendly status messages with emoji-style indicators.
+The script should discover all related batch translation files entries into the
+master diction losing previously stored translations, and avoid duplicate keys
+while keeping the most reliable or most recent translation.
+Words that appear in the failed list but have since been successfully translated
+should be removed from the failed list, and any newly failed words should be
+added to it.
+Both outputs should be saved as UTF-8 text with proper handling of non-ASCII
+Persian characters, with the dictionary written as readable, consistently
+formatted JSON and the failed list written as one word per line, sorted and free
+of duplicates.
+At the end, the script should print a concise summary showing the total number
+of dictionary entries, the number of newly merged entries, and the number of
+remaining failed words, so the user can quickly verify the outcome of the merge.
+---

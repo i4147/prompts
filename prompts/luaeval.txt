@@ -1,0 +1,19 @@
+Write a Python script that scans a directory of Lua source files, checks each
+file for syntax errors using a Lua-aware parser, and quarantines any file that
+fails validation.
+The tool should operate on the current working directory by default and examine
+every Lua file found there.
+For each file, it should determine whether the source contains any syntax errors
+or missing syntactic elements.
+Files that pass validation should be left untouched.
+Files with syntax problems should be moved into a dedicated "error" subfolder
+created alongside them, so the user can review broken scripts separately.
+If a file with the same name already exists in the error folder, the script
+should preserve both by renaming the incoming file with a numeric suffix rather
+than overwriting anything.
+The script should print a clear message for every file it moves, showing its
+original and new location, and should handle the case where no Lua files are
+found gracefully.
+Use a robust, well-structured approach that reads files safely and avoids
+crashing on individual failures, while keeping the overall behavior simple,
+predictable, and easy to run from the command line. ---

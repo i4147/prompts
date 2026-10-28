@@ -1,0 +1,8 @@
+Regression test for the exponential beta-reduction DoS in
+``nltk.sem.logic.ApplicationExpression.simplify`` (CWE-400).
+Beta reduction substitutes the argument into the lambda body;
+when the body references its bound variable more than once the argument is duplicated,
+so a short expression built from nested duplicating lambdas (``(\Y.(Y & Y))``) reduces to an
+exponentially large normal form and exhausts CPU
+and memory. ``simplify`` now refuses with a ``ValueError`` once a single reduction's result exceeds
+``MAX_SIMPLIFY_SIZE`` subexpressions; ordinary reductions are unchanged.

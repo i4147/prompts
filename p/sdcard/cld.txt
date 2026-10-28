@@ -1,0 +1,53 @@
+Write a prompt instructing an AI coding agent to generate a Python CLI script with the following
+specifications: --- Create a Python 3 command-line wrapper script
+(intended to be run as `python -m cld`
+or installed via a console_scripts entry point `cld = cld:main`) that provides a CLI interface for a
+language-detection library. **Purpose**:
+The script should let users detect the natural language of text content from one or multiple files,
+from directories (optionally recursive), or from standard input (using `-` as the path argument),
+and output the detection results (e.g., as plain text or JSON). **Dependencies**:
+It must import the following functions from a local module named `detector`:
+- `detect_language_from_path` - `detect_language` - `is_probably_text_bytes` - `read_file_bytes` -
+`safe_text_from_bytes` If the import fails,
+print an error message (including the exception) to stderr
+and re-raise the exception so the program exits with an error. **Required behaviors / functions**:
+1. `is_text_file_path(path, max_probe=4096)`:
+Reads up to `max_probe` bytes from the given file path using `read_file_bytes`,
+then uses `is_probably_text_bytes` to determine whether the file appears to be text (not binary).
+Should return `False` (instead of raising) if any exception occurs during this check.
+2. `find_files(paths, recursive, exts, include_nontext=False)`:
+A generator that takes an iterable of input paths
+(which may be files, directories, or the special stdin marker `-`),
+and yields the paths of files that should be processed, according to these rules:
+- If a path is `-`, yield it immediately (represents stdin). - If a path is a regular file:
+- Skip it if `include_nontext` is `False`
+and the file does not appear to be text (per `is_text_file_path`). - If a list of extensions
+(`exts`) is provided,
+only yield the file if its extension (case-insensitive, without the leading dot) matches one in the
+list; otherwise skip it. - If no extension filter is provided,
+yield the file as-is. - If a path is a directory:
+- If `recursive` is `True`,
+walk the directory tree (using `os.walk`)
+and apply the same text/extension filtering logic to every file found within it,
+yielding qualifying files. -
+(Non-recursive directory handling should also be supported, e.g.,
+only scanning the top-level files in that directory.) **CLI argument parsing**:
+Use `argparse` to build a command-line interface supporting:
+- One or more positional file/directory paths,
+including `-` for reading from stdin. - A recursive flag (e.g., `-r`/`--recursive`) to enable
+directory recursion. - An extension filter option (e.g., `--ext`) accepting a comma-separated list
+of file extensions (e.g., `py,md,txt`) to restrict
+which files are scanned. - Support for outputting results in a structured format such as JSON
+(via the `json` module) as well as a human-readable plain text format. **Main entry point**:
+Implement a `main()` function that parses arguments,
+resolves the set of files to process (via `find_files`),
+reads each file's content (handling stdin specially by reading raw bytes/text from `sys.stdin`),
+decodes/sanitizes bytes to text using `safe_text_from_bytes`,
+runs language detection via `detect_language_from_path` or `detect_language` as appropriate,
+and prints/reports the detected language (and any relevant metadata/confidence scores) for each
+input, handling errors gracefully without crashing the whole run for a single bad file.
+Include a module docstring at the top documenting usage examples:
+python -m cld file1 file2 ... python -m cld -r src/ --ext py,md,txt echo "Bonjour" | python -m cld -
+and noting the console_scripts entry point `cld = cld:main`.
+Use `from __future__ import annotations`
+and include necessary type hints using `typing` (`List`, `Iterable`, `Optional`, `Dict`, `Any`). ---

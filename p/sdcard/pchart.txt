@@ -1,0 +1,16 @@
+Classes and interfaces for associating probabilities with tree structures that represent the
+internal organization of a text.
+The probabilistic parser module defines ``BottomUpProbabilisticChartParser``.
+``BottomUpProbabilisticChartParser`` is an abstract class that implements a bottom-up chart parser
+for ``PCFG`` grammars.
+It maintains a queue of edges, and adds them to the chart one at a time.
+The ordering of this queue is based on the probabilities associated with the edges,
+allowing the parser to expand more likely edges before less likely ones.
+Each subclass implements a different queue ordering, producing different search strategies.
+Currently the following subclasses are defined:
+- ``InsideChartParser`` searches edges in decreasing order of their trees' inside probabilities. -
+``RandomChartParser`` searches edges in random order. - ``LongestChartParser`` searches edges in
+decreasing order of their location's length.
+The ``BottomUpProbabilisticChartParser`` constructor has an optional argument beam_size.
+If non-zero, this controls the size of the beam (aka the edge queue).
+This option is most useful with InsideChartParser.

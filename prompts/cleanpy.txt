@@ -1,0 +1,24 @@
+Write a Python script that acts as a command-line tool for cleaning up Python
+source files by stripping comments and docstrings, with the option to preserve
+certain special comment markers.
+The tool should accept one or more file or directory paths as input, recursively
+discover Python files within directories while skipping version control and
+cache folders, and ignore symbolic links to avoid duplicate or cyclic
+processing.
+Each discovered file should be parsed and transformed so that ordinary comments
+and docstrings are removed, while comments that act as formatting or type
+directives (such as those beginning with "# fmt" or "# type") are kept intact.
+The transformation must preserve the code's valid syntax and behavior, and it
+should only rewrite a file when a change actually occurs.
+The tool should process multiple files concurrently using a configurable worker
+pool with a sensible default size, and it should report per-file results
+including how many comments and docstrings were removed, whether the file
+changed, and any error encountered (such as unreadable files or syntax problems)
+without aborting the entire run.
+Provide a dry-run mode that reports what would be changed without writing to
+disk, and a summary at the end showing totals of files scanned, files modified,
+comments removed, docstrings removed, and errors.
+Logging should be clear and informative, using a clean and readable console
+output.
+The command should exit with a non-zero status code if any file failed to
+process, and zero otherwise. ---

@@ -1,0 +1,17 @@
+Regression tests for ReDoS in chunk tag-pattern parsing (CWE-1333). ``tag_pattern2re_pattern``
+validates a caller-supplied tag pattern against the module-level ``CHUNK_TAG_PATTERN`` regex.
+That regex used to contain a nested quantifier of the ``(A+)*`` form,
+which exhibits catastrophic (exponential) backtracking:
+a short tag pattern ending in a character the pattern cannot match
+(e.g. a trailing ``{``) forced the engine into exponential work,
+hanging the process. ``CHUNK_TAG_PATTERN`` / ``tag_pattern2re_pattern`` / ``RegexpParser`` are
+public entry points,
+so an application that compiles user-supplied chunking rules could be stalled by a single
+~30-character request.
+The first alternative is no longer quantified with ``+``,
+so the match is linear while accepting the exact same language.
+See huntr report https://huntr.com/bounties/aff8ef29-2f20-46a4-ae13-7ce6010e26a5.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun,
+so a regression to an exponential regex cannot keep burning CPU for the rest of the suite,
+and any exception in the worker is propagated back to the assertions instead of being swallowed.

@@ -1,0 +1,17 @@
+Create a Python script that implements an MCP (Model Context Protocol) server using the `FastMCP`
+class from the `mcp.server.fastmcp` module, named "text_writer".
+The server should expCP tool function called `get_textwriter` that: - Accepts one input parameter:
+`contents` (a string). - Appends the given `contents` to a text file located at
+`C:/python/contentfile.txt`,
+opening the file in append mode with UTF-8 encoding (creating the file if it doesn't exist). - After
+writing the contents,
+writes two newline characters to the file to separate entries. - Returns nothing (None). - Prints a
+confirmation message to the console stating that the text was saved to `C:/contentfile.txt`.
+Include a `main` function that:
+- Prints a startup message indicating the Text Writer server is starting. - Runs the MCP server
+using the "stdio" transport.
+Add a standard `if __name__ == "__main__":` entry point that calls `main()`.
+The overall purpose of the script is to act as a simple MCP tool server that allows an AI agent
+or client to send text content,
+which the server then persists by appending it to a local file on disk,
+enabling logging or accumulation of text snippets over time. ---

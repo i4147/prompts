@@ -1,0 +1,26 @@
+Write a Python script that acts as a command-line license file generator.
+It should accept a license type chosen from a set of available license templates
+stored in a local "files" folder (the license type names are derived from the
+template file names), along with the holder's name and a year or date to be
+filled in.
+The tool should produce the completed license text, printing it to the terminal
+or saving it to an output file the user specifies.
+To make repeated use faster, the script should remember the most recently used
+license details in a small cache file stored in the user's home directory.
+On each run it should check whether the requested details match what is cached:
+on a hit, it reuses the cached values and reports that a cache hit occurred; on
+a miss, it asks for or accepts the needed details, generates the license, and
+updates the cache, reporting the miss.
+Cache hits and misses should be shown to the user with colored, easy-to-read
+status messages.
+Handle errors gracefully with a clearly formatted, colored error message.
+This includes an unknown or unsupported license type (the message should list
+the valid options), a missing or unreadable template, an invalid or malformed
+date or year, and a missing or unwritable cache file.
+Validate user input before generating output, and make sure a failure never
+leaves a corrupted cache or a partially written output file.
+The interface should be a clean command-line experience with helpful `--help`
+text, sensible defaults where reasonable, and clear success conf self-contained,
+cross-platform where practical, and organized so the template discovery, cache
+handling, input validation, and text generation are easy to follow and maintain.
+---

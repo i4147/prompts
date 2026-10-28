@@ -1,0 +1,11 @@
+Regression tests for pickle RCE in model loading (CWE-502).
+``TransitionParser.parse(depgraphs, modelFile)`` is a public API
+whose ``modelFile`` is caller-supplied.
+It used to be loaded with the warn-only ``pickle_load`` (``restricted=False``),
+which prints a warning and then performs a full,
+unrestricted unpickle
+-- so a crafted model file achieved arbitrary code execution the instant it was loaded.
+The load now goes through ``allowlisted_pickle_load``:
+only numpy/scipy/sklearn globals may be reconstructed,
+and anything else (e.g. ``os.system``) raises ``UnpicklingError`` instead of executing.
+See huntr report https://huntr.com/bounties/38abc191-0525-42a1-96fd-262c1c187012.

@@ -1,0 +1,31 @@
+Write a Python module for a document-parsing framework that adds support for parsing source code
+files (extensions: .py, .rs, .java, .js, .ts, .c, .h, .cpp, .go) into a unified
+`Document` structure.
+The module should: - Import `Block` and `Document` models from a sibling `..model` module,
+a `register` decorator from `..registry`,
+and a `read_text` helper from `.._util`. - Define a dictionary mapping each supported file extension
+to a compiled regular expression that extracts top-of-file docstrings
+or header comments in that language's idiomatic style: - `.py`:
+triple-quoted string literals (`"""..."""` or `'''...'''`) at the start of the file. - `.rs`:
+lines starting with `//!` (module-level doc comments). - `.java`, `.js`, `.ts`, `.c`, `.h`, `.cpp`:
+block comments in the form `/** ... */`. - `.go`:
+single-line `//` comments. - All patterns should use appropriate flags (e.g., DOTALL, MULTILINE) to
+correctly match multi-line content. - Define a parser function decorated with the `register`
+decorator, registering it for all the extensions above under a category/type named `"source"`. - The
+parser function should:
+- Accept a `Path` to the source file
+and return a `Document`. - Read the file's full text content using the `read_text` helper. - Look up
+the matching docstring/comment pattern for the file's extension (case-insensitive). - Create an
+initial `Block` of kind `"code"` containing the entire raw file text,
+with metadata indicating the detected language
+(derived from the file extension, without the leading dot). - If a pattern is found for the
+extension, iterate over all regex matches in the text,
+extract the captured docstring/comment body (trimming whitespace), and for each non-empty match,
+append an additional `Block` of kind `"quote"` with metadata marking its source as `"docstring"`. -
+Return a `Document` with the original file path, format set to `"source"`,
+the list of collected blocks,
+and top-level metadata containing the detected language. - Include a concise module-level docstring
+describing that this module handles source code docstring extraction for the listed file extensions.
+- Include a brief docstring on the parser function summarizing that it pulls top-of-file docstrings
+and comments from source files as text blocks. - Use `from __future__ import annotations`
+and the `re` and `pathlib.Path` imports as needed. ---

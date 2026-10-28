@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree for Python source files and
+ensures each one has a standard `__main__` entry point guard, adding the missing
+scaffolding where needed.
+The tool should accept a target directory (or individual files) from the command
+line, along with options to control the number of parallel workers, the
+indentation style used for generated code, a list of directory names to skip
+during traversal (with sensible defaults such as version control folders,
+virtual environments, caches, and build output), and a dry-run mode that reports
+what would change without modifying any files.
+For each Python file it examines, the script should parse the source
+structurally rather than relying solely on text matching, so it can reliably
+detect whether a proper main guard already exists (recognizing the common
+comparison form against the module name and the main string, regardless of quote
+style).
+If no guard is present, it should append a template consisting of a `main()`
+function stub with a docstring and placeholder body, followed by a guard block
+that invokes `main()` and exits with its return value.
+If a file already contains a main function, the script should avoid creating a
+duplicate definition and should only add the guard if it is missing.
+Files that cannot be parsed due to syntax errors should be skipped with a clear
+warning rather than crashing the run.
+Processing should be distributed across multiple worker processes for speed,
+with results collected and summarized at the end: the number of files scanned,
+files modified, files skipped, and errors encountered.
+The script should use structured logging with adjustable verbosity, return a
+meaningful exit code (zero on success, non-zero when errors occur), and print a
+concise, human-readable report.
+Preserve the original file encoding and line endings wherever possible, and
+never leave a file partially written if an error occurs mid-operation. ---

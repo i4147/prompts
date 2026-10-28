@@ -1,0 +1,4 @@
+This is a NLTK port of the tokenizer used in the NIST BLEU evaluation script,
+https://github.com/moses-smt/mosesdecoder/blob/master/scripts/generic/mteval-v14.pl#L926
+which was also ported into Python in
+https://github.com/lium-lst/nmtpy/blob/master/nmtpy/metrics/mtevalbleu.py#L162

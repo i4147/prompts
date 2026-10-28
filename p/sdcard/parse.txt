@@ -1,0 +1,4 @@
+Usage: parse [options] -i FILE -o FILE Options:
+--overwrite --bllip-model DIR Bllip parser model path
+[default: ~/.radtext/bllipparser/BLLIP-GENIA-PubMed] -o FILE -i FILE --only-ner Parse the sentences
+with NER annotations at the passage level

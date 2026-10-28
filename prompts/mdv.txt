@@ -1,0 +1,21 @@
+Write a Python script that acts as a terminal Markdown viewer, letting a user
+open a Markdown file and read it page by page directly in the command line.
+The tool should accept an optional file path as a command-line argument,
+defaulting to a README.md file in the current directory when none is given.
+It should read the file as UTF-8 text and render it with clean, readable
+terminal formatting so headings, lists, code blocks, emphasis, and other
+Markdown elements appear styled rather than as raw syntax.
+Key behaviors: - Present the content in pages sized to fit the terminal window,
+so the user can move forward and backward through the document without losing
+their place. - Support simple keyboard navigation (for example, next page,
+previous page, and quit), and fall back gracefully to a basic line-based prompt
+when interactive key reading is unavailable. - If the specified file does not
+exist, print a clear, human-readable error message to standard error and exit
+with a non-zero status code instead of crashing with a traceback. - Provide a
+help option that describes the command's usage and its optional file argument,
+with the program name "mdview" and a brief description: "View a Markdown file in
+the terminal, page by page." - Exit cleanly when the user quits, leaving the
+terminal in a normal state.
+The script should be self-contained, runnable from the command line, and easy to
+extend, with reasonable handling of edge cases such as empty files and very long
+lines. ---

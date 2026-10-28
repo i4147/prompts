@@ -1,0 +1,8 @@
+An implementation of the Hole Semantics model, following Blackburn and Bos,
+Representation and Inference for Natural Language (CSLI, 2005).
+The semantic representations are built by the grammar hole.fcfg.
+This module contains driver code to read in sentences
+and parse them according to a hole semantics grammar.
+After parsing, the semantic representation is in the form of an underspecified representation that
+is not easy to read.
+We use a "plugging" algorithm to convert that representation into first-order logic formulas.

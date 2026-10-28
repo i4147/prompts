@@ -1,0 +1,21 @@
+Write a Python script that reads a text-based directory tree listing (such as
+the output of the Unix `tree` command, including box-drawing or ASCII branch
+characters, optional root line, and optional summary footer lines like "N
+directories, M files") and converts it into a structured representation of the
+folder hierarchy.
+The tool should accept the tree text from a file path or standard input via
+command-line arguments, parse each line to determine its nesting depth and file
+or folder name while ignoring decorative branch characters, trailing
+annotations, and summary lines, and then reconstruct the full parent-child
+relationships of the tree.
+Based on that parsed hierarchy, the script should be able to produce useful
+outputs such as creating the corresponding empty directory and file structure on
+disk at a user-specified destination, and/or exporting the structure in a
+normalized, readable form.
+It should handle image-file recognition by extension (distinguishing image files
+from other files), gracefully handle malformed or inconsistent indentation,
+sanitize names to be safe for the local filesystem, avoid overwriting existing
+files unless explicitly permitted, and report clear error messages and a summary
+of what was created or parsed.
+Provide a clean command-line interface with help text, sensible defaults, and a
+dry-run option that previews actions without modifying the filesystem. ---

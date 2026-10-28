@@ -1,0 +1,30 @@
+Write a Python script that acts as a parallel,
+command-line code-cleanup and transformation tool for Python source trees.
+It should accept a root file or directory path and recursively discover Python files,
+skipping common non-source directories such as version-control folders, virtual environments,
+caches, and build artifacts by default, with the option to add or override exclusion patterns.
+The tool should process files concurrently using a configurable number of worker processes,
+with a sensible default,
+and must be resilient so that a failure on one file never aborts the whole run.
+For each file, it should apply a set of safe,
+behavior-preserving source transformations such as normalizing or removing unused
+or redundant constructs, tidying whitespace and formatting, and standardizing imports,
+using the most capable parsing or syntax-tree tooling available
+while degrading gracefully to simpler text- or token-based techniques
+when optional dependencies are missing.
+Every transformation must keep the resulting file syntactically valid;
+if a transformed result cannot be parsed, the original file content must be left untouched.
+Support a dry-run mode that reports which files would change and a unified-diff
+or summary view of the proposed edits without writing anything,
+a check mode that exits with a non-zero status
+when any file would be modified (useful in continuous integration),
+and an in-place mode that writes changes back atomically.
+Optionally allow an external formatter or linter command to be invoked on the affected files
+when the user requests it.
+Report results clearly:
+print per-file status, a final summary with counts of scanned, changed, unchanged, skipped,
+and failed files, and log errors and warnings through a logger when available
+or to standard error otherwise.
+Use meaningful exit codes for success, changes-detected-in-check-mode, and failures.
+Include a help message describing all options,
+and handle keyboard interruption gracefully by shutting down workers cleanly. ---

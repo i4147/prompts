@@ -1,0 +1,30 @@
+Write a Python script that benchmarks
+and compares the execution performance of three different file-size formatting functions
+— `format_size`, `fsize`, and `fsz` — imported from a local module named `dh`.
+The script should: 1.
+Import `perf_counter` from the `time` module for high-precision timing,
+and `cprint` from the `termcolor` package for colored console output.
+2. Import the three functions `format_size`, `fsize`, and `fsz` from a module called `dh`.
+3. Loop over a range of integer byte values from 0 to 10,000,000,
+incrementing by 10,000 on each iteration (i.e., test each function at these size values).
+4. On each iteration:
+- Call `format_size(i)`, print its result prefixed with `"format_size ->"`,
+measure the elapsed time using `perf_counter`,
+and print that elapsed time in cyan using `cprint`. - Call `fsize(i)`,
+print its result prefixed with `"fsize ->"`, measure the elapsed time,
+and print it in green. - Call `fsz(i)`, print its result prefixed with `"fsz ->"`,
+measure the elapsed time,
+and print it in yellow. - Determine the minimum of the three measured times
+and print it on its own line wrapped in ANSI escape codes to make it blink
+and appear in bright cyan. - Compare the minimum time against each function's measured time
+and print the name of the fastest function in a distinct color for each case
+(blue for `format_size`, magenta for `fsize`, red for `fsz`).
+5. The output for each iteration should be printed on the same line where results
+and timings are shown side by side (using `end=" | "` for the result prints),
+followed by the blinking minimum-time line and the winner label.
+The purpose of the script is purely for performance comparison/benchmarking of the three
+size-formatting utility functions across a wide range of input values,
+with visually distinct colored console output to make it easy to identify
+which function is fastest on each iteration.
+There are no file outputs — all results are printed directly to the terminal.
+---

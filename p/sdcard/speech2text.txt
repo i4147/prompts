@@ -1,0 +1,55 @@
+Write a prompt for an AI coding agent to generate a Python automation script with the following
+purpose, inputs/outputs, and behavior:
+The script should use Selenium WebDriver to automate a headless Chrome browser that interacts with a
+specific web page (a voice/text capture web app hosted at a given URL,
+e.g. "https://allorizenproject1.netlify.app/").
+Its core purpose is to continuously monitor a text output element on that page
+(identified by its HTML element ID, e.g. "output"), detect when new text content appears,
+and append that newly detected text to a local output file
+(e.g. "input.txt" in the current working directory),
+so the file acts as a running log of everything captured by the page over time.
+Key requirements and notable behaviors to implement: 1. **Driver lifecycle management**:
+Create a class (e.g. `HeadlessChrome`) that acts as a context manager
+(supporting `__enter__`/`__exit__` with proper typing using `Self` and `TracebackType`),
+responsible for configuring
+and launching a headless Chrome instance via `selenium.webdriver.chrome.options.Options`,
+and cleanly quitting/closing the driver on exit
+(using `contextlib.closing` and `contextlib.suppress` to silently handle shutdown exceptions).
+2. **Configuration constants**:
+Define clear module-level constants (using `typing.Final`) for the target website URL,
+the output file path (resolved via `pathlib.Path.cwd()`),
+the HTML element IDs for the "start" button and the "output" text container,
+a polling interval (e.g. 0.25s),
+and timeout values for explicit waits (e.g. 20s general timeout, 10s long timeout).
+3. **Page interaction flow**:
+- Navigate to the target website. - Use `WebDriverWait` combined with `expected_conditions` (`EC`)
+to wait until the "start" button (located via `By.ID`) is clickable,
+then click it to begin the capture/listening process on the page. - Wait for
+and repeatedly poll the output element (also located via `By.ID`) for its text content.
+4. **Polling and change detection loop**:
+- Implement a loop (ideally structured as a generator/iterator using `collections.abc.Iterator`)
+that repeatedly reads the text from the output web element at the configured poll interval
+(`time.sleep` or equivalent). - Track the last seen text value and only yield/write new content
+when the text actually changes,
+avoiding duplicate writes. - Append each newly detected piece of text to the output file
+(opening in append mode),
+ideally flushing or writing incrementally so data is not lost if the script is interrupted.
+5. **Robust error handling**:
+Gracefully handle and recover from (or appropriately log/skip) common Selenium exceptions during
+polling, including `NoSuchElementException`, `StaleElementReferenceException`, `TimeoutException`,
+and `WebDriverException`,
+so transient page issues (e.g., element temporarily not found due to DOM updates) do not crash the
+entire script.
+6. **Type safety and modern Python style**:
+Use `from __future__ import annotations`,
+full type hints (including `WebDriver`, `WebElement` types from Selenium's remote module),
+and target a modern Python version compatible with `Self` from `typing`.
+7. **Entry point**: Provide a `main`-style execution flow
+(e.g., guarded by `if __name__ == "__main__":`) that instantiates the `HeadlessChrome` context
+manager, performs the navigation/click/poll sequence,
+and runs until manually stopped or until some natural termination condition,
+writing all captured text to the output file throughout execution.
+The final script should be self-contained,
+runnable as-is with Selenium and a compatible Chrome/Chromedriver setup,
+and should not require any external configuration files
+â€” all settings should be defined as constants at the top of the script. ---

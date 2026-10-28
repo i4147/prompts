@@ -1,0 +1,9 @@
+Regression tests for the untrusted-search-path fix in MaltParser (CWE-426). ``find_maltparser`` used
+``os.path.exists(parser_dirname)`` to accept a directory as-is.
+For a *relative* ``parser_dirname`` (as NLTK's docs use) that resolves against the current working
+directory and is checked *before* the ``MALT_PARSER`` environment variable,
+so an attacker who can write a ``maltparser-*/`` directory into the CWD could place its jars on the
+Java classpath -- overriding a trusted ``MALT_PARSER``
+-- and have ``org.maltparser.Malt`` executed (RCE).
+Only an explicit *absolute* directory is now taken as-is;
+a relative name is resolved through ``MALT_PARSER``.

@@ -1,0 +1,38 @@
+Write a Python utility module for adding ANSI terminal color/style decoration to text output,
+with the following requirements: **Purpose**:
+Provide helper functions to detect terminal color support
+and apply ANSI escape codes to strings for colored/styled console output,
+with cross-platform compatibility (including Windows via colorama). **Main components**: 1.
+An `ESCAPE` format string template for building ANSI escape sequences (e.g., `"\033[{:d}m"`).
+2. A `STYLES` dictionary mapping human-readable style names to their ANSI codes, including:
+- `clear` (reset), `bold` - Foreground colors:
+`black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`,
+`white` - Background colors (prefixed with `on_`):
+`on_black`, `on_red`, `on_green`, `on_yellow`, `on_blue`, `on_magenta`, `on_cyan`,
+`on_white` - Include a docstring noting these are the possible styles usable with the
+decorate function.
+3. A function `isatty(stream=None)` that:
+- Defaults to `sys.stdout` if no stream is given - Returns whether the stream is a TTY
+(checks for `isatty` attribute first, returns `False` if not present, otherwise calls it) 4.
+A function `init_colorama()` that:
+- Attempts to import
+and initialize the `colorama` package (calling `colorama.init()`) - Returns `True` on success,
+`False` if `colorama` is not installed (catch `ImportError`) 5.
+A function `curses_available()` that:
+- Attempts to import the `curses` module - Returns `True` if available,
+`False` if `ImportError` occurs 6.
+A module-level constant `SYSTEM_SUPPORTS_COLOR` computed as `curses_available() or init_colorama()`,
+with a docstring explaining it's an indicator of system color capability relying on colorama
+when available (e.g., on Windows where curses is absent).
+7. A function `supports_color(stream=None)` that returns `True` only if both the given stream is a
+TTY and `SYSTEM_SUPPORTS_COLOR` is `True`.
+8. A function `decorate(msg, *styles)` that:
+- Takes a message and a variable number of style name strings - If no styles are provided,
+returns `msg` unchanged - Otherwise,
+builds a concatenated ANSI escape prefix from the valid style names found in `STYLES`
+(silently ignoring unknown style names) - Wraps the message:
+prefix + stringified message + clear escape code - Returns the resulting decorated string **Notable
+behavior**: The module should gracefully degrade when `colorama` or `curses` aren't available,
+never raising import errors at module load time.
+No external output or side effects besides the optional `colorama.init()` call.
+---

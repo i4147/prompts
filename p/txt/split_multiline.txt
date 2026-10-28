@@ -1,0 +1,4 @@
+Script to reorganize Lua config files by separating single-line and multi-line options.
+Handles control flow blocks (if-then-else-end), function definitions,
+and other multi-line structures.
+Usage: python script.py input.lua [output.lua]

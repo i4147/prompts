@@ -1,0 +1,24 @@
+Create a Python command-line script named `odd_even_example.py` that uses the `docopt` library to
+parse command-line arguments.
+The script's purpose is to demonstrate docopt's handling of repeated, paired positional arguments.
+It should accept a sequence of numeric arguments grouped in pairs,
+where each pair is conceptually labeled as `ODD` and `EVEN`,
+and this `(ODD EVEN)` pair pattern must be repeatable one
+or more times (indicated with `...` in the usage pattern).
+Requirements: - Define a module-level docstring that serves as the docopt usage specification,
+following strict docopt syntax conventions. - The usage line must be in the form:
+`odd_even_example.py [-h | --help] (ODD EVEN)...` - Include an "Example" section in the docstring
+showing a sample invocation,
+such as `odd_even_example.py 1 2 3 4`. - Include an "Options" section listing `-h, --help` as the
+help flag. - Import `docopt` from the `docopt` package. - In the `if __name__ == "__main__":` block,
+call `docopt(__doc__)` to parse `sys.argv` based on the docstring,
+storing the result in a variable named `arguments`. - Print the parsed `arguments` dictionary to
+standard output.
+Notable behavior: - Running the script with `-h` or `--help` should display the docstring usage text
+and exit. - Running the script with an odd number of positional arguments, or zero arguments,
+should cause docopt to raise a usage error (since arguments must come in ODD/EVEN pairs). -
+When valid pairs of numeric arguments are provided (e.g., `1 2 3 4`),
+docopt will collect repeated `ODD`
+and `EVEN` values into lists under those keys in the resulting `arguments` dictionary,
+and the script simply prints this dictionary — no additional parsing, validation,
+or type conversion of the numbers is performed. ---

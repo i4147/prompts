@@ -1,0 +1,47 @@
+Write a prompt for an AI coding agent to generate a Python script with the following purpose
+and requirements: --- Create a Python script that implements a PDF processing/compatibility module
+built on top of the `pdfminer.six` and `pypdf` libraries,
+designed to mimic a `pypdfium2`-like API surface
+(e.g., class names such as `FPDF` and exception types like `PdfiumError`). **Purpose**:
+Provide a wrapper/shim library that exposes PDF-reading capabilities
+(text extraction, metadata extraction, page counting) through a simplified, consistent interface,
+while relying internally on `pdfminer.six` for low-level parsing/layout analysis
+and `pypdf` for general PDF manipulation. **Main inputs**:
+- File paths (str or `pathlib.Path`)
+or binary file-like objects (`BinaryIO`) pointing to PDF documents. - Optional parameters for text
+extraction (e.g., layout analysis parameters similar to pdfminer's `LAParams`). **Main outputs**:
+- Extracted plain text content from PDF pages. - PDF metadata (e.g., title, author, creation date)
+decoded from raw PDF info dictionaries,
+handling byte-string values by decoding them to UTF-8 with error tolerance. - Page count
+and per-page access/iteration. **Notable behavior and requirements**: 1.
+At import time, attempt to import `pdfminer.six` submodules
+(`pdfdocument`, `pdfparser`, `pdfpage`, `converter`, `layout`, `pdfinterp`).
+If the import fails,
+print a clear error message (`"ERROR: pdfminer.six not installed!"` plus pip install instructions)
+and exit the program with a non-zero status via `sys.exit(1)`.
+2. Similarly, attempt to import `pypdf`.
+If unavailable, print `"ERROR: pypdf not installed!"` plus pip install instructions
+and exit via `sys.exit(1)`.
+3. Define a module-level `__version__` string (e.g., `"0.5.0"`).
+4. Define a custom exception class `PdfiumError(Exception)` to represent library-specific errors.
+5. Define a main class `FPDF` that: - Has an `__init__` method initializing internal state:
+an empty list of pages, an empty metadata dictionary,
+and a placeholder for the parsed document object. - Provides a class method
+`from_file(cls, filepath)` that opens the given file path in binary mode,
+parses it using `pdfminer`'s `PDFParser` and `PDFDocument`,
+extracts and decodes metadata from the document's info dictionary
+(handling byte values safely, falling back to string conversion on decode errors),
+computes the total page count by iterating over `PDFPage.create_pages(...)`,
+and returns a fully constructed `FPDF` instance. - Is designed to be extended with further methods
+for text extraction (using `PDFResourceManager`, `PDFPageInterpreter`,
+and `TextConverter` with `LAParams`) and page-level access,
+consistent with the pdfminer-based architecture.
+6. Use proper typing hints (`Optional`, `Union`, `BinaryIO`) for method signatures where file paths
+or file-like objects are accepted.
+7. Suppress or manage warnings as needed using the `warnings` module.
+8. The overall code should be structured as a reusable compatibility/wrapper module
+(not a standalone CLI script),
+suitable for import by other Python code that expects a `pypdfium2`-like interface
+but wants pdfminer/pypdf under the hood.
+Generate the complete Python implementation fulfilling all the above requirements,
+including robust error handling for missing dependencies and malformed PDF metadata. ---

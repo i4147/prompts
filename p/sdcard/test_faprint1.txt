@@ -1,0 +1,19 @@
+Write a Python script that imports a function named `faprint` from a module called `faprint1`.
+The script should call this `faprint` function with a single string argument containing Persian
+(Farsi) text: "این یک ازمایش لست"
+(which translates to something like "this is a test list/experiment").
+Purpose: - The script serves as a minimal usage example/test for the `faprint1` module's `faprint`
+function, likely demonstrating its ability to print
+or process right-to-left (RTL) Persian/Farsi text correctly.
+Main inputs/outputs: - Input:
+a hardcoded Persian string literal passed directly to the function call. - Output:
+whatever `faprint` produces
+when invoked (presumably printing the Persian text to standard output,
+possibly with special formatting/handling for RTL script,
+since that would be the typical purpose of a custom print function in such a module).
+Notable behavior: - No command-line arguments, user input,
+or file I/O are involved. - The script contains exactly one import statement
+and one function call. - The text encoding must support Persian/Arabic script characters (UTF-8),
+so ensure the source file is saved/handled with proper UTF-8 encoding. - Keep the code extremely
+simple and minimal, matching a basic smoke-test style script with no additional logic,
+error handling, or extra output. ---

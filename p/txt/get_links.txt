@@ -1,0 +1,25 @@
+Write a Python script that uses the Telethon library to connect to Telegram with a given API_ID
+and API_HASH (using a persistent session file named "session_name"),
+then scans all of the user's dialogs (channels and groups only, skipping private chats)
+and iterates through the entire message history of each one (no limit).
+For every message that contains text, the script must extract URLs from two sources: 1.
+Message entities — handling both MessageEntityTextUracting the entity's .url attribute)
+and MessageEntityUrl
+(extracting the substring from message the entity's offset andw regex scL pattern like
+r"(https?://[^\s+]+)" to catch any links not captured as entities.
+Any URL extracted from entities that contains "t.me" (case-insensitive) must be excluded
+(to filter out internal Telegram links), while raw regex matches should also be collected.
+All discovered URLs should be deduplicated by adding them to a set (urls_found).
+The script should run asynchronously using asyncio
+and Telethon's async API
+(async with TelegramClient(...), async for dialog in client.iter_dialogs(),
+async for message in client.iter_messages(...)).
+Include console print statements to show progress:
+confirm successful connection before fetching dialogs,
+and print the name of each channel/group as its full history is being scanned.
+The main inputs are the hardcoded Telegram API credentials (API_ID, API_HASH)
+and the user's Telegram account dialogs/message history (via the session file).
+The main output is the in-memory set of unique external URLs (urls_found) collected across all
+scanned channels and groups.
+Structure the code with a URL_REGEX constant, an async main() function containing the core logic,
+and a standard entry point that runs main() via asyncio.

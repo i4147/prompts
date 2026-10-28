@@ -1,0 +1,2 @@
+Interactive chat script for Z.AI GLM-4.5 with auto-save support.
+Uses pathlib for filesystem operations as per user preference.

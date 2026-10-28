@@ -1,0 +1,21 @@
+Write a Python script that serves as a lightweight executable entry point for a command-line tool
+called "prettierpy".
+The script should use `from __future__ import annotations` at the top of the file to enable
+postponed evaluation of annotations.
+Define a single function named `run` that takes no arguments
+and returns `None` (explicitly annotated with a `-> None` return type).
+Inside this function:
+- Perform a local/deferred import of the `main` function from the `prettierpy.cli` module
+(the import must happen inside the function body, not at the top of the file,
+to avoid import-time side effects
+or circular import issues). - Call the imported `main()` function with no arguments to invoke the
+actual CLI logic.
+The `run` function should have no other logic
+— it acts purely as a thin wrapper/delegator that defers to `prettierpy.cli.main` for the real
+implementation.
+This pattern is typically used as the callable referenced by a console script entry point
+(e.g., in packaging configuration such as `pyproject.toml` or `setup.py`) so that importing this
+module is cheap and the heavier CLI module is only loaded when the command is actually executed.
+No other functions, classes, imports at module level,
+or output should be included
+— the file should contain only the `__future__` import and the `run` function definition. ---

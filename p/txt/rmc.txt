@@ -1,0 +1,5 @@
+strip_py: remove comments, docstrings and type annotations from Python sources.
+Backends: ast (stdlib, default), libcst (optional), tree-sitter (optional).
+Install optional backends with:
+pip install libcst pip install tree-sitter tree-sitter-python pip install rich # optional,
+for progress display

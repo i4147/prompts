@@ -1,0 +1,34 @@
+Write a Python script that catalogs the files in the current working directory into a shared SQLite
+database located at "/sdcard/pkg.db".
+The script should behave as follows: 1. **Determine the current folder name**:
+Use the name of the current working directory (via `Path.cwd().name`) as an identifier for this run.
+2. **Connect to the SQLite database** at `/sdcard/pkg.db` (creating it if it doesn't exist),
+using a context-managed connection and cursor.
+3. **Check if a table matching the current folder name already exists** in the database
+(query `sqlite_master` for a table named exactly like the folder). - If the table already exists,
+the script should skip processing (to avoid duplicating work for a folder that was already scanned)
+and print/return accordingly without re-inserting data. - If the table does not exist,
+proceed to create it and populate it.
+4. **Create a new table** named exactly after the current folder name
+(safely quoted to allow special characters), with columns:
+- `id INTEGER PRIMARY KEY AUTOINCREMENT` - `filename TEXT NOT NULL` - `file_contents TEXT` 5. **Scan
+all files (not subdirectories) in the current directory**,
+printing each filename as it is being read (e.g., " Reading: <filename>").
+6. **Read each file's contents as text**,
+attempting multiple encodings in order (`utf-8`, `latin-1`, `cp1252`, `iso-8859-1`)
+until one succeeds.
+Truncate the content to a maximum of 1 MB (1024*1024 characters).
+If all encodings fail due to decode/permission errors,
+store the placeholder string `"[Binary file content not stored]"` instead of the content.
+If any other unexpected exception occurs while reading,
+store an error message string describing the exception (e.g., `"[Error reading file: <error>]"`).
+7. **Insert all collected files** (filename and contents) into the newly created table in a single
+batch operation (using `executemany`), with one row per file.
+8. **Commit the changes** to the database as part of the connection's context management.
+The script should be structured with small,
+reusable helper functions
+(e.g., for getting the current folder name, checking table existence, creating the table,
+reading file contents with fallback encodings, collecting files in the directory,
+and inserting files), and a `main()` function that orchestrates the overall flow:
+connect to the database, check for the existing table, and if not present, create the table,
+gather the files, and insert them.

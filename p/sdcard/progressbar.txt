@@ -1,0 +1,24 @@
+Write a Python module that implements a `ProgressBar` class as part of a GUI binding library for
+Termux:GUI, extending a base `View` class.
+The class should represent a native ProgressBar widget and provide the following behavior:
+1. **Imports**: Use `Optional` and `Literal` from the `typing` module.
+Import `Activity` from `termuxgui.activity` and `View` from `termuxgui.view`.
+2. **Class `ProgressBar(View)`**:
+- Include a short docstring describing it as representing a ProgressBar. - **Constructor
+`__init__`**: - Parameters:
+`activity` (an `Activity` instance, required),
+`parent` (an optional `View` instance, default `None`),
+and `visibility` (an optional `Literal[0, 1, 2]`, default `None`). - Build a `params` dictionary
+containing `aid` (from `activity.aid`) and `visibility`. - If `parent` is not `None`,
+add a `parent` key to the params dict set to `parent.id`. - Call the parent `View.__init__` method,
+passing `self`, `activity`,
+and the result of `activity.c.send_read_msg(...)` using a message with `method` set to
+`"createProgressBar"`
+and `params` set to the built dictionary. - **Method `setprogress(self, progress: int)`**:
+- Include a docstring stating that it sets the progress of the ProgressBar,
+and that the value must be an integer from 0 to 100 inclusive. - Send a message via
+`self.a.c.send_msg(...)` with `method` set to `"setProgress"`
+and `params` containing `aid` (`self.a.aid`), `id` (`self.id`), and `progress`.
+The code should follow the same structure, naming conventions,
+and communication pattern (sending JSON-like method/params dictionaries through a connection object)
+as other View subclasses in this GUI binding library. ---

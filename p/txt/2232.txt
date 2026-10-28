@@ -1,0 +1,63 @@
+Create a Python command-line tool that automatically applies 2to3-style refactoring fixers
+(from `lib2to3`) across a codebase to help modernize Python 2 style code to Python 3,
+with parallel processing and detailed reporting.
+Requirements and behavior: 1. **Purpose**:
+Recursively scan a directory (or a list of specific files) for Python source files
+and apply `lib2to3` refactoring fixers to transform legacy syntax/idioms into modern equivalents,
+optionally writing changes back to disk or just previewing them (dry-run mode).
+2. **Fixer loading**:
+- Attempt to load fixers dynamically via `get_fixers_from_package("lib2to3.fixes")`. - If that fails
+or returns no fixers,
+fall back to a hardcoded list (`FALLBACK_FIXERS`) containing the full set of standard
+`lib2to3.fixes.fix_*` module paths
+(e.g. `fix_apply`, `fix_asserts`, `fix_basestring`, `fix_buffer`, `fix_dict`, `fix_except`,
+`fix_exec`, `fix_execfile`, `fix_exitfunc`, `fix_filter`, `fix_funcattrs`, `fix_future`,
+`fix_getcwdu`, `fix_has_key`, `fix_idioms`, `fix_import`, `fix_imports`, `fix_imports2`,
+`fix_input`, `fix_itertools`, `fix_itertools_imports`, `fix_long`, `fix_map`, `fix_metaclass`,
+`fix_methodattrs`, `fix_ne`, `fix_next`, `fix_nonzero`, `fix_numliterals`, `fix_operator`,
+`fix_paren`, `fix_print`, `fix_raise`, `fix_raw_input`, `fix_reduce`, `fix_reload`,
+and other standard 2to3 fixers covering the rest of the standard set like `fix_renames`, `fix_repr`,
+`fix_set_literal`, `fix_standarderror`, `fix_sys_exc`, `fix_throw`, `fix_tuple_params`, `fix_types`,
+`fix_unicode`, `fix_urllib`, `fix_ws_comma`, `fix_xrange`, `fix_xreadlines`,
+`fix_zip`). - Build a `RefactoringTool` instance from the resolved fixer list.
+3. **File discovery**:
+- Accept one or more input paths (files or directories) via CLI arguments. - For directories,
+recursively walk and collect files matching configurable extensions (default: `[".py"]`). - For
+explicit files, include them directly regardless of extension filtering
+(or still validate extension—document as needed). - Support excluding common non-source directories
+(e.g. virtual envs, `.git`, `__pycache__`, build directories) from the recursive walk.
+4. **Processing**: - Use a multool` (worker count configurable, default `WORKER_COUNT =
+8`) to refactor files in parallel for performance on large codebases. - For each file:
+read source text, run the refactoring tool to produce a transformed version,
+and compute whether changes occurred (i.e., diff is non-empty). - If changes are found
+and not in dry-run mode,
+write the transformed content back to the file (preserving encoding). - If in dry-run mode,
+do not modify files—only report what would change.
+5. **CLI arguments** (via `argparse`):
+- Positional argument(s) for one
+or more input paths (files or directories). - `--dry-run` flag to preview changes without writing
+them. - Option to specify file extensions to include (defaults to `.py`). - Option to configure
+number of worker processes. - Possibly a verbosity/log-level option.
+6. **Output / Logging**:
+- Use `loguru` for structured,
+leveled logging (info, warning, error, success). - For each modified (or would-be-modified) file,
+log a concise diff preview:
+- Limit displMAX_DIFF_LINES` (5) in normal mode
+and `MAX_DRY_RUN_DIFF_LINES` (20) in dry-run mode. - Truncate long lines/previews to
+`MAX_PREVIEW_CHARS` (80) and change snippets to `MAX_CHANGE_PREVIEW_CHARS` (50) characters,
+adding ellipsis if truncated. - At the end, print a summary:
+total files scanned, number of files changed (or would be changed), number of files unchanged,
+and any files that failed to process (with error messages). - Use a non-zero process exit code
+(`sys.exit`) if errors occurred during processing, so the tool is CI-friendly.
+7. **Error handling**: - Gracefully handle files that fail to parse/refactor (e.g., syntax errors),
+   logging the error with the filename
+   and continuing with the rest instead of aborting the whole run. - Handle empty input
+   (no matching files found) with a clear warning/message and a clean exit.
+   8. **Code structure**:
+   - Use type hints throughout
+   (leveraging `collections.abc.Iterable`/`Sequence`, `typing.Any`, `pathlib.Path`). - Organize into
+   clear functions (e.g., fixer resolution, file discovery, per-file refactor worker function,
+   diff/preview formatting, summary reporting,
+   and a `main()` entry point guarded by `if __name__ == "__main__":`). - Ensure the worker function
+   used by `multiprocessing.Pool` is picklable (top-level function, not a lambda/closure)
+   and accepts/returns simple serializable data (e.g., file path and result status/diff info).

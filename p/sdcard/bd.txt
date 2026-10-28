@@ -1,0 +1,56 @@
+Write a prompt instructing an AI coding agent to implement a complete,
+standards-compliant Unicode Bidirectional Algorithm (UBA, UAX #9) library in Python,
+compatible with both Python 2 and 3 (using the `six` compatibility library).
+The prompt should specify the following: **Purpose**:
+Build a self-contained module that determines the correct visual display order of mixed-direction
+text (left-to-right and right-to-left scripts, such as Latin mixed with Hebrew or Arabic) according
+to the Unicode Bidirectional Algorithm, and exposes utility functions to compute embedding levels,
+base paragraph direction,
+and the final reordered/display string. **Public API** (must be exported via `__all__`):
+- `get_display(unistr, upper_is_rtl=False, base_dir=None, debug=False, encoding="utf-8")`:
+takes a unicode string (or byte string with given encoding)
+and returns the string reordered for correct visual display,
+handling mirrored characters (e.g., parentheses/brackets/angle/guillemet pairs)
+and optional uppercase-as-RTL heuristic for testing. - `get_base_level(text, upper_is_rtl=False)`:
+determines the paragraph's base embedding level (0 for LTR, 1 for RTL) by scanning characters
+according to rule P2/P3 of the algorithm,
+optionally treating uppercase ASCII letters as RTL for testing purposes,
+and handling explicit directional override/embedding codes. -
+`get_embedding_levels(text, bidi_types, upper_is_rtl=False, base_dir=None, debug=False)`:
+computes the embedding level
+and explicit bidi type override for every character in the input. - `BidiAlgorithm`:
+a class/namespace implementing the full rule set of the algorithm
+(explicit embeddings and overrides X1–X10, removal of embedding/override/boundary characters X9,
+isolating run sequence determination, resolving weak/neutral types W1–W7 and N0–N2,
+resolving implicit levels I1–I2, reordering resolved levels L1–L4,
+and shaping of mirrored characters). **Internal/supporting behavior**:
+- Handle surrogate pairs correctly for narrow Python builds (`sys.maxunicode == 65535`),
+treating surrogate code points specially. - Maintain mapping tables for explicit formatting codes
+(RLE, LRE, RLO, LRO) defining how each increments/overrides the embedding level and direction,
+following the "least greater odd/even" helper calculations. - Maintain a set of character types
+ignored/removed during the X6
+and X9 cleanup steps (e.g., BN, PDF, B, and the explicit embedding/override codes). - Maintain a
+dictionary of mirrored character pairs (parentheses, brackets, braces, angle brackets, guillemets)
+used when reordering RTL runs so that mirrored glyphs are swapped appropriately. - Use
+`unicodedata.bidirectional`
+and `unicodedata.mirrored` to look up each character's bidirectional category
+and mirrored property. - Represent the per-character storage state as a dictionary with keys like
+`base_level`, `base_dir`,
+`chars` (list of per-character info such as character, bidi type, orig type, and level),
+and `runs` (a `deque` of level runs),
+created via a helper `get_empty_storage()`. - Include a debug utility
+`debug_storage(storage, base_info=False, chars=True, runs=False)` that prints the current base
+level, base direction, character list (with type and level info),
+and run list to stderr for troubleshooting,
+using the caller's function name (via `inspect.stack()`) in the debug header,
+and handling the stderr writer differently for Python 2
+(wrapping with a codecs writer using the locale's preferred encoding) versus Python 3
+(using `sys.stderr` directly). - Define a constant for the maximum explicit embedding level
+(62, per UAX #9) and constants mapping paragraph-level directions ("L", "AL", "R") to initial
+embedding levels (0, 1, 1 respectively). **Notable implementation details to preserve**:
+- Compatibility shims for Python 2/3 string and iteration differences via `six`. - Pure-Python,
+no external dependencies beyond `six`
+and the standard library. - Designed so other modules can import `get_display`, `get_base_level`,
+`get_embedding_levels`, and `BidiAlgorithm` as the primary public interface,
+while internal helper functions (level calculation lambdas, storage initialization, debug printing)
+remain available for testing and debugging but are not part of the primary public surface. ---

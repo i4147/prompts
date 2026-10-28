@@ -1,0 +1,33 @@
+Write a Python script that analyzes a directory tree of Python source files and
+identifies duplicate or near-duplicate code blocks, so that a developer can find
+copy-pasted logic across a codebase.
+The tool should accept a root directory path as its main input, along with
+optional settings such as file or name patterns to exclude, a minimum block size
+threshold, and a choice of how many worker processes to use for parallel
+processing.
+It should recursively discover all Python source files under the root, skipping
+any excluded names, and read each file safely, gracefully ignoring files that
+cannot be decoded or accessed.
+For each file, the tool should parse the source into a structural representation
+and extract meaningful code units such as function and class definitions.
+To detect duplicates regardless of superficial differences, it should normalize
+each unit by stripping out identifying names (such as function, class, and
+variable names) so that structurally identical code with different names is
+recognized as equivalent.
+Each normalized unit should be fingerprinted with a stable cryptographic hash so
+that matching units can be grouped efficiently.
+The output should be a human-readable report listing each group of duplicate or
+structurally identical code blocks, including the file paths, line ranges, and
+the number of lines in each occurrence, sorted so that the most significant
+duplications (largest blocks and most occurrences) appear first.
+The tool should also provide a summary with total files scanned, total code
+units analyzed, number of duplicate groups found, and the estimated number of
+duplicated lines.
+An optional machine-readable output format (such as JSON) should be supported
+for integration with other tools.
+Key behaviors: the scan should run efficiently across large projects by using
+parallel processing where appropriate; it should handle malformed or unparseable
+files without crashing; it should produce deterministic output for the same
+input; and it should exit with a clear status code indicating whether duplicates
+were found, suitable for use in continuous integration pipelines.
+Include clear command-line help describing all options. ---

@@ -1,0 +1,1 @@
+Streaming authenticated AES-256-GCM encryption and safe decryption.

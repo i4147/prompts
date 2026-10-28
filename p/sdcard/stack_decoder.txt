@@ -1,0 +1,25 @@
+A decoder that uses stacks to implement phrase-based translation.
+In phrase-based translation, the source sentence is segmented into phrases of one or more words,
+and translations for those phrases are used to build the target sentence.
+Hypothesis data structures are used to keep track of the source words translated so far
+and the partial output.
+A hypothesis can be expanded by selecting an untranslated phrase,
+looking up its translation in a phrase table, and appending that translation to the partial output.
+Translation is complete when a hypothesis covers all source words.
+The search space is huge because the source sentence can be segmented in different ways,
+the source phrases can be selected in any order,
+and there could be multiple translations for the same source phrase in the phrase table.
+To make decoding tractable,
+stacks are used to limit the number of candidate hypotheses by doing histogram
+and/or threshold pruning.
+Hypotheses with the same number of words translated are placed in the same stack.
+In histogram pruning, each stack has a size limit,
+and the hypothesis with the lowest score is removed when the stack is full.
+In threshold pruning,
+hypotheses that score below a certain threshold of the best hypothesis in that stack are removed.
+Hypothesis scoring can include various factors such as phrase translation probability,
+language model probability, length of translation,
+cost of remaining words to be translated, and so on.
+References: Philipp Koehn.
+2010. Statistical Machine Translation.
+Cambridge University Press, New York.

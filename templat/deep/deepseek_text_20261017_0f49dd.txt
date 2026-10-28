@@ -1,0 +1,139 @@
+# Task: Reimplement the Linux `{{COMMAND}}` command in Rust
+## Objective
+Implement a faithful, working reimplementation of the Linux `{{COMMAND}}` command
+(target: {{REFERENCE_IMPL_AND_VERSION, e.g. "GNU coreutils 9.4" or "mlocate 0.26"}})
+in Rust, on Linux.
+## Naming and CLI contract (HARD)
+- The produced binary MUST be named exactly `{{COMMAND}}` — same string as the
+  original command. No `-rs`, `-rust`, `-py`, `-python`, `-impl`, or any other
+  suffix in:
+    - the `[[bin]] name` in `Cargo.toml`,
+    - the on-disk binary name,
+    - usage/help text (`Usage: {{COMMAND}} [OPTION]...`),
+    - error messages.
+- If the original ships multiple binaries (e.g. `mlocate` → `updatedb` + `locate`,
+  coreutils → separate tools), produce one `[[bin]]` per original binary, each with
+  the exact original name.
+- The CLI surface MUST match the original: subcommand/argument grammar, option names
+  (short and long), option-argument forms (`-e PATTERN`, `--regexp=PATTERN`,
+  `-ePATTERN` where the original accepts the attached form), and `--help` / `--version`.
+- Grouped short flags (`-abc`), repeated flags (`-e a -e b`), `--` terminator,
+  `--opt=value` and `--opt value` must all be accepted wherever the reference accepts
+  them.
+- `--help` and `--version` output MUST match the reference byte-for-byte (modulo
+  formatting of the program name, which is the same string).
+## Flags — ALL of them (HARD)
+- Enumerate every flag the reference version accepts for the target binaries
+  (from `--help`, the man page, and the info manual).
+- Implement **every** flag whose behavior is achievable under the hard constraints
+  below. Do not silently drop flags; do not stub them to no-ops; do not "implement
+  the popular ones."
+- If a specific flag is genuinely unimplementable under the constraints (e.g. needs
+  root, needs a kernel interface unavailable in std, needs a third-party crate you
+  are forbidden from using), then in your initial reply you MUST list each such flag
+  with a one-line justification, and reproduce that list in `README.md` under
+  "Unsupported flags". Any flag not on that list is expected to work correctly.
+- Every supported flag must appear in `tests/matrix.toml` (see below) and be
+  exercised by at least one unit test and one integration-test invocation.
+## Hard constraints (apply always)
+- Language: Rust, stable, edition 2021.
+- Third-party crates: **target zero**. Use only `std`. `[dependencies]` must be
+  empty. If a crate is genuinely unavoidable, STOP and justify it in your initial
+  reply before adding it. Dev-dependencies for tests are permitted but must be
+  called out.
+- **No process spawning in the implementation.** `std::process::Command`,
+  `libc::fork`/`exec*`, `posix_spawn`, and equivalents are forbidden in library
+  or binary code. You may use `Command` inside `#[cfg(test)]` code ONLY for
+  differential testing against the real reference binary.
+- No shelling out to the real command, to `find`/`grep`/`sed`/`awk`/`sort`/`xargs`,
+  or to any external helper that would trivially solve the task.
+- `#![forbid(unsafe_code)]` at crate root unless the task genuinely requires it —
+  in which case justify every `unsafe` block in the README.
+## Functional requirements (FILL IN — per-command section)
+{{FILL_IN: input sources, output format (byte-exact), exit-code mapping,
+error semantics (abort vs continue, stderr format), and edge cases that MUST be
+handled correctly. Prefer bulleted lists over prose. Call out anything easy to
+get subtly wrong.}}
+## Compatibility & robustness requirements (apply always)
+### Byte-exact compatibility
+- `{{COMMAND}} --help` and `{{COMMAND}} --version` must match the reference output
+  byte-for-byte (modulo the program name, which is identical). Check in the expected
+  text as a golden file under `tests/fixtures/help/` and diff in a test.
+- Error text on stderr must match the reference format exactly, e.g.
+  `{{COMMAND}}: {{FILENAME}}: No such file or directory`. Check in one golden file
+  per error class under `tests/fixtures/errors/`.
+- Produce an explicit exit-code table in `README.md` (0, 1, 2, others). Every
+  documented exit code must be exercised by at least one integration test.
+- Exit codes must match the reference byte-for-byte for every documented error class.
+### Robustness
+- **SIGPIPE:** `{{COMMAND}} ... | head -1` must exit with the reference's code, no
+  panic/backtrace, no stderr noise. Add an integration test using a shell pipeline.
+- **Pathological filenames:** correct behavior with filenames containing newlines,
+  spaces, tabs, quotes, backslashes, control bytes, and non-UTF-8 bytes (`\xff\xfe`).
+  Byte-preserve on output. Document `-z`/`\0` support if the reference has it.
+  Also handle names near 255 bytes and total paths near `PATH_MAX` (4096).
+- **Memory bounds:** must run under `ulimit -v 262144` (256 MB) on a 1,000,000-file
+  input without OOM. Peak RSS must be O(1) in input size. Add a `make bench-mem`
+  target that reports peak RSS via `/usr/bin/time -v`.
+- **FD leaks:** FD count in `/proc/<pid>/fd` must be stable across 10,000 iterations
+  of the command. Add a test that loops and compares.
+### Differential testing
+- Ship `scripts/difftest.sh` (or a `cargo test` case) that, when the reference
+  binary is on `$PATH`, runs both on the same fixture and diffs stdout, stderr, and
+  exit code byte-for-byte. Include 20+ cases covering every flag and every error
+  class. Skips cleanly if the reference is absent.
+- Ship `scripts/grade.sh` that runs the differential harness end-to-end and prints
+  a pass/fail table. It must be runnable by a reviewer with one command.
+### Test matrix
+- Ship `tests/matrix.toml` listing every supported flag and the name of the test
+  that exercises it. A test asserting "every flag in the matrix has at least one
+  passing test" must exist. No supported flag may be tested zero times.
+### Hidden sanity fixture
+- Ship `tests/fixtures/sanity/` containing:
+    - one empty directory,
+    - one regular file whose name contains a byte ≥ 0x80 (e.g. `\xff`),
+    - one regular file whose name contains a newline,
+    - one symlink loop (`a -> b -> a`),
+    - one directory containing 10,000 small files.
+  Integration tests must exercise all five cases against the built binary. Do NOT
+  modify this fixture from the implementation side — treat it as read-only.
+## Quality bar (apply always)
+- Single crate with `src/lib.rs` (core logic, public API) + one `src/bin/{{BIN}}.rs`
+  per original binary. Core logic must be unit-testable without spawning processes.
+- `///` doc comments on all public items.
+- Unit tests: happy path, every flag, every documented error path.
+- Integration test under `tests/` that runs the real binary end-to-end against
+  `tests/fixtures/sanity/` and any additional fixtures.
+- `cargo build --release` clean with `-D warnings`; `cargo clippy -- -D warnings` clean.
+- `cargo test` passes.
+- No panics on malformed input — return `Result` / `ExitCode`; errors to stderr.
+- Every integration test creates a fresh `tempfile::tempdir`, `chdir`s into it, and
+  cleans up. No test depends on order or on the host `$HOME`.
+## Deliverables (apply always)
+1. Full source tree; `Cargo.toml` with `[[bin]] name = "{{COMMAND}}"` (exact) and
+   empty `[dependencies]`.
+2. `README.md` containing:
+   - design overview,
+   - complete supported-flags table,
+   - **Unsupported flags** section (may be empty; must exist),
+   - exit-code table,
+   - **deviations from reference behavior**,
+   - build/run/test instructions.
+3. `scripts/demo.sh` (or a `Makefile` target) that builds a synthetic fixture,
+   invokes the built binary by its exact name `./target/release/{{COMMAND}}`, and
+   shows 5+ representative invocations covering multiple flags with expected output.
+4. `scripts/difftest.sh` and `scripts/grade.sh` as specified above.
+5. Final message: what you implemented, every omitted flag with reason, any crates
+   used and why, known limitations.
+## Known pitfalls to handle (FILL IN — usually 5–8 items)
+{{FILL_IN: command-specific traps. Be concrete — byte sequences, flag combinations,
+filesystem edge cases, buffer sizes, signal handling, locale, etc.}}
+## Reporting back (before you write any code)
+Reply with:
+  1. The reference version you are targeting and where you got its flag list.
+  2. The complete list of flags you will implement.
+  3. The list of flags you will NOT implement, with one-line reasons.
+  4. Any crate you intend to use and why.
+  5. Anything in this brief you believe is infeasible under the constraints.
+  6. Confirmation that the built binary will be named exactly `{{COMMAND}}`.
+Then proceed.

@@ -1,0 +1,27 @@
+Write a Python script that checks an HTML file for structural tag-balance
+problems and reports them to the user.
+The tool should accept a path to an HTML file (or read from standard input when
+no path is given) and parse its markup, tracking opening and closing tags so it
+can detect unclosed elements, stray or mismatched closing tags, and tags that
+were closed out of order.
+Void elements such as line breaks, images, inputs, and meta tags should be
+understood as not requiring a closing tag.
+The script should report each problem with its line and column position in the
+source, along with a short human-readable description of what went wrong (for
+example, which tag was left open or which closing tag had no matching opener).
+It should summarize the total number of errors found and exit with a non-zero
+status code when the document is unbalanced, and zero when it is clean.
+Optionally, the tool should offer a fix mode that attempts to repair the most
+common problems automatically, such as appending missing closing tags at the end
+of the document or removing stray closing tags, and writes the corrected HTML
+either back to the original file or to a path supplied by the user.
+Before overwriting anything, the script should make it clear to the user what
+changes will be applied, and it should never silently destroy content.
+The command-line interface should be simple and self-documenting, with help text
+describing each option.
+Handle common failure cases gracefully, including missing files, unreadable
+files, and non-UTF-8 input, by printing clear error messages rather than
+crashing with a stack trace.
+Keep the output readable for both humans and simple scripts, and make sure the
+core checking logic can be reused by other Python code without being forced
+through the command-line interface. ---

@@ -1,0 +1,31 @@
+Write a Python script that inventories the Python packages installed in the
+current environment (system-wide and user site-packages) and produces a
+structured report about them.
+The tool should be a command-line utility that scans the installed
+distributions, gathers metadata for each one (name, version, install location,
+and any other useful package details), and detects packages that contain
+compiled binary extensions such as shared libraries or DLLs.
+It should also identify and summarize git-hosted or VCS-sourced installations by
+recognizing repository URLs from well-known code hosting services, using the
+package's own metadata to find them.
+The script should accept command-line options that let the user control scope
+and output: for example, whether to include the per-user site-packages
+directory, how to filter or sort results, and the output format.
+Supported output formats should include a human-readable table or text listing,
+JSON, and CSV.
+Results should be written to standard output by default, with an option to write
+to a file.
+The report should be deterministic and well-organized, grouping or annotating
+packages clearly so a reader can quickly see which ones are binary-bearing,
+which come from git sources, and which are plain pure-Python packages.
+Handle errors gracefully: directories that do not exist or cannot be read,
+malformed or missing metadata, and unreadable files should be skipped or
+reported as warnings without crashing the run.
+Duplicate entries across site directories should be resolved so each
+distribution appears once, with the most relevant location preserved.
+Include a concise summary at the end of the run showing totals for packages
+scanned, binary packages found, and git-sourced packages found.
+The exit status should reflect success or a clear failure when the requested
+output cannot be produced.
+Keep the implementation self-contained, rely only on the standard library, and
+document usage with a built-in help message that explains every option. ---

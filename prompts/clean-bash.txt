@@ -1,0 +1,27 @@
+Write a Python script that acts as a command-line tool for automatically
+reformatting and tidying Bash shell scripts across a directory tree.
+The tool should accept one or more file or directory paths as input, recursively
+discover Bash scripts within them, and identify them by either a `.sh` extension
+or, for extensionless files, a shebang line referencing bash or sh.
+It should skip hidden files, symbolic links, and directories.
+The script should parse each Bash file into a syntax tree so that formatting
+decisions are based on the true structure of the code rather than naive text
+manipulation.
+It should normalize indentation, spacing, and line breaks for constructs such as
+functions, conditionals, loops, case statements, pipelines, and command
+substitutions, while preserving the original semantics, comments, and quoting
+exactly.
+Provide a dry-run or check mode that reports which files would change without
+modifying them, and a diff mode that shows unified differences for proposed
+changes.
+In write mode, the tool should update files in place only when the formatted
+output differs from the original, and it should safely handle files that fail to
+parse by reporting an error without aborting the rest of the batch.
+Process files in parallel using a configurable number of worker processes
+(defaulting to a modest fixed count) to keep large repositories fast.
+Use a logging facility to report progress, warnings, and errors, with a
+verbosity option.
+The tool should exit with a non-zero status code when check mode finds
+unformatted files or when any file fails to parse, and with zero otherwise.
+Output summaries should list the number of files scanned, changed, unchanged,
+and failed. ---

@@ -1,0 +1,60 @@
+Create a Python module named `fopen` that provides a collection of general-purpose utility functions
+for terminal text formatting, progress display, date/time parsing and formatting,
+and simple file-based list persistence.
+The module must be importable and testable via `pytest`,
+and should work correctly
+when the current working directory is changed
+(i.e., it should not depend on a fixed working directory,
+and any files it reads/writes should be created relative to the current working directory at
+call time).
+The module must expose at least the following functions with the described behavior:
+1. `align_text(text, alignment)`: - Accepts a string and an alignment mode:
+`"left"`, `"center"`, or `"right"` (and possibly others). - For `"left"`,
+returns the text unchanged (no padding). - For `"center"`,
+returns the text padded/centered with surrounding whitespace such that stripping the whitespace
+returns the original text.
+2. `colorize(text, bold=False, color=None, ...)`:
+- Wraps the given text with ANSI escape codes for terminal styling. - When `bold=True`,
+the output must contain the bold escape sequence `\x1b[1m`
+and must end with the reset sequence `\x1b[0m`. - Should support optional color parameters as well
+(design the signature to allow specifying colors, with bold as a keyword flag).
+3. `loop_progress(current, total, mode_="bar")`:
+- Returns a string representing progress of a loop. - Default/bar mode should include a fraction
+like `"1/2"` somewhere in the output (e.g., as part of a progress bar string). -
+When `mode_="count"`, it should return a specific formatted string:
+`"⟳ [ current/total ]"` with single spaces around the numbers inside the brackets
+(e.g., `loop_progress(3, 10, mode_="count")` returns `"⟳ [ 3/10 ]"`).
+4. `parse_date_string(date_str)`:
+   - Parses a date/time string in the format `"YYYY-MM-DD HH:MM:SS"` (e.g., `"2024-01-02 03:04:05"`)
+   and returns a `datetime` object with the correct year, month, day, hour, minute, and second.
+   5.
+`time_ago(dt)`: - Given a `datetime` object,
+returns a human-readable relative time string compared to now. - If the given datetime is
+essentially the current moment (within a few seconds),
+return the literal string `"just now"`. - If the given datetime is in the future,
+return a string starting with `"in "` (e.g., `"in 5 minutes"`). - Should also handle past datetimes
+with appropriate phrasing (e.g., `"X minutes ago"`),
+though this specific behavior may not be explicitly tested.
+6. `future_datetime(amount, unit, with_date=False)`:
+- Computes a future datetime by adding `amount` of the given `unit`
+(e.g., `"s"` for seconds, and likely also supports minutes, hours, days, etc.) to the current time.
+- Returns a non-empty formatted string representing that future datetime. - When `with_date=True`,
+the output should include date information (not just time).
+7. `w(name, data, is2d=False)`:
+- Writes a list (or list of lists if `is2d=True`) to a file
+(named based on `name`, e.g., `"mylist"` or `"matrix"`) in the current working directory,
+serializing the data for later retrieval. - Must support both 1D lists of values
+and 2D lists (list of lists) depending on the `is2d` flag.
+8. `r(name, is2d=False, index=None)`:
+- Reads back data previously written by `w()` under the same `name`. - Without `is2d`,
+returns a 1D list matching exactly what was written (e.g., `[1, 2, 3]`). - With `is2d=True`,
+returns a 2D list (list of lists) matching exactly what was written (e.g., `[[1, 2], [3, 4]]`). -
+Should support an optional `index` parameter to retrieve a specific element/row instead of the full
+list (behavior should be consistent and testable, e.g.,
+retrieving the element at a given index after writing).
+The module should use only standard library capabilities (e.g., `os`, `time`, `datetime`, file I/O)
+without requiring external dependencies beyond what's already available,
+and should be structured so each function is independently unit-testable with `pytest`,
+including via fixtures that reload the module fresh
+and change the working directory to a temporary directory for isolated file-based
+read/write tests. ---

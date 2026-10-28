@@ -1,0 +1,24 @@
+Write a Python script that scans a directory tree (defaulting to the current
+working directory) for HTML documents and analyzes them to identify the common
+structural elements shared across pages, so that a reusable HTML template can be
+derived from them.
+The script should: - Recursively discover all HTML files under the target
+directory, covering both common HTML file extensions, while skipping any file
+that is already named as a template so it does not contaminate the analysis.
+Return the results in a consistent, sorted order. - Read each discovered file
+using UTF-8 encoding and parse it leniently so that imperfect or partial markup
+does not stop the process.
+Individual files that cannot be read or parsed should be skipped gracefully
+without aborting the whole run. - From each page's document head, collect the
+metadata, stylesheet link, and externally referenced script declarations, and
+from the document body, capture the class attributes used on the body element. -
+Aggregate these collected elements across all pages so that the output reflects
+what is shared or recurring throughout the site, rather than page-specific
+content. - Present the findings as a clear, human-readable summary (or a
+structured output) that lists the common head elements and body classes, making
+it easy for a developer to build a base template from them. - Handle edge cases
+such as missing head or body sections, empty directories, and files without the
+expected attributes without crashing. - Keep the script self-contained, runnable
+from the command line, and well-organized into small, focused parts with a clear
+entry point, and include concise comments explaining the purpose of each major
+step. ---

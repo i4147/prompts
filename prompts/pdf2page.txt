@@ -1,0 +1,24 @@
+Write a Python script that extracts text content from PDF files, supporting
+multiple PDF parsing backends and parallel processing for speed.
+The tool should accept one or more PDF file paths (or a directory containing
+PDFs) from the command line, along with options to select the extraction engine,
+restrict extraction to specific page ranges, optionally s reading order, and
+control the degree of parallelism (for example, using threads or processes and a
+configurable number of workers).
+Each page's extracted text should be tagged with its page number so the output
+remains traceable to the source document.
+The script should produce its results as plain text, writing either to standard
+output or to one or more output files, with a clear separation between pages and
+between documents.
+It should handle errors gracefully: a failure on a single page or a single file
+should be reported to standard error with a useful message while processing
+continues for the remaining pages and files, and the script should exit with an
+appropriate status code reflecting whether any errors occurred.
+Invalid arguments, missing files, and unsupported page ranges should be detected
+early with helpful feedback.
+The tool should be designed so that extraction backends are interchangeable and
+new ones can be added without changing the overall workflow, and it should only
+load heavy third-party dependencies when the selected backend actually needs
+them.
+Provide a readable command-line interface with built-in help, and ensure that
+the output order is deterministic regardless of how parallel workers finish. ---

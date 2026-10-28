@@ -1,0 +1,7 @@
+Command line interface for zoxide:
+zoxide add <path> zoxide query [--list|-l] [--interactive|-i] [--score] [--exclude PATH] keywords...
+zoxide remove <path> zoxide edit
+-- <rank> <path> (edit / set score directly) zoxide import <path> (import from real zoxide's db.zo)
+zoxide init <shell> zoxide --version `z`
+and `zi` wrapper functions are installed via `zoxide init <shell>`
+and call back into `zoxide query` / `zoxide add`.

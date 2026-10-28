@@ -1,0 +1,60 @@
+--- Create a Python -line network scanning tool with the following specifications: **Purpose**:
+Build an interactive terminal-based network scanner/prober called "NetLeafyScanner"
+(display version "Scanner V4") that checks the reachability
+and HTTP status of hosts/domains (e.g., from a user-supplied list, CIDR range, or file) using ping
+and HTTP(S) probing,
+then reports results and lets the user save/export them. **General requirements**:
+- Use only standard library modules:
+`os`, `sys`, `signal`, `socket`, `json`, `subprocess`, `time`, `shutil`, `ipaddress`, `re`,
+`tempfile`, `threading`, plus `pathlib.Path`,
+`concurrent.futures.ThreadPoolExecutor`/`as_completed`, `urllib.parse.urlparse`/`parse_qs`,
+and `datetime`. - Define ANSI color/style escape-code constants
+(reset, bold, dim, cyan, white, gray, yellow, red, green) for styled terminal output. - Define
+branding constants: `BRAND = "NetLeafyScanner"`, `VERSION = "Scanner V4"`,
+a paste/homepage URL (`PASTE_URL`), a Telegram channel URL (`CHANNEL`),
+and a results directory under the user's home folder (e.g. `~/.netleafy`) for storing scan
+output/history. - Define a set of "bad" HTTP status codes (as strings) that should be treated as
+failures/dead hosts,
+e.g. `{"000","403","404","502","503","521","522","523","530"}`
+(000 representing no response/connection error). - Define a dictionary of scan "profiles" keyed by
+menu number ("1" through "5"), each with a `name` (Low/Mid/High/Ultra/Custom), a `threads` count,
+a `timeout` (seconds), and a `ping_count`.
+The "Custom" profile (key "5") should have all values set to `None`,
+to be filled in interactively by the
+user.ading.Lock()` to synchronize console printing across worker threads so concurrent scan output
+doesn't interleave/corrupt. **Notable helper functions to implement**:
+- A helper that returns the correct subprocess creation flag to suppress console windows on Windows
+(`CREATE_NO_WINDOW`) and `0` on other platforms,
+for use when launching subprocesses like `ping`. - A `clear()` function that clears the terminal
+screen cross-platform
+(`cls` on Windows, `clterm_w()` function that returns the current terminal width capped at a maximum
+of 80 columns, with a safe fallback (80) if the terminal size can't be determined. - A
+`strip_ansi()` function that uses a regex to remove ANSI escape sequences from a string
+(for accurately measuring/printing text without color codes). - A `box()` function that prints a
+styled box/banner to the terminal using box-drawing characters, sized to the terminal width,
+optionally with a centered title string (title length computed after stripping ANSI codes).
+**Expected overall program behavior**
+(to be implemented beyond the shown snippet, consistent with the above scaffolding):
+- Present an interactive menu allowing the user to choose a scan profile (Low/Mid/High/Ultra/Custom)
+or define custom thread count, timeout,
+and ping count. - Accept target input
+(single host, list of hosts, CIDR notation expanded via `ipaddress`, or a file of hosts). - For each
+target, run concurrent checks (via `ThreadPoolExecutor`) combining ICMP ping (via `subprocess`)
+and HTTP/HTTPS requests (parsing URLs with `urlparse`/`parse_qs`) to determine liveness
+and HTTP response codes,
+classifying hosts as alive/dead based on the `BAD_CODES` set. - Display live,
+color-coded progress
+and results in the terminal
+(green for success, red for failure, yellow for warnings, cyan/white/gray/dim for UI chrome),
+respecting terminal width
+and using the `box()` banner for headers/titles. - Handle graceful shutdown on interrupt signals
+(`signal`, e.g. Ctrl+C) without leaving corrupted output,
+using the print lock. - Save scan results (timestamped) as JSON
+and/or plain text under the `RESULTS_DIR`,
+and support exporting/copying results
+(potentially using `tempfile` and `shutil` for file operations,
+and referencing `PASTE_URL`/`CHANNEL` for sharing
+or community links). - Include a `datetime`-based timestamp in saved result filenames
+or result metadata.
+Produce the complete, runnable Python script implementing this tool, following the structure,
+naming, and constants described above. ---

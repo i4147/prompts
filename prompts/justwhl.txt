@@ -1,0 +1,20 @@
+Write a Python script that operates on the immediate subdirectories of the
+current working directory to standardize each one down to a single Python wheel
+package.
+For every subdirectory, the script should look for a wheel file (.whl) either
+directly inside that subdirectory or inside a nested "dist" folder within it.
+If no wheel is found, the script should report that the subdirectory was skipped
+and move on.
+If a wheel is found in the nested location, it should be relocated to the top
+level of its subdirectory.
+After that, every other file and folder inside the subdirectory (except the
+retained wheel) should be deleted, including non-empty directories, while
+leaving symbolic links handled safely as files rather than followed.
+The script should print a clear, human-readable log line for each action it
+takes: noting skipped directories, moves, removals, and a final confirmation of
+which wheel was kept for each processed subdirectory.
+Design the script so it processes only directories (ignoring loose files in the
+working directory), handles errors gracefully so that one failing subdirectory
+does not stop processing of the others, and runs as a standalone command-line
+tool that requires no arguments and can be executed from the directory that
+contains the target subdirectories. ---

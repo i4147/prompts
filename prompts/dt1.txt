@@ -1,0 +1,34 @@
+Write a Python script that translates the text content of a file (or multiple
+files) from one language to another, using a chain of fallback translation
+services so that if one service fails or is rate-limited, the next one is tried
+automatically.
+The tool should be a command-line application that accepts input file paths, a
+target language (with a source language that defaults to automatic detection),
+and options controlling output location, concurrency, and request pacing to
+avoid overloading translation services.
+Language identifiers should be normalized through common aliases (for example,
+mapping variant spellings of Chinese or Portuguese codes to their standard
+forms).
+Key behaviors: - Read the input text, split it into manageable chunks that
+respect service length limits, translate the chunks, and reassemble them so that
+the original structure, line breaks, and formatting are preserved as closely as
+possible. - Attempt translation through an ordered list of backend services
+(such as DeepL, deep_translator, translate, Bing via translators, googletrans,
+and pygoogletranslation), moving to the next backend when one fails, times out,
+or returns an error.
+Raise a clear error only when all backends have failed. - Enforce a configurable
+delay between outgoing requests in a thread-safe way, so that parallel workers
+do not exceed the request rate. - Support parallel translation of chunks using a
+configurable number of worker threads, with results collected in the correct
+original order. - Write the translated output to a file, using a sensible
+default naming scheme that includes the target language, and never overwrite the
+original input unless explicitly allowed.
+Write output atomically (for example, through a temporary file and rename) to
+avoid corrupted results on interruption. - Log progress, warnings about backend
+failures, and final statistics using a structured logging approach, with
+verbosity controlled from the command line. - Handle keyboard interruption
+gracefully by cancelling pending work and reporting what was completed. -
+Provide helpful error messages for missing files, unsupported languages, invalid
+arguments, and empty input, and exit with appropriate non-zero status codes on
+failure. - Accept an option to dry-run or preview the chunking plan without
+calling any translation service. ---

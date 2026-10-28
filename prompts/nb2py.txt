@@ -1,0 +1,25 @@
+Write a Python script that converts Jupyter notebook files (.ipynb) into plain
+Python source files.
+The tool should accept one or more notebook file paths (or a directory to scan
+recursively) and produce a corresponding executable Python script for each
+notebook, written to a chosen output location.
+Key behaviors: - Read each notebook using standard notebook format parsing and
+iterate over its code cells, skipping markdown and raw cells. - Preserve the
+order of code cells and separate them clearly in the output, with each cell's
+contents kept intact and readable. - Comment out IPython-specific magic commands
+(lines beginning with `%`, `%%`, or `!`), including multi-line magics that
+continue with a trailing backslash, so the resulting file remains valid Python.
+Mark each commented magic line clearly so the user can identify it. - Detect
+import statements across all cells and gather them at the top of the generated
+file so the output is organized, while keeping the original code behavior
+intact. - Optionally include markdown cell content as comments to give context,
+controlled by a command-line flag. - Process multiple notebooks in parallel
+using a configurable worker pool (default of 8 workers) to speed up batch
+conversion of large directories. - Handle errors gracefully: report unreadable
+or malformed notebooks via logging, continue processing the remaining files, and
+return a non-zero exit status if any conversion failed. - Provide a command-line
+interface with options for the input paths, output directory, worker count, and
+verbosity, along with helpful usage text. - Log progress and a final summary
+(number of notebooks converted, skipped, and failed). - Ensure output filenames
+mirror the input names with a `.py` extension and that existing files are
+overwritten only when explicitly permitted by an option. ---

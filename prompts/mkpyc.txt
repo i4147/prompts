@@ -1,0 +1,20 @@
+Write a Python script that compiles Python source files into bytecode caches in
+parallel, and reports how the total size of the working directory changed as a
+result.
+The tool should: - Accept an optional list of file paths from the command line.
+If none are given, discover all Python source files recursively under the
+current working directory, skipping anything inside version-control metadata
+folders. - Measure the total size of the current working directory before any
+work begins, and again after all compilation has finished. - Compile each Python
+file into its standard bytecode cache using the default optimization level, in
+the modern (non-legacy) cache layout. - Process files concurrently using a pool
+of worker processes that run in a spawn-safe manner, while bounding how many
+unfinished tasks are queued at once so memory use stays controlled. - Skip paths
+that do not exist and quietly ignore version-control directories, treating them
+as non-errors. - After processing, print a concise summary showing the size
+before, the size after, and the net difference, using a clear sign (+ for
+growth, - for shrinkage, and an indicator for no change) and human-readable byte
+units. - Wait for all queued work to complete before reporting, and surface any
+worker errors to the user rather than silently discarding them. - Provide a
+clean command-line entry point that runs the main routine when executed
+directly. ---

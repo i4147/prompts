@@ -1,0 +1,7 @@
+atomicio.py - one reusable atomic file writer.
+Accepts bytes / str / JSON-serializable data, preserves or sets file mode, optional backup,
+optional lock, and tolerates the legacy call styles:
+atomic_write(path, data) atomic_write(path, data, True) # backup atomic_write(path, data, 0o755) #
+mode atomic_write(path, data, "utf-8") # encoding atomic_write(path, data, other_path) # copy mode
+from file atomic_write(path, data, lock) # hold a threading.Lock
+atomic_write(path, data, original_bytes) # ignored (compat)

@@ -1,0 +1,28 @@
+Write a Python script that scans a directory tree of text-based source files
+(such as HTML, CSS, JavaScript, or Markdown) and extracts every embedded data URI resource,
+such as base64-encoded images, fonts, stylesheets, scripts, or other binary/text payloads,
+saving each one as a separate file on disk
+and rewriting the original source to reference the extracted files by relative path.
+The tool should be a command-line utility that accepts a root directory or a single file as input,
+along with options controlling the output location,
+whether files are modified in place or written to a copy,
+and whether a dry-run preview is shown without writing anything.
+It should recognize data URIs with common MIME types
+(images, fonts, JSON, JavaScript, CSS, text, PDF, video, audio, and generic binary),
+decode them correctly, and choose an appropriate file extension for each,
+falling back to a sensible default when the MIME type is unknown.
+Key behaviors: - Walk the directory tree while skipping version-control folders, caches,
+virtual environments, and other common build or dependency directories by default,
+with the option to customize skipped directories and file patterns.
+- Deduplicate identical payloads by content hash so the same resource is written only once
+  and referenced consistently across files. - Name extracted files predictably
+  (for example, using a hash-based
+  or sequential name plus theurable assative to each source file. - Process files concurrently for
+  speed while keeping output deterministic. - Handle malformed
+  or URIs gracefully by leaving them untouched
+  and reporting a warning rather than crashing. - Provide a summary report at the end listing files
+  processed, resources extracted, bytes saved, duplicates removed,
+  and any errors or skipped items. - Validate inputs and fail with clear,
+  user-friendly error missing paths, permission problems,
+  or invalid options. - Preserve the original file encoding and line endings
+  when rewriting sources. ---

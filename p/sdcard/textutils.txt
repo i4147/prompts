@@ -1,0 +1,44 @@
+Produce a Python module for text/document content analysis that provides reusable utilities to
+compute readability, composition, and lexical statistics from raw text or text files,
+intended to classify
+or score documents (e.g., against two configurable thresholds imported from a constants module,
+DOC_TH1 and DOC_TH2).
+Main requirements and notable behavior:
+1. **Module setup** - Use `from __future__ import annotations`. - Import `Counter` from
+`collections`, `lru_cache` from `functools`, `StringIO` from `io`,
+`sqrt` from `math` (aliased as `math_sqrt`), `Path` from `pathlib`,
+`compile`/`IGNORECASE`/`UNICODE` from `re` (aliased as `re_compile`, `re_IGNORECASE`, `re_UNICODE`),
+`ascii_lowercase`/`ascii_uppercase`/`digits` from `string`,
+and `TYPE_CHECKING`/`Union` from `typing`. - Import `DOC_TH1`
+and `DOC_TH2` from a local `.const` module
+and `is_binary` from a local `.fileutils` module. - Under `TYPE_CHECKING`,
+import `Sequence` from `collections.abc` for type hints only. - Combine `DOC_TH1`
+and `DOC_TH2` into a tuple constant `DOC_TH`.
+2. **Precompiled regex constants** (module-level, using the aliased `re_compile`): - `_WORD_RE`:
+matches word tokens including apostrophes, using `\b[\w']+\b` with `UNICODE` flag. - `_SENTENCE_RE`:
+splits sentences using a lookbehind for `.`, `!`, or `?` followed by whitespace. - `_MULTISPACE_RE`:
+matches one or more whitespace characters (for collapsing/normalizing whitespace). - `_URL_RE`:
+matches `http://`, `https://`, or `www.` URLs, case-insensitive. - `_HTML_RE`:
+matches HTML tags (`<...>`). - `_EMOJI_RE`:
+matches emoji and pictographic Unicode ranges
+(covering common emoji blocks such as symbols, pictographs, transport, flags, dingbats,
+and enclosed characters), with the `UNICODE` flag.
+3. **Stop words set** - Define a module-level `STOP_WORDS` set containing common short English stop
+words (articles, pronouns, conjunctions, prepositions, auxiliary verbs, and question words) in
+lowercase, used later to filter tokens for keyword/frequency analysis
+while excluding trivial filler words.
+Design the rest of the module to logically build on this foundation:
+expose helper functions (potentially cached with `lru_cache` for repeated calls) that clean text
+(stripping HTML tags, URLs, and emojis, normalizing whitespace),
+tokenize into words and sentences using the compiled regexes, filter out stop words,
+and compute statistics such as word count, sentence count, average word/sentence length,
+character composition ratios (using `ascii_lowercase`, `ascii_uppercase`, `digits`),
+word frequency distributions (via `Counter`),
+and derived numeric scores (potentially using `math_sqrt` for normalization) that can be compared
+against the `DOC_TH` thresholds to flag or classify documents.
+Include a function to read file content safely from disk
+(using `Path` and `is_binary` to skip binary files,
+using `StringIO` where streaming text construction is needed)
+and return structured results (e.g., dicts or tuples) suitable for downstream reporting,
+accepting `Union` types and `Sequence` inputs where multiple texts
+or paths may be processed in batch. ---

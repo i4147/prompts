@@ -1,0 +1,23 @@
+Write a Python script that replicates the command-line interface of the `git add` command using the
+`docopt` library for argument parsing.
+The script must: - Define a module-level docstring containing the full usage/help text for
+`git add`, formatted exactly in the docopt convention, including:
+- A `usage:` line showing the pattern `git add [options] [--] [<filepattern>...]` - A list of
+supported options with both short and long flags and brief descriptions, covering:
+`-h/--help`, `-n/--dry-run`, `-v/--verbose`, `-i/--interactive`, `-p/--patch`, `-e/--edit`,
+`-f/--force`, `-u/--update`, `-N/--intent-to-add`, `-A/--all`, `--refresh`, `--ignore-errors`,
+and `--ignore-missing` - Import `docopt` from the `docopt` package. - In the
+`if __name__ == "__main__":` block,
+call `docopt(__doc__)` to parse `sys.argv` against the docstring-defined usage pattern,
+and print the resulting dictionary of parsed arguments and options.
+Behavior notes: - The script takes no explicit function inputs;
+instead it parses command-line arguments supplied
+when the script is run (simulating the `git add` CLI). - The output is the parsed arguments
+dictionary printed to stdout,
+mapping each option/flag (e.g., `--dry-run`, `--verbose`, `<filepattern>`) to its parsed value
+(boolean, string, or list). - If the command-line input doesn't match the usage pattern
+or `-h`/`--help` is passed,
+docopt should automatically print the usage/help text (from the docstring)
+and exit. - The script serves as a minimal example/template demonstrating how docopt can be used to
+mimic a real-world git subcommand's argument parsing behavior without implementing the actual git
+functionality. ---

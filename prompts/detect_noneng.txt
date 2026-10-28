@@ -1,0 +1,32 @@
+Write a Python script that scans a directory tree for text-based source files,
+detects the natural language (script) of their content, and organizes or reports
+the results in a user-friendly way.
+The tool should accept a root directory path as its main input, along with
+command-line options that let the user control behavior such as which files to
+include or skip, size limits, and whether to actually move, copy, or only report
+findings.
+It should walk the folder structure while automatically ignoring common
+non-source directories (such as version control folders, dependency caches,
+build outputs, and virtual environments) and skip files that are too large to be
+practical to analyze.
+For each candidate file, the script should read its text, count characters
+belonging to major writing systems (for example Chinese ideographs, Japanese
+kana, Korean Hangul, Arabic script, and Latin or Cyrillic letters), determine
+the dominant language or script with a sensible threshold so that mostly-code or
+mixed files are handled gracefully, and treat files with no meaningful
+natural-language content as a separate category.
+The analysis should be robust to encoding problems, binary files, and unreadable
+paths, reporting these as errors or skips rather than crashing.
+Processing should be parallelized across multiple workers for speed, with a live
+terminal progress display showing completed count, elapsed time, and estimated
+remaining time.
+The script should produce a clear summary at the end listing how many files fell
+into each language category, along with any notable errors, and optionally write
+a detailed machine-readable report.
+It should support a dry-run mode that previews intended actions without changing
+anything on disk, and when organizing is enabled it should place files into
+per-language subfolders safely, avoiding overwrites by resolving name
+collisions.
+The output should be clean, well-structured, and suitable for both interactive
+use and scripting in automated pipelines, with appropriate exit codes indicating
+success, partial failure, or invalid input. ---

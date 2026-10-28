@@ -1,0 +1,30 @@
+Write a Python script that cleans up terminal-captured log files in place by
+stripping ANSI escape sequences, control characters, and other terminal
+formatting artifacts, while normalizing excess whitespace.
+The tool should accept a directory (or a set of paths) as input, locate all log
+files within it, and process them so that the resulting text is readable plain
+text with the original line content preserved.
+Key requirements: - **Scope**: Only target log files with a specific extension.
+Recurse through subdirectories when given a directory. - **Cleaning rules**:
+Remove color codes, cursor movement sequences, character set switching codes,
+carriage returns, shift-in/shift-out control characters, and similar terminal
+escape artifacts.
+After removing these, collapse runs of two or more spaces into a single space.
+Line endings should remain meaningful and the content otherwise untouched. -
+**Size-aware processing**: Small files should be read and rewritten in a
+straightforward way.
+Large files (above roughly 1 MB) should be handled efficiently, using
+memory-mapped or streaming access so that memory usage stays bounded, and the
+cleaned output should be written safely (for example, to a temporary file that
+replaces the original only upon success). - **Parallelism**: Process multiple
+files concurrently using a small fixed pool of workers (around four) to speed up
+batch runs. - **Robustness**: Tolerate undecodable bytes by ignoring or
+replacing them rather than crashing.
+Any per-file failure should be captured and reported without stopping the rest
+of the batch. - **Reporting**: After processing, print or return a summary that
+lists each file processed, whether it succeeded, which processing mode was used,
+and any error messages, followed by totals for successes and failures. -
+**Command-line usage**: Provide a simple command-line interface taking the
+target path(s), with clear help text and a non-zero exit status if any file
+failed. - **Safety**: Never leave a partially written file in place of an
+original if processing fails mid-way. ---

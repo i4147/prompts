@@ -3,7 +3,6 @@
 //!
 //! Everything that can be unit tested without spawning a process lives here.
 //! The two `src/bin/*.rs` files are thin argument-parsing wrappers.
-
 pub mod db;
 pub mod error;
 pub mod glob;
@@ -11,12 +10,10 @@ pub mod matcher;
 pub mod options;
 pub mod regex;
 pub mod walk;
-
 /// Help text for `locate`. Kept byte-identical to `tests/golden/locate-help.txt`.
 pub const LOCATE_HELP: &str = "\
 Usage: locate [OPTION]... [PATTERN]...
 Search for entries in a locate database.
-
   -b, --basename         match only the base name of path names
   -c, --count            only print number of found entries
   -d, --database DBPATH  use DBPATH instead of default database
@@ -34,15 +31,12 @@ Search for entries in a locate database.
       --help             display this help and exit
       --version          output version information and exit
 ";
-
 /// Version string for `locate`. Kept byte-identical to the golden file.
 pub const LOCATE_VERSION: &str = "locate (locate-rs) 0.1.0";
-
 /// Help text for `updatedb`.
 pub const UPDATEDB_HELP: &str = "\
 Usage: updatedb [OPTION]...
 Build or update a locate database.
-
   -o, --output FILE      write the database to FILE
   -l, --localpaths DIRS  colon-separated list of directories to index
   -U, --netpaths DIRS    alias for --localpaths
@@ -50,6 +44,5 @@ Build or update a locate database.
       --help             display this help and exit
       --version          output version information and exit
 ";
-
 /// Version string for `updatedb`.
 pub const UPDATEDB_VERSION: &str = "updatedb (locate-rs) 0.1.0";

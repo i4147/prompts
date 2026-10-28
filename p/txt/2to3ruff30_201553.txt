@@ -1,0 +1,35 @@
+Create a Python command-line utility script that automates converting legacy Python `print`
+statements (Python 2 style) into modern `print()` function calls by leveraging the external `ruff`
+linter/formatter as a subprocess.ose two main functions:
+1. **`convert_print_statements(file_or_dir, preview=False, dry_run=False)`**
+— The primary conversion function.
+It should: - Accept a file
+or directory path (string or Path-like object) as the target to process. - Build
+and run a `ruff check --fix --select UP010 <target>` command via `subprocess.run`,
+capturing both stdout and stderr with `text=True`
+and `check=False`. - Support an optional `preview` flag that appends `--preview` to enable ruff's
+preview mode for the rule. - Support an optional `dry_run` flag that appends `--diff` instead of
+actually applying fixes, and prear "DRY RUN" header (with a visual separator line) before running,
+so the user can see proposed changes without modifying files captured stdout normally,
+and print captured stderr to `sys.stderr`. - After execution,
+print a success message (✅) if the return code is 0 — distinguishing between "dry run complete,
+no changes made" and "successfully converted print statements in <target>"
+— or a warning message (⚠️) with the non-zero exit code otherwise,
+returning `False` in that case and `True` on success. - Gracefully handle the case
+where `ruff` is not installed by catching `FileNotFoundError`,
+printing a friendly error (❌) with installation instructions
+(`pip install ruff` or `brew install ruff` on macOS),
+and returning `False`. - Catch any other generic exception,
+print an error message (❌) with the exception details, and return `False`.
+2. **`convert_with_alternative_rules(file_or_dir, dry_run=False)`**
+— A secondary/alternative conversion function that instead targets ruff rule `T201`
+(flake8-print rule for detecting print statements) rather than `UP010`.
+It builds a similar `ruff check --fix --select T201 <target>` command,
+optionally appending `--diff` for dry-run mode,
+intended as an alternative approach for finding/handling print usage.
+The script should use `subprocess`, `sys`, `os`, and `pathlib.Path` as its core dependencies,
+use emoji-prefixed console output for clear visual feedback
+(🔍 for dry-run notice, ✅ for success, ⚠️ for warnings, ❌ for errors),
+and be structured so it can be used either as an importable module
+(calling these functions programmatically)
+or extended with a CLI entry point for command-line usage on individual files or whole directories.

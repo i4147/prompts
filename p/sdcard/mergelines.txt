@@ -1,0 +1,29 @@
+Create a Python 3 command-line script that cleans up
+and merges VLESS subscription links contained in a text file. **Purpose:** The script reads a text
+file that may contain one or more "vless://" links,
+where each link could be broken across multiple lines
+or contain stray whitespace/line breaks embedded within it
+(e.g., due to copy-pasting or wrapped text).
+It reconstructs each link into a single clean continuous line
+and outputs all cleaned links joined by newlines. **Core logic:** - Read the entire content of the
+input file. - Use a regular expression with a lookahead to split the content into chunks right
+before every occurrence of "vless://",
+so that the "vless://" delimiter is preserved at the start of each resulting chunk. - For each
+non-empty chunk, remove all whitespace characters (spaces, tabs, newlines, carriage returns, etc.)
+so the link becomes one unbroken line. - Join all cleaned links together with newline characters,
+and ensure the final merged string ends with a trailing newline. **Function requirement:** Implement
+a function `merge_vless_lines(input_file, output_file=None)` that performs the reading,
+regex-based splitting, whitespace cleanup, and merging described above,
+and returns the merged result as a string. **Command-line interface:** - First argument (required):
+path to the input text file containing raw VLESS link data.
+- Second argument (optional):
+  path to an output file. - If an output file path is given,
+  write the merged result to that file using UTF-8 encoding
+  and print a confirmation message to stdout
+  (e.g., indicating the number of links written and the output file path). - If no output file path
+  is given, print the merged result directly to stdout. **Other notable behavior:** - Handle the
+  case where the input file doesn't exist or can't be read,
+  with an appropriate error message. - Ensure the script is runnable directly from the command line
+  (e.g., via `if __name__ == "__main__":` block)
+  and provides clear usage instructions if the required input file argument is missing. - Use UTF-8
+  encoding consistently for both reading the input file and writing the output file. ---

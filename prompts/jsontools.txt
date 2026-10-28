@@ -1,0 +1,36 @@
+Write a Python script that acts as a command-line utility for parsing and
+applying custom patch rules to binary or text files.
+The tool should accept a path to a rules file and a target file (or directory of
+files) as input, and produce a modified output file or a report of the changes
+made.
+Key requirements: - **Rule file format**: Read a plain-text rules file where
+each line describes a patch rule.
+Each rule specifies a byte offset in the target file and a replacement value,
+optionally prefixed by an index that selects which occurrence or rule group it
+applies to.
+Lines that are blank, comments, or section headers should be recognized and
+skipped or handled appropriately.
+Support grouping of rules into named sections. - **Value handling**: Replacement
+values should be interpreted as raw bytes derived from the text in the rule
+(using a Latin-1-compatible mapping), with graceful handling of characters
+outside that range.
+Display values in hexadecimal form when reporting. - **Application behavior**:
+Apply the parsed rules to the target file, writing bytes at the specified
+offsets.
+Validate that offsets are within file bounds and report any rules that cannot be
+applied.
+Support a dry-run mode that reports intended changes without modifying files. -
+**Batch processing**: When given a directory, process matching files in parallel
+using multiple worker processes to speed up work on large sets, while keeping
+output and error reporting orderly. - **Output**: Print a clear, human-readable
+summary of applied, skipped, and failed rules per file, and optionally emit a
+machine-readable JSON report.
+Write modified files safely (for example, by writing to a temporary file and
+replacing the original atomically), and optionally keep a backup of the
+original. - **Command-line interface**: Provide options for the rules file,
+target path, dry-run, backup creation, output report path, worker count, and
+verbosity.
+Use clear exit codes to indicate success, partial failure, or invalid input. -
+**Robustness**: Handle missing files, malformed rule lines, permission errors,
+and interrupted runs gracefully with informative messages, without leaving
+corrupted target files behind. ---

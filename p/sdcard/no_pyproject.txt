@@ -1,0 +1,23 @@
+Write a Python module for a PyScaffold extension named `no_pyproject` that disables the generation
+of a `pyproject.toml` file in a scaffolded project.
+The module should: - Import `List` from `typing`,
+the `structure` helper module from the parent package, the `Action`, `ActionParams`, `ScaffoldOpts`,
+and `Structure` types from the `..actions` module,
+and the `Extension` base class from the local `.` package. - Define a class `NoPyProject` that
+subclasses `Extension`,
+with a class attribute `name` set to `"no_pyproject"`. - Implement an `activate` method on
+`NoPyProject` that takes a list of `Action` objects and returns a list of `Action` objects.
+It should register two actions using `self.register`:
+- A function `ensure_option`,
+registered to run `before="get_default_options"`. - A function `remove_files`,
+registered to run `after="define_structure"`. - Define a module-level function
+`ensure_option(struct: Structure, opts: ScaffoldOpts) -> ActionParams` that returns the structure
+unchanged along with a copy of `opts` updated so that `"pyproject"` is set to `False`
+and `"isolated_build"` is set to `False`
+(use dict unpacking to merge, not mutate the original dict). - Define a module-level function
+`remove_files(struct: Structure, opts: ScaffoldOpts) -> ActionParams` that removes the
+`"pyproject.toml"` entry from `struct` using `structure.reject(struct, "pyproject.toml")`,
+then returns the updated structure along with `opts` unchanged.
+Ensure correct type annotations throughout, consistent with the described signatures,
+and that the code follows the same style
+and import conventions typical of PyScaffold extension modules. ---

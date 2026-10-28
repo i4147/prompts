@@ -1,0 +1,32 @@
+Write a Python module that provides utilities for detecting
+and opening compressed archive files (tar.gz, tar.bz2, tar.zst, and zip formats).
+The module should: 1.
+Define an `ArchiveType` class (acting as a simple enum/namespace) with string constants for the
+supported archive types:
+`GZ` ("gz"), `BZ2` ("bz2"), `ZIP` ("zip"),
+and `ZST` ("z archive type detection using two str Check if the filename ends with `.tar.gz`,
+`.tar.bz2`, `.tar.zst`, or `.zip`,
+and return the corresponding `ArchiveType`. - **By magic number/file signature**:
+Open the file in binary mode, read enough leading bytes to cover the longest known magic number,
+and match it against a dictionary mapping known magic byte sequences to their archive types:
+- `\x1f\x8b\x08` → GZ -
+`\x42 → BZ2 -\x28\xb5\ first that fails ( Return `None` if neither method identifies the type.
+3. Provide a function to open an archive file given its filename,
+automatically detecting its type and returning the appropriate file-like archive object:
+- For ZIP files, return a `zipfile.ZipFile` opened in read mode. - For ZST files,
+return a custom `ZstdTarFile` object (opened in read mode) that extends `tarfile.TarFile` to support
+reading `.tar.zst` archives by internally decompressing the Zstandard stream
+(e.g., using a streaming decompression approach,
+potentially leveraging multiprocessing for parallel decompression)
+and feeding the decompressed data into the standard tar fileic. - For GZ, BZ2,
+or any other/undetected type,
+default to opening with `tarfile.open` in read mode
+(letting tarfile auto-detect gzip/bzip2/plain tar compression).
+4. Include necessary imports:
+`multiprocessing`, `tarfile`, `zipfile`,
+and `typing.Union` for type hinting
+(the open function should return `Union[tarfile.TarFile, zipfile.ZipFile]`).
+5. Use `from __future__ import absolute_import` for Python 2/3 compatibility style.
+The overall purpose is to give a unified,
+extension-and-signature-aware interface for transparently opening various compressed archive formats
+without requiring the caller to know the specific compression scheme in advance.

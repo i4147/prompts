@@ -1,0 +1,27 @@
+Write a Python script that acts as a fast command-line text search tool, similar to ripgrep,
+for recursively scanning directories and files for regex or literal pattern matches.
+The tool should accept a search pattern and one or more file or directory paths as input,
+along with options to control matching behavior, such as case sensitivity, whole-word matching,
+literal (fixed-string) mode, and inverted matching.
+It should allow users to restrict the search by file type presets
+(for example Python, Markdown, JSON, logs, JavaScript/TypeScript, Rust, Go, C/C++, Java, Ruby)
+and by glob patterns for including or excluding files, and it should skip common version-control,
+dependency, cache, and IDE directories by default.
+The script should detect and skip binary files, respect a configurable maximum file size or depth,
+and optionally follow symbolic links.
+The output should present each match with its file path, line number, and the matching line content,
+optionally showing a configurable number of lines of context before and after each match,
+and optionally highlighting the matched text.
+It should support summary modes such as counting matches per file,
+listing only the names of files that contain matches,
+and printing overall statistics (files searched, files matched, total matches, elapsed time).
+It should also offer a machine-readable JSON output mode suitable for piping into other tools.
+Searching should be parallelized across multiple CPU cores for large directory trees
+while keeping results deterministic and ordered by path and line number.
+The tool should handle encoding errors gracefully,
+report unreadable files or permission problems as warnings without aborting the run,
+and return appropriate exit codes indicating whether matches were found, no matches were found,
+or an error occurred.
+Diagnostic and operational events should be written to a log file rather than cluttering standard
+output, and the script should behave correctly when its output is piped and
+when interrupted by the user. ---

@@ -1,0 +1,3 @@
+Unified archive creation
+and cleanup tool. tar_folder.py -> python archive_merger.py tar <folder> tgzr.py -> python
+archive_merger.py tgz <folder>

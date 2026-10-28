@@ -1,0 +1,45 @@
+Build a Telegram bot in Python that helps users check whether a given Python package name exists on
+PyPI, and if not, suggests similar existing package names to help catch typos
+or typosquatting attempts.
+Key requirements: 1. **Framework & libraries**:
+Use `python-telegram-bot`
+(v20+ async style with `ApplicationBuilder`, `CommandHandler`, `MessageHandler`, `ContextTypes`) for
+the bot, `httpx.AsyncClient` for async HTTP requests,
+and `rapidfuzz` (`process.extract` with `distance.Levenshtein.normalized_similarity` as the scorer)
+for fuzzy string matching.
+Use Python's built-in `logging` module configured at INFO level.
+2. **Configuration**:
+Define a `BOT_TOKEN` placeholder constant
+and a `PYPI_SIMPLE_INDEX` constant pointing to `https://pypi.org/simple/`
+(the PyPI Simple API index page).
+3. **Package name cache**:
+Maintain a module-level global list (e.g. `_package_names_cache`) that caches all package names
+available on **`refresh_package_index` async function**:
+Fetches the PyPI simple index HTML page via `httpx`,
+parses out all package names using a regex that extracts text from `<a>` tags
+(e.g. `<a[^>]*>([^<]+)</a>`), and stores them in the global cache.
+Logs how many package names were cached.
+5. **`package_exists` async function**:
+Takes a package name string, queries the PyPI JSON API (`https://pypi.org/pypi/{name}/json`),
+and returns the parsed JSON metadata dict if the response status is 200, otherwise returns `None`.
+Use a reasonable timeout (e.g. 10 seconds).
+6. **`find_similar_packages` function**:
+Takes a package name and a limit (default 5), and if the cache is non-empty,
+uses `rapidfuzz.process.extract` with Levenshtein normalized similarity to find the closest matching
+package names from the cache.
+Returns a list of tuples `(matched_name, similarity_score)`
+where the score is normalized to a 0-100 scale rounded to 1 decimal place.
+Returns an empty list if the cache is empty.
+7. **Telegram handlers**:
+- A `start` command handler that replies with a welcome message explaining the bot's purpose
+(checking a Python package name against PyPI)
+and giving an example of how to use it. - A message handler (to be implemented) that takes a user's
+text input as a candidate package name, checks its existence via `package_exists`, and if not found,
+uses `find_similar_packages` to suggest close alternatives from the cached index, results.
+8. **Startup beh should refresh/populate the handling messages,
+so fuzzy matching has **Error handling & logging**:
+Use `raise_for_status()` on HTTP responses where appropriate,
+and log relevant events (like cache refresh completion) using the configured logger.
+The overall goal is a typo-squatting/package-name-verification assistant bot that helps developers
+avoid installing malicious or misspelled packages by checking PyPI existence
+and suggesting legitimate near-matches.

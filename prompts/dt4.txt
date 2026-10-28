@@ -1,0 +1,27 @@
+Write a Python script that translates a large text file from one language to
+another, using a free online translation service, and saves the results as
+structured JSON chunks.
+The tool should read an input text file, split its content into manageable
+chunks of a configurable size (preferably breaking at natural boundaries such as
+sentences or paragraphs), and translate each chunk independently.
+It should accept command-line arguments for the input file, output file,
+failed-items file, source and target language codes, number of concurrent
+workers, delay between requests, chunk size, and how often progress is saved.
+Key behaviors: - Translate chunks concurrently with a configurable number of
+workers, while respecting a small delay between requests to avoid rate limiting.
+- Map common ISO language codes (such as en, fr, es, de, it, pt, ru, zh, ja, ar)
+to the naming conventions expected by the translation backend, and reject
+unsupported codes with a clear error. - Retry failed translations with
+exponential backoff up to a fixed maximum number of attempts, and distinguish
+between transient errors (which should be retried) and permanent ones (which
+should be recorded and skipped). - Periodically save progress so that an
+interrupted run can resume without re-translating already completed chunks. -
+Write successfully translated chunks to the output JSON file, preserving their
+original order and including both source and translated text along with
+identifiers. - Record any chunks that could not be translated into a separate
+failed-items file so the user can review or retry them later. - Handle keyboard
+interruption (Ctrl+C) gracefully by saving current progress before exiting. -
+Log progress, warnings, and errors to the console with clear, readable messages,
+and print a final summary of successes, failures, and elapsed time. - Validate
+inputs up front (file existence, valid language codes, positive numeric
+parameters) and report problems with helpful messages instead of crashing. ---

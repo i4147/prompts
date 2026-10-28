@@ -1,0 +1,16 @@
+Write a Python script that performs optical character recognition (OCR) on a PDF
+file and outputs all of its recognized text to standard output.
+The script should accept the path to a PDF file as a command-line argument and
+process the document's pages in parallel across a configurable number of worker
+processes to speed up extraction on large documents.
+Each page should be rendered and analyzed for text using English-language OCR at
+high resolution, with full-page recognition so that scanned or image-based pages
+are captured accurately.
+The recognized text from every page should be collected in the original page
+order and joined together into a single output, with pages separated by line
+breaks.
+The script should use a sensible default level of parallelism, ensure that each
+worker efficiently opens and reuses the PDF rather than reloading it for every
+page, and release all resources cleanly when processing completes.
+It should be structured so it can also be imported and its extraction function
+called directly from other Python code, returning the full text as a string. ---

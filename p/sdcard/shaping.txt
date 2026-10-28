@@ -1,0 +1,37 @@
+Create a Python script that converts standard Persian/Farsi (Arabic-script) text into its correct
+contextual presentation forms (isolated, initial, medial, final glyph shapes),
+as used for proper visual rendering of Persian/Arabic script in contexts that don't perform
+automatic text shaping. **Purpose:** The script should take a string of Persian text written in
+standard logical Unicode characters
+and reshape each letter into the appropriate positional form based on its position within a word
+and its connectivity to neighboring letters,
+since many Arabic-script letters change glyph shape depending on whether they are isolated,
+at the start, middle,
+or end of a connected sequence of letters. **Main components/inputs/outputs:** 1.
+A data structure (e.g., a dictionary named `CHAR_FORMS`) mapping each base Persian letter to its
+four contextual presentation forms:
+`isolated`, `final`, `initial`, and `medial`,
+using the correct Unicode presentation-form codepoints (e.g., Arabic Presentation Forms-B block) for
+each letter (ا, آ, ب, پ, ت, ث, ج, چ, ح, خ, د, ذ, ر, ز, ژ, س, ش, ص, ض, ط, ظ, ع, غ, ف, ق, ک, گ, ل, م,
+ن, و, ه, ی, and any additional required letters/variants).
+2. A set or list identifying "non-connecting" letters
+(letters that never connect to the following letter, such as ا, آ, د, ذ, ر, ز, ژ, و),
+since these affect how the next letter's form is determined.
+3. A function that takes a plain Persian input string and iterates through each character,
+determining its correct contextual form by checking:
+- Whether the character is a letter present in `CHAR_FORMS`
+(otherwise leave unchanged, e.g., spaces, punctuation, digits). - Whether there is a connectable
+previous letter (one that allows connection to its right/following letter). - Whether there is a
+connectable next letter (one that allows connection to its left/preceding letter). - Based on these
+neighbor conditions, select the isolated, initial, medial, or final form accordingly.
+4. The function should return the reshaped string with each letter replaced by its correctly chosen
+presentation form, preserving the original order of characters, spaces,
+and any non-Arabic-script characters unchanged. **Notable behavior:** - Handle word boundaries
+correctly (spaces or non-letter characters reset connectivity,
+so letters adjacent to such characters should use isolated/initial/final forms as if at a word
+edge). - Correctly handle non-connecting letters so that the letter following a non-connecting
+letter is treated as if it has no connectable previous letter
+(forcing it into isolated or initial form rather than medial or final). - The script should be
+self-contained, using only built-in Python functionality (no external shaping libraries),
+and should be usable as an importable function
+or run directly on a sample string to demonstrate the reshaping output. ---

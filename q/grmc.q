@@ -1,4 +1,3 @@
-
 You are an expert python developer.
 generate a complete robust python
 script to strip comments and docstring from python files using libcst

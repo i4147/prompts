@@ -21,15 +21,15 @@ SHEBANG_MAP, TXT_EXT, get_files, and is_binary, aliased with a `DH_` prefix; on
 failure set each to None.
 Code must work when none of the optional modules are present. 2. **Constant
 tables**: - `ALIASES`: a dict[str, str] mapping equivalent extensions to a
-canonical one (e.g. `.jpeg`→`.jpg`, `.tiff`→`.tif`, `.htm`→`.html`,
-`.tgz`→`.tar.gz`). - `COMPOUND_EXTS`: a tuple of multi-part extensions treated
+canonical one (e.g. `.jpeg`â†’`.jpg`, `.tiff`â†’`.tif`, `.htm`â†’`.html`,
+`.tgz`â†’`.tar.gz`). - `COMPOUND_EXTS`: a tuple of multi-part extensions treated
 as a single unit (`.tar.gz`, `.tar.bz2`, `.tar.xz`, `.min.js`, `.min.css`). -
 `MIME2EXT`: a dict[str, str | list[str]] mapping MIME types to one or more
 candidate extensions.
 Populate it with a reasonable set of common types (text, images, archives,
 documents, audio/video, code).
 Also define text and binary extension sets, and a shebang-to-extension map
-(interpreter name → extension) used for extensionless scripts. 3. **Detection
+(interpreter name â†’ extension) used for extensionless scripts. 3. **Detection
 pipeline**: For each file, determine its detected MIME type/extension using the
 following priority order, using the first successful result: - Use
 `DH_MIME2EXT`/`DH_SHEBANG_MAP`/`dh_is_binary` when the `dh` helper is available.

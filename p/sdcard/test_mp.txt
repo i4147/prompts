@@ -1,0 +1,38 @@
+Write a Python benchmarking script that measures
+and compares the performance of multiple multiprocessing/multithreading/async helper functions
+(imported from a custom `dh` module) when applying a file-hashing task across a large set of files.
+Requirements and behavior: 1. **Imports**:
+Use `sys`, `pathlib.Path`, `time.perf_counter` (aliased as `pff`), and `loguru.logger` for logging.
+Import the following parallel-execution helper functions from a local module named `dh`:
+`get_files`, `get_sha256`, `mpf`, `mpf2`, `mpf3`, `mpf_async`, `mpf_imap`, `mpf_imapu`, `mpf_map`,
+`mpf_ppe`, `mpf_ppe_ac`, `mpf_starmap`, `mpf_tpe`.
+2. **Helper function `process_file(fp)`**:
+Takes a file path and returns its SHA-256 hash by calling `get_sha256(fp)`.
+3. **Helper function `measure_time(func_to_process, filez)`**:
+- Accepts a parallel-execution function
+and a list of `Path` objects. - Records the start time using `perf_counter`. - Calls
+`func_to_process(process_file, filez)`,
+passing the `process_file` function
+and the file list to be processed in parallel. - Records the end time,
+computes the elapsed duration. - Logs the function's string representation
+and the elapsed time (formatted to 3 decimal places, in seconds) using `loguru.logger.info`. -
+Returns `None`.
+4. **`main()` function**:
+- Sets the target directory to `~/projects` using `Path.home()`. - Retrieves the list of files in
+that directory via `get_files(cwd)`. - Builds a list of parallel-execution functions to benchmark:
+`mpf`, `mpf2`, `mpf3`, `mpf_async`, `mpf_imap`, `mpf_map`, `mpf_ppe`, `mpf_ppe_ac`, `mpf_tpe`,
+`mpf_starmap` (note: `mpf_imapu` is imported but intentionally not included in this benchmark list).
+- Runs the entire benchmark suite 6 times (a loop from 1 to 6 inclusive) to gather repeated timing
+  measurements for each function,
+  calling `measure_time` for every function in the list on every iteration. - Returns nothing
+  explicitly (implicit `None`).
+  5. **Script entry point**:
+  Under `if __name__ == "__main__":`,
+  call `sys.exit(main())` so the script exits with `main()`'s return value
+  (which is `None`, resulting in a normal exit code of 0).
+The overall purpose of the script is to empirically benchmark
+and compare the execution time of different parallelization strategies
+(multiprocessing variants, thread pool, process pool, async, map/starmap/imap variants) provided by
+the `dh` utility module,
+using SHA-256 hashing of all files under the user's `~/projects` directory as the workload,
+with results logged via `loguru` for each run. ---

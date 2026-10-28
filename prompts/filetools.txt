@@ -1,0 +1,30 @@
+Write a Python script that analyzes a directory tree on the local filesystem and
+reports on files whose creation (birth) time falls within a recent window, with
+optional handling of matching files based on that analysis.
+The tool should be a command-line utility that accepts a root directory path to
+scan, along with options controlling the time window (for example, a number of
+minutes or a fixed 24-hour lookback) and whether to only report or to take an
+action such as copying or moving the matching files to a destination folder.
+Key behaviors to include: - Recursively walk the given root directory, skipping
+version-control and Python cache directories so they never appear in results or
+get traversed. - For each file, determine its creation/birth timestamp where the
+operating system supports it (for example, on Linux via low-level file status
+queries), and fall back gracefully to another reasonable timestamp or skip the
+file when birth time is unavailable.
+Handle permission errors, broken symlinks, and files that disappear mid-scan
+without crashing. - Compare each file's creation time against the current UTC
+time and the requested window, selecting only the files created within it. -
+Process file checks in parallel using a bounded pool of workers to keep scanning
+fast on large trees, while showing a progress indicator in the terminal. -
+Display the results in a readable, color-coded terminal output that lists each
+matching file with its relative path and a human-readable creation timestamp,
+plus a summary count at the end. - When an action option is selected, copy or
+move the matching files into a specified output directory, preserving their
+relative directory structure, creating folders as needed, and avoiding
+overwriting existing files by renaming or reporting conflicts. - Validate all
+arguments up front, print clear error messages for invalid paths or options, and
+return appropriate exit codes (zero on success, non-zero on failure or invalid
+input). - Support a dry-run mode that reports what would be copied or moved
+without modifying the filesystem. - Keep the script self-contained, runnable
+directly from the command line, and well-documented with a helpful usage/help
+message. ---

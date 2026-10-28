@@ -1,0 +1,38 @@
+Write a pytest test suite for a `get_files` function imported from a module named `dh`.
+The function under test is expected to recursively discover files within a directory tree
+and optionally filter them by file extension and/or by whether they have no extension at all.
+Requirements for the test suite: 1. **Fixture `setup_test_directory`**:
+Using pytest's `tmp_path` fixture,
+build a temporary directory structure named `test_root` that contains:
+- Several regular files directly inside the root with various extensions
+(`.txt`, `.log`, `.py`, `.json`)
+and some files with no extension at all (e.g., `document`, `config_file`). - Two subdirectories
+(`subdir1`, `subdir2`),
+each containing a mix of files with extensions (`.txt`, `.zip`, `.py`, `.log`)
+and files without extensions (e.g., `readme`, `notes`). - A set of "target" regular files in the
+root used as symlink targets:
+one with a `.txt` extension, one with a `.log` extension,
+and one with no extension. - A `symlink_dir` subdirectory containing symbolic links pointing to the
+target files (e.g., `link_to_txt.txt`, `link_to_log.log`, `link_to_no_ext`),
+to verify that the function correctly handles/resolves symlinked files alongside regular files. -
+Additional symlinks created directly in the root directory that point to other regular files in the
+structure (e.g., a `.log` symlink pointing to `file2.log`),
+to further test symlink traversal
+and extension detection. - The fixture should return the path to the root directory
+(and any other data needed by the tests, such as expected file lists) so test functions can use it.
+2. **Test functions** that use this fixture to verify `get_files` behavior, such as:
+- Retrieving all files recursively from the root directory with no filter applied,
+confirming both subdirectory files
+and symlinked files are included. - Filtering files by a specific extension
+(e.g., `.txt`, `.log`, `.py`)
+and confirming only matching files (including matching symlinks) are returned. - Filtering for files
+with no extension and confirming only extensionless files (including extensionless symlinks) are
+returned. - Verifying correct behavior when combining extension filtering with nested subdirectories
+and symlinked directories. - Verifying the function does not include directories themselves in the
+results, only files.
+Use `pathlib.Path` throughout for path handling, write file contents with `write_text`,
+create directories with `mkdir()`, and create symbolic links using `Path.symlink_to()`.
+Organize assertions to compare actual results from `get_files` against expected sets/lists of
+filenames or paths derived from the fixture setup.
+Ensure the tests cover edge cases around mixed extensions, missing extensions, nested directories,
+and symlink resolution. ---

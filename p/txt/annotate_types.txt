@@ -1,0 +1,27 @@
+Write a Python function named `archive_existing_file` that safely archives (moves) an existing file
+into a predefined archive directory before it gets overwritten or replaced elsewhere in a script.
+Requirements: - The function signature should be `archive_existing_file(file_path: Path) -> None`,
+using `pathlib.Path`. - It relies on a module-level constant `ARCHIVE_DIR` (a `Path` object) that
+defines the destination archive directory. - Behavior: 1.
+If `file_path` does not exist, the function should do nothing and return immediately.
+2. If the archive directory does not exist, create it (including any necessary parent directories),
+without raising an error if it already exists.
+3. Determine the destination path inside `ARCHIVE_DIR` using the original file's name.
+4. If a file with the same name already exists in the archive directory,
+avoid overwriting it by appending an incrementing numeric counter (starting at 1) to the file's stem
+(e.g., `filename_1.ext`, `filename_2.ext`, etc.) until a free filename is found.
+5. Move the original file to the computed archive path using `shutil.move`.
+6. On success, print a confirmation message showing the archive destination,
+prefixed with a package emoji (📦), e.g. `"📦 Archived to: <archive_path>"`.
+7. If the move operation fails due to an `OSError`,
+print an error message prefixed with a cross mark emoji (❌) including the exception details to
+`stderr`, and exit the program with a non-zero status code using `sys.exit(1)`.
+Inputs/Outputs: - Input: a single `Path` object representing the file to archive. - Output:
+no return value (`None`);
+the function performs a filesystem side effect (moving a file)
+and prints status messages to stdout/stderr.
+Notable behavior/details to preserve:
+- Use `shutil.move` for the actual file move operation. - Use `sys.stderr` for error output
+and `sys.exit(1)` to terminate on failure. - Ensure uniqueness of the archived filename by checking
+existence in a loop and incrementing a counter suffix. - Use `mkdir(parents=True, exist_ok=True)`
+semantics when creating the archive directory.

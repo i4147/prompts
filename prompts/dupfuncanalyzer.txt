@@ -1,0 +1,28 @@
+Write a Python script that analyzes a collection of Python source files to
+detect functions that are duplicated across the codebase, and then produces a
+consolidated report or refactoring output identifying those repeated
+definitions.
+The tool should accept a directory (or set of files) as input, scan every Python
+file within it, and examine the top-level function definitions in each file.
+Two functions should be considered duplicates when their normalized source text
+matches, so the comparison should ignore insignificant differences such as
+leading/trailing whitespace and trailing spaces on lines.
+The analysis should track, for each unique function signature (name plus a
+definition identity), which files it appears in, and group together all
+occurrences that share identical implementations.
+Key behaviors: - Process files in parallel to handle large codebases
+efficiently, using a configurable worker pool with a sensible default size. -
+Read files as UTF-8, and gracefully skip or report files that cannot be read or
+parsed, without aborting the whole run. - Produce a single output file (with a
+configurable name and a sensible default) that lists each repeated function, the
+files where it occurs, and its source code, so a developer can review or
+consolidate it. - Optionally generate a shared module containing one canonical
+copy of each repeated function, and rewrite the original files so they import
+that canonical definition from a configurable module name instead of redefining
+it, while preserving the rest of each file's content. - Provide a command-line
+interface that lets the user specify the target path, output location, worker
+count, and whether to apply the consolidation. - Print a concise summary to the
+console indicating how many files were scanned, how many repeated functions were
+found, and where the report was written. - Handle edge cases such as no
+duplicates found, files with syntax errors, empty files, and non-Python content
+gracefully with clear messages. ---

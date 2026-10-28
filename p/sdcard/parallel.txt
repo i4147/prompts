@@ -1,0 +1,40 @@
+Write a Python utility module that provides a simplified interface for running functions in parallel
+across multiple processes using the `multiprocessing` module,
+mimicking the ergonomics of async task submission
+and gathering (similar in spirit to `concurrent.futures`).
+The module should include:
+1. **An import section** using `from __future__ import annotations`,
+and importing `multiprocessing as mp`, `Future` from `concurrent.futures`,
+and typing helpers (`Any`, `Callable`, `Iterable`, `List`, `Optional`, `Tuple`).
+2. **A function `apply_async_map`** that:
+- Accepts a callable `func`, an iterable of positional-argument tuples `tasks`,
+an optional iterable of keyword-argument dicts `kwargss`, an optional `processes` count,
+a `chunksize` integer (default 1),
+and optional `callback`/`error_callback` functions. - If `processes` is `None`
+or less than/equal to 0,
+defaults to the number of CPU cores available
+(via `mp.cpu_count()`, falling back to 1 if that returns a falsy value). - Creates a
+`multiprocessing.Pool` with the determined number of processes. - Converts `tasks` into a list;
+if `kwargss` is provided, converts it to a list as well,
+otherwise builds a list of empty dicts matching the length of the tasks list. - Iterates over the
+paired args/kwargs, submitting each task to the pool via `pool.apply_async`, passing `args`, `kwds`,
+`callback`, and `error_callback`. - Collects all the returned `AsyncResult` objects into a list. -
+Closes the pool (via `pool.close()`) after submitting all tasks (without blocking/joining). -
+Returns the list of `AsyncResult` objects. - Note:
+the `chunksize` parameter is accepted for interface consistency
+but is not actually used in the per-task `apply_async` submission logic.
+3. **A function `gather`** that:
+- Accepts a list of `AsyncResult` objects
+and an optional `timeout` value. - Iterates over the results,
+calling `.get(timeout=timeout)` on each one to block
+until the result is available (or raise on timeout/exception).
+- Returns a list of the retrieved results in the same order as the input.
+  4. **A function `shutdown`** that:
+  - Accepts a `multiprocessing.Pool` object. - Calls `.join()` on it to wait for all worker
+  processes to finish, then calls `.terminate()` to forcibly clean up the pool.
+Include complete type hints throughout
+(e.g., `List[mp.pool.AsyncResult]`,
+`List[Future[Any]]` as the declared return type of `apply_async_map` even
+though actual returned items are `AsyncResult` objects).
+Keep the code concise, with no additional error handling, logging,
+or docstrings beyond what's described. ---

@@ -1,0 +1,24 @@
+Write a Python `setup.py` file for packaging a Python library using `setuptools`.
+The script should import `setup` and `find_packages` from `setuptools`,
+then call `setup()` with the following configuration: - `name`:
+a placeholder value `"PACKAGE_NAME"` - `version`: `"0.7.9"` - `url`:
+`"https://github.com/isaac4ever/"` - `license`: `"MIT"` - `author`:
+`"Isaac Onagh"` - `author_email`: `"mkalafsaz@gmail.com"` - `description`:
+an incomplete placeholder string `"Python package to"` - `packages`:
+use `find_packages()` to automatically discover all packages - `zip_safe`:
+`False` - `include_package_data`: `True` - `platforms`: `"any"` - `install_requires`:
+an empty list (no dependencies) - `download_url`:
+`"https://github.com/username/repo_name/tarball/0.1"` - `classifiers`:
+a list of PyPI trove classifiers including:
+- `"Environment :: Web Environment"` - `"Intended Audience :: Developers"` -
+`"License :: Other/Proprietary License"` - `"Operating System :: OS Independent"` -
+`"Programming Language :: Python"` - `"Topic :: Internet :: WWW/HTTP :: Dynamic Content"` -
+`"Topic :: Software Development :: Libraries :: Python Modules"` The purpose of the script is to
+define the packaging metadata needed to build
+and distribute this Python package (e.g., via `pip install` or upload to PyPI).
+It takes no runtime input and produces no direct output when imported,
+but when executed with setuptools commands (such as `sdist`, `bdist_wheel`, or `install`),
+it outputs a built/installed Python package based on the specified metadata.
+Keep all field values exactly as listed,
+including the placeholder `name` and incomplete `description`,
+without completing or correcting them. ---

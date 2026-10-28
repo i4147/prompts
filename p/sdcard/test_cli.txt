@@ -1,0 +1,38 @@
+Write a Python script named `tests/test_cli.py` that implements an end-to-end test suite for a
+`prettier`-like code formatting library,
+covering both its command-line interface (CLI) and its multiprocessing-based file processor.
+The suite must be runnable directly with `python tests/test_cli.py` (no pytest dependency required),
+while still containing plain `test_*` functions that pytest could also discover and run.
+The script should: - Import from the `prettier` package:
+the top-level module (for `__version__`), `Options`, `check`, `format`,
+`format_file` from the public API, `main` and `resolve_paths` from `prettier.cli`,
+and `WORKERS` and `format_files` from `prettier.processor`. - Use only standard library modules
+otherwise (`contextlib`, `io`, `sys`, `tempfile`, `pathlib.Path`),
+plus `from __future__ import annotations`. - Include a helper function `_capture(args, stdin=None)`
+that invokes the CLI's `main(args)` entry point while redirecting `sys.stdin`, `sys.stdout`,
+and `sys.stderr` to in-memory `io.StringIO` buffers (feeding `stdin` as input if provided).
+It must catch `SystemExit` raised by `main`, treat a non-integer or missing exit code as `0`,
+always restore the original `sys.stdin`/`stdout`/`stderr` in a `finally` block,
+and return a tuple `(exit_code, captured_stdout, captured_stderr)`. - Include individual test
+functions (each named `test_*`, taking no arguments,
+using plain `assert` statements — no pytest fixtures or markers) that verify:
+- The library's version string matches the expected value.
+- The basic formatting API (`format` with `Options(parser="babel")`) produces the expected formatted
+  output for a simple JS snippet. - Formatting is idempotent
+  — formatting already-formatted code twice yields the same result as formatting it once. - The
+  `--check` CLI flag correctly reports whether a file
+  (written to a temporary directory/file using `tempfile.TemporaryDirectory` and `pathlib.Path`) is
+  already formatted, via the captured exit code, stdout,
+  and stderr from `_capture`. -
+  (Additional similar tests, following the same patterns, should cover other CLI flags/options,
+  `resolve_paths` behavior for discovering/filtering files,
+  `format_file` for in-place/file-based formatting,
+  and the multiprocessing `format_files`/`WORKERS` processor for handling multiple files
+  concurrently, checking exit codes, output messages, and resulting file contents.) - At the bottom,
+  include a runner block (executed when the script is run as `__main__`, not via pytest) that
+  collects all module-level functions whose names start with `test_`, runs each one in turn,
+  prints a pass/fail status (and the exception on failure) for each,
+  and exits with a non-zero status code if any test failed, otherwise exits with code 0.
+Keep the tests self-contained, deterministic,
+and free of external network
+or filesystem side effects outside of temporary directories created per-test. ---

@@ -1,0 +1,38 @@
+Write a Python module (using `from __future__ import annotations` and `typing.Iterable`) that
+implements a simple spelling-suggestion utility based on Levenshtein edit distance.
+It must contain exactly two public functions:
+1. `levenshtein_distance(left: str, right: str) -> int`:
+Computes the Levenshtein (edit) distance between two strings using an iterative dynamic-programming
+approach with two rolling rows (`previous` and `current`) instead of a full 2D matrix,
+for memory efficiency.
+It should include early-exit shortcuts:
+return 0 if the strings are equal, return `len(right)` if `left` is empty,
+and return `len(right_ `... actually return `len(right)`/`len(left)` appropriately if either
+string is empty.
+The core loop iterates over each character of `left` (1-indexed via `enumerate(..., start=1)`),
+builds a `current` row starting with the row index,
+and for each character of `right` (also 1-indexed) computes insertion cost, deletion cost,
+and substitution cost (adding 0 or 1 depending on whether characters differ),
+taking the minimum of the three.
+After processing each character of `left`, `previous` is replaced by `current`.
+The function returns the last value of `previous` (the bottom-right cell of the conceptual matrix).
+2. `suggest(word: str, dictionary_words: Iterable[str], *, limit: int = 5, max_distance:
+int = 2) -> list[str]`:
+Generates spelling suggestions for a potentially misspelled `word` by comparing it against a
+provided iterable of dictionary words.
+Behavior and notable details:
+- Lowercases the input `word` before comparison. - Pre-filters candidate words to only those
+whose length differs from `word`'s length by at most `max_distance`
+(a cheap pruning step to avoid unnecessary distance computations). - Computes the Levenshtein
+distance between `word`
+and each remaining candidate using `levenshtein_distance`. - Ranks all candidates by a tuple key of
+`(distance, candidate)`,
+so lower distances come first and ties are broken alphabetically. - Filters out any candidates
+whose distance exceeds `max_distance`. - Returns at most `limit` suggestions as a list of strings,
+in ranked order.
+Keep both functions' signatures, parameter names, default values (`limit=5`, `max_distance=2`),
+and docstrings as single-line descriptive docstrings
+("Calculate the Levenshtein distance between two strings."
+and "Generate spelling suggestions for a misspelled word.").
+Do not add any additional functions, classes, imports,
+or side effects (no I/O, no printing, no external dependencies beyond the standard library). ---

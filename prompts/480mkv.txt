@@ -1,0 +1,10 @@
+Write a Python script that takes a text file path as a command-line argument,
+reads its contents as UTF-8, and filters the lines to keep only those that point
+to video files in either MKV or MP4 format at the lowest available resolution:
+it should prefer 480p if any line mentions it, and otherwise fall back to 720p.
+Ignore blank or whitespace-only lines.
+Overwrite the original file so it contains only the matching lines, joined by
+newlines, and print to the console how many matching links were found.
+The script should handle the case where no lines match by still reporting a
+count of zero, and it should be robust to typical file paths and encoding of the
+input file. ---

@@ -1,0 +1,19 @@
+Write a Python script that scans a project directory tree for Python source
+files and automatically migrates deprecated `pkg_resources` usage to the modern
+`importlib` equivalents.
+The tool should accept a root directory path (and optionally a flag to perform a
+dry run or to apply changes in place) from the command line, recursively locate
+`.py` files while skipping common non-source directories such as version control
+folders, virtual environments, caches, and build artifacts, and process the
+files in parallel to speed up large codebases.
+For each file, it should apply a set of pattern-based rewrites that convert
+calls for retrieving distribution versions, reading package resource contents as
+bytes or text, and obtaining resource file paths into their corresponding
+`importlib.metadata` and `importlib.resources` forms, while ensuring the
+necessary `importlib` imports are added when a rewrite requires them and
+preserving the rest of each file's content exactly.
+The script should report which files were changed (or would be changed in
+dry-run mode), summarize the total number of files scanned and modified, handle
+unreadable or non-UTF-8 files gracefully by logging a warning and continuing,
+and exit with a clear status code indicating success, the presence of changes in
+check mode, or an error. ---

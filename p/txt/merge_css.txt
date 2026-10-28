@@ -1,0 +1,4 @@
+Unified CSS Merger and Minifier.
+Usage Examples: python merged.py join # Original joincss.py behavior python merged.py join
+--font-dir /local/fonts # Join with custom font rewrite path python merged.py minify # Original
+mergecss.py behavior python merged.py minify -i "*.css" -o out.css # Minify specific files to output

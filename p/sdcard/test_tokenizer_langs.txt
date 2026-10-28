@@ -1,0 +1,50 @@
+Write a Python test suite (using plain `assert` statements, pytest-style test functions) for the
+`pycspell.tokenizer_langs` module that validates the behavior of a language-aware text tokenizer
+used for spell-checking purposes.
+The module under test exposes:
+- A `Language` enum (with at least `ENGLISH` and `PYTHON` members). - A `LanguageTokenizer` class
+that is instantiated with a `Language` value
+and provides a `tokenize(text, include_compounds=False)` method returning an iterable of
+token objects.
+Each token object has at least a `.word` attribute (the extracted word string)
+and a `.context` attribute
+(indicating how the token was derived,
+e.g. `"compound"` for sub-words extracted from compound identifiers). - A
+`split_compound_word(word, config)` function that splits a single compound identifier
+(e.g. camelCase or snake_case) into its constituent lowercase parts based on a given tokenizer
+configuration. - A `TokenizerConfig` class/type, along with two preconfigured instances:
+`PYTHON_CONFIG` and `JAVASCRIPT_CONFIG`,
+representing language-specific tokenization rules (e.g. snake_case vs camelCase conventions).
+The test suite must include the following test functions,
+each with no parameters and no return value:
+1. `test_english_tokenization` — Creates a `LanguageTokenizer` for `Language.ENGLISH`,
+tokenizes the string `"Hello, world!"` with `include_compounds=False`,
+and asserts that the resulting list of word strings equals `["Hello", "world"]`
+(punctuation excluded, case preserved).
+2. `test_python_tokenization` — Creates a `LanguageTokenizer` for `Language.PYTHON`,
+   tokenizes the code snippet `"my_variable = some_function()"` with `include_compounds=False`,
+   and asserts that `"my_variable"`
+   and `"some_function"` are both present among the extracted words
+   (i.e. identifiers are captured as whole tokens rather than being split by default).
+   3.
+`test_camel_case_split`
+— Uses `JAVASCRIPT_CONFIG` to call `split_compound_word("myVariableName", config)`
+and asserts that the resulting set of parts equals `{"myvariablename", "variablename", "name"}`,
+demonstrating that camelCase splitting produces the full lowercased word plus progressively shorter
+suffix combinations.
+4. `test_snake_case_split`
+— Uses `PYTHON_CONFIG` to call `split_compound_word("my_variable_name", config)`
+and asserts that `"my"`, `"variable"`, and `"name"` are all present in the result,
+demonstrating that snake_case identifiers are split on underscores into individual components.
+5. `test_compound_word_tokens` — Creates a `LanguageTokenizer` for `Language.PYTHON`,
+   tokenizes the string `"myVariable"` with `include_compounds=True`,
+   and asserts that more than one token is returned (the original word plus its compound sub-parts)
+   and that the set of token contexts includes the string `"compound"`,
+   confirming that compound-word decomposition is correctly tagged in the output.
+Import all required names
+(`Language`, `LanguageTokenizer`, `split_compound_word`, `TokenizerConfig`, `PYTHON_CONFIG`,
+`JAVASCRIPT_CONFIG`) from `pycspell.tokenizer_langs`.
+Each test function should include a brief inline comment
+where helpful (as in the compound token test)
+and use direct `assert` statements rather than a test framework's assertion helper methods,
+so the tests are compatible with pytest's assertion rewriting. ---

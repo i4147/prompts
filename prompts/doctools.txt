@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line utility for organizing and
+exporting files from a local directory tree, with a set of subcommands selected
+via command-line arguments.
+The tool should accept an input path (a file or a directory) and an output
+location, and should be able to filter files by extension, optionally recursing
+into subdirectories.
+It should handle chat-export style text or JSON files as a primary use case:
+read an exported conversation file, validate that it exists and is well-formed,
+and convert it into a cleaner, normalized output format such as Markdown or
+plain text, with a clear per-message structure including speaker, timestamp when
+tool should also provide supporting file-management behaviors: when a
+destination file already exists, it must never silently overwrite it and should
+instead generate a unique non-conflicting name.
+It should log progress messages to the console with clear informational,
+warning, and error levels, sending warnings and errors to the error stream while
+keeping informational output on the standard stream.
+Errors such as missing input files should produce a clear message and a non-zero
+exit status rather than an unhandled crash.
+Where batch processing is involved, the tool should be able to process many
+files efficiently, optionally in parallel across multiple worker processes, and
+should report a summary of successes, skips, and failures at the end.
+It should compute and optionally report content fingerprints for files so that
+duplicates can be identified.
+Where external tooling is needed (for example, to inspect or convert media or
+archives), the script should check that the required system command is available
+and fail gracefully with a helpful message if it is not.
+The script should be invoked with clearly named subcommands and standard help
+text, validate all arguments before doing work, and be structured so that each
+subcommand is independently testable.
+It should run as a standalone script with a conventional entry point and return
+a meaningful process exit code. ---

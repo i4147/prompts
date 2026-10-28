@@ -1,0 +1,28 @@
+Write a Python script that acts as an interactive terminal viewer for PDF
+documents, letting a user read long PDF content one screen at a time directly in
+the console.
+The tool should accept one or more PDF file paths (and optionally a page range
+or similar selection options) from the command line, with a clear help message
+describing usage.
+For each requested PDF, it should extract the text of each page, split long page
+text into manageable parts that fit the current terminal width and height, and
+then present those parts as successive "screens" in the terminal.
+Each screen should display a header line showing the page number, the part
+position within that page, and the screen position overall, followed by the text
+content.
+Key behaviors: - Process multiple PDF files efficiently, using parallel workers
+where it makes sense so that extraction of large documents does not block the
+interface. - Clear the terminal before rendering each screen and respect the
+current terminal dimensions so text wraps cleanly and the header is sized to
+fit. - Accept keyboard input in raw/single-keystroke mode so the user can move
+forward and backward through screens, jump between pages, and quit at any time,
+without needing to press Enter.
+Restore the original terminal settings reliably on exit, including after errors
+or interruptions. - Handle missing files, non-PDF inputs, PDFs with no
+extractable text, and extraction errors gracefully with informative messages
+written to the log rather than crashing the session. - Use a logging library to
+record progress, warnings, and errors, keeping normal console output clean for
+the reading interface. - Create and clean up any temporary files used during
+processing. - Provide a non-interactive fallback or option (for example, dumping
+all text to standard output) for use when the input is not a terminal. - Exit
+with a meaningful status code indicating success, usage error, or failure. ---

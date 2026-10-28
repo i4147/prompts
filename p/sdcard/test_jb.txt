@@ -1,0 +1,59 @@
+Write a prompt that specifies the following requirements for an AI coding agent:
+--- Create a Python command-line tool named `json_prettifier.py` (importable as module `jb`) that
+acts as a JSON beautifier/minifier,
+and write a comprehensive unittest-based test suite for it named `test_jb.py`. **Purpose**:
+The tool reads JSON input (from a file path argument or stdin)
+and outputs either a nicely indented ("beautified") version
+or a compacted ("minified") version of the JSON,
+with a custom formatting style for the beautified output that differs from Python's default
+`json.dumps(indent=...)` behavior
+(e.g., custom placement of brackets/commas, custom indentation rules for nested dicts/lists,
+and consistent handling of empty `{}` and `[]`). **Main inputs**: - A JSON source:
+either a file path passed as a command-line argument,
+or JSON text piped via stdin
+when no file path is given. - Command-line flags/options to control behavior,
+such as choosing minify vs beautify mode, custom indentation size,
+and possibly an option to write output to a file instead of stdout. **Main outputs**:
+- Printed (or file-written) JSON text:
+either compactly minified (no unnecessary whitespace)
+or beautified using the tool's custom formatting function. - Non-zero exit code
+and an error message written to stderr when input is invalid JSON, the file doesn't exist,
+the file can't be read (e.g., permission errors),
+or other I/O/OS errors occur. **Notable behavior to implement and test**: 1.
+A core function `custom_format(obj, ...)` that recursively converts a parsed JSON object
+(dict, list, string, number, bool, None) into a custom-formatted string:
+- Empty dict formats as `{}`
+and empty list as `[]` (no extra whitespace/newlines). - Scalars format using JSON-compatible
+representations: integers/floats as-is, `None` as `null`, booleans as `true`/`false`,
+strings with proper JSON string escaping/quoting. - Nested dicts and lists are indented consistently
+and recursively.
+2. A function to minify JSON
+(parse and re-serialize with no extraneous whitespace, preserving key order).
+3. A main entry point / CLI handling function that:
+- Reads JSON from a given file path if provided as an argument,
+otherwise reads from stdin. - Supports an option/flag to select minify mode vs. beautify
+(custom format) mode. - Handles and reports errors gracefully:
+invalid/malformed JSON input, missing files, unreadable files (permission denied),
+and other OS-level errors
+— printing descriptive messages to stderr
+and returning/exiting with a non-zero status rather than raising uncaught exceptions. - Optionally
+supports writing the result to an output file instead of printing to stdout. **Testing
+requirements**: - Use Python's built-in `unittest` framework,
+runnable via `python -m unittest test_jb -v`. - Import the module under test as
+`import json_prettifier as jb`. - Define a base test case class (e.g., `FileTestCase`) that sets up
+a fresh temporary directory per test (using `tempfile.TemporaryDirectory`),
+exposes it as `self.tmp` (a `pathlib.Path`),
+and provides a helper `write(name, content)` method that creates a file with given text content
+inside the temp directory and returns its `Path`.
+Clean up the temp directory in `tearDown`. - Include a test class `TestCustomFormat` covering
+`custom_format`, with test cases for:
+empty dict, empty list, scalar values (integers, `None`, booleans),
+and strings (including proper quoting/escaping). - Include additional test classes covering:
+minification behavior, CLI/main function behavior reading from a file argument, reading from stdin,
+error handling for invalid JSON content, error handling for non-existent files,
+error handling for permission-denied files
+(using `os.chmod`/`stat` to simulate restricted permissions),
+and verifying correct exit codes
+and stderr messages using `io.StringIO`/`contextlib.redirect_stdout`/`redirect_stderr`
+and `unittest.mock` where appropriate. - Ensure tests are isolated, deterministic,
+and do not leave temporary files behind. ---

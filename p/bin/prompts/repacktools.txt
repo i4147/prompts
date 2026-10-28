@@ -1,0 +1,39 @@
+Write a Python script that acts as a wheel repackaging
+and maintenance tool for Python distribution archives.
+It should accept one or more wheel files (or a directory containing wheels) as input,
+along with command-line options that control the operation mode, output location,
+and processing behavior, and produce repackaged,
+validated wheel outputs as well as a machine-readable report.
+The tool should support the following high-level behaviors:
+- Inspect each wheel archive
+and read its metadata (package name, version, tags, and the metadata describing the distribution),
+reporting the contents in a structured way. - Repackage a wheel by rebuilding its archive with
+corrected or updated metadata,
+such as regenerating the record of file hashes and sizes for every entry,
+so that the resulting wheel is internally consistent
+and installable. - Optionally modify the platform
+or compatibility tags of a wheel
+(for example, to retarget it to a different platform or Python version),
+with the new filename reflecting the change. - Verify wheel integrity:
+check that the hashes and sizes recorded for each file match the actual contents,
+and report any mismatches, missing entries,
+or malformed metadata without crashing on a single bad file. - Process many wheels efficiently,
+with an option for parallel execution across available CPU cores and an optional progress indicator
+when a progress library is available,
+falling back gracefully to plain execution otherwise. - Support a dry-run mode that describes what
+would be changed without writing any output files. - Allow running an external command
+or subprocess (such as an installer check) against produced wheels and capture its result,
+with clear reporting of success
+or failure. - Optionally run asynchronous checks on a set of wheels concurrently
+when requested. - Produce a summary at the end listing each processed file, its status,
+any warnings or errors, and aggregate counts,
+and optionally export this summary as CSV or JSON. - Log progress
+and problems through a standard logging facility with configurable verbosity. - Use safe,
+atomic file handling so that partially written outputs are never left in place after a failure,
+and clean up temporary files reliably. - Return a meaningful process exit code:
+zero when all operations succeed, non-zero when any wheel fails validation or processing,
+with errors for invalid arguments reported clearly. - Gracefully handle optional capabilities:
+if the wheel-building helper is unavailable,
+provide a clear message
+or fallback rather than crashing. - Ensure the tool runs on common operating systems
+and reports platform information when verbose output is requested. ---

@@ -1,0 +1,46 @@
+Write a Python module that provides utilities to detect whether a file is binary or text-based,
+using multiple complementary heuristics.
+The module should implement the following functions:
+1. `is_text_by_extension(path: Path) -> bool`
+— Checks whether a file's extension matches a predefined set of known text file extensions
+(referenced via a constant like `TXT_EXT`),
+returning True if it is considered a text file by extension.
+2. `has_null_bytes(data: bytes) -> bool`
+— Inspects a chunk of raw bytes and returns True if it contains any null byte (`\x00`),
+which is a strong indicator of binary content.
+3. `matches_binary_signature(data: bytes) -> bool`
+— Checks whether the given bytes start with any known binary file signature (magic number),
+  based on an internal dictionary mapping common binary signatures
+  (e.g., JPEG, PNG, GIF, BMP, ICO, WebP/WAV/AVI, HEIF/MP4, ZIP, GZIP, BZIP2, XZ, 7z, RAR, RPM, ELF,
+  PE, Mach-O, PDF, OLE2, SQLite, PostScript, MP4, MP3, OGG, FLAC, Flash,
+  etc.) to their format names.
+Returns True if any signature matches the start of the data.
+4. `heuristic_is_binary(data: bytes, threshold: float = 0.3) -> bool`
+— Performs a statistical heuristic check on raw bytes to estimate whether the content is binary.
+It defines a set of "text-like" byte values
+(printable ASCII range 32–126, common whitespace control characters 9/10/13,
+and all extended bytes 128–255), counts how many bytes in the data fall outside this set,
+computes the ratio of non-text bytes, and returns True if this ratio exceeds the given threshold.
+Returns False for empty data.
+5. `is_binary(path: Path, first_8kb: Optional[bytes] = None) -> bool`
+— The main entry point that combines the above checks into a single decision function to determine
+if a file at the given path should be treated as binary.
+It should read (or accept pre-read) the first ~8KB of the file and apply the extension check,
+null-byte check, binary signature check,
+and heuristic ratio check in a sensible order/priority to produce a final boolean verdict,
+optimizing for avoiding unnecessary full-file reads.
+Notable behavior and design considerations:
+- The module is intended for use cases like file-type detection in text processing pipelines,
+content indexers, diff tools,
+or upload validators
+where distinguishing text from binary files is required before further processing
+(e.g., to avoid attempting text encoding/decoding on binary data). - Detection should prioritize
+cheap, fast checks (extension lookup) before more expensive checks
+(reading file bytes, computing heuristics). - The binary signature dictionary should be easily
+extensible with additional magic numbers. - The heuristic threshold should be configurable by the
+caller to tune sensitivity. - The function should gracefully handle an optional pre-loaded byte
+buffer (`first_8kb`) to avoid redundant file I/O
+when the caller already has the leading bytes available,
+falling back to reading the file from disk if not provided. - Edge cases such as empty files,
+files with no extension,
+and files with ambiguous content should be handled without raising exceptions. ---

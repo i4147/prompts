@@ -1,0 +1,19 @@
+Write a Python script that scans the current working directory for text-based
+files (excluding binary files, as determined by an existing helper that lists
+non-binary files), and removes specific conditional exit blocks from each file.
+The target pattern is a shell-style conditional check: an `if` statement testing
+whether a command's exit status is non-zero, whose body ends with an `exit 1`
+statement and is closed by an `fi` terminator.
+Everything between the opening `if` line and the closing `fi` should be stripped
+out, including the `exit 1` line, while leaving the rest of the file untouched.
+The script should handle multiple occurrences of this pattern within a single
+file by repeatedly removing matches until none remain.
+Matching should be case-insensitive and tolerant of varying whitespace and line
+breaks.
+For each file, read its contents as UTF-8 text, perform the removals, and write
+the file back only if something was actually changed.
+Print a message to standard output for every file that is modified, and report
+any read or write errors for individual files to standard error without stopping
+the processing of the remaining files.
+The script should be robust, process every eligible file in the directory, and
+exit cleanly after a summary of the work is complete. ---

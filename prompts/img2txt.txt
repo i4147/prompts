@@ -1,0 +1,29 @@
+Write a Python script that recursively scans a given directory for image files,
+extracts any text they contain using optical character recognition, and reports
+the results in a structured form.
+The tool should accept a root directory path as its main input, along with an
+optional filter for which file types to process (for example, common image
+formats such as PNG, JPG, JPEG, BMP, TIFF, or GIF).
+It should walk through all nested subfolders in a breadth-first manner, skipping
+version-control, cache, and dependency folders such as ".git", "__pycache__",
+and "node_modules", and it should ignore symbolic links to avoid loops or
+duplicate processing.
+Once the matching image files are collected, the script should process them
+concurrently across multiple worker processes (using two workers by default) to
+keep throughput reasonable on large collections.
+For each image, it should open the file, run OCR to extract the text, and return
+a per-file record that includes the file path and the recognized text.
+The script should gracefully handle files that cannot be opened or decoded by
+logging a clear warning and continuing with the rest, rather than aborting the
+whole run.
+The final output should be a consolidated result set that lists every processed
+image alongside its extracted text, with a summary of how many files were found,
+processed, and skipped due to errors.
+The results should be presentable on the console and also exportable to a
+machine-readable file format of the user's choice.
+The script should be runnable from the command line, accept the directory path
+and options as arguments, provide helpful usage messages, and return a non-zero
+exit status if a fatal error occurs (such as an invalid or inaccessible root
+directory).
+Design the internal structure however you see fit, prioritizing clarity,
+robustness, and maintainability. ---

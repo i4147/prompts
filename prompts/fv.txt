@@ -1,0 +1,9 @@
+Write a Python script that takes a single file path from the command line, reads
+the file's text content (tolerating invalid or non-UTF-8 bytes without
+crashing), and displays the content in an interactive, scrollable pager so the
+user can page through long documents comfortably.
+The script should be runnable directly from a terminal, exit cleanly when the
+viewer is closed, and handle the case where the required file argument is
+missing by showing a brief usage message.
+Keep the tool minimal and dependency-free, with the focus on quick, read-only
+viewing of text files. ---

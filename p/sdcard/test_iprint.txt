@@ -1,0 +1,7 @@
+Write a short Python script that imports the `iprint` function from a local module named `dh`,
+then calls `iprint` with the string argument "this is a test" to print it.
+The script has no additional inputs, command-line arguments,
+or configuration—its sole output is whatever `iprint` produces when passed the given string.
+Keep the implementation minimal:
+a single import statement followed by a single function call, with no extra logic, error handling,
+or additional print statements. ---

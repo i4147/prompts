@@ -1,0 +1,53 @@
+Prompt: Create a Python command-line tool for Korean noun phrase (NNG) extraction using the Mecab
+part-of-speech tagger, intended for NLP preprocessing of Korean text.
+Purpose: The script should process raw Korean text (from a file or directory of files),
+tokenize it into sentences,
+and extract noun-based phrases/candidate keywords by analyzing Mecab POS tags.
+It should intelligently reconstruct noun phrases by combining consecutive noun tags
+while using verb/predicate tags and a curated list of trailing particles (josa)
+and suffixes to determine where a noun phrase ends,
+so that extracted terms are clean and meaningful (not just raw single-token nouns).
+Key components/behavior: 1.
+Import and use `nltk.tokenize.sent_tokenize` (or a custom `nltkSentTokenizer` wrapper) to split
+input text into sentences before running POS tagging per sentence.
+2. Use a `mecab` tokenizer module (e.g., from a package like `SmiToText`) to get POS tags for
+each sentence.
+3. Define a core function (e.g., `expect_nng_text(text)`) that:
+- Runs Mecab POS tagging on the input text. - Maintains a list of candidate noun phrases
+(`nng_list`) and a working buffer for in-progress phrase construction (`vv_list`). - Uses a list of
+characters to strip/ignore from tokens
+(e.g., brackets, quotes, various dashes/hyphens, Korean special punctuation marks like 「」〈〉·ㆍ○◇△,
+slashes, equals signs,
+etc.). - Uses a list of sentence/word-ending punctuation marks
+(e.g., `,`, `.`, `:`, `;`, `!`, `?`, quotes) to detect phrase/word boundaries. - Uses a list of POS
+tags that indicate verb/predicate/ending morphemes (e.g., `EC`, `VV`, `X`, `ETN`, `ETM`, `EF`) to
+decide when to stop extending a noun phrase. - Uses a list of POS tags to skip
+(e.g., `MAG` for adverbs). - Uses an extensive list of Korean trailing particles/suffixes
+(josa endings like `처럼`, `했고`, `고`, `하게`, `된`, `보다`, `당한`, `한`, `하기`, `하던`, `이라는`, `로부터는`, `로부터`,
+`에서는`, `에서`, `에는`, `은`, `하는`, `는`, `하면`, `이다`, `이라`, `이`, `가`, `께서`, `서`, `을`, `를`, `의`, `에도`,
+`되지만`, `에게서`, `에게`, `에`, `한테`, `으로`, `로`, `와`, `과`, `아`, `야`,
+etc.) to strip from the end of candidate noun phrases so the extracted noun is in its base form. -
+Maintains an exception list of words (e.g., `무허가`) that should not be affected by the stripping
+logic even if they match a particle pattern. - Combines consecutive noun-tagged tokens into a single
+multi-word noun phrase,
+and finalizes/pushes the phrase into `nng_list`
+when a boundary condition (punctuation, verb/predicate tag, or sentence end) is met.
+4. Expose a command-line interface using `argparse` that accepts input parameters such as an input
+text/file/directory path and (optionally) an output path,
+allowing the script to be run standalone
+(e.g., `python extract_nng.py --input <path> --output <path>`).
+5. Use helper utilities from a `Util` class (e.g., `SmiToText.util.util.Util`) for common tasks such
+as file reading/writing, path handling, or text cleaning.
+6. The final output should be a list (or file) of extracted Korean noun phrases/keywords,
+one per sentence or aggregated across the whole input,
+suitable for downstream tasks like keyword extraction, topic modeling,
+or building a custom dictionary.
+Notes: - The script is written for Korean text specifically
+and relies on Mecab morphological analysis being available
+(via the `SmiToText.tokenizer.mecab` module). - The particle-stripping logic should be conservative,
+applying a priority/order (checking longer suffixes first) to avoid incorrectly truncating valid
+nouns, while still respecting the exception list. - Include comments in Korean (as in the original)
+explaining that this is "Mecab 을 이용한 명사 추출기" (a noun extractor using Mecab) with POS tagger usage,
+and keep variable naming conventions consistent with the described lists
+(`nng_list`, `vv_list`, `replace_char_list`, `check_word_end`, `check_vv`, `check_skip`,
+`end_josa_list`, `exception_list`). ---

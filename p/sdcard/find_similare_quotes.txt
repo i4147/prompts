@@ -1,0 +1,61 @@
+Generate a Python command-line utility script for finding and reporting near-duplicate
+or fuzzy-matching text quotes across one or more JSON files.
+Purpose: The script should scan JSON files
+(each containing a list of quote records,
+where each record is a dictionary with at least a "quote" key and other associated metadata),
+collect all quotes, and identify duplicate
+or highly similar quotes using both exact string matching (after normalization)
+and fuzzy string similarity (via Levenshtein distance from the rapidfuzz library).
+It should report or output groups/pairs of matching quotes so a user can review
+and clean up redundant data.
+Main inputs: - One or more command-line arguments representing file or directory paths.
+If no paths are provided, default to the current directory ("."). - For each path:
+if it is a `.json` file, use it directly;
+if it is a directory,
+recursively search for all `.json` files within it (using `rglob("*.json")`). - Each JSON file is
+expected to contain a top-level list of objects,
+where each object has at least a "quote" field (string) plus possibly other metadata fields
+(e.g., author, source, etc.).
+Files that fail to parse
+or aren't valid JSON lists should be safely skipped (return an empty list instead of raising).
+Main outputs: - A report
+(printed to stdout and/or written to a new unique output file via a helper `unique_path` utility)
+listing duplicate or near-duplicate quote pairs/groups found across all input files,
+including enough information
+(e.g., the quotes themselves, their similarity score, and their source file/metadata) to let a user
+manually review and resolve duplicates.
+Notable behavior and implementation details:
+- Use `pathlib.Path` for all filesystem operations. - Deduplicate the raw list of quotes first by
+exact match: normalize each quote by lowercasing and stripping whitespace,
+and keep only the first occurrence of each unique normalized quote (using a seen-set),
+preserving original record order and original casing/metadata. - For fuzzy matching,
+compare quotes pairwise using an efficient parallelized approach:
+- Use `concurrent.futures.ProcessPoolExecutor`
+and/or `ThreadPoolExecutor` to parallelize pairwise comparisons across CPU cores for performance on
+large datasets. - Each pairwise comparison task receives a tuple of
+(index_i, index_j, quote_record_1, quote_record_2, similarity_threshold). - As an optimization,
+before computing the full Levenshtein distance, first apply a cheap length-based filter:
+skip the pair (return None / no match) if the absolute difference in quote lengths exceeds 50% of
+the longer quote's length, since such pairs are very unlikely to be near-duplicates.
+This avoids expensive distance computation for obviously dissimilar pairs. - If the normalized quote
+texts are exactly equal, treat them as an immediate match (highest similarity). - Otherwise,
+compute similarity using `rapidfuzz.distance.Levenshtein`
+and compare it against the given similarity threshold;
+only pairs meeting or exceeding the threshold should be reported as matches,
+returning the pair's indices, computed similarity score,
+and the two original quote records. - Collect all files via `get_json_files`,
+read and merge quotes from all files via `read_json_file`,
+deduplicate exact matches via `deduplicate_quotes`,
+then run the parallel fuzzy comparison across all remaining quote pairs to detect near-duplicates. -
+Design the script to be run directly as a CLI tool
+(include a `#!/usr/bin/env python3` shebang and use `sys.argv`
+or similar for reading command-line path arguments),
+handling large numbers of quotes efficiently through multiprocessing/multithreading rather than a
+naive O(n²) single-threaded loop. - Import
+and rely on an external helper `unique_path` from a local module `dh` to generate a non-colliding
+output file path for writing results,
+and use `rapidfuzz.distance.Levenshtein` for the similarity/distance calculation. - Use proper type
+hints throughout (`List`, `Dict`, `Any`, `Optional`, `Tuple` from `typing`), and follow a clean,
+modular function-based structure
+(separate functions for reading JSON, collecting files, deduplicating exact matches,
+and comparing a single pair of quotes). ---

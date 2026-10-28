@@ -4,12 +4,10 @@
 //! (`-l10`), long options (`--limit 10`, `--limit=10`), repeated options, and
 //! the `--` terminator. Patterns are kept as raw bytes so non-UTF-8 names
 //! survive end to end.
-
 use crate::error::LocateError;
 use std::ffi::OsString;
 use std::os::unix::ffi::OsStrExt;
 use std::path::PathBuf;
-
 /// Parsed `locate` invocation.
 #[derive(Debug, Clone)]
 pub struct Options {
@@ -42,7 +40,6 @@ pub struct Options {
     /// `--version`.
     pub version: bool,
 }
-
 impl Default for Options {
     fn default() -> Self {
         Self {
@@ -63,7 +60,6 @@ impl Default for Options {
         }
     }
 }
-
 fn push_databases(dst: &mut Vec<PathBuf>, spec: &str) {
     for part in spec.split(':') {
         if !part.is_empty() {
@@ -71,18 +67,15 @@ fn push_databases(dst: &mut Vec<PathBuf>, spec: &str) {
         }
     }
 }
-
 fn take_value(raw: &[OsString], i: usize, opt: &str) -> Result<String, LocateError> {
     raw.get(i)
         .map(|s| s.to_string_lossy().into_owned())
         .ok_or_else(|| LocateError::Usage(format!("option '{opt}' requires an argument")))
 }
-
 fn parse_limit(s: &str) -> Result<usize, LocateError> {
     s.parse::<usize>()
         .map_err(|_| LocateError::Usage(format!("invalid limit '{s}'")))
 }
-
 impl Options {
     /// Parse arguments (including `argv[0]`).
     pub fn parse<I: IntoIterator<Item = OsString>>(args: I) -> Result<Self, LocateError> {
@@ -93,11 +86,9 @@ impl Options {
         let mut o = Options::default();
         let mut i = 0usize;
         let mut after_dd = false;
-
         while i < raw.len() {
             let arg = &raw[i];
             let bytes = arg.as_os_str().as_bytes();
-
             if after_dd || bytes.first() != Some(&b'-') || bytes.len() == 1 {
                 o.patterns.push(bytes.to_vec());
                 i += 1;
@@ -108,7 +99,6 @@ impl Options {
                 i += 1;
                 continue;
             }
-
             if bytes.starts_with(b"--") {
                 let s = std::str::from_utf8(&bytes[2..])
                     .map_err(|_| LocateError::Usage("invalid option".into()))?;
@@ -166,7 +156,6 @@ impl Options {
                 i += 1;
                 continue;
             }
-
             // Short option cluster.
             let cluster = &bytes[1..];
             let mut j = 0usize;
@@ -212,7 +201,6 @@ impl Options {
             }
             i += 1;
         }
-
         if o.databases.is_empty() {
             if let Ok(p) = std::env::var("LOCATE_PATH") {
                 push_databases(&mut o.databases, &p);
@@ -226,40 +214,33 @@ impl Options {
         Ok(o)
     }
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
     fn parse(args: &[&str]) -> Options {
         let mut v = vec![OsString::from("locate")];
         v.extend(args.iter().map(OsString::from));
         Options::parse(v).unwrap()
     }
-
     #[test]
     fn grouped_short_options() {
         let o = parse(&["-ic", "foo"]);
         assert!(o.ignore_case && o.count);
         assert_eq!(o.patterns, vec![b"foo".to_vec()]);
     }
-
     #[test]
     fn attached_limit() {
         assert_eq!(parse(&["-l10", "x"]).limit, Some(10));
     }
-
     #[test]
     fn long_with_equals() {
         assert_eq!(parse(&["--limit=3", "x"]).limit, Some(3));
     }
-
     #[test]
     fn dd_terminator() {
         let o = parse(&["--", "-foo"]);
         assert_eq!(o.patterns, vec![b"-foo".to_vec()]);
     }
-
     #[test]
     fn unknown_is_usage_error() {
         let mut v = vec![OsString::from("locate"), OsString::from("--nope")];

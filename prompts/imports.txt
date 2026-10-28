@@ -1,0 +1,31 @@
+Write a Python script that scans a project directory tree and reports which
+third-party packages its Python source files depend on, so a developer can see
+at a glance what needs to be installed and which imports are missing.
+The tool should accept a target directory path from the command line (defaulting
+to the current directory) and walk through all Python files beneath it, while
+skipping common non-source folders such as version control metadata, caches,
+test directories, and tooling artifacts.
+For each Python file, it should analyze the source without executing it,
+identifying every absolute module import (both plain import statements and
+from-import statements, while ignoring relative imports) and recording only the
+top-level package name.
+Identify and exclude imports that belong to the project itself, meaning packages
+defined by the directory being scanned (detected by the presence of package
+initialization files), and exclude modules that are part of the Python standard
+library.
+The remaining names are third-party dependencies.
+For each third-party dependency, determine whether it is currently installed in
+the active environment.
+Report the results in a clear, human-readable summary that lists: - the detected
+third-party packages that are installed, along with their installed versions
+where available; - the detected third-party packages that are not installed; -
+optionally, the files in which each unresolved import appears.
+The analysis of many files should be parallelized across multiple worker
+processes to keep scanning fast on large projects.
+The tool should gracefully handle files that cannot be parsed (such as syntax
+errors or encoding problems) by skipping them with a brief warning rather than
+crashing, and should report the total elapsed time and number of files scanned
+at the end.
+Consider providing an option to output the results in a machine-readable format
+such as JSON, and make sure the script runs as a standalone command-line program
+with a helpful usage message. ---

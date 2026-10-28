@@ -1,0 +1,40 @@
+Write a Python utility module for detecting whether a file is text-based or binary,
+intended for use in file-processing pipelines
+(e.g., search/indexing tools that need to skip binary files).
+The module must provide: 1.
+A helper function `detect2(data: bytes) -> dict` that acts as a lightweight fallback
+encoding detector.
+It should: - Try decoding the input bytes as UTF-8;
+if successful, return `{"encoding": "utf-8", "confidence": 0.99}`. - If UTF-8 decoding fails,
+try decoding as Latin-1;
+if successful, return `{"encoding": "latin-1", "confidence": 0.7}`. - If both fail,
+return `{"encoding": None, "confidence": 0.1}`.
+2. A module-level constant `TEXT_CHARS` representing the set of byte values considered "printable
+text" — printable ASCII (byte values 32–126) plus common whitespace/control characters:
+newline, carriage return, tab, form feed, and backspace.
+3. A function `is_likely_binary_chunk(chunk: bytes, threshold: float = 0.30) -> bool` that
+heuristically determines if a byte chunk is likely binary:
+- Return `False` for an empty chunk. - Return `True` immediately if a null byte (`\x00`) is present.
+- Otherwise, compute the ratio of bytes not in `TEXT_CHARS` to total bytes,
+and return `True` if that ratio exceeds the given threshold, else `False`.
+4. A main function `is_text_file(path: str | Path, chunk_size:
+int = 32678, encoding_confidence_threshold:
+float = 0.95) -> bool` that determines whether a given file is a text file:
+- Accept the path as either a string or `Path` object,
+normalizing it to `Path`. - Immediately return `False` if the file's extension (lowercased) is in a
+known binary-extensions set `BIN_EXT` (imported from an internal module `dh`). - Open the file in
+binary mode and read up to `chunk_size` bytes (default ~32KB). - If the chunk is empty,
+treat the file as a text file (return `True`). - If `is_likely_binary_chunk` flags the chunk as
+binary (using a 0.30 threshold), return `False`. - Otherwise,
+use the `chardet` library's `detect()` function on the chunk to determine encoding and confidence.
+- If chardet's confidence meets or exceeds `encoding_confidence_threshold`,
+  treat the file as text regardless of whether the detected encoding is ASCII
+  or not (return `True` in both cases). - If chardet's confidence is insufficient,
+  fall back to the custom `detect2` function for a secondary encoding/confidence judgment,
+  and use similar logic to make the final text/binary decision. - Handle file I/O
+  or decoding exceptions gracefully
+  (e.g., treat unreadable or problematic files as not text, returning `False`),
+  without crashing the caller.
+The code should be clean, use type hints,
+and rely on the `chardet` library plus the internal `dh.BIN_EXT` constant for extension-based
+filtering. ---

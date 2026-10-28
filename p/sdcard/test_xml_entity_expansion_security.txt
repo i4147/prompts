@@ -1,0 +1,7 @@
+Regression tests for XML entity-expansion (Billion Laughs) in corpus readers (CWE-776).
+NLTK's XML corpus readers parsed untrusted corpus XML with the stdlib ``xml.etree.ElementTree``,
+which performs entity expansion and is vulnerable to a Billion-Laughs denial of service.
+They now parse via ``defusedxml`` (``safe_parse`` / ``safe_fromstring``),
+which forbids the custom-entity definitions such an attack relies on
+while leaving ordinary XML unaffected.
+This mirrors the fix applied to the downloader's remote index in issue #3545 / PR #3544.

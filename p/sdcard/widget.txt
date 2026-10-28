@@ -1,0 +1,21 @@
+Write a Python script that implements a live-updating Termux:GUI home-screen widget displaying the
+contents of the current working directory.
+The script should use the `termuxgui` (tg) library to connect to the Termux:GUI plugin via
+`tg.Connection()`.
+It must accept a single command-line argument (the widget ID, `sys.argv[1]`) identifying
+which existing widget instance to update.
+Behavior and requirements:
+- Establish a connection to Termux:GUI using a `with` statement context manager. - Create a
+`RemoteViews` object tied to the connection,
+representing the widget's remote layout. - Add a single `TextView` to the remote layout. - Enter an
+infinite loop that, on each iteration:
+- Lists the files and directories in the current working directory (`os.listdir()`). - Sorts the
+list alphabetically. - Joins the sorted entries into a single string separated by newlines. - Sets
+this string as the text content of the TextView. - Calls the widget update method
+(passing the widget ID) to push the new layout/content to the home-screen widget. - Sleeps for 1
+second before repeating.
+The net effect is a home-screen widget that refreshes once per second to show an always-current,
+alphabetically sorted directory listing of the directory the script is running in.
+No other inputs, outputs, error handling,
+or configuration are required — the script runs indefinitely until externally terminated,
+and its only output is the widget's displayed text (there is no stdout output or return value). ---

@@ -1,0 +1,21 @@
+Write a Python script that demonstrates the use of the `docopt` library's `[options]` shortcut
+feature for defining command-line interfaces.
+Requirements: - The script's docstring must serve as the docopt usage specification,
+with a descriptive header comment explaining that it's an example of a program using the `[options]`
+shortcut in its usage pattern. - Define a "Usage" section specifying the program is invoked as
+`options_shortcut_example.py [options] <port>`,
+where `<port>` is a required positional argument
+and `[options]` represents all optional flags defined below.
+- Define an "Options" section listing the following options:
+  - `-h --help` — show the help message and exit - `--version` — show version information and exit
+- `-n, --number N` — accept a numeric value `N` - `-t, --timeout TIMEOUT`
+  — set a timeout value in seconds - `--apply` — apply changes to a database - `-q`
+  — operate in quiet mode - In the main execution block (guarded by `if __name__ == "__main__":`),
+  parse command-line arguments using `docopt(__doc__, version="1.0.0rc2")`,
+  assign the result to a variable named `arguments`,
+  and print that variable. - The script must import `docopt` from the `docopt` package. - Keep the
+  implementation minimal
+  — the sole purpose is to illustrate how `[options]` in the usage pattern automatically includes
+  all options defined
+in the Options section, and to show the parsed arguments dictionary when run.
+---

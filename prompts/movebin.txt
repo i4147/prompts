@@ -1,0 +1,22 @@
+Write a Python script that scans the current working directory, identifies every
+regular file that contains binary data (rather than plain text), and relocates
+those files into a subdirectory named "binary" created inside the same directory
+if it does not already exist.
+The script should process only the top-level files in the working directory (not
+recurse into subfolders), skip directories and anything that is not a regular
+file, and leave text files untouched.
+For each file moved, report the original filename and its new location to the
+user.
+If a particular file cannot be moved (for example, due to permissions or a name
+conflict), the script should report the failure for that file and continue
+processing the remaining files rather than stopping.
+When finished, print a summary: if no binary files were found, state that
+clearly; otherwise, report the total number of binary files successfully moved.
+The determination of whether a file is binary should be based on inspecting its
+contents, such as checking for null bytes or a high proportion of non-text
+characters in an initial sample of the file, so that common text formats are
+correctly left in place.
+The script should run as a standalone command-line program, exit cleanly with a
+status code when executed, and be written in clear, readable Python with
+sensible error handling and no external dependencies beyond the standard
+library. ---

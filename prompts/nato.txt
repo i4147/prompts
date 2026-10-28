@@ -1,0 +1,14 @@
+Write a Python script that converts text into the NATO phonetic alphabet.
+The tool should accept input either as a command-line text argument or read from
+a specified file (via a flag), but not both at once.
+For every alphabetic letter in the input (case-insensitive), it should output
+the corresponding NATO phonetic word (e.g., A → Alpha, X → X-ray), ignoring
+digits, spaces, punctuation, and other non-letter characters.
+The phonetic words should be separated by single spaces and printed to standard
+output as a single line.
+The script should provide a clear command-line help message describing its
+purpose and options.
+If the file option is used, it should handle missing or unreadable files
+gracefully by printing a concise error message to the standard error stream and
+exiting with a non-zero status code.
+On success, the script should exit with status code zero. ---

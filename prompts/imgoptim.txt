@@ -1,0 +1,31 @@
+Write a Python script that acts as a batch image optimizer for a directory tree.
+It should recursively discover image files (JPEG, PNG, and SVG) under a
+user-supplied root path, shrink each file's size using the appropriate external
+optimization tools available on the system, and replace the original only when
+the result is genuinely smaller and still valid.
+The tool should be designed to run from the command line with options that let
+the user choose the target path, control parallel worker count, set a per-file
+timeout, preview changes without modifying anything (dry-run), and optionally
+limit or skip particular file types or paths.
+Key behaviors to include: - Process files concurrently across multiple worker
+processes so large trees finish quickly, while keeping output from different
+workers from interleaving confusingly. - For each file, measure the size before
+and after optimization, and report the bytes saved for each file and a overall
+summary (total files processed, files changed, files skipped, failures, and
+total bytes saved), using colored terminal output with a clear, readable layout.
+- Verify file type by inspecting the actual file contents (magic bytes) rather
+than trusting only the extension, and skip or reject files whose contents do not
+match their claimed format. - Write optimized output to a temporary location
+first, validate it, and only then atomically replace the original; never leave a
+corrupted or half-written file behind, and never replace a file with a larger
+one. - Handle external tool failures, missing executables, and timeouts
+gracefully: log a clear message, leave the original untouched, and continue
+processing the rest of the tree. - Treat certain exit codes from optimization
+tools as "no change needed" rather than errors, and report such files as
+unchanged. - Support a safe mode that keeps backups of originals so changes can
+be reverted, and a dry-run mode that reports what would happen without writing
+anything. - Exit with a meaningful status code: zero on full success, non-zero
+if any file failed, and handle keyboard interruption cleanly by stopping workers
+and cleaning up temporary files. - Do not require the user to edit the source;
+all configuration comes from command-line arguments with sensible defaults and a
+helpful `--help` message. ---

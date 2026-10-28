@@ -1,0 +1,26 @@
+Write a Python script that acts as a universal, command-line text translation
+tool supporting multiple AI translation backends.
+The script should load configuration such a user-levelment file in the home
+directory (ignoring blank lines and comments, and stripping surrounding quotes
+from values), and fall back to real environment variables when needed.
+It should support at least two AI providers (an OpenAI-compatible service and
+Google's Gemini service), initialize only the clients whose SDKs and credentials
+are available, and degrade gracefully with clear messages when a provider or
+dependency is missing.
+The tool should accept input from the command line, including a source file
+path, a glob pattern to process multiple files, or direct text, along with
+target language, optional source language (auto-detect by default), and a choice
+of provider and model.
+It should translate the content while preserving its original structure,
+formatting, line breaks, code blocks, markup, and placeholders, and write
+results to an output file or directory, or print them to standard output.
+Batch processing of many files should be supported, with per-file error handling
+so one failure does not stop the rest, and a concise summary of successes and
+failures at the end.
+Behavior requirements: validate all arguments and file paths before making API
+calls, provide helpful error messages and non-zero exit codes on failure, avoid
+overwriting existing files unless explicitly allowed, handle large inputs by
+chunking when necessary while keeping translations coherent, and never print
+secrets such as API keys.
+The script should be runnable as a standalone program with a `--help`
+description of its usage. ---

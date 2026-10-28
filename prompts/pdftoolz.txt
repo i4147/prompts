@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line PDF processing and compression
+utility.
+It should accept one or more input paths, where each path can be either a PDF
+file or a directory; when a directory is given, it should recursively discover
+all PDF files within it.
+The tool should report the total size of the inputs before processing and the
+size savings achieved afterward, formatting byte counts in human-readable units
+(bytes through terabytes, with two decimal places).
+The script should be able to optimize PDFs by rewriting them to reduce file
+size, for example by applying compression, removing redundant or unused objects,
+and downsampling or recompressing embedded images, while keeping the document
+content visually intact and readable.
+Processing multiple files should be parallelized across available CPU cores to
+improve throughput.
+The user should be able to control the output location, such as writing results
+to a designated output directory, or overwriting originals in place when
+explicitly requested, and the tool should preserve the relative folder structure
+of input directories when writing outputs.
+The tool should provide clear command-line options for configuring behavior,
+including the ability to set image quality or resolution targets, to choose
+whether to skip files that would not shrink, and to enable a dry-run or
+summary-only mode that reports what would be done without modifying files.
+It should display progress or per-file results (original size, new size,
+percentage saved) and a final aggregate summary.
+Errors on individual files (corrupted, encrypted, or unreadable PDFs) should be
+caught and reported without aborting the entire batch, and the script should
+exit with a non-zero status code if any failures occurred.
+Where external command-line tools are helpful, the script may invoke them, but
+it should check their availability first and fail gracefully with a helpful
+message if they are missing.
+The output should be robust, safe against accidental data loss, and suitable for
+use in batch scripts and automated pipelines. ---

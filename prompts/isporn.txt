@@ -1,0 +1,15 @@
+Write a Python script that scans the current working directory for image files
+(JPG, JPEG, PNG, and WEBP) and classifies each one for explicit or suggestive
+content using an NSFW detection model.
+The script should prepare three output folders named "safe", "sexy", and "porn"
+in the working directory, creating them if they do not already exist.
+It should skip any files already located inside folders with names indicating
+prior classification (such as "porn", "nude", "safr", or "sexy") so they are not
+reprocessed.
+For each remaining image, the script should run the detector, determine the
+predicted class and confidence score, and report the result to the console with
+the filename, class label, and score, using colored output for readability.
+Processing should be parallelized across multiple files for efficiency, and the
+script should handle the image set as a whole rather than one file at a time.
+The script should be designed so that it runs as a standalone command-line tool
+when executed directly. ---

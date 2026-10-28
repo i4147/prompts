@@ -1,0 +1,50 @@
+Write a prompt for an AI coding agent to generate a Python benchmarking script with the following
+characteristics: **Purpose**:
+Create a command-line benchmarking tool (runnable as `python -m dh.benchmark`) that measures
+and compares the performance of a parallel-map function `mpf`
+(imported from a local package `dh`, along with `MAX_WORKERS` and `PoolMethod`) across multiple
+execution backends (e.g., serial, thread pool, process pool variants,
+and an optional joblib-based backend)
+and across different workload shapes (CPU-bound, I/O-bound, and mixed). **Main inputs**:
+- Command-line arguments via `argparse`:
+- `--items`: number of items to process (default to a reasonable value, e.g., a few hundred) -
+  `--workload`: select
+  which workload to run (`cpu`, `io`, `mixed`, or all by default) - `--repeats`:
+  number of trials per case to run (default a small number like 3â€“5) - `--no-joblib`:
+  flag to skip the optional joblib backend if it's not desired/available **Core behavior**:
+  - Define at least three worker functions representing distinct workload types: - `cpu_work`:
+  a CPU-bound task (e.g., a pure-Python LCG/iterative numeric loop) that burns a few milliseconds of
+  real bytecode per item,
+  parameterized by an `iters` count. - An I/O-bound worker that uses `time.sleep` (or equivalent) to
+  simulate blocking I/O. - A mixed worker that combines both CPU
+  and I/O characteristics. - For each workload type,
+  run the same worker over the same list of items through every available backend/method
+  (serial baseline, thread pool, one or more process pool strategies, and optionally joblib). - For
+  each backend/case, execute `--repeats` trials
+  and record the **best (minimum) wall-clock time** rather than the mean,
+  with reasoning in code comments that best-of-N is more stable than mean under OS scheduling/CPU
+  frequency noise. - Compute
+  and report the **speedup** of each parallel backend relative to the serial baseline. - Perform a
+  **correctness check** comparing the parallel backend's output against the serial baseline's output
+  to ensure results match. - Print a clear,
+  readable summary/report (e.g., a formatted table) showing backend name, best time, speedup,
+  and correctness status for each case. **Output**:
+  - Console output summarizing benchmark results per workload and per backend, including timing,
+  speedup ratio, and correctness verification. - No files are written;
+  this is a diagnostic/reporting CLI tool.
+**Notable behavior/documentation requirements**:
+- Include a module-level docstring explaining the script's purpose,
+usage examples (e.g., `python -m dh.benchmark`, `python -m dh.benchmark --items 256`,
+`python -m dh.benchmark --workload io`, `python -m dh.benchmark --repeats 5`,
+`python -m dh.benchmark --no-joblib`),
+and an "Interpretation" section explaining expected relative performance: - CPU workload:
+process-based pools should win;
+thread pool should underperform due to the GIL. - I/O workload: thread pool should win;
+process-based backends incur unnecessary fork/IPC overhead. - Mixed workload:
+represents a realistic middle-ground scenario. - A note that if the serial baseline outperforms
+parallel methods, the workload is too small to amortize pool startup costs,
+and the user should increase `--items`. - Use `from __future__ import annotations`
+and standard library imports
+(`argparse`, `math`, `sys`, `time`, `collections.abc.Callable`, `typing.Any`). - Structure the code
+with clear section comments (e.g., a "Workloads" section) separating worker function definitions
+from benchmarking/reporting logic. ---

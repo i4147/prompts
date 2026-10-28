@@ -1,0 +1,4 @@
+Register JSON tags, so the nltk data loader knows what module and class to look for.
+NLTK uses simple '!' tags to mark the types of objects,
+but the fully-qualified "tag:nltk.org,2011:" prefix is also accepted in case anyone ends
+up using it.

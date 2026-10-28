@@ -1,0 +1,51 @@
+Write a prompt for an AI coding agent to generate a standalone Python 3 script
+(meant to be used as a command-line tool and importable module) that detects the natural language of
+arbitrary text-based files, with special handling for source code files.
+The script should meet the following requirements: **Purpose**:
+Combine two optional third-party language detection libraries,
+`gcld3` (Google's Compact Language Detector 3) and `pycld2` (Compact Language Detector 2),
+to robustly detect the natural human language used in a given text,
+with extraction logic that pulls natural-language content (comments, strings, docstrings) out of
+source code files before running detection,
+rather than feeding raw code to the detectors. **Main public API**:
+A function `detect_language(text: str, filename: Optional[str] = None) -> dict` that takes the text
+content (and optionally the original filename to inform extension-aware processing)
+and returns a dictionary with detection results
+(e.g., detected language code/name, confidence/probability, reliability flag,
+and which backend(s) produced the result). **Required behavior and features**: 1.
+Gracefully handle missing optional dependencies:
+attempt to `import gcld3` and `import pycld2`,
+catching any exception and falling back to `None` if unavailable,
+so the script still runs (with reduced capability) without these libraries installed.
+2. Instantiate a single persistent/module-level `gcld3.NNetLanguageIdentifier` instance
+(if gcld3 is available) for performance,
+configured with a reasonable `min_num_bytes`
+and `max_num_bytes` (e.g., 0 and 8192) rather than recreating it on every call.
+3. Detect whether input content is binary vs text (e.g., via null-byte checks or heuristics)
+and skip/short-circuit language detection for binary files,
+returning an appropriate result indicating detection was not applicable.
+4. Implement extension-aware extraction of natural-language candidates from source code:
+maintain a mapping (e.g., a `COMMENT_STYLES` dictionary) from file extensions
+(py, sh, rb, pl, js, ts, jsx, tsx, etc.) to their single-line comment markers (like `#`, `//`)
+and block comment/docstring delimiters (like `'''`/`"""`, `/* */`),
+and use this mapping to strip out
+and collect comments/docstrings/string literals as the text to analyze instead of raw code syntax.
+5. Provide a generic fallback extraction strategy for files with unknown or unmapped extensions,
+applying reasonable heuristics to pull out likely natural-language text.
+6. Combine or reconcile results from both `gcld3` and `pycld2`
+when both are available
+(e.g., cross-checking agreement, preferring one when the other is unavailable or low-confidence),
+and handle the case where one or both libraries are missing without raising exceptions.
+7. Use only standard library modules besides the optional imports
+(e.g., `re`, `io`, `os`, `sys`, `typing`) and include type hints throughout.
+8. Include a module docstring at the top summarizing the script's purpose, feature list,
+and the public API, plus inline comments explaining key logic sections
+(extension mapping, binary detection, extraction rules, detector invocation).
+9. Ensure the function never raises on malformed/empty input
+and returns a well-structured dictionary result in all cases
+(including when no language can be confidently detected).
+The output should be a single, self-contained,
+well-organized Python script ready to run or be imported, with clear separation between:
+optional dependency setup, the comment-style/extension configuration table,
+text extraction helper functions, binary detection helper,
+and the main `detect_language` function that ties everything together. ---

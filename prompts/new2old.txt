@@ -1,0 +1,16 @@
+Write a Python script that reads a Python project's packaging metadata from its
+standard configuration files (a pyproject.toml file and/or a setup.py file in
+the current working directory) and extracts a consolidated, structured summary
+of the project's information, such as its name, version, description, license,
+authors and author emails, maintainers, keywords, classifiers, and dependencies.
+The script should prefer the modern pyproject.toml declaration when present,
+fall back to setup.py when needed, and gracefully handle missing files, missing
+fields, and differently formatted author entries (plain name strings, "Name
+<email>" strings, or dictionaries containing name and email keys).
+It should support Python versions both before and after 3.11 by choosing an
+appropriate TOML parsing approach, and it should present the collected results
+as a clear, human-readable report printed to standard output, with a clean error
+message if neither file can be found or parsed.
+Design the data model and the overall flow freely, ensuring the output is
+well-organized, robust to incomplete metadata, and easy to extend with
+additional fields. ---

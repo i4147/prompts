@@ -1,0 +1,14 @@
+Write a Python script that lists files in the current working directory using a custom
+helper function.
+Requirements: - Import `Path` from the `pathlib` module. - Import a function named `get_filez` from
+a local/custom module named `dh`. - In the `if __name__ == "__main__":` block:
+- Get the current working directory using `Path.cwd()`
+and store it in a variable named `cwd`. - Call `get_filez(cwd)` to retrieve an iterable of file
+paths from that directory (the function is assumed to return `Path`-like objects). - Iterate over
+the results and print only the file name (i.e., `path.name`) of each item, one per line.
+Notable behavior: - The script relies entirely on the external `get_filez` function from the `dh`
+module to perform the actual file retrieval/filtering logic;
+the script itself only handles invocation and output. - No command-line arguments, error handling,
+or additional output formatting should be included
+— keep it minimal and straightforward. - The script should be directly executable as a standalone
+entry point (guarded by the `__main__` check). ---

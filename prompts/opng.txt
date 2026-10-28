@@ -1,0 +1,28 @@
+Write a Python script that recursively scans a directory tree for PNG image
+files and losslessly optimizes them in place using an external PNG optimization
+tool, reporting the space savings achieved.
+The tool should accept a target directory (or file) path as its main input,
+along with optional settings for the optimization effort level (a numeric scale
+from 1 to 7, defaulting to the maximum), the number of parallel worker processes
+(defaulting to 8), and a per-file timeout in seconds (defaulting to 300).
+It should skip common non-source and build/cache/virtual-environment directories
+such as version control folders, dependency folders, caches, and build output
+directories, so they are never traversed.
+Key behaviors: - Discover only files with a PNG extension, and verify each
+candidate really is a PNG by checking its file signature rather than trusting
+the extension alone. - Process files concurrently across multiple worker
+processes, with results gathered as they complete. - For each file, run the
+external optimizer on a temporary copy, then compare the result against the
+original.
+Only replace the original if the optimized output is smaller, and preserve the
+original file's permissions and metadata where possible.
+Clean up all temporary files, even on failure. - Enforce the per-file timeout,
+treating timed-out or failed files as skipped without crashing the whole run. -
+Verify that the required external optimizer executable is available before
+starting; if it is missing, exit with a clear error message. - Print a per-file
+summary of bytes saved (or why a file was skipped or failed), followed by an
+overall total of files processed, files improved, total bytes saved, and
+percentage reduction. - Return a nonzero exit status if any fatal error occurs,
+and zero otherwise.
+Handle keyboard interrupts gracefully by stopping workers and cleaning up
+temporary data. ---

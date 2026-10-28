@@ -1,0 +1,21 @@
+Write a Python tool that acts as a multi-backend text translation utility,
+which takes source text (single strings or batches read from files or standard input)
+and translates it into a target language,
+automatically falling back through an ordered chain of translation services when one fails
+or is unavailable.
+The tool should accept command-line options for the source and target languages,
+the input and output locations, the number of concurrent workers,
+and a choice of which backend services to use or in what priority order.
+It should preserve the structure and line breaks of the input, skip or pass through blank content,
+and write results to a file or standard output in a consistent format,
+optionally including the backend that produced each translation.
+Translation requests should run concurrently with a bounded worker pool,
+results should be returned in the original input order,
+and transient failures should be retried with sensible backoff before moving to the next backend.
+The tool should cache previously translated segments within a run to avoid redundant requests,
+track and report progress and errors through a logging facility,
+and print a concise summary at the end covering counts of successes, failures, and backends used.
+It should gracefully handle missing dependencies by skipping unavailable backends,
+reject any backend that relies on locally hosted heavy machine-learning models,
+and exit with a clear,
+non-zero status code when translation cannot be completed for some or all inputs. ---

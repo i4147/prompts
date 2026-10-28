@@ -1,0 +1,7 @@
+Classified traversal over the all-branches AL tree (roadmap F0, spec 5.1 and 6).
+Stdlib only, no relative imports:
+tests load this file by path, and the installed package imports it as ``tree_sitter_al.traversal``.
+Works on any py-tree-sitter >= 0.25 ``Tree``; nothing here imports ``tree_sitter``.
+Every position is a canonical UTF-8 byte offset.
+Node classes come from the hand-maintained policy (``traversal/policy.json``),
+never from a type name.

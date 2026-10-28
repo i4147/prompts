@@ -1,0 +1,38 @@
+Generate a Python command-line script that calculates and displays disk usage for a directory,
+similar to the Unix `du` command. **Purpose:** The script computes the total disk space consumed by
+a directory and all its contents (files and subdirectories), then prints a human-readable summary.
+It should mimic the basic behavior of the `du` command (e.g., `du -sh`). **Input:** - An optional
+command-line argument specifying the target directory path (`sys.argv[1]`).
+If no argument is provided, default to the current directory (`.`). **Output:**
+- If the given path does not exist,
+  print an error message to stderr (e.g., `Error: '<path>' does not exist`)
+  and exit with a non-zero status code. - Otherwise,
+  print the human-readable total size of the directory followed by its path
+  (similar to `du -sh` output format, e.g., `12.3M ./some_dir`). **Core logic
+  and notable behavior:** 1.
+Implement a helper function `human_size(size: int) -> str` that converts a byte count into a
+human-readable string using units `B, K, M, G, T`.
+Values under 1024 in a given unit are shown with that unit;
+otherwise divide by 1024 and move to the next unit.
+Bytes (`B`) should be shown as integers (e.g., `500B`),
+while larger units should show one decimal place (e.g., `4.2K`, `1.5M`).
+If the size reaches the terabyte range, always use `T` as the final unit regardless of magnitude.
+2. Compute disk usage by recursively traversing the directory tree **iteratively** (no recursion)
+using an explicit stack-based post-order depth-first traversal
+— avoid Python recursion to prevent stack overflow on deeply nested directories.
+3. Use two dictionaries to support the traversal:
+- One mapping each `Path` to its computed size. - One mapping each directory `Path` to its list of
+child paths (sorted alphabetically, case-insensitively, by name).
+4. The stack should hold tuples of `(path, is_processed)` to distinguish between the first visit to
+a directory (where children are discovered and pushed onto the stack)
+and the second visit
+(post-order, where the directory's total size is computed by summing its children's sizes).
+5. Handle symlinks specially:
+use `lstat()` instead of `stat()` so symlink targets are not followed
+and only the symlink's own size is counted.
+6. Handle regular files by using their file size via stat.
+7. Gracefully handle errors such as permission denied
+or broken symlinks during traversal (e.g., skip or treat as zero size) rather than crashing.
+8. Use only Python standard library modules (`sys`, `pathlib.Path`, `os`).
+9. Structure the code with a `main()` function and a `if __name__ == "__main__":` guard,
+with a `#!/usr/bin/env python3` shebang line at the top. ---

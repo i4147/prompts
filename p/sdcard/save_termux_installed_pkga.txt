@@ -1,0 +1,26 @@
+Write a Python 3 command-line script that inventories all installed Debian/Ubuntu packages on the
+system and exports the results to files in the current working directory.
+Requirements: - Use the `subprocess` module to run
+`dpkg-query -W -f='${Package}\t${Installed-Size} '` to retrieve the list of installed packages along
+with their installed sizes (capture output as text, and raise an error if the command fails). -
+Parse each line of the command output,
+splitting on the tab character to extract the package name
+and its installed size (which `dpkg-query` reports in KB). - Convert the size from KB to MB
+(rounded to 2 decimal places).
+If the size value cannot be parsed as an integer, default it to 0. - Build a list of dictionaries,
+each with two keys: `pkgname` (the package name)
+and `pkgsize` (the size in MB). - Sort the list of packages in descending order by size
+(largest first). - Skip any blank/empty lines from the command output. - In the `main()` function:
+- Call the package-gathering function to get the sorted list. - Write the full list as
+pretty-printed JSON (indent=2) to a file named `installed_pkgs.json` in the current working
+directory. - Write just the package names (one per line) to a plain text file named
+`installed_pkgs.txt` in the current working directory. - Print a confirmation message showing how
+many packages were saved
+and the path to the JSON file. - Print a second confirmation message showing the path to the text
+file. - Structure the code with a dedicated function for collecting/parsing the package data
+(separate from `main()`),
+and guard the entry point with `if __name__ == "__main__":`. - Include the standard
+`#!/usr/bin/env python3` shebang at the top of the file. - Use `pathlib.Path` for file path handling
+(e.g., `Path.cwd()` for the output directory). - The script should have no command-line arguments
+— it always writes output to the current working directory using the fixed filenames
+mentioned above. ---

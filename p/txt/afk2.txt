@@ -1,0 +1,40 @@
+Write a Python script that analyzes an "import file" describing symbols to re-export,
+and cross-references it against the actual usage of those symbols in a target Python source file,
+in order to detect unused imports.
+The script should work as follows: Inputs: 1.
+An "imports file" (its lines define importable symbols), containing lines in one of two forms:
+- Explicit imports: `from <module> import <symbol1>, <symbol2>, ...`
+— lines may be continued across multiple physical lines using a trailing backslash (`\`). -
+Wildcard/splat imports:
+`import <symbol1>, <symbol2>, ...` (without a `from` clause)
+— these are treated as a set of "splat" symbols that are assumed to always be in use
+(since their true origin module is ambiguous)
+and should be excluded from unused-import checks. - Blank lines should be ignored. - Lines that
+don't match either expected pattern should raise a custom exception (e.g., `ImportParseException`)
+carrying the offending line.
+2. A target source file whose code will be scanned to determine
+which names are actually referenced/used (via Python's tokenizer, looking at NAME tokens).
+Processing/behavior:
+- Parse the imports file into a mapping from module name to the set of symbols imported from that
+module (use a dict subclass with a default-factory-like behavior,
+defaulting each new key to a deep copy of an empty set),
+plus a separate set of all splat-imported symbols. - Support line continuation (trailing backslash)
+when gathering import lines. - Tokenize the target source file using `tokenize.generate_tokens`
+and collect the set of all NAME tokens to determine
+which symbols are actually used in the code. - Compare each module's imported symbols against the
+used-symbols set and against the splat set to determine
+which imported symbols are never referenced anywhere in the target file
+(i.e., candidates for removal),
+while symbols covered by a splat import are never flagged. - Provide a command-line interface
+(using `sys.argv`) that accepts the imports file path and the target source file path as arguments,
+runs the analysis, and prints/reports the unused symbols grouped by their source module
+(e.g., module name followed by the list of unused symbols imported from it).
+Notable implementation details to preserve:
+- Use `itertools.chain`
+where appropriate for combining iterables (e.g., merging all used symbols). - Use `token.NAME`
+and `tokenize.generate_tokens` for the tokenization step. - The custom `DefaultDict` class should
+subclass `dict`, accept a `default` value in its constructor,
+and override `__getitem__` so that accessing a missing key auto-creates (via `setdefault`) a deep
+copy of the default value rather than returning a shared mutable reference. - Raise
+and handle the custom `ImportParseException` to distinguish "from X import Y" lines from plain splat
+`import Y` lines during parsing.

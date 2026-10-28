@@ -1,0 +1,44 @@
+Create a Python automation script that compresses every top-level item (files and directories) found
+in the current working directory into individual, maximally compressed 7-Zip (.7z) archives,
+using multiprocessing to parallelize the work across items.
+Requirements and behavior: 1. **Purpose**:
+Scan the current working directory (`Path.cwd()`), and for each top-level entry (file or folder),
+produce a corresponding `.7z` archive containing that entry,
+using the best available compression method from the `py7zr` library.
+2. **Inputs**: - No command-line arguments;
+the script operates on the current working directory. - It should exclude from processing:
+the log file it generates (`compress.log`), the script file itself,
+and any existing `.tar` or `.7z` files already present in the directory.
+3. **Outputs**: - One `.7z` file per top-level entry, placed in the same base directory,
+named after the original entry. - A log file (`compress.log`) in the current working directory
+capturing timestamped, leveled log messages (INFO level), including the process name,
+written both to the file and to the console (stream handler).
+4. **Compression logic**:
+- Dynamically determine the best compression method available from `py7zr.compressor`,
+checking in priority order: `LZMA2`, then `LZMA`, then `PPMd`.
+Raise a clear runtime error if `py7zr.compressor` is missing
+or none of these algorithms are available. - For directories:
+first create an intermediate `.tar` archive from the directory's contents,
+then compress that tar file into a `.7z` archive using the selected method,
+and clean up the intermediate tar file afterward. - For individual files:
+compress the file directly into a `.7z` archive using the selected method.
+5. **Parallelism**: - Use Python's `multiprocessing` module to process multiple top-level entries
+concurrently. - Determine the number of worker processes based on the available CPU count minus one
+(with a minimum of 1 worker), stored in a constant.
+6. **Code structure and quality expectations**:
+- Use `from __future__ import annotations`
+and proper type hints (e.g., `Iterable`, `Optional`, `Path`). - Use a `dataclass`
+where appropriate to represent task/work-item information passed to worker processes.
+- Organize logic into small, well-named functions, such as:
+  setting up logging, selecting the best compression method, iterating top-level entries,
+  creating a tar from a directory,
+  and compressing a tar/file into `.7z`. - Use module-level constants for the base directory,
+  log file path, max worker count,
+  and relevant file suffixes (`.tar`, `.7z`). - Include informative logging at each major step
+  (e.g., when creating a tar, when compressing to 7z, when skipping files),
+  including source and destination paths. - Ensure the script is safe to run as a standalone program
+  (e.g., guarded with `if __name__ == "__main__":`),
+  initializing logging
+  and dispatching the multiprocessing pool to handle all discovered entries. - Handle errors
+  gracefully per work item so that one failure does not necessarily crash the entire batch,
+  logging exceptions with enough context (e.g., which path failed).

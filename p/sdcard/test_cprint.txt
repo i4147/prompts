@@ -1,0 +1,17 @@
+Write a Python script that demonstrates colored console output by printing a sequence of numbers in
+randomly selected colors.
+Requirements: - Import the `random` module
+and a custom `cprint` function from a local module named `dh`. - Define a tuple named `colors`
+containing the following color name strings:
+"red", "green", "yellow", "blue", "cyan", "magenta", "grey",
+"white". - Loop through integers from 0 to 254 (i.e., `range(255)`). - For each iteration,
+call `cprint` to print the current number followed by a space,
+using a randomly chosen color from the `colors` tuple (selected via `random.choice`). - Each call to
+`cprint` should pass the number as a formatted string (e.g., `f"{i} "`),
+the randomly chosen color as the second argument,
+and use `end=" "` so that outputs are separated by spaces on the same line rather than printed on
+separate lines. - The `cprint` function is assumed to be a custom utility (from the `dh` module)
+that accepts a text string, a color name,
+and standard `print`-like keyword arguments (such as `end`) to render colored text in the terminal.
+- The overall effect should be printing numbers 0 through 254, each in a random color,
+all on a continuous line separated by spaces. ---

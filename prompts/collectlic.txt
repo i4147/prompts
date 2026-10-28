@@ -1,0 +1,19 @@
+Write a Python script that recursively scans a given root directory and gathers
+the contents of every file whose name contains the word "license"
+(case-insensitive), then consolidates those contents into a single UTF-8 text
+file at a fixed output location.
+The script should skip version-control metadata directories (such as `.git`)
+entirely, tolerate permission errors and unreadable files without crashing, and
+never include its own output file in the results.
+Before writing, it should report how many matching files were found.
+For each matched file, the consolidated output should clearly separate entries
+by showing the file's path relative to the scanned root, followed by that file's
+full text content, so the result reads as a single navigable document.
+Content that cannot be decoded should be handled gracefully, for example by
+ignoring problematic characters rather than failing.
+The script should create any missing parent directories for the output location,
+overwrite any previous output on each run, and finish without requiring user
+interaction.
+Keep the design simple, robust, and self-contained, and ensure it runs as a
+standalone command-line tool that accepts the target root directory as its
+input. ---

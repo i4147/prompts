@@ -1,0 +1,3 @@
+Compression benchmark comparing multiple algorithms: - snappy (cramjam) - brotli
+- zstd (zstandard) - xz (lzma) - lz4 - bz2 - 7z (py7zr) - lzma (pylzma) Usage:
+python compression_benchmark.py <folder_path>

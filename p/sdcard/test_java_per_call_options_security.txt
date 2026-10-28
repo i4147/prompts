@@ -1,0 +1,13 @@
+Regression test for GHSA-m4rf (incomplete fix of CVE-2026-12841, CWE-88).
+Two defects are covered:
+1. ``config_java()`` validated the *global* java options,
+but ``java()``'s per-call ``options`` parameter reached ``subprocess.Popen`` without validation,
+so a caller could inject a dangerous JVM flag on any Stanford/CoreNLP wrapper call. ``java()`` now
+validates per-call options too.
+2. The validator itself blanket-allowed the ``-XX:`` prefix
+(``-XX:OnError=`` / ``-XX:OnOutOfMemoryError=`` are executed as shell commands by the JVM)
+and all ``-D`` system properties (e.g. ``-Djava.ext.dirs``).
+It is now a minimal allowlist of exactly what NLTK and the Stanford CoreNLP docs use:
+heap/stack sizing, ``-verbose``, ``-server``/``-client`` and ``--add-modules``.
+Anything else (including ``-XX:`` and ``-D``) is rejected;
+a caller that vouches for an unlisted flag passes it via ``java(trusted_raw_options=...)``.

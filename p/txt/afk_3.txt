@@ -1,0 +1,36 @@
+Write a Python command-line tool that scans Python source files to detect
+and optionally remove unused import statements, helping developers clean up codebases automatically.
+The script must use the `ast` module to statically parse each Python file into a syntax tree,
+without executing any code.
+It should define: 1.
+A dataclass `ImportInfo` that stores metadata about each import statement, including:
+the imported name, its alias (if any), the line/column where it starts, the line where it ends,
+whether it is a `from ... import ...` style import, the source module (for `from` imports),
+and the list of imported names (for multi-name imports).
+2. A class `ImportAnalyzer` that subclasses `ast.NodeVisitor` and walks the AST to:
+- Record every `import x` statement via `visit_Import`,
+  splitting dotted module names (e.g. `os.path` → `os`) to get the base name,
+  and capturing line/column/end-line info. - Record every `from module import x` statement via
+  `visit_ImportFrom`, skipping wildcard imports (`from module import *`) and skipping imports
+  where the module is `None` (relative imports without a module, e.g. `from . import x`). - Track
+  which names are actually used in the code (`used_names`) and
+  which names are defined (`defined_names`),
+  maintaining a notion of scope (`current_scope`) to correctly resolve name usage versus shadowing.
+  3.
+Logic to cross-reference recorded imports against `used_names` to determine
+which imports are unused (never referenced anywhere in the file after the import statement).
+4. Support for processing multiple files concurrently using both `multiprocessing.Pool`
+and `concurrent.futures.ProcessPoolExecutor`,
+leveraging `cpu_count()` to parallelize analysis across many files efficiently for large codebases.
+Inputs: one or more file paths or a directory path (to be recursively scanned for `.py` files),
+provided via command-line arguments (`sys.argv`), with `pathlib.Path` used for filesystem handling.
+Outputs: a report (printed to stdout) listing, per file,
+the unused imports found (with line numbers and names),
+and optionally a mode to automatically rewrite the files with unused import lines removed.
+Notable behavior: - Must handle syntax errors gracefully per-file (catching `ast.parse` exceptions)
+without crashing the whole batch,
+reporting which files failed to parse. - Must correctly avoid false positives for imports used only
+in type annotations, `__all__` lists,
+or re-exports. - Must support both absolute and relative imports,
+and aliased imports (`import x as y`, `from m import x as y`). - Should be efficient on large
+codebases by parallelizing file analysis across CPU cores.

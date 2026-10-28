@@ -1,0 +1,39 @@
+Create a prompt for an AI coding agent to generate a Python 3.12 command-line script that
+reimplements the classic `dos2unix` utility.
+The prompt should specify the following: **Purpose**:
+Write a script named `dos2unix.py` that converts DOS/Windows-style line endings (CRLF, `\r `)
+and lone CR (`\r`) characters into Unix-style line endings (LF, ` `) in text files. **Core
+requirements**: - Target Python 3.12, use `from __future__ import annotations`,
+and rely on modern standard library modules:
+`argparse`, `sys`, `pathlib.Path`, `dataclasses.dataclass`,
+and `collections.abc.Iterator`. - Include a custom exception class `ConversionError` raised
+when an individual file fails to process. - Include a `Stats` dataclass (using `slots=True`) that
+tracks aggregate counters across a run:
+`converted`, `unchanged`, `skipped`,
+and `errored` file counts. - Implement a binary-file detection heuristic:
+read up to the first 8192 bytes of a file and treat it as binary if it contains a NUL byte (`\x00`);
+skip binary files by default. - Implement a core byte-conversion function that transforms CRLF
+and lone CR sequences into LF. **CLI behavior / inputs**:
+- Accept one or more file or directory paths as positional arguments.
+- Support recursive directory processing via a `-r`/`--recursive` flag
+  (using pathlib to walk directories). - Support in-place conversion by default,
+  with an optional backup via `-k`/`--keep` flag that preserves the original file
+  (e.g., as a `.bak` copy) before overwriting. - Support a `-n`/`--newfile` mode that takes exactly
+  two arguments (OLDFILE and UNIXFILE):
+  read from OLDFILE and write the converted result to UNIXFILE without modifying the original. -
+  Support a `--force` flag to force conversion of files even if they appear to be binary. - Support
+  glob-style multiple file arguments (e.g., `*.txt`). **Outputs / reporting**:
+  - Print a per-file report indicating whether each file was converted, left unchanged,
+  skipped (binary), or errored. - Track
+  and report aggregate statistics at the end of the run using the `Stats` dataclass. - Return a
+  meaningful process exit code based on the outcome (e.g., success, partial errors, or failure).
+  **Documentation**: - Include a module-level docstring describing the tool's purpose,
+  listing its features
+  (CRLF/CR to LF conversion, file/directory operation, in-place conversion with optional backup,
+  newfile mode, binary file skipping, reporting and exit codes),
+  and providing usage examples such as:
+  - `dos2unix.py file.txt` (convert in place) - `dos2unix.py *.txt` (convert several files) -
+  `dos2unix.py -r src/` (recurse into a directory) - `dos2unix.py -k file.txt` (keep a .bak backup)
+  - `dos2unix.py -n old.txt new.txt` (write result to a new file) Ensure the final script is a
+  complete, runnable, well-structured command-line tool with a proper `main()` entry point
+  and shebang line (`#!/usr/bin/env python3.14`). ---

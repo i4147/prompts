@@ -1,0 +1,1 @@
+Test that our implementation of wrap_non_picklable_objects mimics properly the loky implementation.

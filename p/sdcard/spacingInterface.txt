@@ -1,0 +1,40 @@
+Write a Python command-line script for a Korean word-spacing correction system based on a trained
+TensorFlow (v1-style, using tf.placeholder) LSTM character-level sequence model.
+The script should: - Use `optparse.OptionParser` to parse command-line arguments:
+- `--verbose` (optional flag) to enable verbose mode (sets a global `VERBOSE` flag to 1). -
+`-m`/`--model` (required) specifying the directory path (`model_dir`) containing the trained model
+and its associated character dictionary. - If `model_dir` is not provided,
+print the help message and exit with status code 1. - Import
+and instantiate two custom helper classes from a package named `SmiToText.spacing`:
+- `spacingUtil` (from `spacingUtil` module)
+— a utility class for text/spacing processing. - `spacingTrain` (from `spacingTrain` module)
+— a class that encapsulates model-building helpers such as `weight_variable`. - Load a character
+dictionary (`char_dic`) from a pickle file located at `<model_dir>/dic.pickle`,
+which maps characters to indices
+and is used to determine vocabulary size. - Define model configuration constants:
+- `n_steps = 30` (number of time steps / max sequence length per input chunk). - `padd = "\t"`
+(special padding character used to pad short sequences). - `n_input` = vocabulary size derived from
+the loaded dictionary. - `n_hidden = 8` (LSTM hidden layer size). - `n_classes = 2`
+(binary classification: whether a space follows each character or not). - `vocab_size` equal to
+`n_input`. - Build TensorFlow v1 graph placeholders: - `x`:
+float32 placeholder of shape `[None, n_steps, n_input]` for one-hot/encoded character sequences. -
+`y_`: int32 placeholder of shape `[None, n_steps]` for ground-truth space labels per character. -
+`early_stop`: int32 placeholder for the actual (possibly variable) sequence length per batch,
+used for dynamic RNN unrolling. - `istate`:
+float32 placeholder of shape `[None, 2 * n_hidden]` representing the combined LSTM hidden
+and cell state. - Initialize `weights`
+and `biases` dictionaries for a single-layer LSTM network with an input-to-hidden projection
+and a hidden-to-output projection,
+using the `weight_variable` helper method from the `spacingTrain` model instance to create the
+weight tensors (and an analogous bias initializer for the biases dictionary, e.g.,
+a `bias_variable` method), with keys `"hidden"` and `"out"` for both weights and biases.
+The overall purpose of the script is to set up the inference/evaluation pipeline
+(loading a pre-trained spacing model's vocabulary and preparing the TensorFlow graph structure) for
+a Korean text auto-spacing correction tool,
+where the final (not-yet-shown) portion of the script is expected to build the LSTM cell,
+run inference on input text,
+and insert spaces at predicted positions using the `spacingUtil` helper.
+Include the necessary imports
+(`pickle`, `sys`, `OptionParser` from `optparse`, `numpy as np`, `tensorflow as tf`,
+and the two custom `SmiToText.spacing` modules),
+and guard the main logic under `if __name__ == "__main__":`. ---

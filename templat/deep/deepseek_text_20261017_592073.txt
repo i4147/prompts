@@ -1,0 +1,45 @@
+# Task: Reimplement the Linux `{{COMMAND}}` command in Rust
+## Objective
+Implement a faithful, working equivalent of the Linux `{{COMMAND}}` command in Rust.
+Match GNU/coreutils behavior for the flags listed below on Linux. Where behavior is
+ambiguous or differs between implementations, state your choice in the README.
+## Hard constraints (apply always)
+- Language: Rust, stable, edition 2021.
+- Third-party crates: **target zero**. Use only `std`. If a crate is genuinely
+  unavoidable, STOP and justify it in your reply before adding it. Dev-dependencies
+  for tests are fine but must be called out.
+- No shelling out to the real command, to `find`/`grep`/`sed`/`awk`/`sort`/`xargs`,
+  or to any external program to do the real work. Same applies to any helper that
+  would trivially solve the task.
+- No `unsafe` (or: `#![forbid(unsafe_code)]` at the crate root) unless the task
+  genuinely requires it — in which case justify each use.
+- Cross-platform build must succeed, but Linux is the only behavior target.
+## Functional requirements (FILL IN — this is the per-command section)
+{{FILL_IN: input sources, output format, exact flags to support, exit codes,
+error semantics, edge cases that MUST be handled correctly. Prefer a bulleted list
+over prose. Call out anything that is easy to get subtly wrong.}}
+## Quality bar (apply always)
+- Single crate with `src/lib.rs` (core logic, public API) + `src/bin/{{COMMAND}}.rs`
+  (thin CLI wrapper). Core logic must be unit-testable without spawning processes.
+- `///` doc comments on all public items.
+- Unit tests: happy path, each flag, each error path.
+- Integration test in `tests/` that exercises the real binary end-to-end.
+- `cargo build --release` clean with `-D warnings`; `cargo clippy -- -D warnings` clean.
+- `cargo test` passes.
+- No panics on malformed input — return `Result`/`ExitCode`, print errors to stderr.
+## Deliverables (apply always)
+1. Full source tree.
+2. `README.md`: design overview, supported flags, **deviations from GNU behavior**,
+   build/run/test instructions.
+3. `scripts/demo.sh` (or `Makefile` target) that builds a synthetic fixture, runs
+   the command on it, and shows 5+ representative invocations with expected output.
+4. Final message: what you implemented, what you skipped and why, any crates used
+   and why, known limitations.
+## Known pitfalls to handle (FILL IN — usually 5–8 items)
+{{FILL_IN: command-specific traps that agents typically get wrong. Be concrete:
+specific byte sequences, flag combinations, filesystem edge cases, buffer sizes,
+signal handling, etc.}}
+## Reporting back
+Before you start, reply with: (1) any crate you intend to use and why, (2) the
+subset of flags you will implement, (3) any requirement you believe is infeasible
+under the constraints. Then proceed.

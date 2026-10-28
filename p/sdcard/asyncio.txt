@@ -1,0 +1,3 @@
+Asynchronous progress bar decorator for iterators.
+Includes a default `range` iterator printing to `stderr`.
+Usage: >>> from tqdm.asyncio import trange, tqdm >>> async for i in trange(10): ... ...

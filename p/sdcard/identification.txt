@@ -1,0 +1,40 @@
+Create a Python utility module that provides string manipulation
+and identifier-validation helper functions for use within a larger library
+(the module imports a custom `InvalidIdentifier` exception from a local `.exceptions` module).
+The module should expose the following functionality:
+1. **`is_valid_identifier(string: str) -> bool`**:
+Checks whether a given string is a syntactically valid Python identifier
+(matches identifier naming rules using a regex) and is not a reserved Python keyword.
+Returns `True` only if both conditions are satisfied.
+2. **`make_valid_identifier(string: str) -> str`**:
+Converts an arbitrary string into a valid Python identifier by:
+stripping whitespace, replacing hyphens and spaces with underscores,
+removing any remaining characters that aren't alphanumeric or underscores,
+and lowercasing the result.
+If the resulting string is a valid identifier (per `is_valid_identifier`), return it;
+otherwise raise the custom `InvalidIdentifier` exception with a descriptive message.
+3. **`levenshtein(s1: str, s2: str) -> int`**:
+Computes the Levenshtein (edit) distance between two strings using an efficient dynamic-programming
+approach with a single-row rolling buffer
+(recursively swapping arguments so the first string is always the longer one,
+and handling the empty-string base case).
+4. **`dasherize(word: str) -> str`**: Converts underscores in a string to hyphens.
+5. **`underscore(word: str) -> str`**:
+Converts a camelCase or PascalCase string (or a string with non-word separators) into snake_case,
+by splitting on non-word characters and camel-case word boundaries using a precompiled regex,
+then joining the resulting parts with underscores and lowercasing the final result.
+6. **`deterministic_name(obj)`**:
+Generates a deterministic, fully-qualified string name for a given Python object,
+intended to uniquely
+and reproducibly identify it (e.g., for caching, serialization, or registry keys).
+It should derive the name from the object's module
+(falling back to a placeholder like `".."` if `__module__` is not available) combined with its
+qualified name (e.g., via `__qualname__`), producing a consistent identifier string.
+The module should include proper type hints throughout
+(using `typing.Callable`, `Iterable`, `List`, and a generic `TypeVar` named `T` where applicable,
+suggesting some functions may operate generically over iterables/callables),
+and should import only standard library modules (`keyword`, `re`, `typing`) plus the local
+exception class.
+The overall purpose is to serve as a shared internal helper module for name/identifier
+normalization, string distance comparison, case conversion,
+and deterministic object naming within a larger Python package. ---

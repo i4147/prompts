@@ -1,0 +1,20 @@
+Write a Python script that acts as a command-line tool for bulk-downloading
+images from a web source using a headless browser for page rendering and
+multiple HTTP backends for fetching the files.
+The tool should accept a set of search or target-page parameters from the
+command line, including a destination directory (validated to exist or be
+creatable), an optional custom image size constraint specified as WIDTH*HEIGHT
+(for example 1920*1080, rejected with a clear error message if malformed), and
+any other reasonable filters such as a keyword, result count limit, and file
+type restrictions.
+It should open the target pages in a browser-automation session, scroll or
+paginate to reveal content, extract image URLs from the rendered page, and then
+download the images concurrently using a thread pool with a configurable number
+of workers.
+The downloader should prefer whichever HTTP client is available (falling back
+gracefully when optional networking libraries are not installed), handle
+relative and encoded URLs correctly, skip duplicates, sanitize file names, and
+report progress and a final summary of successes and failures.
+Errors on individual files should not stop the whole run.
+The script should provide a helpful `--help` interface, sensible defaults, and
+clean shutdown of the browser session even when interrupted. ---

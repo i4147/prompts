@@ -1,0 +1,10 @@
+Write a Python script that takes a single file path from the command line, reads
+that file as UTF-8 text, converts all of its content to plain ASCII by
+decomposing accented and special characters into their closest base letters and
+discarding anything that has no ASCII equivalent, then overwrites the original
+file with the cleaned text in UTF-8 encoding.
+Once the file is updated, the script should print a short confirmation message
+that includes the file path.
+The script should be runnable directly from the terminal, accept the path as its
+only argument, and handle the path argument robustly, including trimming
+surrounding whitespace from it before use. ---

@@ -1,0 +1,19 @@
+Write a Python script that sorts Python source files in the current working
+directory based on whether they are correctly formatted according to the Black
+code formatter.
+The script should scan the current directory for `.py` files, skipping itself,
+and check each file's formatting status using Black in check mode.
+Files that pass the check should be moved into an "ok" folder, and files that
+fail should be moved into an "error" folder, both created automatically if they
+do not already exist.
+If a file with the same name already exists in the destination folder, the
+script should preserve the existing file and give the incoming file a unique
+name by appending an incrementing numeric suffix before the extension.
+The script should print a clear progress message for each file it checks,
+indicating whether it passed or failed and where it was moved, using a checkmark
+for success and a clear marker for failure.
+It should handle the case where Black is not installed or cannot be run
+gracefully, reporting a helpful message to the user rather than crashing.
+The script should not produce any output files other than the relocated Python
+files and the two folders, and it should run as a standalone command-line tool
+with no required arguments. ---

@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree for JavaScript and TypeScript
+source files (.js, .jsx, .ts, .tsx) and removes all comments from them while
+preserving the code's exact behavior and syntax.
+The tool should accept a root path as input, locate every supported file
+recursively, and process them in parallel using a modest pool of worker
+processes to keep throughput high on large codebases.
+For each file, the script should parse the source with a robust syntax-aware
+parser so that comments are identified accurately, never confusing comment-like
+text inside strings, template literals, or regular expressions with real
+comments.
+Before rewriting a file, it should verify that the parse produced no syntax
+errors; files that fail validation should be skipped and reported rather than
+altered, so that no code is ever corrupted.
+When comments are removed, the script should carefully handle surrounding
+whitespace so that the resulting lines remain tidy, removing trailing spaces or
+blank lines left behind by deleted comments without collapsing meaningful
+formatting.
+Shebang lines and other semantically significant directives should be preserved
+where appropriate.
+Output should be written back in place, with the original file encoding and line
+endings kept intact.
+The tool should log its progress clearly, reporting which files were modified,
+which were skipped due to parse errors, and a final summary of counts.
+It should handle missing paths, unreadable files, and unexpected exceptions
+gracefully, continuing to process remaining files instead of aborting the whole
+run.
+The final result should be a reliable command-line utility that a developer can
+run against any project directory to produce comment-free JavaScript and
+TypeScript code. ---

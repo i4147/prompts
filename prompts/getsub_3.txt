@@ -1,0 +1,12 @@
+Unified subtitle downloader for local video files and title-based searches.
+Usage examples: python merged.py file movie.mkv python merged.py file movie.mkv
+./subtitles python merged.py file movie.mkv --filename-suffix .en --scan-output
+processing --no-warn-non-mkv python merged.py search "The Witcher season 2"
+python merged.py search breaking_bad_s01e01 --output ./subs/breaking_bad.srt
+Mapping from the supplied scripts: get_subtitle.py -> file mode defaults
+getsubtitle.py -> file mode with .en suffix, processing-only output, and no MKV
+warning getsub.py -> search mode (OpenSubtitles, then YTS by default) The two
+local-file scripts share one implementation; their output naming and console
+behavior are selectable with file-mode options.
+Install the original third-party dependencies as needed: python -m pip install
+babelfish subliminal requests.

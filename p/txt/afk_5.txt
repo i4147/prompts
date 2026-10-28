@@ -1,0 +1,68 @@
+Generate a Python prompt for me based on this description: a script for detecting unused imports.
+[Tool: think] Params:
+{"content":"The user wants me to generate a prompt for an AI agent that can produce the given
+Python code.
+The code is a static analysis tool that detects unused imports in Python files using AST parsing.
+Let me analyze the code structure:\n\n1.
+It uses argparse, ast, multiprocessing, re, sys, tarfile, tempfile, zipfile\n2.
+Has dataclasses UnusedImport and FileReport\n3.
+Has helper functions: _dotted, _collect_names, _collect_annotation_names\n4.
+Supports scanning files, likely directories, archives (tar/zip)\n5.
+Uses multiprocessing for parallel processing\n6.
+Has colored terminal output (ANSI codes)\n7.
+Likely has a CLI with argparse\n\nThis is a single-tool task
+(no actual tool call needed, I just need to write a prompt).
+Let me construct a detailed prompt describing purpose, inputs/outputs,
+and notable behaviors based on the code shown
+and reasonable inference of what such a tool does.\n\nNo tool calls needed - this is a direct text
+generation task."} Write a detailed prompt for an AI coding agent requesting a Python command-line
+tool that statically detects unused imports in Python source files, with the following requirements:
+**Purpose**: The script should scan Python files
+(individual files, directories recursively,
+or Python source files packaged inside `.zip`/`.tar`/`.tar.gz` archives) and report any `import`
+or `from ... import ...` statements
+whose imported names are never referenced elsewhere in the module. **Core analysis behavior**:
+- Parse each file's source into an AST (`ast` module) rather than using regex-based matching for
+detection logic. - For each `Import`/`ImportFrom` node,
+determine the "bound name"
+(the alias if `as` is used,
+otherwise the first segment of the dotted module name for plain `import x.y.z`,
+or the imported name itself for `from` imports). - Walk the rest of the AST
+and collect all identifiers that are actually used — covering `ast.Name` nodes,
+the root name of `ast.Attribute` chains (e.g. `foo.bar.baz` resolves to `foo`),
+and the root name of `ast.Subscript` expressions (e.g. `foo[bar]` resolves to `foo`). - Also collect
+names referenced inside type annotations
+(`ast.AnnAssign` annotations, function argument annotations, return annotations) since these count
+as "used" even though they may only appear in string/annotation contexts. - Compare bound import
+names against the collected used-names set to determine which imports are unused,
+and report their line number, column offset, the original statement text,
+and the list of unused names bound by that statement. - Use a dataclass (e.g. `UnusedImport`) to
+hold line number, column offset, statement text, and names,
+and another dataclass (e.g. `FileReport`) to hold a file path, list of unused imports,
+and an optional error message (for files that fail to parse). **Inputs**:
+- Command-line arguments (via `argparse`) accepting one or more paths to Python files, directories,
+or archive files (zip/tar/tar.gz) to analyze. - Support recursive directory traversal to find `.py`
+files. - Support extracting and scanning `.py` files from inside zip
+and tar archives (using `zipfile`/`tarfile`),
+likely via a temporary directory (`tempfile`). - Support optional parallel processing of multiple
+files using `multiprocessing` to speed up analysis of large codebases. **Output**:
+- Print a human-readable,
+color-coded report to the terminal using ANSI escape codes
+(e.g. red/yellow for unused imports, green for clean files, cyan/bold for headers/filenames),
+listing each file and its unused import statements with line numbers. - Gracefully handle
+and report syntax errors or unreadable files without crashing the whole run,
+recording the error in the `FileReport`
+and continuing with remaining files. - Provide a sensible exit code reflecting whether unused
+imports were found (e.g. non-zero exit if issues exist),
+suitable for CI usage. **Notable behavior/edge cases to handle**:
+- Imports used only inside string-based forward-reference type annotations
+or `typing.TYPE_CHECKING` blocks should still be considered used if referenced in annotations. -
+Avoid false positives for `import x.y.z`
+where only `x` is used elsewhere even if the full dotted path isn't directly referenced. - Should
+not flag `__future__` imports
+or imports used solely for their side effects if such exceptions are explicitly configured
+(optional, mention if implemented). - Code should be organized into clear,
+reusable functions (e.g. helpers for dotted name resolution, name collection,
+annotation name collection, file/archive scanning,
+and report printing) and should work correctly
+when run as a standalone script (`if __name__ == "__main__":` entry point using `sys.exit`).

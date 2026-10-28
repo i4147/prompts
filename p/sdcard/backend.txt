@@ -1,0 +1,29 @@
+Write a Python module (`src/cyjson/backend.py`) that implements a pure-Python fallback backend
+mimicking the low-level API of the `ijson` library for incremental/streaming-style JSON parsing,
+but operating on a fully-loaded JSON document.
+Requirements: 1.
+Provide a private helper function `_load_data(file_obj)` that accepts either a file-like object,
+a file path string, or a `Path` object,
+and returns the parsed JSON data (using the standard `json` module).
+If given a string or `Path`, it should open the file with UTF-8 encoding and load it;
+if given a file-like object, it should call `json.load` directly on it.
+2. Provide a `parse(file_obj)` generator function that mimics `ijson.parse()`'s behavior:
+it loads the entire JSON document via `_load_data`,
+then recursively walks the resulting Python object (dicts, lists, and scalar values)
+and yields low-level parsing events as `(prefix, event_type, value)` tuples, where:
+- Dicts yield `('start_map', None)` before iterating,
+a `('map_key', key)` event for each key (with the prefix including the key),
+followed by recursively walking the key's value,
+and `('end_map', None)` after all items. - Lists yield `('start_array', None)` before iterating,
+recursively walk each item (with the prefix including the index),
+and `('end_array', None)` after all items. - Scalar values yield one of `('null', None)`,
+`('boolean', bool)`, `('integer', int)`, `('double', float)`,
+or `('string', str)` depending on the Python type of the value. - The `prefix` string should follow
+ijson's dotted/indexed path convention, building nested paths like `"key"`, `"key.subkey"`,
+`"key.0"`, `"key.0.subkey"`, etc., starting from an empty string at the root.
+3. Include appropriate type hints
+(using `Iterator`, `Tuple`, `Any`, `Union`, `IO` from `typing`, and `Path` from `pathlib`)
+and docstrings explaining the purpose of each function and the event format,
+similar in spirit to `ijson`'s documentation.
+4. The module should have no external dependencies beyond the Python standard library
+(`json`, `pathlib`, `typing`). ---

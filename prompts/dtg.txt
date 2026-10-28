@@ -1,0 +1,31 @@
+Write a Python script that scans a Python source file and translates its
+human-readable text into another language while leaving the code's logic
+untouched.
+The tool should accept a source file path, a target language, and optional
+settings such as an output path, a model or service to use for translation, and
+the level of parallelism.
+It should identify which text is meant for people rather than the computer:
+string literals passed to output functions (such as printing messages),
+docstrings for modules, classes, and functions, and comments.
+Everything else, including identifiers, control flow, imports, and
+non-human-facing string values, must be preserved exactly as written.
+The script should parse the source so that it understands the structure of the
+code, then extract the translatable segments along with their precise locations.
+It should send those segments for translation in batches or concurrently to
+improve throughput, handle transient failures with retries and backoff, and
+respect rate limits.
+Progress should be tracked in a small state file so that an interrupted run can
+resume without re-translating completed segments, and a changed source should
+invalidate only the affected entries.
+Once translation is complete, the script should write a new Python file that
+reproduces the original code with the translated text substituted in place,
+preserving indentation, quoting style, string prefixes (such as raw or byte
+markers), triple-quoted formatting, and comment markers.
+The output must remain valid, runnable Python, and the script should verify this
+before reporting success, falling back to the original text for any segment that
+fails to translate or would break syntax.
+It should also provide a concise summary at the end covering how many segments
+were translated, skipped, cached from a previous run, and failed, and it should
+exit with a non-zero status code when errors prevent a complete result.
+Include clear command-line help, sensible defaults, and informative logging so
+that a user can follow the progress of a long run on a large project. ---

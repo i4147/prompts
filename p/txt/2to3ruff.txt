@@ -1,0 +1,38 @@
+Write a Python automation script that scans multiple Python source files
+and converts legacy Python 2 "print" statements into Python 3 "print()" function calls.
+The script should: 1.
+Import a custom helper module `dh` and use its `get_files`
+and `mpf3` functions
+(presumably for retrieving a list of target files
+and for multi-processing/file traversal respectively), along with standard libraries `re`,
+`subprocess`, `sys`, and `pathlib.Path`.
+2. Implement a function `fix_print_statements_manually(content)` that:
+- Takes the full text content of a Python file as input. - Splits it into lines
+and processes each line individually. - Skips empty lines
+and comment-only lines (lines starting with `#`) without modification. - Detects lines containing a
+Python 2 style `print` statement
+(using a regex word-boundary match for `print` followed by whitespace),
+but only if the word "print" is not itself part of a string literal on that line
+(delegated to a helper `is_in_string`). - Handles two cases:
+a. `print >> file_obj, value` style redirection
+— converts it to `print(value, file=file_obj)` using a regex substitution,
+correctly stripping trailing inline comments. b.
+Plain `print value` style statements — converts them to `print(value)` using a regex substitution,
+also stripping trailing inline comments. - Reassembles
+and returns the modified content as a single string, preserving line structure.
+3. Implement a helper function `is_in_string(line, text)` that scans a line character by character,
+tracking whether the current position is inside a single-
+or double-quoted string (respecting escaped quotes),
+and returns True if the given `text` substring falls within a string literal region of the line
+— used to avoid false-positive matches of the word "print" inside string literals.
+4. Implement a function `process_file(path)` that:
+- Accepts a file path (string or Path),
+converts it to a `Path` object. - Reads the file's content as UTF-8 text,
+wrapped in a try/except for error handling. - Calls `fix_print_statements_manually` on the content.
+- If the content was changed,
+writes the fixed content back to the same file (overwriting it, encoded as UTF-8).
+The overall purpose is to serve as a lightweight,
+regex-based Python 2-to-3 print statement migration tool that can be run across a batch/directory of
+files (using `get_files`/`mpf3` for file discovery and parallel/batch processing),
+without relying on heavier tools like `2to3`,
+while being careful not to corrupt print-like text that appears inside string literals or comments.

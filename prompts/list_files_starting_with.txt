@@ -1,0 +1,18 @@
+Write a Python script that lists the names of items in the current working
+directory whose names begin with a user-supplied prefix.
+The script takes a single command-line argument, the prefix.
+Leading and trailing whitespace around the prefix should be ignored.
+If no prefix is provided, or the prefix is empty after trimming, the script
+should print a brief usage message to the error output stream and exit with a
+non-zero status code.
+When a valid prefix is given, the script should scan only the immediate contents
+of the current directory (not recursing into subdirectories) and print the name
+of each matching entry, one per line, to standard output.
+Matching is case-sensitive and based solely on the start of the entry name.
+Symbolic links should be excluded from the results, so that only regular files
+and directories that are not links are reported.
+The output should contain just the names, without full paths or extra
+decoration, and the script should exit with a zero status code on success.
+The script should be a self-contained, command-line tool that runs directly with
+the Python interpreter, with its main logic placed in an entry point that is
+invoked only when the file is executed as a program. ---

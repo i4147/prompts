@@ -1,0 +1,26 @@
+Write a Python script that analyzes a Python source file (or a directory of
+Python files) to detect duplicate or near-duplicate function implementations and
+reports them to the user.
+The tool should accept a path to a Python file or a folder as its main input,
+optionally with options controlling how strict the comparison is (for example, a
+similarity threshold and whether to ignore comments and blank lines).
+It should walk through every function definition in the source, extract each
+function's body, and normalize it so that differences in formatting,
+indentation, comments, and whitespace do not hide otherwise identical logic.
+Functions that are exact or sufficiently similar matches of one another should
+be grouped together.
+For each group of duplicates, the output should list the function names, the
+file paths and line numbers where they appear, and a similarity score.
+The tool should also provide a summary with totals such as the number of
+functions scanned, the number of duplicate groups found, and the number of
+redundant functions.
+Results should be presented in a readable console report, and optionally
+exported to a structured format such as JSON for use by other tools.
+The script should handle unusual inputs gracefully: files with syntax errors
+should be reported and skipped without stopping the whole analysis, empty files
+and directories without Python files should produce clear messages, and the tool
+should exit with a meaningful status code indicating whether duplicates were
+found.
+It should be runnable from the command line with clear help text describing
+every option, and it should be organized so that the comparison logic can be
+reused independently of the command-line interface. ---

@@ -1,0 +1,36 @@
+Create a Python module for the "SmiToText" project that generates custom Mecab Korean morphological
+analyzer user-dictionary entries from words.
+The script must define a class named `mecabDictGenerate` with the following behavior:
+1. **Initialization (`__init__`)**:
+- Instantiate a `Util` helper object (from `SmiToText.util.util`) to access shared utility
+functions. - Instantiate a `koLastCharCheck` object (from `SmiToText.wordcheck.koLastCharCheck`) to
+check whether the last character of a Korean word has a trailing consonant (batchim). - Resolve
+and store the project's root directory path by calling
+`self.util.getRootPath("SmiToText.SmiToText")`.
+2. **`dictGenerate(self, word, posTag="NNG", kind="")` method**: - Purpose:
+build a single Mecab user-dictionary CSV-formatted line for a given word. - Use
+`self.kolastChar.lastKoTextCheck(word)` to determine if the word's last character ends with a final
+consonant (batchim present = 1, absent = 0). - If `kind` is provided (non-empty string),
+append a hyphen to it (e.g., "추가-") to use as a prefix for the semantic/expression field. -
+Construct the Mecab dictionary line in the standard format: `word,,,,posTag,*,T/F,kind+word,*,*,*,*`
+- Use `"T"` as the batchim flag if the last character has a final consonant (`isLastChar == 1`),
+  otherwise use `"F"`. - Return the constructed dictionary line string.
+  3. **`mecab_dict_gen_from_file(self, input_filename, output_filename, posTag="NNG", kind="")`
+  method**: - Purpose:
+  read a plain text file containing one word per line,
+  generate a Mecab dictionary entry line for each word using `dictGenerate`,
+  and write all generated lines to an output file.
+- Open `input_filename` for reading (UTF-8 encoding)
+  and `output_filename` for writing (UTF-8 encoding). - Loop through the input file line by line,
+  stripping whitespace/newlines from each word. - Keep a line counter (`linenum`) incremented for
+  each line read. - Stop reading
+  when an empty line (or end of file) is encountered. - For each valid word,
+  call `self.dictGenerate` with the given `posTag` and `kind`,
+  and write the resulting line (plus a newline) to the output file.
+Include the standard `# -*- coding: utf-8 -*-` encoding declaration at the top,
+import `re` and `os` even if not all are directly used elsewhere,
+and follow the existing project's coding style
+(CamelCase method naming mixed with snake_case, inline comments showing example output format,
+and commented-out legacy code
+demonstrating prior implementation approaches using `print` and `writelines`).
+---

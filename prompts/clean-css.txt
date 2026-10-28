@@ -1,0 +1,30 @@
+Write a Python script that acts as a command-line CSS minifier and
+comment-stripper for entire project directories.
+It should take a root folder (or a single CSS file) as input and produce
+minified CSS output, removing comments and unnecessary whitespace while
+preserving the exact semantics of the stylesheets.
+Key behaviors: - Walk a directory tree recursively to find CSS files, skipping
+common non-source folders such as version control metadata, virtual
+environments, dependency folders, IDE settings, caches, and build output
+directories. - Process files in parallel across available CPU cores to handle
+large projects efficiently. - Parse each stylesheet with a robust syntax-aware
+approach so that comments are identified accurately, including ones inside
+strings or unusual constructs.
+Files that fail to parse cleanly should be left untouched or reported rather
+than corrupted. - Remove all comments and collapse redundant whitespace, while
+keeping strings, URLs, and selectors valid.
+Optionally apply a more aggressive compression pass when an optional third-party
+minifier is available, and fall back gracefully to a built-in approach when it
+is not installed. - Skip empty files without error. - Support a dry-run mode
+that reports which files would change and shows a unified diff of the proposed
+edits, without writing anything. - Support an in-place mode that overwrites the
+original files, and an output mode that writes minified copies to a separate
+destination directory while preserving the relative folder structure. -
+Optionally create a backup of each original file before overwriting it. - Report
+a clear summary at the end: number of files scanned, processed, skipped, and
+failed, plus total bytes saved and percentage reduction. - Handle errors per
+file so that one bad stylesheet never stops the whole run, and exit with a
+non-zero status code if any failures occurred. - Provide a clear command-line
+interface with help text, validation of paths, and sensible defaults; the user
+should be able to choose the target path, mode, output location, and whether to
+back up files. ---

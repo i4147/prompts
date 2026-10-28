@@ -1,0 +1,5 @@
+Recursively convert .zip -> .tar.xz (max compression) in CWD.
+Strategy per zip: 1.
+Bulk-extract to a temp dir (single pass, zipfile.extractall). 2.
+Stream `tar -C tmpdir -cf - .` into `xz -9e -T0` via a pipe. 3.
+Atomic replace onto <name>.tar.xz; verify; remove original .zip.

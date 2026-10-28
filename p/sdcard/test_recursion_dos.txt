@@ -1,0 +1,9 @@
+Living-audit regression tests for the recursion / inefficient-complexity DoS findings across the
+wider tree (GHSA-ff5c-cp5c-9wjf umbrella; CWE-674 / 407 / 400).
+These sit alongside the parser cluster in ``test_parser_dos.py``
+and the seed ``test_recursivedescent_dos.py``.
+Each sink below was reproduced on the unpatched code (out-of-process with a hard kill):
+``ResolutionProver`` hung *uninterruptibly*, while ``FeatStructReader``,
+``LogicParser`` and ``Tree.fromstring`` raised an unhandled ``RecursionError`` on a small
+crafted string.
+Each now aborts with a clean, bounded error and benign inputs are unaffected.

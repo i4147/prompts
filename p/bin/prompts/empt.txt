@@ -1,0 +1,6 @@
+Write a Python script that takes a single file path as a command-line argument,
+strips any leading or trailing whitespace from that path,
+and creates an empty file at that location (overwriting it if it already exists).
+The script should run only when executed directly, not when imported as a module.
+It should require no user interaction and produce no console output on success.
+---

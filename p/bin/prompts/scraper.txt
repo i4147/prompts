@@ -1,0 +1,28 @@
+Write a Python script that acts as a combined command-line toolkit for web crawling,
+page inspection, and lightweight dependency reporting.
+The tool should accept a starting URL (or a list of URLs) along with options that control crawl
+depth, page limits, request delay, custom user-agent strings, and output destination.
+It should fetch pages politely,
+respecting site crawling rules such as robots.txt directives and rate limits,
+and should only follow links that stay within the same domain
+unless explicitly configured otherwise.
+For each visited page, the script should extract and normalize the useful content:
+the page title, meta description,
+all discovered hyperlinks (resolved to absolute URLs and with fragments removed),
+and visible text or other structured elements relevant to the page.
+It should track visited URLs to avoid duplicates and handle failures gracefully,
+logging errors such as timeouts, HTTP error codes,
+and malformed content without stopping the entire run.
+The tool should also include a utility mode that reports the Python environment in which it runs,
+listing installed packages and their versions,
+so that users can verify dependencies before running a crawl.
+Progress and results should be printed to the console with optional color highlighting for status
+messages, and the complete results should be saved to a structured output file (such as JSON)
+containing per-page data, summary statistics (pages crawled, errors encountered, elapsed time),
+and crawl metadata.
+Support timeouts that can interrupt long-running operations safely,
+allow graceful shutdown on interrupt signals with partial results still saved,
+and provide clear command-line help describing all options.
+Design the script so that its core logic is modular and reusable,
+with a clean separation between command-line handling, network fetching, page parsing,
+and output generation. ---

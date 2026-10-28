@@ -1,0 +1,37 @@
+Write a Python unit test module (using the `unittest` framework) that thoroughly tests a function
+called `clean_blank_lines`, which is imported from a local module named `dh`.
+The purpose of `clean_blank_lines` is to normalize blank lines in text:
+it collapses multiple consecutive blank lines down to a single blank line,
+and strips leading/trailing blank lines,
+while preserving intentional single blank lines between content lines.
+The test module must:
+- Import `os`, `tempfile`, `unittest`, `Path` from `pathlib`, `logger` from `loguru`,
+and `clean_blank_lines` from `dh`. - Define a test class `TestCleanBlankLines` that inherits from
+`unittest.TestCase`. - Cover the following behaviors with individual test methods,
+each with a clear, descriptive name
+(e.g., `test_string_input_no_blank_lines`, `test_string_input_single_blank_lines`,
+`test_string_input_multiple_blank_lines`, `test_string_input_leading_trailing_blank_lines`,
+`test_string_input_empty_string`, `test_string_input_only_blank_lines`, etc.):
+- A string with no blank lines remains unchanged. - A string with single blank lines between lines
+remains unchanged. - A string with multiple consecutive blank lines gets collapsed to a single blank
+line between content. - A string with leading
+and trailing blank lines has them stripped/normalized appropriately. - An empty string input returns
+a newline character (`" "`) as output. - A string consisting only of blank lines is handled
+correctly (test to be completed in the same style as the others). - Additional cases involving file
+input/output using `tempfile` and `Path` should also be tested,
+since the function may support reading from
+or writing to files (e.g., passing a file path,
+verifying the cleaned content is correctly written back or returned),
+with proper setup and teardown of temporary files/directories. - Each test method should:
+- Define an `input_str` (or appropriate input)
+and `expected_output` variable. - Optionally log the input
+and the function's output using `logger.info` for debugging purposes. - Use `self.assertEqual` to
+assert that `clean_blank_lines(input_str)` matches `expected_output`. - Ensure the tests are
+self-contained, use type hints (e.g., `-> None` for test methods), and follow clean,
+idiomatic Python testing conventions. - Include necessary setup/teardown methods
+(`setUp`/`tearDown`) if temporary files or directories are used,
+ensuring proper cleanup with `os` and `Path`/`tempfile` utilities.
+The output should be a complete,
+runnable Python test file that validates the correctness of the `clean_blank_lines` function across
+diverse input scenarios, including edge cases like empty strings, whitespace-only strings,
+and file-based inputs/outputs. ---

@@ -1,0 +1,22 @@
+Write a Python script that renders an image file as colorful block art directly
+in a terminal.
+The script takes a single image file path from the command line, opens it, and
+prints a representation of the picture using ANSI 256-color background blocks,
+with each block representing one pixel-sized cell.
+Requirements: - Accept the image file path as a command-line argument. - If the
+file cannot be found, exit with a short, clear error message instead of a stack
+trace. - Scale the image to a fixed height of 100 character rows while
+preserving the original aspect ratio.
+Because terminal characters are roughly twice as tall as they are wide, make
+each output cell two characters wide so the picture looks proportionally
+correct. - Use high-quality resampling when scaling the image. - Convert each
+pixel's RGB color into the closest entry in the xterm 256-color palette.
+Grayscale tones should map to the dedicated grayscale ramp for better accuracy,
+while other colors map to the 6×6×6 color cube. - Print each pixel as a colored
+space character using an ANSI background color escape sequence, resetting the
+style after each cell, and end each row with a newline so the output forms a
+complete image in the terminal. - Run the rendering only when the script is
+executed directly, not when it is imported as a module. - Keep the output
+dependency-light and fast enough to render typical photos in a second or two. -
+Do not produce any output other than the rendered image and, on error, a brief
+message. ---

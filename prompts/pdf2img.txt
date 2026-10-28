@@ -1,0 +1,22 @@
+Write a Python script that converts every PDF file in a given input location
+into high-resolution JPG images, organizing the output so that each PDF gets its
+own dedicated subfolder containing one image per page.
+The tool should accept a folder path as input (or a single PDF file path),
+locate all PDF documents within it, and process each one in turn.
+For every PDF, create a subfolder named after the document, then render each
+page as a sharp, high-quality JPG image at print-level resolution (around 300
+DPI) with high compression quality.
+Name the output images clearly so they reflect both the source document and the
+page number, with page numbering starting at 1.
+Provide clear progress feedback to the user as it runs, such as which file is
+being converted and a summary of how many pages were produced for each file.
+If a conversion fails partway through, report the error for that specific file,
+clean up any partially written output for that document so no incomplete results
+are left behind, and continue processing the remaining PDFs rather than stopping
+the entire run.
+At the end, present a brief overall summary showing how many PDFs were converted
+successfully and how many failed.
+The script should be robust to missing or empty input folders, handle
+file-system and document-reading errors gracefully, and be runnable from the
+command line with the input and output locations as arguments, with sensible
+defaults if they are omitted. ---

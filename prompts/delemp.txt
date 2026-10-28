@@ -1,0 +1,22 @@
+Write a Python script that scans a directory tree for text files, identifies
+which files should be processed while skipping binary files and excluded paths,
+and reports on the lines it would remove from each file.
+The tool should be a command-line utility that accepts a target path (a
+directory or a single file) and optional flags controlling behavior such as
+whether to actually modify files or only preview the changes.
+It should process files in parallel using a pool of worker processes to speed up
+work across large trees, and it should collect per-file results including total
+line counts, the number of lines removed, any error encountered, and whether a
+file was detected as binary.
+The script should present a clear, color-coded terminal summary at the end:
+totals across all files, a list of the affected files with their changes, and a
+limited preview of the first few affected files with their removed lines shown
+for review.
+Output should degrade gracefully to plain text when color is disabled or the
+terminal does not support it.
+The tool should report elapsed time and handle errors in individual files
+without stopping the whole run.
+Logging should be handled through a structured logger, with verbosity
+controllable from the command line.
+The script should exit with a meaningful status code indicating success, partial
+failure, or invalid input. ---

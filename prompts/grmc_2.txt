@@ -1,0 +1,32 @@
+Write a Python command-line tool that strips or simplifies source code from
+Python files while preserving their runtime behavior.
+The tool should accept one or more Python source files (or a directory to
+process recursively) and produce cleaned versions of them, either writing
+results to new output files, overwriting the originals in place when explicitly
+requested, or printing to standard output.
+The tool should offer configurable stripping options so the user can choose
+which kinds of content to remove, such as comments (with an option to remove
+only inline comments while keeping standalone ones), docstrings (with an option
+to keep the module-level docstring), and type annotations, plus a convenient
+"remove everything possible" mode.
+Options should be definable through command-line flags and be bundled into a
+single, immutable configuration object that is passed through the processing
+pipeline.
+The tool should support multiple parsing backends, selecting a high-fidelity
+concrete-syntax-tree library when available and falling back to an alternative
+parser when it is not, or reporting clearly when no suitable backend is
+installed.
+Output must remain valid, executable Python that behaves identically to the
+original, and the tool should validate its own output (for example, by
+confirming it still compiles) and refuse to write results that break syntax.
+Files that cannot be parsed should be reported and skipped without halting the
+whole run.
+Logging should report progress and warnings through a clear, timestamped console
+log at an informational level, and a summary at the end should state how many
+files were processed, changed, skipped, or failed.
+When handling many files, the tool should be able to use parallel worker
+processes to speed up processing, with a sensible default and a flag to control
+the number of workers.
+Include a dry-run mode that reports what would change without modifying any
+files, and ensure the tool handles missing paths, permission errors, and
+encoding issues gracefully with informative messages. ---

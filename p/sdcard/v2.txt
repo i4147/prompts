@@ -1,0 +1,41 @@
+Write a Python command-line tool that implements an opinionated TOML file formatter
+and linter (conceptually similar to a `plo fmt` subcommand).
+The tool must accept one or more TOML file paths (or read from stdin)
+and support three operating modes:
+(1) in-place rewrite of the file(s) with the formatted output,
+(2) printing a unified diff between the original and formatted content without modifying files,
+and (3) a check-only mode that reports whether files are already correctly formatted
+and exits with a non-zero status if not (for use in CI pipelines).
+Formatting must be driven by a hand-written TOML tokenizer
+and parser (not a generic TOML library that discards layout),
+because the formatter needs to preserve and intelligently reformat comments, blank lines,
+quote styles, multiline strings,
+and the original structural layout of the document rather than re-serializing from a plain
+data structure.
+Model the parsed document using small dataclasses representing the distinct TOML elements:
+`Key`, `Scalar`, `Str`, `Array`, `InlineTable`, `Blank` (blank line), `Comment`,
+and a `Table`/document-root node type that preserves the original ordering of entries,
+including blank lines and comments interleaved among key-value pairs, standard tables,
+and arrays of tables.
+Include a custom `FormatError` exception class used throughout the tokenizer
+and parser to report invalid TOML syntax,
+carrying enough context (file name, line number, column number, and a descriptive message) to
+produce clear, actionable error messages when formatting fails.
+Define an `Options` dataclass that centralizes all formatting configuration knobs,
+including at minimum: - `indent`:
+the indentation string to use (default: two spaces) - `align_entries`:
+boolean toggle to vertically align `=` signs across consecutive key-value pairs within the same
+table - `align_comments`:
+boolean toggle to vertically align trailing inline comments - additional style controls such as
+maximum consecutive blank lines allowed,
+rules for formatting arrays (inline vs. multiline, trailing commas),
+rules for formatting inline tables,
+and comment spacing/handling rules The tool should expose a command-line interface
+(e.g., via `argparse`) that lets users specify the mode (write/diff/check),
+pass one or more file paths, and optionally override formatting options.
+It should process each file independently,
+report errors per file (including the file name and location of any syntax problems) without
+crashing on the first failure,
+and produce clear console output summarizing the outcome
+(files changed, files already formatted, or files with errors) suitable for both interactive use
+and CI automation. ---

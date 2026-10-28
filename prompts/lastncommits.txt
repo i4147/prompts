@@ -1,0 +1,21 @@
+Write a Python script that inspects the recent history of a Git repository and
+reports the files that were newly added (created) within the last N commits.
+The script should accept the number of commits to examine as a command-line
+argument, and it should require that argument, printing a short usage message to
+the standard error stream and exiting with a non-zero status if it is missing.
+Behavior requirements: - Query the Git history of the current repository for the
+most recent N commits, considering only changes where a file was added (not
+modified, renamed, or deleted). - Collect the paths of all added files across
+those commits into a list, skipping any entries that are symbolic links. -
+Handle failures gracefully: if the Git command fails (for example, because the
+directory is not a Git repository), display a clear error message on the
+standard error stream and exit with a non-zero status.
+Handle other unexpected errors the same way. - Present the results to the user
+in a readable form on standard output, showing each created file path, along
+with a count of the total files found. - If no files were created in the
+examined range, report that clearly rather than printing an empty result. -
+Validate the commit count input sensibly, rejecting values that are not positive
+integers with a helpful error message. - Use clear status indicators in messages
+(such as success and error markers) so the output is easy to scan. - The script
+should be runnable directly from the command line and should be self-contained
+in a single file. ---

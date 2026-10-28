@@ -1,0 +1,16 @@
+Write a Python script that renders an image file as colored text directly in the terminal.
+The tool should accept a path to an image file
+(with optional maximum width and height limits in character cells) and,
+when the file is missing or cannot be opened as an image,
+print a clear error message to the standard error stream and exit gracefully without crashing.
+For valid images, it should automatically scale the picture to fit within the current terminal size,
+preserving the original aspect ratio, and respect any user-supplied size limits when provided.
+Transparent pixels should be handled sensibly,
+for example by blending them against a neutral background so the output remains readable.
+The output should be a compact,
+colorful text rendering that uses terminal color capabilities to represent pixel colors,
+with each character cell conveying two vertical pixels so the image looks as close to the original
+as possible.
+The script should be usable from the command line, accepting the image path as its main argument,
+and it should produce the rendered output directly to the terminal with no extra decoration
+or explanation. ---

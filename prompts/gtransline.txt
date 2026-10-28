@@ -1,0 +1,28 @@
+Write a Python script that scans a project directory for source files containing
+Chinese text and automatically translates that text into English, producing a
+translated copy or in-place update while preserving the overall structure and
+meaning of the files.
+The tool should accept a target directory (or file path) and optional settings
+from the command line, such as whether to modify files in place, an output
+location, and a flag for a dry-run mode that only reports what would change.
+It should recursively walk the directory tree while skipping common non-source
+or cache folders (for example version control, build caches, linter caches, and
+similar generated directories).
+Key behaviors: - Detect whether a piece of text is predominantly Chinese, using
+a configurable ratio threshold so that mixed or mostly-English content is
+handled sensibly. - Identify translatable Chinese segments within files, such as
+comments, strings, and docstrings, and leave the surrounding code syntax intact
+so that files remain valid and runnable after translation. - Use an available
+third-party translation backend; if none of the supported translation libraries
+is installed, it should log a clear installation message and exit with a
+non-zero status.
+Support fallback between at least two translation backends. - Process multiple
+files concurrently to speed up large projects, with sensible worker-count
+defaults and a way to override it. - Handle encoding issues gracefully, preserve
+original line endings and file formatting where possible, and skip binary or
+unreadable files with a warning. - Log progress and a final summary: number of
+files scanned, files changed, segments translated, and any errors encountered. -
+Be resilient to network or rate-limit failures from the translation service by
+retrying with backoff and reporting segments that could not be translated rather
+than crashing. - Provide clear, human-readable console output and meaningful
+exit codes for success, partial failure, and fatal errors. ---

@@ -1,0 +1,67 @@
+# Task: Implement `mlocate` (`updatedb` + `locate`) in Rust
+## Objective
+Reimplement the Linux `mlocate` package as two binaries:
+  1. `updatedb` — walks one or more directory trees and builds a path database.
+  2. `locate`   — queries that database and prints matching absolute paths, one per line.
+The implementation must be functionally equivalent to GNU `mlocate` for the flags listed below, on Linux.
+## Hard constraints
+- Language: Rust, stable, edition 2021.
+- Third-party crates: **target zero**. Use only `std`. If you believe a crate is genuinely unavoidable, stop and justify it explicitly in your reply before adding it. (Dev-dependencies for testing are acceptable, but call them out.)
+- No shelling out to `find`, `updatedb`, `locate`, `grep`, or any external program to do the real work. This applies to both the walk and the query.
+- `#![forbid(unsafe_code)]` at the crate root.
+## Must-have functional requirements
+### `updatedb [OPTIONS]`
+- Walk one or more roots. Support `-U PATH` / `--database-root PATH` (repeatable). Default root: none — require at least one `-U` for this exercise so it runs unprivileged.
+- Write DB to `-o FILE` / `--output FILE` (default `./mlocate.db`).
+- Do **not** follow symlinked directories by default (GNU behavior). Document this.
+- `-l` / `--one-file-system`: prune mount points on other filesystems (use `st_dev`; you may read it via `std::os::unix::fs::MetadataExt::dev`).
+- `--prune-paths FILE`: file with newline-separated prefixes to skip.
+- Continue past permission-denied and I/O errors; do not abort the walk. With `-v` / `--verbose`, report counts (files indexed, dirs visited, errors).
+- Store absolute, normalized paths. Deduplicate hardlinks / identical paths.
+- Handle non-UTF-8 filenames: keep paths as `Vec<u8>` internally; only convert at output time.
+- Deep trees: use an explicit stack, not recursion.
+- Atomic write: write temp file in same directory → `fsync` → `rename` over target. Concurrent `locate` must never see a partial DB.
+### Database format
+- Your design; document it in `README.md` with a byte-level layout spec.
+- Must include: magic number, format version, build timestamp, root list.
+- Must support streaming/partial reads for large DBs (line-oriented is fine).
+- `locate` must validate magic + version and error clearly on mismatch or truncation.
+### `locate [OPTIONS] PATTERN...`
+- Default: case-sensitive **substring** match on the full path; one match per line to stdout.
+- Flags:
+  - `-i` / `--ignore-case`
+  - `-b` / `--basename` (match on final component only); default is `-w` / `--wholename`
+  - `-r` / `--regexp` — POSIX-extended-ish regex. You may implement a small engine yourself, or document the exact supported subset. Do **not** pull the `regex` crate without justification.
+  - `-l` / `--limit N`
+  - `-c` / `--count`
+  - `-d` / `--database FILE` (default `./mlocate.db`)
+  - `--existing` — only print paths that currently exist
+- No pattern → print everything.
+- Exit codes: 0 on success (including 0 matches); 1 on fatal error (missing DB, bad args, corrupt DB).
+## Stretch (only if must-haves are solid)
+- `locate -e` alias for `--existing`.
+- DB compression (simple RLE or front-coding is fine).
+- `updatedb.conf`-style config file.
+- `--max-depth N`.
+## Quality requirements
+- Layout: single crate with `src/lib.rs` (shared DB reader/writer) + `src/bin/updatedb.rs` + `src/bin/locate.rs`. Public items get `///` doc comments.
+- Unit tests: DB round-trip; matching (substring, `-i`, `-b`, `-r`, `-l`, `-c`); error paths (missing file, corrupt magic, truncated file).
+- Integration test under `tests/` that: creates a temp tree, runs `updatedb`, runs `locate`, asserts on output.
+- `cargo build --release` must pass with `-D warnings`.
+- `cargo test` must pass.
+## Deliverables
+1. Full source tree.
+2. `README.md`: design overview, DB format byte spec, supported flags, deviations from GNU `locate`, build/run/test instructions.
+3. `scripts/demo.sh` (or a `Makefile` target) that:
+   - builds a synthetic tree in `/tmp`,
+   - builds the DB,
+   - runs 5+ representative `locate` queries,
+   - demonstrates permission-denied handling (`chmod 000` on a dir),
+   - demonstrates an interrupted write leaves the old DB intact.
+4. Final message: what you implemented, what you skipped and why, any crates used and why, known limitations.
+## Anticipated pitfalls (handle these)
+- Symlinks: not followed by default; document and test.
+- Hardlinks: deduped.
+- Non-UTF-8 names: preserved byte-for-byte.
+- Empty DB: `locate` exits 0 silently; `locate -c` prints `0`.
+- Very large directory: streaming, not `read_dir().collect()`.

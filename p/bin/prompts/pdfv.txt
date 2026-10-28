@@ -1,0 +1,30 @@
+Write a Python script that acts as a terminal-based PDF viewer,
+letting a user page through and read a PDF document directly inside a command-line window.
+The tool should take a PDF file path as its main input,
+along with optional command-line arguments that control basic display behavior,
+and should display a user-friendly error message
+and exit cleanly if the required PDF rendering dependency is not installed
+or the file cannot be opened or contains no pages.
+The script should render each PDF page as an image
+and draw it in the terminal using text-based graphics,
+so that a full page can be seen without leaving the shell.
+It should adapt the rendered output to the current terminal size,
+keep the display readable at different window dimensions,
+and recalculate the layout when the window is resized.
+Pages should be rendered on demand
+and a small cache of recently viewed pages should be kept so that moving back
+and forth stays responsive.
+Navigation should be keyboard-driven:
+the user can move to the next and previous pages, jump to the first or last page,
+go to a specific page number, and zoom in and out or fit the page to the window.
+The interface should show a concise status line or indicator with the current page number,
+total page count, zoom level, and a brief help hint,
+rendered with a visible highlight style that stands apart from the page content.
+The terminal should be placed into a full-screen alternate buffer while the viewer runs,
+with the cursor hidden during display and everything restored cleanly on exit,
+including after an interruption or error.
+Keyboard input should be read in a way that responds immediately to single keypresses,
+and the script should handle quitting gracefully from any state.
+The output should be a single, self-contained,
+runnable script that includes a usage description a standard help option, validates its inputs,
+and produces a predictable, polished terminal experience. ---

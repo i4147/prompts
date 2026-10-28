@@ -1,0 +1,5 @@
+Test suite that runs all NLTK tests.
+This module, `nltk.test.all`,
+is named as the NLTK ``test_suite`` in the project's ``setup-eggs.py`` file.
+Here, we create a test suite that runs all of our doctests,
+and return it for processing by the setuptools test harness.

@@ -1,0 +1,4 @@
+Penn Treebank Tokenizer The Treebank tokenizer uses regular expressions to tokenize text as in
+Penn Treebank.
+This implementation is a port of the tokenizer sed script written by Robert McIntyre
+and available at http://www.cis.upenn.edu/~treebank/tokenizer.sed.

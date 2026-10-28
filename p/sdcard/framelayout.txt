@@ -1,0 +1,20 @@
+Write a Python module for an object-oriented wrapper around the Termux:GUI library (termuxgui) that
+defines a `FrameLayout` class representing a FrameLayout view container.
+Requirements: - Import `Optional` and `Literal` from `typing`, the `termuxgui` package as `tg`,
+the `Activity` class from `termuxgui.activity`,
+and the `ViewGroup` class from `termuxgui.oo.viewgroup`. - Define a class `FrameLayout` that
+inherits from both `ViewGroup` (the custom object-oriented base class)
+and `tg.FrameLayout` (the underlying termuxgui FrameLayout implementation). - Include a short
+docstring on the class stating that it represents a FrameLayout.
+- Implement an `__init__` method with the following parameters: - `activity`:
+  an `Activity` instance (required, positional). - `parent`:
+  an `Optional[ViewGroup]`, defaulting to `None`. - `visibility`:
+  an `Optional[Literal[0, 1, 2]]`, defaulting to `None`,
+  representing the view's visibility state (e.g., visible, invisible, gone). - Inside `__init__`,
+  first call `tg.FrameLayout.__init__` passing `activity`, `parent`,
+  and `visibility` to properly initialize the underlying native FrameLayout view. - Then call
+  `ViewGroup.__init__` passing `activity`, `self.id` (the id assigned by the native initialization),
+  and `parent` to properly initialize the object-oriented container behavior. - The class should
+  have no other methods or attributes beyond this constructor. - Follow clean, minimal,
+  idiomatic Python typing conventions consistent with a small wrapper/adapter class in a larger GUI
+  binding library. ---

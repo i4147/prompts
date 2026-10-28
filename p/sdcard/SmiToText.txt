@@ -1,0 +1,71 @@
+The user wants a prompt for an AI agent that would generate the given Python code.
+I need to analyze the code to understand its purpose, inputs/outputs, and notable behaviors.
+Looking at the code:
+- It's part of a module called "SmiToText" dealing with SMI subtitle files
+(likely bilingual English-Korean subtitles) - `extract_enko` function reads a SMI file in binary
+mode, processes it line by line - It looks for `<SYNC` tags to identify synchronization points in
+SMI subtitle format - It handles different text encodings
+(utf-8 shown, likely more like euc-kr, euc-jp based on comments) - It extracts timed text pairs
+and sorts them - Uses libraries like langdetect, mecab,
+nltk tokenizers - suggesting language detection
+and tokenization for Korean/English/Japanese text processing - Imports frequency word analysis
+module Let me provide a comprehensive prompt describing this.
+Create a Python module named `SmiToText` (or a script within it) for parsing
+and processing SMI (SAMI) subtitle files,
+with a focus on extracting bilingual (English-Korean)
+or multilingual subtitle text pairs for text analysis and NLP tasks.
+The script must include: 1. **Imports**:
+Standard libraries `os`, `re`, `sys`, `collections.Counter`, `operator.itemgetter`, plus `numpy`,
+`langdetect.detect`, and internal project modules `SmiToText.frequency.word` (as `word_freq`),
+`SmiToText.tokenizer.mecab`, and `SmiToText.tokenizer.nltk`.
+2. **Function `extract_enko(filename)`**: - Purpose:
+Parse a `.smi` subtitle file
+and extract synchronized English-Korean (or similar bilingual) subtitle text blocks along with their
+timing/sync information. - Input: `filename` — path to a SMI subtitle file. - Behavior:
+- Declares a module-level global variable `enko_smi_raw` used to store raw parsed data. - Opens the
+file in binary read mode (`"rb"`). - Reads the file line by line in a loop
+until EOF. - For each non-empty line,
+decodes it using a helper function `read_by_encod_type` that handles multiple possible encodings
+(try utf-8 first, with fallbacks such as euc-kr/euc-jp
+— implied by commented-out variable names `euckr_smi_text`,
+`eucjp_smi_text`). - Cleans each line using a helper function `remove_unused_word` that strips
+unnecessary characters/tags. - Detects synchronization blocks by checking if a line
+(uppercased, stripped) starts with `"<SYNC"`
+— sets a `sync_start_flag` to `True` once the first sync tag is found;
+lines before the first `<SYNC` tag are skipped. - When a new `<SYNC START=` tag is encountered,
+it finalizes the previous accumulated text block by calling a helper function
+`extract_synctime_text(temp_line)`,
+which should return a tuple/list where index 0 and 1 are likely sync time/language identifiers
+and index 2 is the extracted text content.
+If the result is not `None` and the text content (index 2) is non-empty,
+it is appended to `pair_smi_list`.
+The current line then becomes the new `temp_line`. - If the line is not a new `<SYNC START=` tag,
+it is appended (concatenated with a space) to `temp_line` to accumulate multi-line subtitle text
+within the same sync block. - Closes the file after reading. - Sorts `pair_smi_list` first by the
+second element (index
+1) and then by the first element (index 0) using `itemgetter`,
+   effectively producing a stable multi-key sort (primary key = index 0, secondary key = index 1). -
+   Contains commented-out debug/trim code (e.g., slicing lists `[20:-20]`, print statements) that
+   should be preserved as comments,
+   indicating this was used historically for trimming edge subtitle entries and debugging. - Output:
+   Returns `pair_smi_list`,
+   a list of parsed/sorted subtitle entries
+   (each entry presumably containing sync time info and extracted text).
+   3. **Function `read_by_encod_type(line)`**: - Purpose:
+   Attempt to decode a raw binary line using multiple encodings in sequence
+   (starting with UTF-8 inside a try/except block),
+   falling back to other encodings (e.g., EUC-KR, EUC-JP) if UTF-8 decoding fails,
+   so the SMI file can be read regardless of its original encoding. - Input:
+`line` — a raw bytes line read from the file. - Output: Returns the decoded string.
+Additional expectations:
+- Include placeholder/helper functions referenced
+but not fully shown (`remove_unused_word`, `extract_synctime_text`) consistent with their usage
+above, so the module is runnable. - The overall design should support downstream NLP tasks
+(tokenization via Mecab/NLTK, language detection via langdetect, word frequency analysis) on the
+extracted subtitle text pairs,
+implying this module is part of a larger pipeline for building a bilingual subtitle-based
+text/corpus dataset. - Preserve the binary file reading approach
+and the encoding-detection fallback pattern,
+as SMI subtitle files often have inconsistent or legacy encodings. - Code should be in Python,
+following the structure, variable names, control flow, and comments shown,
+including the global variable declaration and the commented-out debug code blocks. ---

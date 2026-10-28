@@ -1,0 +1,43 @@
+Write a Python test suite (using plain `assert` statements, e.g., for pytest) that validates the
+behavior of a `pycspell` spell-checking library, specifically its `SpellChecker`, `Dictionary`,
+and `Language` components imported from `pycspell.checker`, `pycspell.dictionary`,
+and `pycspell.tokenizer_langs` respectively.
+The script must define the following independent test functions,
+each taking no arguments and returning `None`: 1. `test_python_checker`:
+Instantiate a `SpellChecker` with a `Dictionary` seeded with the words `"myvar"`, `"myfunction"`,
+and `"calculate"`, using `Language.PYTHON` and `compound_support=True`.
+Call `checker.check_text(...)` on the source snippet `"my_var = myfunction() + calculate()"`.
+Since `myfunction` and `calculate` are valid dictionary words
+but `my_var` should be decomposed (via compound/identifier splitting, e.g. by underscores) into `my`
+and `var`, and `var` is not a dictionary word,
+assert that the returned issues list is non-empty (`len(issues) > 0`).
+2. `test_javascript_checker`:
+Instantiate a `SpellChecker` with a `Dictionary` seeded with `"myvar"`, `"myfunction"`,
+and `"value"`, using `Language.JAVASCRIPT` and `compound_support=True`.
+Call `checker.check_text(...)` on `"const myValue = myfunction();"`.
+Include a comment noting that `myfunction` is in the dictionary,
+but the camelCase identifier `myValue` should be split into its constituent parts for checking.
+3. `test_compound_word_support`:
+Instantiate a `SpellChecker` with a `Dictionary` seeded with `"my"`, `"var"`, and `"name"`,
+using `Language.PYTHON` and `compound_support=True`.
+Call `checker.check_text(...)` on `"x = my_var_name"`.
+Include a comment explaining that `my_var_name` should be considered valid
+because it decomposes into dictionary-valid parts.
+Collect the misspelled words from the issues (via an attribute `word` on each issue object) into a
+list, and assert that either `"my_var_name"` is not among the misspelled words,
+or the issues list is empty.
+4. `test_language_override`:
+Instantiate a `SpellChecker` with a `Dictionary` seeded with just `"test"`,
+using `Language.ENGLISH` (no compound support specified).
+Call `checker.check_file(...)` on a filename `"dummy.txt"`,
+demonstrating an override so the file content is tokenized/checked using Python-specific
+tokenization rules rather than the default English language rules
+(the call should pass whatever additional parameter(s) are needed to specify this override,
+such as a language or tokenizer override argument).
+Ensure all four functions are included in a single script,
+each illustrating a distinct aspect of the spell checker's API:
+dictionary-based word lookup, per-language tokenization (Python vs JavaScript vs English),
+compound/identifier word splitting support,
+and the ability to override the detected/default language when checking a file.
+Include inline comments explaining the expected spell-checking behavior for each assertion,
+as shown in the described logic above. ---

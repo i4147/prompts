@@ -1,0 +1,39 @@
+Write a prompt for an AI coding agent requesting a dependency-free,
+best-effort CSS/SCSS/LESS formatter written in Python.
+The prompt should specify the following requirements: **Purpose**:
+Build a standalone Python module that formats CSS, SCSS,
+and LESS source code without relying on a full parser or any external dependencies.
+It should behave as a lightweight, best-effort alternative to a prettier-style CSS printer,
+using a recursive, bracket-tracking approach rather than a full grammar-based parser. **Core
+formatting capabilities it must support**:
+- Top-level and nested selector rules (including nesting as used in SCSS/LESS) - At-rules such as
+`@media`, `@keyframes`, `@supports`, and `@font-face`,
+correctly formatting their preludes and nested blocks - Standalone at-rule statements like `@import`
+and `@charset` - Declaration lists in the form `property: value;` - Both line comments (`//`)
+and block comments (`/* ... */`),
+which must be preserved in the output
+and re-indented to match the surrounding code's nesting level **Line wrapping behavior**:
+When selectors or value lists exceed a configurable `print_width` setting,
+they should be wrapped onto multiple lines in a readable way rather than left as overly long single
+lines. **Implementation details to include**:
+- A tokenizer function that scans the input character by character,
+producing a stream of `(kind, raw)` token pairs.
+It should classify whitespace, line comments, and block comments as distinct token kinds,
+collapsing consecutive whitespace into a single whitespace token
+while preserving enough raw text that the original selectors/values can be reconstructed
+and reformatted independently from the surrounding whitespace. - An indentation helper function that
+takes a shared `Options` configuration object (imported from a sibling `api` module)
+and a nesting `level`,
+and returns the appropriate indentation string — using tab characters if the options specify tabs,
+otherwise repeating a space-based indent unit (`tab_width` spaces) per level. - A module-level
+constant defining the set of structural/syntactic characters relevant to CSS parsing
+(e.g. braces, parentheses, brackets, colon, semicolon, comma, combinators like `>`, `+`, `~`,
+and quotes) to help distinguish structural tokens from plain text during tokenization/formatting. -
+Use `from __future__ import annotations`, the `re` module,
+and import a shared `Options` type from a relative `..api` module,
+consistent with being one formatter module in a larger multi-language code-formatting package.
+**Output**: The final deliverable is the Python source code of this formatter module
+(functions/helpers as described above,
+plus whatever additional internal logic is needed to tie tokenization, indentation,
+nesting tracking, and line-wrapping together into a complete formatting pipeline),
+not an explanation of it. ---

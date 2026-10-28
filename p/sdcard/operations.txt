@@ -1,0 +1,40 @@
+Write a Python module for the PyScaffold project scaffolding tool that defines the core type
+contracts and helper "file operation" functions used when creating
+or updating files in a scaffolded project.
+The module should: 1.
+Import `Path` from `pathlib`, typing utilities (`Any`, `Callable`, `Dict`, `Union`),
+a local `file_system` module (aliased as `fs`), and a `logger` from a local `log` module.
+2. Define and document the following type aliases,
+each with a clear docstring explaining its purpose and usage,
+consistent with PyScaffold's public API conventions: - `ScaffoldOpts`:
+a `Dict[str, Any]` representing PyScaffold's options dictionary
+(as used in `pyscaffold.api.create_project`).
+Document that it should be treated as immutable (copy before mutating),
+and explicitly call out that certain option-driven behaviors must be respected by file operations
+‚Äî specifically, files must be overwritten when the `force` option is `True`,
+and when `pretend` is `True`, no real file-system operation should be performed,
+but actions should still be logged as if they were executed. - `FileContents`:
+a `Union[str, None]` representing the contents of a file to be written.
+Document that when the content is `None`, the file should NOT be written to disk,
+and that an empty string `""` represents a leg empty file. - `FileOp`:
+a `Callable[[Path, FileContents, ScaffoldOpts], Union[Path, None]]` type alias representing the
+signature of a "file operation" function.
+Document its arguments
+(`path`: the file path potentially to be written/changed, `contents`:
+the `FileContents` to write, `opts`: the `ScaffoldOpts` dict) and its return value convention:
+if the file was written or otherwise changed (e.g., permissions altered),
+the function should return the resulting `Path`; if nothing was touched, it should return `None`.
+Note that a `FileOp` may return `None` even when a pre-existing file exists on disk,
+if that file was deliberately not modified (e.g., due to update/no-overwrite semantics).
+3. After the type definitions,
+implement one or more concrete `FileOp`-compatible helper functions
+(using the `fs` module for actual filesystem interactions like creating directories
+and writing files, and `logger` for reporting actions such as "create" or "skip") that:
+- Respect the `pretend` option by not touching the real filesystem
+but still logging the intended action. - Respect the `force` option to control whether existing
+files are overwritten. - Return `None` and skip writing
+when `contents` is `None`. - Create parent directories as needed before writing a file. - Follow the
+documented return-value convention (return the path on write/change, `None` otherwise).
+Keep the code well-documented with docstrings in the same style as PyScaffold's existing codebase,
+and keep the implementation focused purely on these file-operation type contracts
+and helpers (no unrelated functionality). ---

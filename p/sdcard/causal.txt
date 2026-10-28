@@ -1,0 +1,37 @@
+Create a Python script that builds a text-based causal analysis model supporting latent variables.
+The script should serve as a foundational/skeleton module for causal inference research that
+incorporates textual data as a source of confounding or mediating information,
+combined with unPurpose:** Develop a model framework that estimates causal effects
+(e.g., treatment effects)
+while accounting for latent confounders inferred from text data
+(such as documents, reviews, or social media posts).
+This is useful in scenarios where traditional causal inference assumes all confounders are observed,
+but in practice some confounders are only indirectly captured through unstructured text. **Main
+Inputs:** - A dataset containing:
+- Treatment variable(s) (binary or continuous) - Outcome variable(s) - Associated text data
+(e.g., raw strings or pre-tokenized documents) that may contain signals about hidden confounders -
+Optionally, other observed covariates - Configuration parameters for the model
+(e.g., latent dimension size, text embedding method, number of training epochs, learning rate)
+**Main Outputs:** - A trained causal model object capable of:
+- Encoding text into latent variable representations - Estimating causal effect sizes
+(e.g., Average Treatment Effect, Conditional Average Treatment Effect) - Returning learned latent
+variable distributions or embeddings - Optionally,
+logs/metrics of model training (loss curves, convergence diagnostics) - Optionally,
+saved/serialized model artifacts for later inference **Notable Behavior / Requirements:** - The
+script should define a clear model architecture or pipeline that integrates:
+- A text encoder (e.g., embedding layer, neural network, or NLP-based feature extractor) to
+transform text into a latent representation - A latent variable component
+(e.g., variational inference, probabilistic latent factor, or neural latent embedding) to model
+unobserved confounders - A causal inference component that uses the learned latent variables
+alongside observed treatment/outcome data to estimate causal effects,
+following principles akin to causal graphical models
+or structural causal models - Include placeholder/TODO-style structure indicating this is a
+foundational implementation to be further developed
+(i.e., the core logic may be stubbed out or minimally implemented, with clear extension points) -
+The code should be organized in a modular,
+readable way (e.g., separate functions or classes for text encoding, latent variable modeling,
+and causal effect estimation) - Comments and docstrings should be written in Chinese,
+explaining the purpose of the text-based causal analysis model with latent variable support - No
+execution logic beyond basic structure is required;
+focus on defining the model's skeleton
+and interface rather than a fully functional end-to-end training pipeline ---

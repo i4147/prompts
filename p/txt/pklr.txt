@@ -1,0 +1,5 @@
+Unified Pickle File Processor (JSON Converter & Raw Unpacker).
+Usage Examples: python merged.py json input.pkl # Standard JSON conversion python merged.py json
+input.pkl --no-ensure-ascii # Original pkl2json.py behavior python merged.py json input.pkl -v
+--sanitize # Original pkltojson.py behavior python merged.py raw input.pkl # Original
+upkl.py behavior

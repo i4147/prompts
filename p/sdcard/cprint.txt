@@ -1,0 +1,37 @@
+a Python module that provides a lightweight ANSI terminal text-coloring/styling utility,
+structured as follows:
+- Use `from __future__ import annotations` and import `os`, `sys`, and `cache` from `functools`.
+Include a `TYPE_CHECKING` block (set to `False`) that conditionally imports `Iterable` from
+`collections.abc` and `Any` from `typing`,
+used purely for type hints without runtime cost. - Define three module-level dictionaries mapping
+human-readable names to their ANSI SGR codes: - `ATTRIBUTES`:
+text attributes such (1), `dark` (4), `blink` (7),
+`concefixed with `on_`, e.g. `on_black` (40), `on_grey` (40), `on_red` (41), `on_green` (42),
+`on_yellow` (43), `on_blue` (44), `on_magenta` (45), `on_cyan` (46), `on_light_grey` (47),
+and bright/light background variants starting at 100
+(`on_dark_grey`=100, `on_light_red`=101, `on_light_green`=102, `on_light_yellow`=103,
+`on_light_blue`=104, `on_light_magenta`=105, `on_light_cyan`=106, `on_white`=107). - `COLORS`:
+foreground colors, e.g. `black`/`grey` (30), `red` (31), `green` (32), `yellow` (33), `blue` (34),
+`magenta` (35), `cyan` (36),
+`light_greyants starting at 90 (90, `light_red`=91, `light_green`=92, `light_yellow`=93,
+`light_blue`=94, `light_magenta`=95, `light_cyan`=96,
+`white`=97). - Define a module-level constant `RESET = "\x1b[0m"` used to reset terminal formatting
+after styled text. - Implement a function
+`can_colorize(*, no_color: bool | None = None, force_color: bool | None = None) -> bool` decorated
+with `@cache` (so results are memoized per argument combination) that determines whether ANSI color
+output should be enabled.
+Its purpose is to centralize the logic for deciding if colorized output is appropriate given
+explicit overrides and environment variables, following this precedence order: 1.
+If `no_color` is explicitly `True`, return `False` immediately (explicit opt-out wins).
+2. If `force_color` is explicitly `True`,
+return `True` immediately (explicit opt-in wins, but only checked after no_color).
+3. If the `ANSI_COLORS_DISABLED` environment variable is set (truthy), return `False`.
+4. If the `NO_COLOR` environment variable is set, return `False`.
+5. If the `FORCE_COLOR` environment`.
+6. If the `TERM` environment variable equals `"dumb"`, return `False`.
+Continue with further standard checks such as verifying `sys.stdout` is a T
+and on Windows checking for ANSI support, before defaulting to `True` if.)
+Theependency-free coraries like `termcolor`) that other functions
+(e.g., a `colored()` text-wrapping function, not required to be fully implemented here) could use to
+decide whether to emit ANSI escape codes or plain text.
+Keep the code clean, typed, and compatible with Python's modern type-hinting syntax.

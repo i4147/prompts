@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree starting from the current
+working directory, reads every text-based file it finds (skipping hidden files
+and any files with known binary extensions), and produces a frequency report of
+the non-empty lines that appear across those files.
+The script should: - Recursively walk the current working directory and gather
+all eligible files, organized or grouped by file extension. - Exclude hidden
+files (names beginning with a dot) and files whose extensions are classified as
+binary. - Read each file leniently using UTF-8 with errors ignored, so that
+malformed bytes never crash the run.
+Each line should be stripped of surrounding whitespace, and blank lines should
+be ignored. - Count how often each distinct trimmed line occurs within each
+file, and aggregate those counts so the user can see which lines are most
+common. - Process files in parallel using a worker pool of a fixed size (around
+8 workers), so that large directories are handled efficiently.
+The parallel strategy is left to the implementer, but results must be correctly
+merged regardless of completion order. - Handle read errors gracefully: if a
+file cannot be opened or read, log an error message containing the file path and
+the reason, then continue processing the remaining files without aborting. - Log
+progress and summary information (such as the number of files processed and the
+number of distinct lines found) using a logging facility. - Accept command-line
+arguments that let the user control behavior, such as limiting how many top
+results are displayed, filtering by extension, or choosing the output format,
+with sensible defaults when no arguments are given. - Print a clear,
+human-readable report at the end listing the most frequent lines (with their
+counts) and, optionally, breakdowns grouped by file extension. - Exit with a
+non-zero status code on fatal errors such as an invalid argument or an
+unreadable starting directory, and zero on success.
+Keep the script self-contained, well-structured, and runnable directly from the
+command line. ---

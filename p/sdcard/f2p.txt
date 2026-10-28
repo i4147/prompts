@@ -1,0 +1,42 @@
+generate a Python module that performs Finglish-to-Persian (f2p) transliteration
+— converting Latin-script (Finglish) text into Persian (Farsi) script.
+The module should: **Purpose**:
+Convert romanized Persian text ("Finglish") into native Persian script,
+using letter-position-based conversion rules, a frequency-ranked Persian word list,
+and a dictionary of known word mappings to pick the most plausible output among multiple candidate
+transliterations. **Main inputs**:
+- A string of Finglish text
+(words composed of Latin letters, possibly with punctuation/separators like spaces, hyphens,
+underscores, and other symbols). - Supporting data files bundled alongside the module
+(loaded at import time from the module's own directory, not the current working directory):
+- `f2p-beginning.txt`, `f2p-middle.txt`, `f2p-ending.txt`:
+whitespace-separated mapping files where the first column is a Latin letter/character
+and the remaining columns are possible Persian letter conversions depending on whether the Latin
+letter appears at the beginning, middle, or end of a word. - `persian-word-freq.txt`:
+a word-frequency list file (lines with `#` comments ignored) mapping Persian words to integer
+frequency counts, used to rank candidate conversions by how common the resulting Persian word is. -
+`f2p-dict.txt`: a direct dictionary file mapping known Finglish words (or tokens) directly to their
+correct Persian spelling,
+used as an override/shortcut before falling back to letter-by-letter conversion. - Also imports
+`__version__` from a sibling `version` module. **Main outputs**:
+- Functions that take a Finglish word or full text string
+and return the most likely Persian-script equivalent (or a ranked list of candidate conversions),
+splitting input text on a defined set of separator characters
+(space, `-`, `_`, `~`, `!`, `@`, `#`, `%`, `$`, `^`, `&`, `*`, `(`, `)`, `[`, `]`, `{`, `}`, `/`,
+`:`, `;`, `"`, `|`, `,`, `.`, `?`,
+backtick) while preserving or reconstructing the separators appropriately. **Notable behavior**:
+- On import, the module prints progress messages
+("Loading converters...", "Loading persian word list...", "Loading dictionary...") while reading
+and parsing the bundled data files using UTF-8 encoding. - Conversion files are parsed into
+dictionaries where each key (a Latin character) maps to a list of possible Persian character
+substitutions. - The dictionary file maps full Finglish words directly to Persian strings,
+splitting only on the first whitespace so the Persian value can contain spaces.
+- For each word, the position of each letter (first, last, or middle) determines
+  which conversion table (beginning/middle/ending) is used,
+  and `itertools.product`-style combination logic (via `itertools`/`functools.reduce`) is used to
+  generate all possible full-word Persian candidates from per-letter options. - Candidate Persian
+  words are scored/filtered using the frequency dictionary to prefer realistic,
+  commonly used Persian words over obscure letter-combination outputs. - Should gracefully handle
+  words not found in the dictionary by falling back to the generative letter-by-letter conversion
+  approach. - File paths for data files must be resolved relative to the module's own location
+  (using `__file__`) so it works regardless of the caller's working directory. ---

@@ -1,0 +1,39 @@
+Write a Python module that defines a `TextView` class as part of a Termux:GUI Python binding
+library, representing a TextView widget within a Termux:GUI activity.
+The class should: - Be defined in a file that imports `Optional` and `Literal` from `typing`,
+and imports `Activity` from `termuxgui.activity`
+and `View` from `termuxgui.view`. - Subclass `View`. - Implement `__init__` with parameters:
+`activity` (an `Activity` instance), `text` (the initial text content, a string),
+an optional `parent` (another `View` instance, defaulting to `None`),
+`selectabletext` (bool, default `False`, controls whether the text is selectable),
+`clickablelinks` (bool, default `False`, controls whether links in the text are clickable),
+and `visibility` (an optional `Literal[0, 1, 2]`, default `None`,
+representing the view's visibility state). - Build a parameters dictionary containing the activity's
+`aid`, the `text`, `selectableText`, `clickableLinks`,
+and `visibility` (using the exact camelCase keys shown). - If `parent` is provided (not `None`),
+add a `parent` key to the dictionary set to the parent view's `id`. - Call the parent
+`View.__init__` method,
+passing the activity
+and the result of sending a blocking/read request through the activity's connection
+(`activity.c.send_read_msg`) with method `"createTextView"`
+and the built parameters as `params`. - Implement instance method `settextsize(self, size: int)`
+that sends a non-blocking message
+(`send"` and params contain`,
+the view's `id` return value. - Implement instance method `gettext(self) -> str` that sends a
+blocking/read request (`send_read_msg`) with method `"getText"`
+and params containing the activity's `aid` and the view's `id`,
+returning the result as a string. - Implement instance method `settext(self, text: str)` that sends
+a non-blocking message with method `"setText"` and params containing the activity's `aid`,
+the view's `id`, and the new `text`.
+No return value. - Implement instance method `settextcolor(self, color: int)` that sends a
+non-blocking message with method `"setTextColor"` (or equivalent)
+and params containing the activity's `aid`, the view's `id`, and the `color`,
+where the color is expected to be an ARGB-formatted integer.
+No return value.
+Include a class-level docstring describing it as representing a TextView,
+and method docstrings briefly describing each method's purpose
+(e.g., "Sets the text size for this TextView.", "Gets the text of this TextView.",
+"Sets the text of this TextView.",
+and a docstring for the color setter noting the expected ARGB color format).
+Throughout, use `self.a` to refer to the associated activity
+and `self.a.c` to refer to its connection object for sending messages. ---

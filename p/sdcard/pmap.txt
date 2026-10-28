@@ -1,0 +1,50 @@
+Design and implement a single Python utility module that provides a unified,
+backend-agnostic interface for running a callable over a collection of items in parallel,
+abstracting away the differences between several concurrency backends.
+Main purpose: - Expose one generic parallel-execution helper function that accepts:
+a callable to execute,
+an iterable of items (or an iterable of argument tuples, depending on the chosen pooling method),
+and a set of configuration options
+(backend name, pooling/method name, number of workers, chunksize,
+and any extra keyword arguments needed by the callable). - The helper must dispatch the work to one
+of several supported parallelism backends, selected by name: - "thread":
+a thread-based `multiprocessing.pool.ThreadPool` - "process":
+a process-based `multiprocessing.Pool` - "cf_thread":
+`concurrent.futures.ThreadPoolExecutor` - "cf_process":
+`concurrent.futures.ProcessPoolExecutor` - "joblib":
+`joblib.Parallel` - For the multiprocessing-style backends ("thread"/"process"),
+support multiple pooling methods mirroring the standard `multiprocessing.Pool` API, such as "map",
+"map_async", "imap", "imap_unordered", "apply", "apply_async", and "starmap"/"starmap_async",
+so callers can choose ordered vs. unordered results, blocking vs. asynchronous execution,
+or multi-argument invocation styles
+(where items are tuples of arguments unpacked into the callable,
+as opposed to single-argument methods
+where each item is passed directly). - Route each backend/method combination to the correct
+underlying API calls, correctly handling the differences in how each backend expects the callable,
+items, chunksize, and extra arguments to be passed,
+and returning results in a consistent form to the caller.
+Worker-count resolution behavior:
+- If the caller does not explicitly specify the number of workers,
+resolve it automatically by reading from an environment variable (e.g. "GGET_MAX_WORKERS"),
+falling back to a sane default (e.g. 8) if the variable is unset, empty,
+or not a valid integer. - Cap the resolved (or default) worker count so it never exceeds the number
+of items being processed (no point spawning more workers than there is work). - If the caller
+explicitly provides a worker count, validate that it is at least 1;
+if not, raise a clear `ValueError` with a descriptive message.
+Validation behavior:
+- Validate all configuration up front — backend name, pooling/method name, chunksize,
+and the items list — before doing any work (fail fast, no partial execution). - Raise descriptive
+`ValueError` exceptions when:
+an unsupported/unknown backend name is requested,
+an unsupported/unknown pooling method is requested for the chosen backend,
+chunksize is invalid (e.g. non-positive), or the items list/iterable is empty or otherwise invalid.
+Notable behavior/design considerations:
+- Keep the function signature generic/reusable so it can wrap arbitrary callables
+and item collections, independent of any specific domain logic. - Ensure consistent,
+predictable return types/structures regardless of which backend or method was used,
+so calling code doesn't need backend-specific handling. - Include clear docstrings/comments
+explaining parameter meanings (callable, items, backend, method, workers, chunksize, extra kwargs)
+and the behavior differences between ordered/unordered
+and sync/async methods. - Favor clean separation of concerns:
+one piece of logic for validating/resolving configuration,
+and another for executing against the selected backend. ---

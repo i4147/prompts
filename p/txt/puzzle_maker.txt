@@ -1,0 +1,2 @@
+Puzzle Generator - Creates a 500-piece jigsaw puzzle from an input image.
+Saves each piece as an individual image file in an output directory.

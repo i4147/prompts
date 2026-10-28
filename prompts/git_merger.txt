@@ -1,0 +1,29 @@
+Write a Python script that acts as an interactive command-line tool for managing
+branches in a Git repository.
+The tool should be run from within a Git repository directory; if it is not, it
+should print a clear message and exit gracefully.
+Core behavior: - Detect the current repository and verify that the user is
+inside a valid Git working copy before doing anything else. - Present the user
+with a set of branch-management operations, such as listing local branches
+(excluding the currently active branch), switching to another branch, creating
+new branches, deleting branches, and cleaning up merged or stale branches. -
+Provide interactive terminal dialogs for the user: confirmation prompts (yes/no)
+before any destructive action, single-choice selection lists for picking a
+branch, and multi-select checklists for bulk operations. - Offer branch name
+autocompletion when the user is typing a branch name on the command line, so
+that partial input suggests matching existing branches. - Support a command-line
+interface with subcommands and options, so the same operations can be run
+non-interactively from the shell as well as through the interactive menu. -
+Protect the user from mistakes: never delete the currently checked-out branch,
+warn about unmerged or unpushed work before removing a branch, and require
+explicit confirmation for force operations. - Display results using color-coded,
+readable status messages (for example, green for success, yellow for warnings,
+red for errors), and log significant actions for traceability. - Handle errors
+from Git operations gracefully, reporting the problem in plain language instead
+of crashing with a raw traceback. - Keep the script self-contained in a single
+file, with a clear entry point, helpful `--help` output, and sensible defaults.
+Inputs: the current working directory (must be a Git repository), the user's
+menu selections and dialog responses, and command-line arguments and options.
+Outputs: changes to the repository's branches (created, switched, renamed, or
+deleted), colorized console feedback for each action, and log entries recording
+what was done. ---

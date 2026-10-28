@@ -1,0 +1,27 @@
+Write a Python script that scans a given Python source file (or a directory of
+Python files) and determines which third-party packages the code depends on, so
+that a user can install them.
+The script should parse each Python file without executing it, collect every
+top-level module name referenced through import statements (both plain imports
+and "from ... import" forms, ignoring relative imports), and skip any names that
+belong to the Python standard library.
+For each remaining third-party module, the script should map it to the correct
+installable package name where the import name differs from the distribution
+name (for example, common cases where a module such as an image library,
+computer vision library, YAML parser, or web-scraping helper is installed under
+a different name).
+It should also consider whether the package is already installed in the current
+environment and report its status accordingly.
+The output should be a clear, human-readable report listing the detected
+third-party dependencies, their resolved package names, and whether each one is
+already installed, followed by a ready-to-use installation command or
+requirements-style list for the missing packages.
+The script should handle files that cannot be read, have encoding problems, or
+contain syntax errors gracefully, reporting a warning and continuing with the
+remaining files rather than crashing.
+It should also ignore a small set of project-local helper modules that are part
+of the user's own codebase and should not be treated as external dependencies.
+The tool should be usable from the command line, accepting a file or folder path
+as input, and optionally write the resulting package list to an output file.
+Design the script so it is robust, well-organized, and easy to extend with
+additional package name mappings. ---

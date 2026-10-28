@@ -1,0 +1,28 @@
+Write a Python script that builds a print-ready CSS stylesheet with embedded
+typefaces for PDF generation.
+The script should look for a set of local font files in the current working
+directory (a regular, bold, italic, and bold-italic variant of a sans-serif
+family such as Inter, plus a monospace font such as JetBrains Mono).
+For each font file found, it should read the binary contents and embed them
+directly into the stylesheet as base64-encoded data so the output is fully
+self-contained and portable.
+If any font file is missing, the script should print a clear warning to the
+console explaining that the rendering engine will fall back to default system
+typography for that style, and continue without failing.
+The script should print progress messages to the console as it works, such as
+indicating when it begins parsing the typography files.
+Its final output is a complete CSS string containing the generated font-face
+declarations followed by a set of precise, professional styling rules intended
+for an HTML-to-PDF rendering pipeline (for example, WeasyPrint).
+The styling should cover base body typography, headings at multiple levels,
+paragraphs, lists, code blocks and inline code using the monospace font, tables,
+blockquotes, links, and page-level print settings such as page size, margins,
+and page numbering in headers or footers.
+The design should emphasize clean hierarchy, comfortable line height, readable
+font sizes, and consistent spacing suitable for formal documents.
+The script should be designed to be imported as a module or run directly, with
+the CSS-building function returning the stylesheet string so that other tools
+can consume it.
+Handle file-reading errors gracefully, keep the font-loading logic robust when
+only some fensure the generated CSS remains valid even if no fonts are found at
+all (in which case only the non-font styling rules are emitted). ---

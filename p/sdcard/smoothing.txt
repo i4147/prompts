@@ -1,0 +1,2 @@
+Smoothing algorithms for language modeling.
+According to Chen & Goodman 1995 these should work with both Backoff and Interpolation.

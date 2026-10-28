@@ -1,0 +1,26 @@
+Write a Python script that batch-processes scanned document images to extract
+their text using optical character recognition (OCR), with optional image
+cleanup to improve accuracy.
+The tool should accept a folder of images (supporting common formats such as
+JPEG, PNG, TIFF, BMP, and WebP) and process them in parallel across multiple
+worker processes to handle large batches efficiently.
+For each image, the script should apply preprocessing steps that make text
+easier to recognize: converting to grayscale, enhancing contrast and sharpness,
+reducing noise, and correcting slight rotation or skew in the scanned page.
+The preprocessing should use advanced image processing when an optional computer
+vision library is available, and fall back to a simpler, lightweight image
+enhancement approach when it is not, so the tool still works in minimal
+environments.
+After preprocessing, the script should run OCR on each image and save the
+recognized text to output files, one per input image, in a clearly named output
+location.
+It should report progress and log useful information such as which files were
+processed, how long they took, and any files that failed, without stopping the
+entire batch when a single image causes an error.
+The final output should include a brief summary of how many images succeeded and
+how many failed.
+The script should run from the command line, use the current working directory
+as the default base location for finding input files, and be safe to run on
+Windows, macOS, and Linux.
+Handle missing dependencies, unreadable or corrupted images, and unsupported
+file types gracefully with clear, user-friendly messages. ---

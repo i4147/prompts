@@ -1,0 +1,1 @@
+Simple version - search current directory for license files and create database.

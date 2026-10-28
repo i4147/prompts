@@ -1,0 +1,19 @@
+Write a Python script that compresses a given folder into a tar-based archive,
+supporting both plain tar and gzip-compressed tar output, with an optional step
+that removes the original folder after successful archiving.
+The tool should be runnable from the command line and accept the target folder
+path as its primary input, along with optional arguments for specifying a custom
+output archive location, choosing the compression mode, and enabling cleanup of
+the source directory.
+Where practical, it should take advantage of multiple workers to speed up
+compression of large folder trees, while still producing a single valid archive
+file.
+The script should resolve paths to absolute form, create parent output locations
+as needed, and report progress and the final archive path to the user via
+console messages.
+It must handle errors gracefully, such as missing folders, permission problems,
+or failed writes, by printing a clear message and returning a non-zero exit
+status, and it should only delete the original folder if the archive was created
+successfully.
+The overall behavior should be robust, readable, and suitable for use in backup
+or archival workflows. ---

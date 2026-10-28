@@ -1,0 +1,29 @@
+Write a Python script that scans a project directory tree and detects the
+natural language used in its text-based files, reporting the likely human
+language of each file and a summary of the languages found across the project.
+The script should start from the current working directory and recursively
+explore subfolders, skipping common non-source or generated directories (such as
+version control folders, dependency and virtual environment folders, build
+output, and hidden directories) as well as binary and media file types (images,
+archives, executables, documents, and similar).
+Only files that can be meaningfully read as text should be analyzed; files that
+appear to be binary or cannot be decoded should be ignored gracefully.
+For each eligible file, the script should read its contents, extract the textual
+material, and use a language-identification approach to estimate the most
+probable language.
+Very short or trivial content should be excluded from classification, and
+results should only be trusted when the confidence exceeds a reasonable
+threshold; low-confidence results should be marked as undetermined rather than
+guessed.
+The output should be a readable, colorized terminal report (with color used
+sparingly and degrading gracefully when the terminal does not support it) that
+lists each analyzed file with its detected language and confidence score,
+followed by an aggregate summary showing how many files fall into each language,
+the percentage distribution, and the count of files that could not be
+classified.
+The script should handle errors such as permission problems, unreadable files,
+and encoding issues without crashing, and should exit with a clear status code
+indicating success or failure.
+Keep the implementation clean, robust, and efficient for projects containing
+thousands of files, and include a brief command-line usage description so users
+understand how to run it. ---

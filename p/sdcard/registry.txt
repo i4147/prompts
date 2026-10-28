@@ -1,0 +1,38 @@
+Write a Python module that implements a lightweight file-format parser registry for a
+document-processing system.
+The module should provide a central mechanism to map file suffixes (extensions) to parser functions,
+where each parser is a callable with the signature `parser(path: Path) -> Document`
+(the `Document` type is defined elsewhere and referenced only as a forward reference/type hint,
+not imported at module load time, to avoid circular imports).
+Core requirements: 1.
+Use `from __future__ import annotations`
+and type hints from `typing` (`Callable`, `Dict`, `Iterable`, `List`) along with `pathlib.Path`.
+2. Maintain two module-level private dictionaries:
+- A registry mapping normalized suffix strings (e.g. `.pdf`, `.docx`) to parser callables. - An
+aliases mapping from suffix to a canonical human-readable format name (e.g. `.docx` -> `"word"`).
+3. Implement a `register(suffixes, format_name)` function that acts as a decorator factory.
+It should: - Accept an iterable of suffixes
+(which may or may not include the leading dot, and may be in any letter case)
+and a canonical Return a decorator that, when parser function,
+registers that function in the registry for every normalized suffix
+(lowercased, with a leading dot added if missing),
+and records the canonical format name for each suffix in the aliases dict. - Return the original
+function unchanged so it cancalled normally after decoration. - This is intended to be used by
+parser implementation modules (e.g. under a `parsers/` package) so that importing those modules has
+the side effect of populating the registry.
+4. Implement a `find_parser(path)` function that:
+- Looks up the parser registered for the lowercased suffix of the given path. - If no parser is
+registered for that suffix,
+falls back to a plain-text parser (`parse_plain`) imported lazily from a local `parsers.plain`
+submodule (to avoid circular imports at module load time),
+treating unknown file types as plain text. - Returns the resolved parser callable.
+5. Implement a `format_name(path)` function that returns the canonical format name associated with
+the path's suffix, defaulting to `"text"` if the suffix is unknown.
+6. Implement a `known_suffixes()` function that returns a sorted list of all currently
+registered suffixes.
+7. Implement a `supported_formats()` function that returns a copy of the full
+suffix-to-canonical-format-name mapping as a dictionary.
+Include a concise module-level docstring explaining that this module maps file suffixes to parser
+callables, that a parser has the signature `parser(path: Path) -> Document`,
+and that parsers are registered via the `parsers/__init__.py` module on import.
+Add clear docstrings to each public function describing its behavior. ---

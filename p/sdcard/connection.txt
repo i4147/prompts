@@ -1,0 +1,37 @@
+Write a prompt for an AI coding agent to generate a Python module that extends the `termuxgui`
+(Termux:GUI) Python bindings with a higher-level,
+object-oriented connection and event-dispatch layer.
+The script should: - Import `Type` and `Optional` from `typing`, and import `termuxgui as tg`,
+along with `Activity` from `termuxgui.oo.activity`
+and `View` from `termuxgui.oo.view`. - Define a module-level helper function
+`_dispatch_event_recursive(e: tg.Event, v: View) -> bool` that recursively searches a `View` tree
+for the view whose `id` matches the event's `id`.
+If found and the view has a method named `"on_" + e.type` (built via `hasattr`/`getattr`),
+call that method with `(e, v)` as arguments and return `True`.
+If the view has a `views` attribute (list of child views),
+recursively call `_dispatch_event_recursive` on each child return `True` as soon as a child
+returns `True`.
+If no match is found anywhere in the tree,
+return `False`. - Define a class `Connection` that subclasses `tg.Connection`,
+with a docstring explaining it represents a connection to the Termux:GUI plugin
+and holds functionality not tied to a specific View, Activity, or Task. - Inside `Connection`,
+declare a private class-level dictionary attribute `__activities` typed as `dict[str, Activity]`,
+initialized empty, used to track launched activities keyed by activity ID (`aid`). - Implement a
+`launch` method with signature
+`launch(self, activity: Type[Activity], t: Optional[tg.Task] = None, *args, **kwargs)` that
+instantiates the given `Activity` subclass by calling `activity(self, t, *args, *kwargs)`,
+then stores the created activity instance in the `__activities` dict keyed by its `aid`.
+Include a docstring stating it launches an Activity with the specified parameters. - Implement an
+`event_loop` method with signature `event_loop(self)` that iterates over `self.events()`.
+For each event `e`, if the event has an `aid` attribute,
+look up the corresponding `Activity` in `__activities`.
+If found (not `None`),
+use a `match` statement on `[e.type]` to dispatch to the activity's lifecycle methods:
+`on_create()` for `tg.Event.create`, `on_start()` for `tg.Event.start`,
+and `on_resume()` for `tg.Event.resume`.
+Include a docstring stating it runs the event loop, dispatches events to Activities and Views,
+and exits when there are no Activities left.
+Keep the code style consistent with lightweight,
+minimal Python OOP wrappers around an existing GUI binding library,
+using type hints from `typing` where applicable, and preserve the described method/function names,
+signatures, and docstring wording exactly as specified. ---

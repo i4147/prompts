@@ -1,0 +1,25 @@
+Living-audit regression tests for the algorithmic-complexity DoS cluster
+(GHSA-ww6m-cw3f-q94g umbrella -- PorterStemmer;
+siblings GHSA-vp2x-qp44-57v7 XMLCorpusView, GHSA-8mpw-7fpc-4gqj TEICorpusView,
+and the newly-found ``read_sexpr_block``).
+CWE-407 / CWE-400.
+Three groups: 1.
+The original quadratic cluster:
+each sink ran in O(n^2) on a single crafted input on the unpatched code
+(measured out-of-process:
+PorterStemmer `'y'*20000+'ness'` >20s, TEICorpusView 80k lines = 43s,
+XMLCorpusView / read_sexpr_block clean quadratic doubling curves) and is now linear.
+2. The general single-untrusted-input batch found by sweeping the whole repo:
+TweetTokenizer digit backtracking, RIBES residual window,
+SyllableTokenizer (vowelless-syllable list rebuild + oversized token), TextTiling,
+and the CHILDES ``replace=True`` per-word rescans.
+3. The two-string distance/alignment family
+(``edit_distance`` / ``edit_distance_align`` / ``jaro_similarity`` in metrics.distance,
+``aline.align``, ``gale_church.align_blocks``):
+each builds an O(n*m) DP matrix (or, for jaro, an O(n^2) double loop) over two untrusted strings
+and is now length-capped. jaro's earlier CVE-2026-12926 fix cut the inner loop O(n^3)->O(n^2)
+but left the length unbounded; the cap closes that residual.
+Tests assert (a) correctness is preserved and (b) a crafted input is bounded
+-- either linear (ratio/wall-clock) or rejected by an explicit length guard.
+The sweep also *cleared* several look-alikes as linear or by-design;
+those are kept here as explicit BENIGN cases so a future change that turns one quadratic is caught.

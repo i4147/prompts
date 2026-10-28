@@ -1,0 +1,26 @@
+Write a Python script that acts as a command-line batch compression tool for
+files and directories.
+The tool should accept a target path (a single file or a folder) and an
+algorithm choice, then compress the contents using one of several widely used
+formats, including Zstandard, XZ, 7z, Gzip, Bzip2, Brotli, and LZ4.
+Each format should use sensible high-compression defaults that can be tuned.
+The script should walk through the specified folder (optionally recursing into
+subfolders), process multiple files concurrently with a bounded number of worker
+threads or tasks, and write each output archive or compressed file alongside the
+original with the correct extension for its format.
+It should also support an option to bundle a whole directory into a single
+compressed tarball (e.g., .tar.zst or .tar.xz) rather than compressing each file
+individually.
+Key behaviors to include: - Report progress and a final summary showing how many
+files were processed, skipped, or failed, along with the original and compressed
+sizes and the overall compression ratio, using human-readable size formatting. -
+Skip files that are already compressed or that have already been processed,
+unless an overwrite flag is given. - Detect and gracefully handle missing
+optional compression libraries, marking those formats as unavailable instead of
+crashing, and list which formats are available when requested. - Provide a
+dry-run mode that reports what would be done without writing any files. - Handle
+errors per file without stopping the whole batch, and return a non-zero exit
+status if any failures occurred. - Validate inputs with clear error messages for
+invalid paths or unsupported algorithms. - Use a clean command-line interface
+with help text, and read compression chunk sizes in reasonably large blocks for
+efficient streaming of large files. ---

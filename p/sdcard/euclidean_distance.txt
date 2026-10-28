@@ -1,0 +1,19 @@
+Write a Python script that defines a function to compute the Euclidean distance between two points
+or vectors.
+Requirements: - Include `from __future__ import annotations` at the top of the file. - Use NumPy
+(assume it is imported as `np`) for all numerical operations.
+- Define a function named `euclidean_distance(x, y)` that:
+  - Accepts two inputs `x` and `y`, which can be lists, tuples,
+  or array-like structures of the same length,
+  representing coordinates
+  or vectors. - Converts both inputs into NumPy arrays. - Computes the element-wise difference
+  between the two arrays. - Squares each element of the difference. - Sums all the squared values. -
+  Takes the square root of the resulting sum. - Returns the final computed value as the Euclidean
+  distance between `x`
+  and `y`. - Implement the computation step-by-step using separate NumPy operations
+  (`np.subtract`, `np.power`, `np.sum`, `np.sqrt`) rather than combining them into a single
+  expression, keeping each intermediate result stored in a variable named `res`. - Do not include
+  any input validation, error handling, docstrings, comments,
+  or example usage — only the function definition itself. - The function should work generically for
+  inputs of any matching dimensionality
+  (e.g., 2D points, 3D points, or higher-dimensional vectors). ---

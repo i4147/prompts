@@ -1,0 +1,34 @@
+Write a Python script that acts as a command-line archive compressor and
+benchmarking tool.
+It should accept one or more input files or directories, compress them using
+several selectable compression algorithms (such as gzip-style, bzip2, LZMA/XZ,
+Brotli, PPMd, and Zstandard-style codecs where available), and produce
+compressed output files or a single archive.
+The tool should be able to run multiple compression jobs in parallel across CPU
+cores, with a configurable worker count, and it should show a live, visually
+rich terminal dashboard with per-task progress bars, transfer speeds, elapsed
+time, and an overall summary table at the end.
+Key behaviors: - Accept command-line arguments for input paths, output location,
+the list of algorithms to try, compression level or preset (including an
+"extreme" mode), chunk and buffer sizing, and the number of parallel workers. -
+Support a mode that compresses each input with every requested algorithm and
+reports a comparison table of original size, compressed size, compression ratio,
+and time taken, ranking the results. - Handle directories by recursively
+collecting files and preserving their relative structure, optionally packing
+them into a tar stream before compression. - Verify integrity: after
+compression, optionally decompress in memory or to a temporary location and
+compare checksums (such as SHA-256) against the original, reporting any mismatch
+clearly. - Write a small self-describing header or metadata record alongside
+compressed payloads (for example, the algorithm name, original size, and
+checksum) so that the output can be identified and validated later, and provide
+a matching decompression/inspection mode. - Communicate between worker processes
+and the main process through a queue so progress updates flow to the dashboard
+in real time without blocking the workers; report and recover gracefully from
+worker errors, printing full tracebacks in a dedicated error panel without
+crashing the whole run. - Optionally export the final results as a JSON report
+file. - Skip codecs whose optional third-party dependencies are not installed,
+warn the user about them, and continue with the remaining algorithms. - Handle
+keyboard interrupts cleanly by cancelling pending jobs, terminating workers,
+removing partial output files, and printing a summary of what completed. - Show
+clear, friendly usage help and validate all user input with informative error
+messages before any work begins. ---

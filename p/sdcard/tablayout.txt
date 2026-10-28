@@ -1,0 +1,34 @@
+Write a Python module for the Termux:GUI Python binding that implements a `TabLayout` widget class,
+used to represent a native Android TabLayout view within a Termux:GUI activity.
+The class must be named `TabLayout`
+and inherit from `HorizontalScrollView` (imported from `termuxgui.horizontalscrollview`),
+since TabLayout is conceptually a horizontally scrollable row of tabs.
+It should also make use of `ViewGroup` (imported from `termuxgui.viewgroup`) for initialization,
+`View` (imported from `termuxgui.view`) for type hinting the optional parent parameter,
+and `Activity` (imported from `termuxgui.activity`) for type hinting the activity parameter.
+Use `typing.Optional`, `typing.List`, and `typing.Literal` for type annotations.
+Include a class docstring describing it as representing a TabLayout.
+Implement the following members:
+1. `__init__(self, activity: Activity, parent: Optional[View] = None, visibility:
+Optional[Literal[0, 1, 2]] =
+None)`: - Builds a parameters dictionary containing the activity's `aid`
+and the `visibility` value. - If `parent` is provided (not None),
+adds the parent's `id` to the parameters dictionary under the key `"parent"`. - Sends a
+`createTabLayout` request via `activity.c.send_read_msg`,
+passing the method name and the parameters dictionary (under the key `"params"`),
+and uses the response together with `activity` to initialize the instance by calling
+`ViewGroup.__init__` (passing `self`, `activity`, and the id returned from the message).
+2. `setlist(self, list: List[str])`: - Docstring:
+"Sets the list tabs." - Sends a `setList` message via `self.a.c.send_msg`,
+with `method` set to `"setList"` and `params` containing the activity id (`self.a.aid`),
+the view id (`self.id`), and the `list` of tab name strings.
+3. `selecttab(self, tab: int)`:
+- Docstring explaining that it selects a tab in the TabLayout,
+where `tab` is the zero-based index of the tab to select. - Sends a `selectTab` message via
+`self.a.c.send_msg`,
+with `method` set to `"selectTab"` and `params` containing the activity id (`self.a.aid`),
+the view id (`self.id`), and the `tab` index.
+The overall purpose of the script is to provide a thin wrapper class that communicates with the
+Termux:GUI backend over its JSON-based socket protocol,
+allowing a Python program to create a tab bar UI element, populate it with a list of tab labels,
+and programmatically select which tab is active. ---

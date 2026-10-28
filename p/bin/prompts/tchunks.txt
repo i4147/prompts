@@ -1,0 +1,6 @@
+Write a Python script that acts as a multi-backend text translation tool,
+reading source text from files or standard input and writing translated output to files
+or standard output.
+The tool should support several translation services
+(such as commercial APIs and free web-based translators),
+selectable from the command line, and it ---

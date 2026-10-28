@@ -1,0 +1,14 @@
+Generate a Python script that checks Python files for syntax errors
+and moves invalid ones into per-directory ``error`` folders.
+The script should: - Accept file and directory paths as positional CLI arguments,
+defaulting to the current working directory
+when none are supplied. - Recursively discover ``.py`` files using a helper ``get_pyfiles`` imported
+from a module named ``dh``. - Validate each file's syntax with ``ast.parse`` (reading as UTF-8). -
+On failure, copy the offending file into an ``error`` subdirectory next to it,
+disambiguating name collisions with a numeric suffix. - Support a ``--dry-run/-n`` flag that reports
+intended actions without touching the filesystem. - Use ``loguru`` for all logging output. - Use
+``pathlib.Path`` exclusively for filesystem operations. - Use ``multiprocessing.Pool.apply_async``
+with a fixed pool of 8 workers to process files concurrently,
+with no CLI options controlling parallelism. - Include complete,
+strict type hints and docstrings on all functions. - Provide a ``main()`` entry point returning an
+integer exit code.

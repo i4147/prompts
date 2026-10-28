@@ -1,0 +1,12 @@
+Write a minimal Python module that serves as a scaffold/placeholder for a "Prettier AST Doc"
+implementation.
+Requirements: - Include `from __future__ import annotations` at the top of the file to enable
+postponed evaluation of annotations. - Define a module-level string constant named `DOC` with the
+exact value `"Prettier AST Doc (Python scaffold)"`. - Define `__all__` as a list containing the
+single string `"DOC"`,
+to explicitly declare the module's public API. - The script should have no other logic, functions,
+classes, or side effects
+— it is purely a lightweight placeholder/scaffold module intended to be expanded later with a real
+implementation of a Prettier-style AST document builder. - No imports other than the `__future__`
+import are needed. - Output should be the exact minimal source code satisfying the above,
+with no additional comments, docstrings, or logic beyond what is specified. ---

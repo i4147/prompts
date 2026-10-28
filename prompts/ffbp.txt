@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line file system utility for
+analyzing and cleaning up a project directory.
+The tool should accept a target directory (defaulting to the current working
+directory) and a set of options that control its behavior, parsed from the
+command line in a user-friendly way.
+Core capabilities it should provide: 1. **Human-readable size formatting**:
+Convert raw byte counts into compact, readable strings with appropriate units
+(bytes through terabytes, and beyond if needed), displayed with two decimal
+places. 2. **Extensionless Python script detection**: Identify files that have
+no file extension but are actually Python scripts.
+A file should qualify only if it is a regular file, is not inside a hidden
+directory or a cache directory, is not binary (no null bytes in its opening
+content), and begins with a shebang line referencing Python.
+Unreadable files should be safely skipped rather than crashing the tool. 3.
+**Backup file cleanup**: Recursively find all files ending in a `.bak` extension
+under the target directory, print each file's path relative to the target
+directory as it is removed, and delete it. 4. **Extension statistics**:
+Recursively scan the target directory and report, for a given file extension,
+the number of matching files and their total size, using the human-readable size
+format.
+The extension should be provided as a command-line argument and handled with or
+without a leading dot.
+Expected behavior: - Each capability should be selectable through a clear
+command-line option, with a helpful usage message and `--help` text. - Output
+should be concise, printed to standard output, with errors reported to standard
+error and a non-zero exit status on failure. - The tool should handle missing
+directories, permission errors, and invalid arguments gracefully without
+crashing. - Deletion of backup files should be performed carefully, reporting
+each removal so the user can see exactly what was changed. - The script should
+be runnable directly as a standalone program with a main entry point, and
+designed so the individual features can be reused or tested independently. ---

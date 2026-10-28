@@ -1,0 +1,12 @@
+Regression tests for the quadratic ReDoS in NLTK's token-regex search
+(``nltk.text.TokenSearcher.findall`` / ``Text.findall``)
+-- CWE-1333. ``findall`` turned a token-regex query into a real regex
+and applied it multi-position over the joined corpus with the stdlib ``re``.
+For a quantified token group followed by a non-match
+(e.g. ``<a>*<b>`` over a long run of ``a`` tokens),
+``re`` re-scanned the run from every position -- quadratic in the number of tokens,
+with no bound on corpus length or backtracking.
+The search now uses the third-party ``regex`` engine
+(which does not re-scan that way and is far faster here)
+and honours a wall-clock ``timeout`` so a crafted query/corpus cannot pin a CPU core.
+The output is unchanged for ordinary queries.

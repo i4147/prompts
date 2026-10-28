@@ -1,0 +1,65 @@
+Create a Python module that implements a custom logging
+and reporting system for a software scaffolding/project generation tool (similar to PyScaffold).
+**Purpose:** Build a logging utility that extends Python's standard `logging` module to provide
+structured, colorized,
+human-readable "activity reports" for file-system
+and project operations (e.g., "create", "update", "run", "invoke"), alongside standard log messages.
+It should support nested/indented log output for sub-operations,
+context managers for temporarily adjusting log levels or indentation,
+and integration with a terminal UI module (`termui`) for colored/styled output. **Key components to
+implement:** 1. **Module-level constant** `DEFAULT_LOGGER` set to the module's `__name__`,
+documented as the name of the package's default logger usable with `logging.getLogger`.
+2. **Helper functions:** - `_are_equal_paths(path1, path2)`:
+compares two paths by resolving them to real absolute paths
+and checking equality. - `_is_current_path(path)`:
+checks if a given path refers to the current directory (".").
+3. **`ReportFormatter` class** (extends `logging.Formatter`): - Class constants:
+`ACTIVITY_MAXLEN` (e.g., 12), `SPACING` (e.g., two spaces), `CONTEXT_PREFIX` (e.g., "from"),
+`TARGET_PREFIX` (e.g., "to"). - `format(record)`:
+dispatches to a special "report" formatting method if the log record has an `activity` attribute,
+otherwise falls back to default formatting. - `create_padding(activity)`:
+returns spacing string so activity labels align to a fixed column width. - `format_path(path)`:
+converts an absolute path to a relative path (using `relpath`) when it contains a path separator
+and the relative form is valid and shorter, falling back to the original path otherwise;
+relies on a path-validity check imported from a sibling `file_system` module. -
+`format_activity(activity)`:
+formats/returns the activity label (hook for subclasses to add styling). -
+`format_subject(subject, _activity=None)`:
+formats the subject of the activity, using `format_path` if a subject is given,
+else empty string. - `format_target(target, _activity=None)`:
+formats an optional "target" path (e.g., destination of a copy/move), prefixed appropriately,
+or empty if no target. **Additional expected behavior
+(to be completed consistently with the above):** - A `format_context`/context-formatting method that
+prefixes a context path with `CONTEXT_PREFIX` and uses `format_path`,
+omitting it when the context is the current directory (using `_is_current_path`). - A
+`format_report` method that assembles activity, padding, subject, context,
+and target into a single aligned, readable line,
+and a `format_default` method that falls back to the standard `Formatter.format` behavior for
+regular (non-activity) log records. - A colorized subclass of `ReportFormatter`
+(using the `termui` module's styling helpers) that overrides `format_activity`
+(and possibly other format_* methods) to add colors/styles depending on the activity type
+(e.g., green for "create", blue for "update", red for "delete", etc.). - A custom `logging.Handler`
+(e.g., a `StreamHandler` subclass) that writes formatted records to the terminal,
+respecting verbosity levels. - A `LoggerAdapter` subclass exposing convenience methods to log
+"activity" records (passing `activity`, `subject`, `context`, `target` as extra fields) in addition
+to standard `debug`/`info`/`warning`/`error` methods,
+plus a method to report generic activities with arbitrary keyword metadata. - Support for a
+nesting/indentation mechanism (tracked via a `DefaultDict[int, int]` or similar counter) so that
+related sub-activities are visually indented under a parent activity,
+exposed via a `@contextmanager` (e.g., `indent()` or `context()`) that increases indentation level
+on entry and restores it on exit. - A `@contextmanager` for temporarily changing the logger's level
+(e.g., a `level(...)` context manager) that resets to the original level on exit. - A module-level
+singleton logger/adapter instance
+(created via `getLogger(DEFAULT_LOGGER)` wrapped in the custom adapter) that other parts of the
+package can import and use directly,
+with default handler/formatter/level (`INFO`) configured. - Use of type hints throughout
+(`Optional`, `Sequence`, `DefaultDict`, `cast`)
+and the `Styles = Sequence[str]` type alias for collections of style names passed to `termui`.
+**Inputs/Outputs:** - Input:
+standard logging calls (`debug`, `info`, `warning`, `error`) plus activity-reporting calls with
+parameters like activity name, subject path, optional context path, optional target path,
+and style/level overrides. - Output:
+formatted text written to the console/stream — plain messages for standard logs, and aligned,
+colorized "activity:
+subject (from context) (to target)" style lines for reported activities,
+with support for indentation to reflect nested operations. ---

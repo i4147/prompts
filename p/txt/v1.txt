@@ -1,0 +1,4 @@
+monolith: Save webpages as single HTML files with embedded resources.
+Usage: monolith [OPTIONS] <URL|FILE> -e,
+--ignore-errors Ignore unreachable resources (don't fail) -i,
+--no-images Strip all images from output

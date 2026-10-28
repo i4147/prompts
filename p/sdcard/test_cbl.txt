@@ -1,0 +1,27 @@
+Write a Python script that recursively scans the current working directory for files
+and prints a cleaned-up version of each text file's content to standard output.
+The script must: - Use `pathlib.Path` to get the current working directory (`Path.cwd()`). - Import
+and use three helper functions from a local module named `dh`: - `get_filez(path)`:
+a generator or iterable that yields all file paths found under the given directory (recursively). -
+`is_binary(path)`: a function that returns `True` if the given file path is a binary file,
+`False` otherwise. - `clean_blank_lines(content)`:
+a function that takes a string of file content
+and returns a cleaned version of it (e.g., with redundant/extra blank lines removed or normalized).
+- In the main execution block (guarded by `if __name__ == "__main__":`): 1.
+Get the current working directory.
+2. Iterate over all file paths returned by `get_filez(cwd)`.
+3. For each file path, skip it if `is_binary(path)` returns `True`.
+4. Otherwise, read the file's full text content using `path.read_text()`.
+5. Pass the content through `clean_blank_lines()` to remove/normalize blank lines.
+6. Print the cleaned content to standard output using `print()`.
+Notable behavior: - Only text (non-binary) files are processed;
+binary files are silently skipped. - The script processes files recursively starting from the
+current working directory,
+with no command-line arguments or configuration options. - No explicit file encoding is specified
+when reading files (relies on default encoding). - Output is simply printed to the console/stdout,
+one file's cleaned content after another, with no filenames, separators,
+or headers printed between them. - The script does not write back to the files
+or save the cleaned output anywhere;
+it only reads and prints. - Assumes the `dh` module
+(containing `clean_blank_lines`, `get_filez`, and `is_binary`) is available in the Python
+path/project. ---

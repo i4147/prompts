@@ -1,0 +1,18 @@
+Write a Python script that acts as a command-line tool for analyzing
+and managing downloaded package files from a local repository or cache directory,
+with the goal of identifying which packages to keep, exclude,
+or report on based on configurable filters such as name patterns, size limits,
+and file types (for example Debian .deb packages).
+The tool should accept inputs such as a source directory, optional exclusion lists or patterns,
+size thresholds, and output options, then scan the matching files,
+compute useful metadata (such as file sizes, checksums, and package names),
+and apply the filters to produce a summary.
+It should support processing many files efficiently using parallel execution where appropriate,
+handle errors gracefully when files are unreadable or malformed without stopping the whole run,
+and provide human-readable size reporting.
+Outputs should include a clear console summary of totals and excluded items,
+and optionally a machine-readable report (such as CSV or JSON) written to a specified path,
+along with an option to perform a dry run that shows what would be removed
+or copied without modifying anything.
+The script should be runnable from the command line with a help option, validate its arguments,
+and exit with meaningful status codes on success, partial failure, or fatal errors. ---

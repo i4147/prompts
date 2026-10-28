@@ -1,0 +1,4 @@
+Example of using filter-branch to rewrite commit history.
+This demonstrates how to use dulwich's filter-branch functionality to:
+- Change author/committer information - Modify commit messages - Apply custom filters The example
+shows both the high-level porcelain interface and the lower-level filter_branch module API.

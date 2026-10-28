@@ -1,0 +1,1 @@
+Fast cryptographic hash of Python objects, with a special case for fast hashing of numpy arrays.

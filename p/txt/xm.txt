@@ -1,0 +1,1 @@
+Extract module docstrings from Python files and save them as .txt or .json.

@@ -1,0 +1,42 @@
+**Features/flags to add**
+- `--dry-run` / `--check`: show planned output or verify no changes, no writes.
+- `--stdout`: write consolidated output to stdout instead of files.
+- `--config pyproject.toml`: persist excludes, entry modules, formatting, strictness.
+- `--format` / `--post-format`: run `black`/`ruff format` on generated files.
+- `--diff`: emit unified diff against existing output.
+- `--overwrite` / `--force`: control overwriting non-empty output dirs.
+- `--include` globs, plus clearer precedence vs `--exclude`.
+- `--keep-docstrings` / `--strip-comments` / `--keep-comments`.
+- `--rename-strategy`: collision policy (`prefix`, `suffix`, `module_path`, error).
+- `--dedupe={none,safe,aggressive}`: control duplicate block removal.
+- `--imports={prune,keep,strict}`: finer than `--keep-unused-imports`.
+- `--all={ignore,respect,merge,recompute}`: richer `__all__` handling.
+- `--entry` improvements: keep multiple mains, rename `main`, generate `if __name__ == "__main__"`.
+- `--namespace` / `--preserve-modules`: emit module-like namespaces or comments mapping origin.
+- `--source-map`: comments showing original file/line ranges.
+- `--fail-on-warning`, `--max-skipped`, `--allow-syntax-errors`.
+- `--jobs` aliases, `--no-parallel`, progress bar.
+- `--validate`: compile + optional import smoke test.
+- `--mode package|module|flat|split`: more output layouts.
+- `--pyproject` / `--setup-cfg` awareness for package discovery.
+
+**Edge cases to consider**
+- Dynamic imports: `importlib`, `__import__`, `globals()`, `locals()`, `eval`, `exec`, `getattr`.
+- `__getattr__`, module-level `__dir__`, monkeypatching, metaprogramming.
+- Computed or mutated `__all__`, re-exports, star imports, external star imports.
+- Conditional/platform/optional imports and `TYPE_CHECKING` imports.
+- Nested imports inside functions/classes and side-effect-only imports.
+- Name collisions across modules, external-vs-local collisions, import aliases.
+- Circular imports and circular import-time dependencies.
+- Duplicate definitions with same/different bodies; duplicate side-effect blocks.
+- Class body scoping, comprehensions, lambdas, walrus, `match`, `global`/`nonlocal`.
+- Decorators/types/default args referencing names that get renamed.
+- `__file__`, `__name__`, `__package__`, `__path__`, relative paths, resources.
+- `__main__` guards, multiple entry modules, `main()` detection.
+- Namespace packages, `src/` layout, single-file input, symlinks, output inside source tree.
+- Syntax errors, partial parse, encoding/BOM, CRLF, tabs, shebang/encoding cookies.
+- `pyproject.toml`/`setup.py` discovery, tests/docs exclusion, generated/vendored code.
+- Huge projects, worker crash/pickling, permission errors, non-UTF8 files.
+- Imports that rely on module identity or import order.
+- Reassignments/rebindings at module scope and shadowing by parameters/locals.
+- data files: files that are not python code, but should be added to pkg

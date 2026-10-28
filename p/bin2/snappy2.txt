@@ -1,0 +1,3 @@
+Pure-Python implementation of Google Snappy (block format).
+Based solely on the official format_description.txt.
+No entropy coding, no framing – just the raw Snappy bitstream.

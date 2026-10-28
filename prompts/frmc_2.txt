@@ -1,0 +1,27 @@
+Write a Python script that scans a directory tree and identifies files that
+should be excluded from some downstream processing (such as code analysis,
+linting, or indexing), using a configurable set of rules.
+The script should walk the directory structure starting from a root path
+provided by the user, skipping well-known tooling, dependency, cache, and
+version-control directories (for example, git metadata, virtual environments,
+build outputs, editor settings, and package caches).
+Within the remaining files, it should classify each file by its extension and
+filename: certain extensions and specific filenames (such as configuration
+files, markup and documentation formats, data files, and many language sources
+that are not the target of processing) must be filtered out, while files whose
+names or extensions are on an explicit processing list (for example, build files
+like Makefiles) must be kept or flagged for processing.
+The script should take a root directory and optional settings from the command
+line, and produce a clear result: a list of the files selected for processing,
+with an option to output them to the console or to a file, and a summary of how
+many files were scanned, selected, and skipped.
+It should handle large directory trees efficiently by taking advantage of
+parallel processing where it helps, gracefully handle unreadable paths,
+permission errors, and symbolic links without crashing, and report errors in a
+concise way.
+Extension and name matching should be case-insensitive where appropriate, and
+the set of skipped directories, skipped extensions, skipped filenames, and
+processed filenames should be easy to extend or override without modifying the
+core logic.
+The script should exit with a meaningful status code: zero on success, a
+non-zero code on invalid input or fatal errors. ---

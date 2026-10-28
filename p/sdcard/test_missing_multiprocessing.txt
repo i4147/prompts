@@ -1,0 +1,2 @@
+Pyodide and other single-threaded Python builds will be missing the _multiprocessing module.
+Test that joblib still works in this environment.

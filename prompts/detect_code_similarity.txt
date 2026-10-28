@@ -1,0 +1,44 @@
+Write a Python script that analyzes a collection of Python source files to
+detect duplicate or near-duplicate code, and reports the similarity groups
+found.
+The tool should accept a directory (or list of paths) as input, recursively
+discover Python files, and process them in parallel to keep runtime reasonable
+on large codebases.
+Core behavior to implement: - Normalize each file's source before comparison so
+that cosmetic differences are ignored.
+Normalization should discard comments, blank lines, and formatting differences,
+and ideally canonicalize identifiers and literal values so that renamed
+variables or changed constants still match structurally.
+Work from the parsed syntax structure where possible, and fall back gracefully
+when a file cannot be parsed (for example, due to syntax errors or Python
+version differences), reporting such files rather than crashing. - Compute
+fingerprints for each normalized file using one or more similarity techniques,
+such as exact content hashing for identical files and fuzzy hashing or
+locality-sensitive hashing for near-duplicates.
+Use optional third-party fuzzy-hash libraries when they are installed, and
+provide a built-in fallback (for example, difflib-based or n-gram/shingle-based
+similarity) when they are not. - Compare files pairwise or via an indexed
+approach, group them into clusters of duplicates or near-duplicates according to
+a configurable similarity threshold, and avoid reporting the same pair multiple
+times. - Produce a human-readable report in the terminal with a rich,
+well-formatted summary: total files scanned, number of duplicate groups, a table
+listing each group with its member files and similarity scores, and a list of
+files that failed to parse.
+Show a progress indicator during scanning and comparison. - Support a
+machine-readable output option (JSON) that includes the same information in a
+structured form, and optionally write it to a file. - Accept command-line
+options for the root path(s), minimum similarity threshold, file include/exclude
+patterns, number of worker processes or threads, output format and destination,
+and a verbose/quiet logging level.
+Validate inputs and print clear error messages for invalid paths or thresholds.
+- Handle large inputs responsibly: skip unreadable or binary files, respect a
+maximum file size, and avoid loading the full set of pairwise comparisons into
+memory when it is not necessary. - Log diagnostic information (skipped files,
+parse errors, timing) without cluttering the main report. - Exit with a non-zero
+status code when a fatal error occurs, and zero otherwise, so the tool can be
+used in continuous-integration pipelines; optionally provide a flag that fails
+the run when duplicates above the threshold are found.
+The result should be a single, self-contained command-line tool that a developer
+can run against any Python project to identify copy-pasted or lightly modified
+code, with an emphasis on accuracy, clear reporting, and reasonable performance.
+---

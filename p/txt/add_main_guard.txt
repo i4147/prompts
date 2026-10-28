@@ -1,0 +1,8 @@
+Unified main guard tool: detect and optionally add `if __name__ == "__main__":` guards.
+Usage: python main_guard_merger.py check [PATH] [OPTIONS] python main_guard_merger.py fix [PATH]
+[OPTIONS] Examples: python main_guard_merger.py check # Find missing guards in current dir python
+main_guard_merger.py check src/ # Check src/ directory python main_guard_merger.py fix -m ast # Add
+guards using AST method python main_guard_merger.py fix --dry-run # Preview changes without
+modifying python main_guard_merger.py fix --method regex # Use regex method for adding Original
+script mapping: addmain.py -> python main_guard_merger.py fix --method ast addmainguard.py -> python
+main_guard_merger.py fix --method regex --parallel 8

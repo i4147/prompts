@@ -1,0 +1,32 @@
+Write a Python script that acts as a multi-backend subtitle
+or text translation tool with a command-line interface.
+The script should accept an input file containing text segments (such as subtitle or caption lines)
+and a target language, translate each segment using a selectable translation backend,
+and write the translated output to a new file in a comparable structure.
+Key requirements: - Provide a command-line interface where the user specifies the input file,
+output file, source and target languages, and which translation backend to use.
+Sensible defaults should be provided where possible. - Support multiple translation backends,
+including commercial API-based services, free or open-source translation libraries,
+and self-hosted or remote translation servers.
+Each backend should be selectable
+and should map common two-letter language codes to whatever code format that backend expects. - Make
+the backend integration pluggable so new translators can be added with minimal changes.
+If a required dependency or API key is missing, the script should fail gracefully with a clear,
+user-friendly message rather than crashing with a raw traceback. - Translate segments concurrently
+using a worker pool to improve throughput,
+while preserving the original order of segments in the output.
+Include reasonable handling for rate limits and transient network errors,
+such as retries with backoff. - Preserve the structure
+and timing metadata of the input (for example, numbered entries and time ranges)
+and only translate the human-readable text, leaving formatting, markup,
+and line breaks intact where appropriate. - Provide progress feedback to the user
+and log meaningful information, warnings, and errors using a logging library,
+with the option to adjust verbosity. - Use a safe,
+atomic write strategy for the output file so that a failed run does not leave a corrupted
+or partially written result. - Optionally support caching of previously translated segments so
+repeated runs avoid redundant API calls. - Report a concise summary at the end,
+including the number of segments translated, skipped, and failed,
+plus the elapsed time. - Handle common environment differences gracefully,
+including the operating system and file encoding,
+and always read and write files as UTF-8. - Exit with a non-zero status code on fatal errors
+and zero on success. ---

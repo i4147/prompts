@@ -1,0 +1,3 @@
+Full OCR testing pipeline:
+- Prepares images for OCR - Runs Tesseract with multiple configuration combinations - Compares
+outputs with runtime + confidence

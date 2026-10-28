@@ -1,0 +1,34 @@
+Write a Python command-line script that validates
+and repairs a JSON file containing a list of quote records.
+Purpose: - The script reads a JSON file (its path passed as the first command-line argument) that
+contains a list of objects,
+where each object is expected to have a "quote" field
+and an "author" field. - It checks whether the "quote"
+and "author" fields appear to be swapped for each entry, using a simple heuristic:
+if the length of the "author" string is greater than the length of the "quote" string,
+it assumes the fields were mixed up,
+swaps them back (quote becomes the original author value, author becomes the original quote value),
+and prints the corrected entry to the console along with a separator line of 35 asterisk characters
+for visibility. - Entries that don't trigger this heuristic are kept as-is. - All processed entries
+(whether swapped or not) are collected into a new list.
+Main inputs/outputs: - Input:
+a single command-line argument specifying the path to a JSON file containing a list of dictionaries,
+each with "quote" and "author" keys. - Output:
+a new file named "fixed.json" written to the current working directory,
+containing the processed list of quote/author dictionaries,
+serialized as JSON with UTF-8 characters preserved (ensure_ascii=False)
+and indented with 2 spaces. - The script also prints each corrected (swapped) entry as it's found,
+followed by a line of 35 asterisks, and prints "done." once processing completes.
+Notable behavior: - Use `from __future__ import annotations` at the top of the file. - Use the
+`json`, `sys`, and `pathlib.Path` modules. - Define a function `process_file(path)` that takes a
+`Path` object, opens and reads the JSON file with UTF-8 encoding,
+and performs the described processing. - Only process the data if the loaded JSON is a list
+(`isinstance(data, list)`);
+if it's not a list, no processing/output occurs for entries. - For each item in the list,
+build a new dictionary with "quote"
+and "author" keys (do not mutate the original item object with extra keys). - The script should be
+runnable as `python script.py <path_to_json_file>`,
+reading the path from `sys.argv[1]`
+and converting it to a `Path` object before calling `process_file`. - Wrap the main execution in an
+`if __name__ == "__main__":` block. - The output file "fixed.json" should be opened in default text
+write mode (not explicitly specifying encoding on the write side) and written using `json.dump`. ---

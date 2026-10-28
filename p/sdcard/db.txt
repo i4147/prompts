@@ -1,0 +1,2 @@
+Database layer: stores (path, rank, last_accessed) entries with a frecency (frequency + recency)
+score, using the same aging algorithm as the original Rust `zoxide`.

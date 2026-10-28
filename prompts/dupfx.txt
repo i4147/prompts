@@ -1,0 +1,28 @@
+Write a Python script that finds duplicate files within one or more directories
+and reports them, so a user can review and clean up redundant copies.
+The tool should accept one or more directory paths from the command line, along
+with options that control behavior such as minimum file size, whether to recurse
+into subdirectories, and whether to include hidden files.
+It should walk the file tree and group candidate files that share the same size,
+since only files with identical sizes can be duplicates.
+For efficiency, it should first compare a small sample of each candidate (such
+as the beginning and end of the file) using a fast non-cryptographic hash, and
+only perform a full-content comparison on files that still match.
+Hard links to the same underlying file should be recognized and not reported as
+duplicates of each other.
+Use parallel processing to speed up hashing on large sets of files, with a
+sensible default number of workers that the user can adjust.
+Handle unreadable files, broken symlinks, permission errors, and files that
+disappear during the scan gracefully by logging a warning and continuing rather
+than aborting the whole run.
+The output should be a clear report listing each group of identical files, with
+their paths, sizes, and total reclaimable space.
+Support a machine-readable output option (such as JSON) in addition to a
+human-readable text summary.
+Optionally allow the user to write the report to a file instead of standard
+output.
+Use structured logging for progress and warnings, with a verbosity option that
+controls how much detail is shown.
+The script should exit with a zero status when the scan completes successfully
+and a non-zero status for invalid arguments or fatal errors.
+Include a command-line help message describing every option. ---

@@ -1,0 +1,28 @@
+Write a Python script that acts as a command-line build tool for minifying
+and compressing web assets (CSS, JavaScript, and related files) within a project directory.
+The tool should accept a source path (a single file or a directory tree)
+and an optional output location,
+then produce size-reduced versions of each supported asset while preserving the original files.
+Core requirements: - Accept command-line arguments for the input path,
+an output destination (defaulting to a sensible location next to the source),
+and options such as whether to overwrite existing outputs, whether to skip already-minified files,
+and how many parallel workers to use. - Recognize CSS and JavaScript files
+and minify them using high-quality minification when optional third-party minifiers are available,
+falling back gracefully to a built-in or simpler strategy
+when they are not. - Walk directory trees recursively,
+mirroring the source structure in the output location,
+and copy through non-asset files unchanged
+where appropriate. - Process files in parallel to keep large projects fast,
+and report progress and results clearly. - Measure and report original size, minified size,
+bytes saved, and percentage reduction per file,
+plus overall totals at the end of the run. - Use colored,
+human-readable terminal output with a clear distinction between success, warnings, skipped items,
+and errors, and allow color to be disabled. - Handle errors robustly:
+a failure on one file must not abort the whole run;
+report the problem and continue,
+and return an appropriate exit status at the end. - Support a dry-run
+or summary mode that reports what would be processed without writing anything. - Optionally produce
+a machine-readable summary (such as JSON) of the run for use in other tooling. - Validate inputs up
+front and clear messages for missing paths, unsupported file types, or permission problems.
+The script should be self-contained, runnable directly from the command line,
+and well-organized so that its behavior is easy to understand and extend. ---

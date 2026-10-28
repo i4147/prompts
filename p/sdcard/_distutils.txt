@@ -1,0 +1,1 @@
+Locations where we look for configs, install stuff, etc

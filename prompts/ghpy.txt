@@ -1,0 +1,18 @@
+Write a Python script that queries the GitHub repository search API to retrieve
+the 50 most recently updated public repositories written in Python, then saves a
+human-readable summary report of those results to a local text file and confirms
+the save location to the user.
+The script should: - Load credentials from a environment configuration file
+located in the user's home directory, reading a GitHub access token from it so
+the API request is authenticated. - Request up to 50 Python repositories, sorted
+by most recent update time in descending order. - Handle HTTP errors from the
+API by surfacing a clear failure rather than silently producing an incomplete
+file. - Write the output to a plain text file named "ghpy.txt" in the current
+working directory.
+The file should begin with a title line indicating it contains the 50 most
+active Python repositories, followed by a visual separator. - For each
+repository, record its full name (owner/repo), its web URL, its last updated
+timestamp, and its star count each onented line, with a blank line between
+entries. - Print a confirmation message to the console indicating where the
+results were saved. - Include a standard main-entry guard so the search runs
+only when the file is executed directly. ---

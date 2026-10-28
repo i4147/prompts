@@ -1,0 +1,28 @@
+Write a Python script that builds a installable Python wheel package from a Rust
+project, without requiring the user to manually run a separate packaging
+toolchain.
+The script should be run from the root directory of a Rust crate that contains a
+Cargo manifest describing the package name and version.
+Its purpose is to read the project's metadata from the Cargo manifest, normalize
+the package name into a Python-compatible form, and determine the correct wheel
+compatibility tags (Python implementation/version, ABI, and platform) for the
+machine it runs on, including handling of free-threaded Python builds and less
+common Linux ARM platforms.
+Key behaviors: - Read the package name and version from the Cargo manifest,
+falling back to a sensible default version when none is given, and fail with a
+clear error message and non-zero exit status if the name is missing. - Compute
+the wheel filename tags automatically from the running interpreter and system
+configuration, so the produced wheel matches the current environment. - Assemble
+the compiled native extension and required Python metadata (such as the package
+metadata file, wheel metadata, and record file with content hashes) into a valid
+`.whl` archive that follows the standard wheel layout. - Place the finished
+wheel in an output directory, creating it if needed, and print progress messages
+prefixed with status markers (e.g., `[+]` for success, `[-]` for errors) to
+standard output or standard error as appropriate. - Clean up temporary build
+artifacts and handle filesystem and subprocess failures gracefully with
+informative messages. - Support building for the host platform by default, and
+allow the user to optionally invoke the Rust build step as part of the process
+and locate the resulting shared library artifact automatically.
+The script should be self-contained, cross-platform where practical (Linux,
+macOS, Windows), and produce a wheel that can be installed with pip in the
+current Python environment. ---

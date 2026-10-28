@@ -1,0 +1,85 @@
+# Task: Reimplement the Linux `{{COMMAND}}` command in Python
+## Objective
+Implement a faithful, working reimplementation of the Linux `{{COMMAND}}` command
+(target: {{REFERENCE_IMPL_AND_VERSION}}) in Python 3.11+, on Linux.
+## Naming and CLI contract (HARD)
+- The user-facing command name MUST be exactly `{{COMMAND}}` — same string as the
+  original. No `-py`, `-python`, `-impl`, or any other suffix in:
+    - `pyproject.toml` `[project.scripts]` entry (key MUST be `{{COMMAND}}`),
+    - the `python -m …` module path (`python -m {{PACKAGE}}` must behave like the
+      command, but the console script is the canonical entry point),
+    - usage/help text (`Usage: {{COMMAND}} [OPTION]...`),
+    - error messages.
+- If the original ships multiple binaries (e.g. `mlocate` → `updatedb` + `locate`),
+  register one `[project.scripts]` entry per original binary, each with the exact
+  original name.
+- The CLI surface MUST match the original: subcommand/argument grammar, option names
+  (short and long), option-argument forms (`-e PATTERN`, `--regexp=PATTERN`,
+  `-ePATTERN` where the original accepts the attached form), `--help`, `--version`.
+  `argparse` defaults to different usage/error formatting — either configure it to
+  match or hand-roll parsing so stderr text and exit codes match the original.
+## Flags — ALL of them (HARD)
+- Enumerate every flag the reference version accepts for the target binaries
+  (from `--help`, the man page, and the info manual).
+- Implement **every** flag whose behavior is achievable under the hard constraints
+  below. Do not silently drop flags; do not stub them to no-ops; do not "implement
+  the popular ones."
+- If a specific flag is genuinely unimplementable under the constraints (e.g. needs
+  root, needs a kernel interface not exposed by the stdlib), then in your initial
+  reply you MUST list each such flag with a one-line justification, and reproduce
+  that list in `README.md` under "Unsupported flags". Any flag not on that list is
+  expected to work correctly.
+- For each implemented flag, at least one unit test and one integration-test
+  invocation that exercises it.
+## Hard constraints (apply always)
+- Language: Python 3.11+.
+- **Standard library only.** No `pip install`, no `requirements.txt`, no third-party
+  packages. `[project] dependencies = []`.
+- **No subprocess / no shelling out in the implementation.** The following are
+  forbidden in library or CLI code:
+    - `subprocess` (any API),
+    - `os.system`, `os.popen`, `os.spawn*`, `os.exec*`, `os.fork`, `os.forkpty`,
+    - `pty`, `asyncio.create_subprocess_*`, `multiprocessing` (for invoking
+      external programs),
+    - `ctypes` calls that reach `fork`/`exec*`/`posix_spawn`.
+  You may use `subprocess` inside `unittest` test code ONLY, and ONLY for
+  differential testing against the real reference binary — never in `{{PACKAGE}}/`.
+- No shelling out to the real command, to `find`/`grep`/`sed`/`awk`/`sort`/`xargs`,
+  or to any external helper that would trivially solve the task.
+- No `pip`-installed dependencies; if you believe one is unavoidable, STOP and
+  justify it in your initial reply before adding it.
+## Functional requirements (FILL IN — per-command section)
+{{FILL_IN: input sources, output format (byte-exact), exit-code mapping,
+error semantics (abort vs continue, stderr format), and edge cases that MUST be
+handled correctly. Prefer bulleted lists over prose.}}
+## Quality bar (apply always)
+- Package layout: `{{PACKAGE}}/__init__.py`, `{{PACKAGE}}/core.py` (logic),
+  `{{PACKAGE}}/cli.py` (entry point). Core logic importable and unit-testable.
+- Type hints throughout; `mypy --strict` clean is a bonus.
+- Docstrings on every public function/class.
+- Unit tests with `unittest` (stdlib only — no pytest).
+- Integration test that invokes the installed `{{COMMAND}}` entry point via
+  `subprocess` from test code against a fixture tree.
+- Non-zero exit + stderr on error; no bare `except:`; no `sys.exit()` inside
+  library code (only in the CLI layer).
+## Deliverables (apply always)
+1. Full source tree + `pyproject.toml` with `[project.scripts] {{COMMAND}} = "…"`
+   and `dependencies = []`.
+2. `README.md`: design overview, complete supported-flags table, **Unsupported
+   flags** section (may be empty; must exist), **deviations from reference
+   behavior**, how to run.
+3. `scripts/demo.sh` (or a `Makefile` target) that builds a synthetic fixture,
+   invokes the built entry point by its exact name `{{COMMAND}}`, and shows 5+
+   representative invocations covering multiple flags with expected output.
+4. Final message: what you implemented, every omitted flag with reason, known
+   limitations.
+## Known pitfalls to handle (FILL IN)
+{{FILL_IN: command-specific traps.}}
+## Reporting back (before you write any code)
+Reply with:
+  1. The reference version you are targeting and where you got its flag list.
+  2. The complete list of flags you will implement.
+  3. The list of flags you will NOT implement, with one-line reasons.
+  4. How you will guarantee no process spawning in `{{PACKAGE}}/`.
+  5. How you will handle non-UTF-8 paths and bytes.
+Then proceed.

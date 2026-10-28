@@ -1,0 +1,31 @@
+Write a Python script that acts as a command-line tool for checking, comparing,
+and upgrading the Python packages installed in the current environment against
+the latest versions published on the Python Package Index (PyPI).
+The tool should be safe to run interactively by a developer and also usable in
+automated scripts.
+Core purpose and behavior: - Discover the packages installed in the active
+Python environment along with their current versions. - Query PyPI for the
+latest available release of each package and determine which packages are
+outdated, using proper version comparison that handles pre-releases and common
+version formats. - Support selecting specific packages to check or ignore via
+command-line options, and support a mode that only reports outdated packages
+without changing anything. - Offer an upgrade mode that installs newer versions
+through the environment's own package installer, with an optional confirmation
+prompt, a dry-run option that shows what would happen, and a summary of
+successes and failures at the end. - Handle network failures, missing or private
+packages, malformed metadata, and interrupted runs gracefully, reporting
+problems clearly without crashing the whole run. - Where useful, speed up checks
+by performing network lookups concurrently, and allow the user to control the
+level of parallelism. - Optionally support fuzzy matching of package names to
+help users who mistype a package name, and optionally verify downloaded
+distribution files (such as wheels) for basic integrity before installation. -
+Produce readable, colorized terminal output when running in an interactive
+terminal, and plain output otherwise.
+Optionally support a machine-readable output format (such as JSON) for
+scripting. - Use meaningful exit codes: zero when everything is up to date or
+the requested action succeeded, and distinct non-zero codes for outdated
+packages found in check mode, partial failures, and invalid usage. - Include a
+clear help message describing all options, with a short usage example.
+Keep the implementation self-contained and robust, favor clear user-facing
+messages, and make sure the script runs on common modern Python 3 versions
+across Windows, macOS, and Linux. ---

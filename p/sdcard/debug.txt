@@ -1,0 +1,35 @@
+Write a Python module that implements a custom `argparse.Action` subclass named `DebugAction` for
+use in a command-line tool's option parser
+(intended for a Flake8-like plugin-based linter/option manager).
+Requirements: 1. **Purpose**:
+When the corresponding CLI flag (e.g. `--bug-report`) is triggered,
+the action should print a JSON report containing diagnostic information about the tool's environment
+and installed plugins, then exit the program immediately with status code 0.
+2. **`DebugAction` class**:
+- Extends `argparse.Action`. - Accepts an extra keyword argument `option_manager` in its constructor
+(popped from `kwargs` before calling `super().__init__`),
+and stores it as an instance attribute. - In `__call__`,
+if the `option_manager` has no registered plugins (`option_manager.registered_plugins` is falsy),
+do nothing and return without printing or exiting. - Otherwise,
+print the result of an `information(option_manager)` function call,
+serialized as JSON using `json.dumps` with `indent=2` and `sort_keys=True`. - After printing,
+raise `SystemExit(0)` to terminate the program.
+3. **`information(option_manager)` function**: - Returns a dictionary with the following keys:
+- `"version"`: the `option_manager.version` attribute. - `"plugins"`:
+the result of a `plugins_from(option_manager)` helper function. - `"dependencies"`:
+the result of a `dependencies()` helper function. - `"platform"`: a nested dictionary with:
+- `"python_implementation"`: from `platform.python_implementation()`. - `"python_version"`:
+  from `platform.python_version()`. - `"system"`: from `platform.system()`.
+  4. **`plugins_from(option_manager)` function**:
+  - Returns a list of dictionaries, one per plugin in `option_manager.registered_plugins`,
+  sorted (plugins must support ordering/sorting). - Each dictionary has:
+`"plugin"` (plugin's `name`), `"version"` (plugin's `version`),
+and `"is_local"` (plugin's `local` attribute).
+5. **`dependencies()` function**:
+- Returns an empty list (type-hinted as `list[dict[str, str]]`),
+serving as a placeholder for future dependency-reporting logic.
+Use standard library imports only:
+`argparse`, `json`, `platform`,
+and typing imports (`Dict`, `List` from `typing`) even if not all are strictly used.
+Keep the code clean,
+with clear function separation and no additional logic beyond what's described. ---

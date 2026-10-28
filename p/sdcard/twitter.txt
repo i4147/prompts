@@ -1,0 +1,2 @@
+A reader for corpora that consist of Tweets.
+It is assumed that the Tweets have been serialised into line-delimited JSON.

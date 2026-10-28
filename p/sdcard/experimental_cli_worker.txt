@@ -1,0 +1,15 @@
+Write a minimal Python script that serves as a bare-bones entry point template for a larger
+application.
+Requirements: - Include `from __future__ import annotations` at the top of the file to enable
+postponed evaluation of type annotations. - Define a single function named `main` with no
+parameters, a return type annotation of `None`,
+and an empty body (using `pass`). - The script should not include a `if __name__ == "__main__":`
+guard or any call to `main()`
+— it should only define the function. - Do not add any additional imports, logic, print statements,
+docstrings, or comments. - The output should be exactly this skeletal structure,
+intended to be expanded later with actual program logic inside `main`.
+Inputs/Outputs: - No inputs are read and no outputs are produced;
+the function body is a no-op placeholder (`pass`).
+Notable behavior: - Running the script as-is has no observable effect since `main()` is never
+invoked. - The use of `from __future__ import annotations` ensures compatibility with modern
+type-hinting syntax even on older Python versions that support this import. ---

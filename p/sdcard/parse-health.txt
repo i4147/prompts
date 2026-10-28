@@ -1,0 +1,9 @@
+Report real-world parse health as the share of bytes inside ERROR nodes.
+A file either having or not having an ERROR node is too blunt to steer by:
+a one-token slip and a file the parser could not enter at all both score zero.
+Byte coverage separates them, and it tracks what a user actually sees in an editor,
+since an ERROR node is the span that loses its highlighting.
+Usage: scripts/parse-health.py [dir-or-file ...]
+Defaults to additional_examples/ and errors/,
+which are local scratch and not part of the published grammar.
+Run it before and after any grammar change.

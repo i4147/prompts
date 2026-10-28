@@ -1,0 +1,26 @@
+Write a Python script that acts as a command-line tool for downloading Python
+package distributions from a selectable package index mirror.
+The user provides one or more package names (optionally with version specifiers)
+and the tool fetches the list of available files for each package from the
+chosen index, filters them according to user-specified criteria such as target
+platform, Python version, architecture, and distribution type (wheel or source
+archive), and then downloads the matching files concurrently into a target
+directory.
+The tool should support choosing among several predefined mirror sources, with a
+sensible default, and allow the user to override the mirror address.
+It should handle network operations robustly: apply configurable timeouts, retry
+transient failures a limited number of times with a short delay, and report
+progress or per-file status clearly.
+Downloads should be bounded by a configurable maximum file size and performed
+with a configurable level of concurrency.
+When a source archive (such as a tarball or zip) is downloaded, the tool should
+optionally extract it into the output directory and report what was extracted.
+Wheel and archive files should be recognized by their filename conventions,
+including platform and Python-version tags.
+The command-line interface should accept arguments for the package names, the
+mirror choice, the output directory, concurrency level, platform/architecture
+filters, and an option to list matching files without downloading them.
+It should print clear, colorful or well-formatted status output, summarize
+successes and failures at the end, and exit with an appropriate status code.
+Invalid input, missing packages, and unreachable mirrors should produce
+informative error messages rather than crashes. ---

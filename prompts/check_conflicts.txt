@@ -1,0 +1,24 @@
+Write a Python script that audits the packages installed in the current Python
+environment for naming conflicts with the standard library and with a known list
+of PyPI package names, then produces a machine-readable conflict report.
+The script should: Read a JSON file containing a list of known PyPI package
+names (entries may be plain strings or lists/tuples whose first element is the
+name).
+If this file is missing, it should print a warning to stderr and continue with
+the PyPI check skipped rather than failing. - Gather the names of all currently
+installed distributions, normalizing them so that differences in case and in
+separators (hyphens, underscores, dots) are treated as equivalent. - Compare the
+installed package names against the Python standard library module names and
+against the PyPI name list, flagging any installed package whose name shadows or
+collides with one of them. - Accept command-line options that let the user
+specify the PyPI names file location and the output report path, with sensible
+defaults for both. - Write the results to a JSON report file summarizing each
+detected conflict, including the offending package name, the kind of conflict
+(standard library shadowing or PyPI name collision), and enough detail for a
+user to act on it. - Print a concise human-readable summary to the console
+indicating how many conflicts were found and where the report was saved. -
+Handle errors gracefully: malformed or unreadable input files should produce
+clear error messages, and the script should exit with a non-zero status when a
+fatal problem occurs and zero when the audit completes. - Be runnable directly
+from the command line as a standalone tool, with a clear help message describing
+its options. ---

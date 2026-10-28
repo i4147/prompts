@@ -1,0 +1,26 @@
+Support for streaming http requests in emscripten.
+A few caveats - If your browser (or Node.js) has WebAssembly JavaScript Promise Integration enabled
+https://github.com/WebAssembly/js-promise-integration/blob/main/proposals/js-promise-integration/Overview.md
+*and* you launch pyodide using `pyodide.runPythonAsync`,
+this will fetch data using the JavaScript asynchronous fetch api
+(wrapped via `pyodide.ffi.call_sync`).
+In this case timeouts and streaming should just work.
+Otherwise, it uses a combination of XMLHttpRequest and a web-worker for streaming.
+This approach has several caveats:
+Firstly, you can't do streaming http in the main UI thread, because atomics.wait isn't allowed.
+Streaming only works if you're running pyodide in a web worker.
+Secondly, this uses an extra web worker
+and SharedArrayBuffer to do the asynchronous fetch operation,
+so it requires that you have crossOriginIsolation enabled,
+by serving over https (or from localhost) with the two headers below set:
+Cross-Origin-Opener-Policy: same-origin Cross-Origin-Embedder-Policy:
+require-corp You can tell if cross origin isolation is successfully enabled by looking at the global
+crossOriginIsolated variable in JavaScript console.
+If it isn't, streaming requests will fallback to XMLHttpRequest,
+i.e. getting the whole request into a buffer
+and then returning it. it shows a warning in the JavaScript console in this case.
+Finally, the webworker which does the streaming fetch is created on initial import,
+but will only be started once control is returned to javascript.
+Call `await wait_for_streaming_ready()` to wait for streaming fetch.
+NB: in this code, there are a lot of JavaScript objects.
+They are named js_* to make it clear what type of object they are.

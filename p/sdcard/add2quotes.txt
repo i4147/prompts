@@ -1,0 +1,29 @@
+Write a Python script that merges a new set of quotes into an existing quotes database stored as
+JSON, while avoiding duplicate entries.
+The script should include the following functionality: 1.
+A helper function to load JSON data from a file given its filename, which:
+- Returns the parsed JSON content if the file exists
+and contains valid JSON. - Returns an empty list if the file does not exist. - Returns an empty list
+and prints an error message if the file contains invalid JSON.
+2. A helper function to save data to a file as JSON, using UTF-8 encoding,
+pretty-printed with an indent of 2, and preserving non-ASCII characters (ensure_ascii=False).
+3. A main function `add_unique_quotes(existing_file, new_file)` that:
+- Loads the existing quotes from `existing_file`
+(a JSON list of quote objects, each with at least "quote" and "author" keys). - Loads the new quotes
+from `new_file` in the same format. - If the new quotes file is empty or invalid,
+prints a message indicating no quotes were found
+and exits the function without making changes. - Builds a set of unique identifiers for existing
+quotes based on the combination of the "quote" text and "author" fields,
+to detect duplicates. - Iterates through the new quotes,
+adding each one to the existing list only if its (quote, author) combination is not already present,
+and updating the duplicate-tracking set accordingly. - Counts how many quotes were newly added
+and how many were skipped as duplicates. - If at least one new quote was added,
+saves the updated combined list back to `existing_file` using the save helper. - Prints a summary
+report showing: the total number of quotes processed from the new file, how many were added,
+how many duplicates were skipped, and the final total count of quotes in the existing file.
+4. A script entry point (`if __":`) that calls `add_unique_quotes` with two hardcoded filenames:
+`"quotes.json"` as the existing file and `"q.json"` as the new file to merge in.
+Use `from __future__ import annotations` at the top of the file
+and the `json` module for all JSON parsing/serialization.
+Ensure the code is clean, uses UTF-8 file encoding for reads and writes,
+and handles missing or malformed files gracefully without crashing. ---

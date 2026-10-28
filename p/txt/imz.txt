@@ -1,0 +1,5 @@
+Offline requirements.txt generator with archive support and multiprocessing.
+Features: - Scans .py files + .whl/.zip/.tar.gz/.tar.xz for python sources. - Extracts imports using
+AST. - Excludes stdlib modules from ./stdlib file. - Applies import→package name mapping from
+./mapping file. - Offline verification against /sdcard/pip.txt. - Uses multiprocessing for faster
+archive + source processing.

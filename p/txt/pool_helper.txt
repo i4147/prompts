@@ -1,0 +1,5 @@
+AI implementation prompt:
+Build a small, dependency-free compatibility layer for ``multiprocessing.pool.Pool.apply_async``
+that lets standalone command-line tools wait for completed jobs safely.
+Keep the worker count fixed, propagate task exceptions when results are consumed, support timeouts,
+and expose typed ``as_completed`` and ``wait`` helpers without depending on ``concurrent.futures``.

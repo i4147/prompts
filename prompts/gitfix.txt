@@ -1,0 +1,19 @@
+Write a Python script that synchronizes a local Git repository's current branch
+with its upstream counterpart on the remote named "origin".
+The script should accept an optional repository path (defaulting to the current
+directory) and open the repository, warning the user and asking for confirmation
+before proceeding if the repository is not on the expected primary branch
+(master).
+It should fetch the latest state from the remote, then determine which upstream
+reference to use by preferring a "master" branch on origin and falling back to a
+"main" branch if the former is absent; if neither exists, it should report a
+clear error and exit without changes.
+After identifying the upstream branch, it should report which one is being used
+and then bring the local branch up to date with that upstream commit, handling
+the case where the local and remote histories may be unrelated.
+The script should print clear, user-friendly progress and status messages
+throughout, handle errors gracefully (for example, invalid repository paths or
+Git failures) with informative messages, and return a success or failure outcome
+to the caller.
+It should be runnable from the command line, using the first command-line
+argument as an optional repository path. ---

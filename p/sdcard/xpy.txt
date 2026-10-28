@@ -1,0 +1,58 @@
+Write a prompt for an AI coding agent to generate a Python command-line utility with the following
+specifications: **Purpose**:
+The script reconstructs a numbered source-code listing (e.g., BASIC-style line-numbered code) that
+has been split across multiple OCR/scanned "page" text files, and writes the reassembled,
+properly ordered code out to a single output file. **Inputs**:
+- A directory path containing page files named using the pattern `page_<number>.txt`
+(e.g., `page_1.txt`, `page_12.txt`). - Each page file contains raw lines of text,
+some of which are numbered code lines in the format `<line_number>.<code text>`
+(optional leading whitespace before the number is allowed). - Command-line arguments
+(via `argparse`) should allow the user to specify:
+- The input directory containing the page files. - The output file path
+where the reconstructed script should be written. **Processing behavior**: 1.
+Scan the input directory for all files matching the `page_<number>.txt` naming pattern,
+extract the numeric page index from each filename,
+and sort the files in ascending numeric order of that page index (not alphabetically).
+2. For each page file, in sorted order, read its text content line by line.
+3. For each raw line, use a regex to detect whether it matches the numbered-code-line pattern:
+optional leading whitespace, then one or more digits, then a literal `.`,
+then the rest of the line as the code body.
+4. Skip lines that don't match this numbered pattern
+(treat them as noise/non-code content, e.g., OCR artifacts, headers, blank lines).
+5. For lines that do match, extract the line number and the code body text.
+If the code body starts with a space (indicating indentation in the original listing),
+handle it accordingly
+(e.g., strip or preserve the leading space as part of normalizing indentation
+— the agent should implement sensible normalization consistent with reconstructing readable
+source code).
+6. Associate each extracted code line with the page number it came from
+and its original line number, so lines can be tracked back to their source page and sequence.
+7. Aggregate all extracted code lines (across all pages, in page order) into a single ordered
+collection representing the full reconstructed script.
+8. Provide a way to render the full collection of code lines back into a single text blob,
+joining lines with newlines and ensuring a trailing newline at the end of the output.
+9. Track and expose metadata about the reconstructed script,
+such as the first page number and last page number it spans,
+and the total number of extracted code lines (e.g., via a length operation). **Output**:
+- Write the rendered,
+reconstructed source code text to the specified output file. - Optionally print a short summary to
+stdout/stderr indicating how many lines were extracted and
+which page range was covered. **Code structure notes**:
+- Use `from __future__ import annotations` for forward-compatible type hints. - Use `dataclasses` to
+model a single extracted code line
+(immutable, frozen dataclass storing page number, line number, and text)
+and a `Script` container (a mutable dataclass wrapping a list of code lines) with properties for
+start page, end page, a `render()` method,
+and a `__len__` method. - Use compiled module-level regex constants:
+one for matching numbered code lines within a page file,
+and one for matching/extracting the page number from a filename. - Implement a function to discover
+and sort page files in a directory based on the numeric page index embedded in their filenames. -
+Implement a function that takes the sorted list of page file paths
+and returns a flat list of extracted `CodeLine` objects, iterating through each page file,
+applying the line-matching regex,
+and skipping non-matching lines. - Read files using UTF-8 encoding. - Use `pathlib.Path` for all
+filesystem path handling. - Include proper `argparse` setup for CLI invocation,
+and structure the script so it can run as a standalone command-line tool
+(`if __name__ == "__main__":` entry point),
+handling and reporting errors gracefully (e.g., missing directory, no matching page files found) via
+`sys.exit` with appropriate messages. ---

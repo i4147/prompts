@@ -28,7 +28,6 @@ Flag Behavior -c, --comments Remove all comments except shebangs, # type, and # 
                  how to copy to clipboard
                  after producing final_code, do this
                  subprocess.run(['termux-clipboard-set',final_code])
-
 Implementation Considerations
  * Speed / performance
  * Code clarity / maintainability

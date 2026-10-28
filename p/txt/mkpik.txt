@@ -1,0 +1,5 @@
+Unified Python Bytecode Compiler and Disk Space Tracker.
+Usage Examples: python merged.py compile # Original mkpic.py behavior python merged.py compile -o 2
+-l path/to/dir # Compile with optimization level 2 in legacy mode python merged.py measure #
+Original mkpyc.py behavior python merged.py measure path/to/file.py # Measure space impact for
+specific target

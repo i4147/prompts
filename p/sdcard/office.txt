@@ -1,0 +1,48 @@
+Write a prompt for an AI coding agent to generate a Python module that parses legacy
+and modern office document formats (.docx, .doc, .xlsx, .xls, .ods, .odt, .rtf, .pptx, .odp) into a
+unified internal document representation.
+The module should: - Be part of a larger parsing framework,
+importing a shared `Block` and `Document` model class from a sibling `..model` module,
+a `register` decorator from a sibling `..registry` module
+(used to associate file extensions and a format name with each parser function),
+and a `read_text` helper from `.._util`. - Use `from __future__ import annotations`
+and rely on `pathlib.Path` for file path handling
+and `subprocess` for shelling out to external converters
+where needed. - Use the following third-party libraries for format-specific parsing:
+`openpyxl` (xlsx), `xlrd` (legacy xls), `python-docx` (docx),
+`odfpy` (`odf.text`, `odf.teletype`, `odf.opendocument`) for OpenDocument formats (odt/ods/odp),
+`python-pptx` (pptx),
+and `striprtf` (rtf). - Define one parser function per format (or group of related formats),
+each decorated with `@register([...extensions...], "format_name")`,
+taking a `Path` and returning a `Document` instance populated with a list of `Block` objects
+and a `metadata` dict. - For DOCX:
+iterate over paragraphs, skip empty ones,
+detect heading styles (style name starting with "heading")
+and extract the heading level number from the style name (default to level 1 if parsing fails),
+and emit `Block(kind="heading", ...)` for headings
+and `Block(kind="paragraph", ...)` for normal text.
+Also iterate over all tables, convert each row's cell text into a Markdown-style pipe table row,
+and emit a `Block(kind="table", text=markdown, meta={"rows": rows})`.
+Populate document metadata with `title`
+and `author` extracted from the DOCX core properties (falling back to `None` if empty). - For legacy
+DOC (.doc): implement a parser that extracts text/structure
+(e.g., via a conversion approach such as invoking an external tool through `subprocess`,
+since python-docx cannot read old binary .doc files),
+returning the same `Document`/`Block` structure. - For XLSX/XLS/ODS:
+parse each sheet's rows/cells into structured blocks (e.g., tables or paragraphs) consistent with
+the same `Document`/`Block` model, handling the different APIs required by `openpyxl`, `xlrd`,
+and `odfpy` respectively. - For ODT:
+use `odfpy` (`odf.opendocument.load`, `odf.text`, and `teletype.extractText`) to extract paragraphs
+and headings into `Block` objects.
+- For PPTX: use `python-pptx` to iterate slides and shapes,
+  extracting text frames into `Block` objects (e.g., as paragraphs or headings per slide). - For
+  ODP: use `odfpy` to extract text content from presentation slides similarly. - For RTF:
+  read the raw file content and use `striprtf.striprtf.rtf_to_text` to convert it to plain text,
+  then wrap the result into paragraph `Block`(s). - Each parser must return a `Document` object
+  carrying at least `path`, `format` (string identifier), `blocks` (list of `Block`),
+  and `metadata` (dict, e.g., title/author when available, `None` for missing fields). - Include a
+  module-level docstring listing all the supported extensions as "office formats".
+- Follow consistent conventions across all parser functions:
+  strip whitespace from extracted text, skip empty/blank text segments,
+  and keep the code concise
+  and uniform in style with type-annotated function signatures (`path: Path -> Document`). ---

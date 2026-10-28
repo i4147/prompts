@@ -1,0 +1,10 @@
+Implementation of 'TnT - A Statistical Part of Speech Tagger' by Thorsten Brants
+https://aclanthology.org/A00-1031.pdf Where Brants (2000) is silent,
+the implementation makes principled choices flagged with ``Underspecified by Brants:`` in inline
+comments so future readers can tell paper-derived behavior from local policy:
+* ``_compute_lambda`` - even-split tie-breaking when multiple ``c_i`` reach the max,
+and zeroed weights on degenerate training input. * ``train`` - empty sentences contribute no EOS
+counts. * ``_expand_states`` - strict ``>`` beam tie-break,
+so the first-encountered hypothesis wins.
+No clearly better policy is known;
+future work on deterministic hypothesis recombination could improve this.

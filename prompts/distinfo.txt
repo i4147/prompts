@@ -1,0 +1,24 @@
+Write a Python script that scans the Python environment's installed package
+metadata and reports any packages that have more than one version installed at
+the same time.
+The tool should locate every site-packages directory that Python is currently
+using, including both the system-wide and the user-specific locations, and
+ignore any location that does not exist or cannot be read without stopping the
+scan.
+Within each location, it should recognize installed-package metadata entries
+(such as distribution-info or egg-info folders), extract each package's
+normalized name and version string from the folder name, and gather all versions
+found for each package across all locations.
+Package names should be compared case-insensitively, and duplicate entries of
+the same version should be counted only once.
+When finished, the script should print a clear, human-readable report listing
+only the packages that have two or more distinct versions present, showing the
+package name and each version found, sorted alphabetically by package name.
+If no duplicates are found, it should print a short message stating that no
+packages with multiple versions were detected.
+The output should be concise, easy to scan in a terminal, and useful for
+diagnosing dependency conflicts.
+The script should run as a standalone command-line program with no required
+arguments, handle unexpected filesystem or parsing errors gracefully without
+crashing, and exit with a status code that indicates whether duplicate versions
+were found. ---

@@ -1,0 +1,27 @@
+Write a Python script that parses a Python package metadata file (in the style
+of a METADATA/PKG-INFO file, using RFC 822-like "Key: Value" headers with
+indented continuation lines) and extracts its contents into a structured,
+machine-readable output.
+The tool should accept the path to a metadata file as input (or read from
+standard input) and produce a JSON document as output, written to standard
+output or to a specified file.
+Key behaviors to implement: - Read the metadata header section line by line,
+stopping at the first blank line or the point where the header section ends, and
+treat everything after that as the long-form description body. - Recognize
+single-valued fields (such as name, version, summary, author, license, home
+page, and similar) and store each as a string. - Recognize multi-valued fields
+(such as classifiers, keywords, requirements, extras, dynamic fields, and
+project URLs) and collect every occurrence into a list, preserving their
+original order. - Support continuation lines: indented lines that follow a field
+should be appended to that field's value, joined with a single space, except for
+multi-valued fields where each entry should be kept intact. - Handle missing
+fields gracefully, using empty strings or empty lists as defaults, and never
+crash on malformed or unexpected lines; skip or log such lines safely. -
+Preserve the full long-form description text that follows the header section,
+with its original line breaks, as a separate field. - Provide a clear summary of
+the parsed result, including counts where useful, and report errors (such as a
+missing or unreadable file) with a helpful message and a non-zero exit status. -
+Include a command-line interface that accepts an optional output path and an
+optional flag to pretty-print the JSON, with a short usage message available via
+a help option. - Write the output as valid, UTF-8 encoded JSON, and ensure the
+tool works on common Python 3 versions across Windows, macOS, and Linux. ---

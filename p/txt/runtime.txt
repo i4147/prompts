@@ -1,0 +1,6 @@
+Matplotlib plot history server for ipybridge.nvim.
+This module hosts a lightweight HTTP + SSE server that mirrors Spyder's plots pane:
+every time the kernel calls ``plt.show`` or ``plt.savefig`` we snapshot the active figures,
+store them in an in-memory history, and expose thumbnails + metadata through a browser UI.
+The Neovim side can also steer the history via ZMQ commands (next/prev/delete),
+so the UX stays keyboard‑friendly even though rendering happens in a browser.

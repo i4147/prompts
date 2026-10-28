@@ -1,0 +1,23 @@
+Write a Python script that scans a site-packages directory for installed
+third-party packages and relocates every "tests" folder it finds into a separate
+destination directory, preserving each folder's original relative structure.
+The script should run its moves concurrently across a bounded pool of worker
+processes to speed up processing of large package trees.
+Requirements: - Accept a command-line flag that enables a dry-run mode.
+In dry-run mode, the script must report every move it would perform (source and
+resulting destination) without modifying the filesystem. - Skip any test folder
+whose path contains the names of scientific packages (numpy, pandas, scipy,
+numba), leaving those untouched and logging that they were excluded. - Preserve
+the relative directory layout of each moved tests folder under the destination
+root, creating any intermediate directories as needed. - Handle failures per
+folder gracefully: a problem moving one folder (such as a permission error or an
+existing destination) must not stop the processing of others.
+Collect and report each outcome. - Return a structured result for every
+attempted folder that indicates the source path, whether the operation succeeded
+or was skipped, and a human-readable message describing what happened. - Log
+progress and a final summary (counts of moved, skipped, failed, and dry-run
+entries) using a logging library with clear, leveled messages. - Use sensible
+defaults for the source directory, destination directory (under the user's home
+directory), and worker count, all easily adjustable in a single configuration
+area at the top of the script. - Ensure the script is safe to run repeatedly and
+never deletes package contents other than relocating test folders. ---

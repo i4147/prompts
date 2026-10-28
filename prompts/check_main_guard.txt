@@ -1,0 +1,26 @@
+Write a Python script that scans a directory tree and reports which Python
+source files are missing a standard entry-point guard (the `if __name__ ==
+"__main__":` idiom).
+The script should accept a directory path as its main input, recursively walk
+all files beneath it, and consider only Python files for analysis.
+For each Python file, the script should read the source and parse it into a
+syntax-aware representation so that the check is structural rather than based on
+plain text matching.
+It should detect whether the file contains a top-level conditional that compares
+the module's name against the string "__main__", tolerating either operand order
+and ignoring formatting, comments, or quoting style differences.
+Files that cannot be decoded, read, or parsed should not be flagged as missing
+the guard; instead, a clear warning describing the problem should be written to
+the error stream, and processing should continue with the remaining files.
+The script should produce a human-readable summary listing every Python file
+that lacks the entry-point guard, along with the total number of files scanned
+and the number flagged.
+Output should be directed to standard output, while warnings go to standard
+error.
+The script should exit normally after reporting, and it should handle a missing
+or invalid directory argument gracefully with a helpful message rather than an
+unhandled crash.
+Keep the tool self-contained, suppress unnecessary runtime warning noise, and
+make the output concise and easy to scan in a terminal, so that a developer can
+quickly audit a project for scripts that might execute unintended code on
+import. ---

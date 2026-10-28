@@ -1,0 +1,43 @@
+Create a Python script that scrapes a Discord text channel's message history via the Discord API to
+extract Clash of Clans base-sharing links. **Purpose:** The script connects to Discord's REST API
+(v9) using a bot/user token, paginates backward through a channel's messages,
+and scans each message's content for Clash of Clans share links
+(matching the pattern `https://link.clashofclans.com/...`).
+For every link found,
+it also parses the Town Hall level embedded in the URL (via a query parameter like `id=TH##:`) so
+each extracted link can be tagged with its corresponding TH level (e.g., "TH15"),
+or "Unknown" if no TH level is found in the URL. **Main inputs:** - `DISCORD_TOKEN`:
+a Discord authorization token (placeholder constant to be filled in by the user). - `CHANNEL_ID`:
+the target Discord channel ID (placeholder constant). - `max_messages`:
+a configurable limit on how many messages to fetch/scan (default 200),
+used to cap the pagination loop. **Main outputs:** - A collected list of Clash of Clans links
+(optionally paired with their detected TH level),
+gathered from the scanned messages. - Console log output for status/progress information,ate-limit
+warnings andTTP error messages encImplied final or print the coll.g.,
+writing them out as JSON with a timestamp, using the `json`, `Path`,
+and `datetime` imports already present. **Notable behavior/requirements:** 1.
+Use `aiohttp` and `asyncio` for asynchronous HTTP requests,
+with a single shared `aiohttp.ClientSession` for all calls.
+2. Implement `fetch_messages(session, channel_id, before_id=None)`:
+- Calls `GET https://discord.com/api/v9/channels/{channel_id}/messages` with `limit=100`
+and an optional `before` parameter for pagination
+(Discord's message history uses `before=or-based pagination). - Sends the `Authorization`
+and application/json` headers.TTP 200:
+(default to 5 seconds if missing), prints a message indicating the wait time,
+asynchronously sleeps for that duration,
+then recursively retries the same request. - On any other error status:
+prints the status code and response text, and returns an empty list.
+3. Implement `extract_th_level(url: str) -> str` using a regex (`id=TH(\d+):`) to pull the Town Hall
+number out of a Clash of Clans link and return it formatted as `"TH<number>"`,
+or `"Unknown"` if the pattern isn't matched.
+4. Implement an async orchestration function `scrape_discord_channel(channel_id, max_messages=200)`
+that: - Opens a single `aiohttp.ClientSession`. - Loops,
+fetching batches of up to 100 messages at a time via `fetch_messages`,
+using the ID of the last message in each batch as the `before_id` cursor for the next request,
+until either no more messages are returned
+or the `max_messages` cap is reached. - For each fetched message,
+searches its content with the `COC_LINK_PATTERN` regex to find any Clash of Clans share links,
+and collects matches (along with their TH level via `extract_th_level`) into a results list.
+- Tracks and increments a count of messages processed so far to respect the `max_messages` limit. -
+  Returns (or saves) the aggregated collection of found links/TH levels once scraightforward
+  command-line/(...)` at the bottom) Discord API rate limiting gracefully without crashing.

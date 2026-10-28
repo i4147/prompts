@@ -1,0 +1,24 @@
+Write a Python script that fetches the latest package release updates from the
+PyPI (Python Package Index) RSS feed, parses the feed, and exports the results
+to a structured file for later analysis.
+The script should: - Retrieve the current package updates feed from the official
+PyPI website over the network, handling connection problems, timeouts, and bad
+HTTP responses gracefully with clear error messages. - Parse the feed's XML
+content and extract, for each entry, the key details: package or release title,
+link, description, publication date, and a unique identifier. - Skip entries
+that lack a meaningful title, and normalize missing fields to empty values so
+the output stays consistent. - Present the collected records in a clean,
+human-readable form and also save them to a file in a machine-friendly format
+(such as CSV or JSON), using a sensible default filename that the user can
+override from the command line. - Convert publication timestamps into a
+readable, consistent date-time representation where possible, and fall back to
+the raw value if conversion is not possible. - Accept optional command-line
+arguments that allow the user to choose the output format, set the output file
+path, limit the number of results shown, and filter entries by a keyword matched
+against package names or descriptions. - Print a concise summary at the end
+indicating how many entries were found, how many were kept after filtering, and
+where the output was saved. - Exit with a non-zero status code and a helpful
+message if the feed cannot be retrieved or parsed, and exit cleanly on user
+interruption.
+Keep the solution self-contained, well-organized into reusable parts, and
+suitable for running from a terminal on any major operating system. ---

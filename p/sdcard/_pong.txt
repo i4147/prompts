@@ -1,0 +1,1 @@
+Minimal Pong game dialog.

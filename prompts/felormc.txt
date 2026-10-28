@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line tool for cleaning up and
+normalizing blank lines and related whitespace in Python source files, primarily
+around top-level and class-level definitions.
+The tool should accept one or more file or directory paths as input, recursively
+discover Python source files (recognizing standard Python extensions such as
+.py, .pyi, and .pyw, as well as extensionless scripts whose shebang line
+indicates a Python interpreter), and process them in parallel using a
+configurable number of worker processes with a sensible default.
+For each file, the script should parse the source into a concrete syntax tree
+that preserves comments, pragma directives (such as type-ignore, fmt-control,
+and noqa markers), and original formatting, then enforce consistent spacing
+rules: a standard number of blank lines between top-level function and class
+definitions, appropriate spacing for nested definitions, and no excessive blank
+lines at the start or end of blocks.
+It must leave pragma comments and shebang lines untouched in position and
+content, and must never alter the program's semantics.
+The tool should support a check mode that reports which files would change
+without modifying them, and a write mode that updates files in place.
+It should also support a verbose option that increases logging detail.
+Results for each file should be reported clearly, indicating whether the file
+was unchanged, reformatted, skipped, or failed due to a syntax error, and the
+overall run should summarize counts of each outcome.
+The script should exit with a non-zero status code when check mode finds files
+needing changes or when errors occur, and zero otherwise.
+Logging should go to standard error with timestamps and severity levels. ---

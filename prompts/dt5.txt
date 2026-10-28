@@ -1,0 +1,29 @@
+Write a Python script that acts as a batch translation tool for text and
+structured files, built around a pluggable set of translation backends with
+configurable language mappings.
+The tool should accept command-line arguments specifying the input source,
+target language(s), source language (optionally auto-detected), the translation
+provider to use, and an output location, and it should process the input
+concurrently to speed up large batches while respecting rate limits and
+remaining responsive to interruption signals (such as Ctrl+C), shutting down
+gracefully and reporting partial progress.
+Key behaviors to include: - Support multiple translation providers, each with
+its own mapping from common language codes to the codes that provider expects,
+and fall back gracefully or report clearly when a language is unsupported by the
+chosen provider. - Accept input as individual strings, plain text files, or
+structured data files, and produce output that preserves the original structure
+and formatting of the input as closely as possible. - Run translation jobs in
+parallel with a configurable number of workers, retry transient failures with
+backoff, and track progress so the user can see how many items have completed,
+failed, or been skipped. - Allow the user to resume an interrupted run by
+reusing previously completed results stored in an intermediate or cache file,
+avoiding duplicate API calls. - Provide clear logging: a detailed debug log
+written to a rotating file, and only error-level messages echoed to the console.
+- Validate all arguments up front, with helpful error messages for missing API
+keys, unsupported language pairs, unreadable input files, or unwritable output
+paths. - Produce a concise final summary on completion (total items, successes,
+failures, elapsed time) and exit with a meaningful status code reflecting
+success, partial failure, or fatal error.
+The script should be self-contained, runnable from the command line, and
+well-organized so that adding a new translation provider requires minimal
+changes. ---

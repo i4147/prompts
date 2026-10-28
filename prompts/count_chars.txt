@@ -1,0 +1,11 @@
+Write a Python script that runs from the command line and reports how many
+characters are in a text file supplied by the user.
+The script should accept exactly one argument, the path to the input file.
+If the argument count is wrong, it should print a brief usage message showing
+the correct invocation and exit with a non-zero status.
+It should read the file using UTF-8 encoding, count every character in its
+contents (including whitespace and newlines), and print a single line stating
+the file name and the total character count.
+If the file does not exist, it should print a clear error message naming the
+missing file and exit with a non-zero status instead of crashing with a
+traceback. ---

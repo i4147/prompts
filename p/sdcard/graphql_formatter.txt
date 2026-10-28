@@ -1,0 +1,54 @@
+Write a prompt instructing an AI coding agent to generate a standalone Python module implementing a
+dependency-free, best-effort GraphQL source code formatter, with the following characteristics:
+**Purpose**: Build a compact,
+idempotent formatter for GraphQL documents (queries, mutations, schemas, etc.) that re-indents
+operations and selection sets by tracking brace `{ }` and parenthesis `( )` nesting depth.
+It must not rely on any external GraphQL parsing library
+— it should work via tokenization and regex-based heuristics only. **Module context**:
+The code lives in a package that exposes a shared `Options` type from a sibling `..api` module
+(an options/config object with at least `use_tabs: bool` and `tab_width:
+int` attributes used to compute indentation strings).
+Assume this formatter is one of several language-specific formatters in a larger multi-language code
+formatting tool, and follow that project's conventions
+(relative imports, `from __future__ import annotations`,
+a module-level docstring describing purpose and behavior). **Core behavior required**: 1.
+A helper function `_indent(options, level)` that returns the indentation string for a given nesting
+level — using tab characters if `options.use_tabs` is true,
+otherwise spaces repeated `options.tab_width` times per level.
+2. A tokenizer function `_tokenize(text)` that scans the raw GraphQL source character by character
+and produces a list of `(token_type, value)` tuples, handling at minimum:
+- Whitespace skipping - Line comments starting with `#` (consumed to end of line) - String literals
+delimited by single or double quotes,
+with backslash-escape handling so escaped quote characters don't terminate the string early -
+GraphQL variable tokens starting with `$` followed by a valid identifier
+(letters, digits, underscore, not starting with a digit) - Punctuation characters relevant to
+GraphQL syntax: `{ } ( ) ; , : [ @` (and similarly significant symbols) emitted as individual
+single-character punctuation tokens - Any remaining identifier/name/number-like runs captured as a
+generic token type 3.
+Using the token stream,
+a main formatting routine that re-emits the GraphQL text with consistent indentation per nesting
+level of `{}` and `()`, including:
+- Removing optional commas between fields in selection sets
+(matching Prettier's GraphQL formatting behavior)
+while preserving commas that are syntactically required/expected inside argument lists - Normalizing
+spacing around `:` (field alias/argument colons), `=` (default value assignment),
+and `@` (directive marker) so there is consistent,
+minimal whitespace (e.g., no space before, single space after, or similar consistent convention) -
+Placing opening braces/parens
+and closing braces/parens on appropriate lines with correct indentation to reflect nesting depth 4.
+The overall formatter must be **idempotent**:
+running it twice on the same input (or on its own output) produces identical output,
+with no further changes.
+5. The formatter should be **best-effort**:
+it should not throw on malformed or unusual GraphQL input where feasible,
+and should gracefully pass through constructs it doesn't specifically understand rather than
+crashing. **Inputs/Outputs**: - Input:
+a raw GraphQL source string
+and an `Options` configuration object controlling indentation style (tabs vs. spaces, tab width).
+- Output: a reformatted GraphQL source string with normalized indentation, spacing, and comma usage.
+Include appropriate private helper functions (prefixed with `_`)
+and keep the implementation compact, readable,
+and free of third-party dependencies (standard library `re` only).
+Provide a module docstring summarizing the formatter's purpose,
+its comma-removal/retention behavior,
+and its spacing-normalization behavior exactly as described above. ---

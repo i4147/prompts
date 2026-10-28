@@ -1,0 +1,24 @@
+Write a Python script that translates a large text file containing many lines
+(for example, a list of phrases or sentences) into a target language using an
+online machine translation service, with the goal of producing a translated
+output file that preserves line-by-line correspondence with the original.
+The tool should accept command-line arguments for the input file path, the
+output file path, the source and target languages, and optional settings
+controlling concurrency and chunk sizing.
+It should split the input into manageable batches, translate them in parallel
+across multiple worker processes or threads, and retry failed requests with a
+delay between attempts.
+Long lines that exceed the batch size limit should be handled gracefully by
+translating them individually or by splitting them into smaller pieces and
+rejoining the results.
+Include a feature that detects whether the translated output still contains
+untranslated text in a specific script (such as Cyrillic characters) and flags
+or re-translates those lines accordingly.
+The script should periodically save progress so that an interrupted run can
+resume without re-translating completed lines, and it should respond to a
+keyboard interrupt by saving current progress and exiting cleanly.
+Log progress, warnings, and errors to both the console and a log file, and
+display a summary at the end reporting how many lines were translated, skipped,
+retried, or failed.
+Preserve empty lines and the original line count in the output, and write the
+results in UTF-8 encoding. ---

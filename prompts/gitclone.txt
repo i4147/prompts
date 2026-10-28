@@ -1,0 +1,19 @@
+Write a Python script that acts as a convenient git clone helper.
+It takes a repository URL and an optional target directory name from the command
+line, automatically detects the remote repository's default branch, and clones
+it with a single shallow-style, branch-specific operation.
+If no URL is provided, it should display a brief usage message and exit with an
+error status.
+If the default branch cannot be determined (for example, the URL is unreachable
+or invalid), it should print a clear error message to the standard error stream
+and exit with a failure status.
+When no target directory is given, the script should derive a sensible local
+folder name from the last path segment of the URL, stripping any trailing
+slashes and a trailing ".git" suffix.
+After a successful clone, the script should check whether the repository
+contains submodules and, if so, initialize and update them recursively.
+It should report progress and the final location of the cloned repository to the
+user in a concise, friendly way, and return an appropriate exit code indicating
+success or failure of each step.
+Errors from the underlying git operations should be surfaced to the user rather
+than silently ignored. ---

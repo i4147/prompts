@@ -3,7 +3,6 @@ Task:
 Refactor the provided Python package source files into a single self-contained Python module or CLI script. Remove all Python 2 compatibility code. Preserve original behavior and public API.
 Input format:
 I will paste multiple files with headers like `# File: path/to/file.py`. Treat them as one package.
-
 Requirements:
 - Target Python 3.12 only.
 - Output one markdown code block containing the complete refactored code.
@@ -21,8 +20,6 @@ Requirements:
 - Do not include any explanatory text outside the code block.
 - If a file is empty, ignore it.
 - If forward references are needed, use `from __future__ import annotations` (optional in 3.12).
-
 Output:
 One markdown block with the full refactored Python code.
 first code is this:
-

@@ -1,0 +1,24 @@
+Write a Python class named `RadioButton` that represents a RadioButton UI widget in a Termux:GUI
+application, extending the `CompoundButton` base class (imported from `termuxgui.compoundbutton`),
+with `View` imported from `termuxgui.view` and `Activity` imported from `termuxgui.activity`.
+The class should have an `__init__` method with the following parameters:
+- `activity` (an `Activity` instance, required):
+the activity the RadioButton belongs to. - `text` (a `str`, required):
+the label text displayed on the RadioButton. - `parent` (an `Optional[View]`, default `None`):
+the parent view to attach this RadioButton to, if any. - `checked` (a `bool`, default `False`):
+whether the RadioButton starts in the checked state. - `visibility`
+(an `Optional[Literal[0, 1, 2]]`, default `None`): the initial visibility state of the view.
+Behavior/notable details:
+- Build a dictionary of parameters (`args`) containing `aid` (taken from `activity.aid`), `text`,
+`checked`, and `visibility`. - If `parent` is not `None`,
+add a `"parent"` key to `args` set to `parent.id`. - Store the `checked` value as an instance
+attribute `self.checked`. - Call the parent class (`CompoundButton`) `__init__` method,
+passing `activity` and the result of `activity.c.send_read_msg(...)`,
+where the message sent is a dict with `"method": "createRadioButton"` and `"params": args`.
+This performs a synchronous call to the Termux:GUI backend to actually create the RadioButton view
+and presumably returns an identifier/id used by the base class. - Include a short docstring on the
+class: "This represents a RadioButton." - Use proper type hints throughout
+(`Optional`, `Literal` from `typing`).
+The output of this code is the `RadioButton` class definition itself
+(no standalone script execution, no additional output)
+— it's meant to be used as part of a Termux:GUI Python binding library module. ---

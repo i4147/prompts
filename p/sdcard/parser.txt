@@ -1,0 +1,15 @@
+Start : ALIGNRELN SubNode " " | SubNode ( ":" SubNode )* " " ;
+SubNode : "(" SubNode ")" RelationDisj? | ModNode RelationDisj? ;
+RelationDisj : RelationConj ( "|" RelationConj )* RelationConj : ModRelation ( "&"?
+ModRelation )* ModRelation : RelChild | "!"
+RelChild | "?"
+RelChild ; RelChild : "[" RelationDisj "]" | Relation ; Relation : ( ( ( (IDENTIFIER (","
+IDENTIFIER)?)?
+RELATION ( IDENTIFIER | REGEX )? ) ( "=" IDENTIFIER )? ) | ALIGNRELN) ( ModNode
+| "(" SubNode ")" ) ; NodeDisj : "[" NodeConj ( "|" NodeConj )* "]" ; NodeConj :
+ModNode ( "&"?
+ModNode )* ; ModNode : Child | "!"
+Child ; Child : NodeDisj | Description ;
+Description : "{" ( ( ( IDENTIFIER ":" (IDENTIFIER | REGEX) ) (";" ( IDENTIFIER ":" ( IDENTIFIER |
+REGEX ) ) )* "}") | ( ROOT "}" ) | ( EMPTY "}" ) | "}" ) ("="
+IDENTIFIER )?

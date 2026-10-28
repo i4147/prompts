@@ -1,0 +1,28 @@
+Write a Python module for a PyAnno extension/plugin system
+(compatible with PyScaffold-style project scaffolding) that implements a "NoSkeleton" extension.
+The script's purpose is to remove the default skeleton/example files that are normally generated
+when scaffolding a new Python project, for users who don't want them.
+Main requirements: 1.
+Import `PurePath` as `Path` from `pathlib`, `List` from `typing`,
+and from the parent package import `structure`, plus `Action`, `ActionParams`, `ScaffoldOpts`,
+`Structure` from an `actions` module, and `Extension` from the local extensions module.
+2. Define a class `NoSkeleton` that inherits from `Extension`.
+It must implement an `activate` method that:
+- Takes a list of `Action` objects as input
+and returns a list of `Action` objects. - Registers a function called `remove_files` into the
+actions list, specifying that it should run after the action named `"define_structure"`
+(using the extension's `register` helper method).
+3. Define a standalone function `remove_files` with the signature
+`(struct: Structure, opts: ScaffoldOpts) -> ActionParams` that:
+- Builds a path to the `src` directory. - Uses `structure.reject` to remove the file located at
+`src/<package_name>/skeleton.py` from the project structure,
+where `<package_name>` comes from `opts["package"]`. - Uses `structure.reject` again to remove the
+file `tests/test_skeleton.py` from the structure. - Returns a tuple of the updated `struct`
+and the unchanged `opts`.
+Notable behavior: - This extension doesn't add new files;
+it only removes specific skeleton/example files (`skeleton.py` and its corresponding test file) that
+are part of the default project template,
+by hooking into the structure-definition phase of the scaffolding action pipeline. - The removal
+logic relies on the `structure.reject` helper to safely exclude paths from the
+nested structure dictionary without raising errors if they are already absent.
+---

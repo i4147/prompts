@@ -1,0 +1,30 @@
+Write a Python benchmarking script that compares the performance of three compression
+implementations: `plz4` (a Rust-based LZ4 binding exposing `compress`/`decompress` functions),
+`python-lz4` (the C-based `lz4.block` module,
+imported optionally and skipped gracefully if not installed),
+and the standard library's `zlib` module.
+The script should: 1.
+Define a list of test payload sizes in bytes: 1 KB (1 << 10), 64 KB (1 << 16), and 4 MB (1 << 22).
+2. Implement a `bench(label, fn, *args, iters=20)` helper function that:
+- Performs a single warm-up call to `fn(*args)` before timing. - Times `iters` repeated calls
+(default 20) using `time.perf_counter()`. - Computes the average time per operation in milliseconds.
+- Prints the result as a line with the label left-aligned in a 28-character field
+and the average duration formatted to 3 decimal places,
+suffixed with "ms/op" (e.g., ` rust compress 0.123 ms/op`).
+3. For each size in the list:
+- Generate random bytes of that size using `os.urandom(n)`. - Print a header line showing the size
+in bytes, right-aligned in an 8-character field,
+surrounded by `==` markers (e.g., ` == 1024 bytes ==`). - Compress the data once with the Rust
+implementation to get a compressed sample,
+then benchmark both compress
+and decompress operations for the Rust implementation using the `bench` helper,
+with labels "rust compress" and "rust decompress". - If `python-lz4` is available,
+compress the data once to get a compressed sample,
+then benchmark both compress and decompress for `lz4.block` using labels "python-lz4 compress"
+and "python-lz4 decompress". - Always compress the data once with `zlib` to get a compressed sample,
+then benchmark both compress and decompress for `zlib` using labels "zlib compress"
+and "zlib decompress".
+Notable behavior: the `python-lz4` import must be wrapped in a try/except ImportError block,
+setting the module reference to `None` on failure,
+and all python-lz4-related benchmarking must be conditionally skipped if the import failed,
+without raising errors or stopping the script. ---

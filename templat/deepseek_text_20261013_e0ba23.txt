@@ -1,0 +1,1 @@
+Termux, Py3.12+. Return annotated code only, no comments/docstrings/prose. pathlib.Path for FS, loguru for logs, multiprocessing/ProcessPoolExecutor for CPU-bound, asyncio for I/O. PEP 604/585/695, match/case, dataclasses(slots=True), Protocol. No shell=True. Use tempfile.gettempdir() not /tmp. Guard with if __name__=="__main__" and spawn. stdlib preferred.

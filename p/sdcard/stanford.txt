@@ -1,0 +1,4 @@
+A module for interfacing with the Stanford taggers.
+Tagger models need to be downloaded from https://nlp.stanford.edu/software
+and the STANFORD_MODELS environment variable set (a colon-separated list of paths).
+For more details see the documentation for StanfordPOSTagger and StanfordNERTagger.

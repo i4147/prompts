@@ -1,0 +1,32 @@
+Write a Python script that provides a single public function `format(text, opts)` for
+normalizing/reformatting Markdown text,
+with graceful fallback if an optional dependency is unavailable.
+Behavior requirements: 1.
+Attempt to `import mdformat` at the top of the script inside a `try` block.
+2. If `mdformat` imports successfully, define `format(text, opts)` so that it:
+- Takes `text` (a string of Markdown content)
+and `opts` (a dictionary-like object of formatting options). - Calls `mdformat.text(...)` passing
+the given `text`. - Passes an `options` dictionary to `mdformat.text`,
+setting `"wrap"` to the value of `opts.get("printWidth", 80)` — i.e.,
+read a `printWidth` key from `opts` if present,
+otherwise default to `80`. - Returns the formatted string produced by `mdformat.text`.
+3. If importing `mdformat` fails (wrap the import in `try`/`except` with a bare `except`),
+fall back to a lightweight manual implementation:
+- Import the `re` module. - Define `format(text, opts)` so that it:
+- Uses a regular expression to collapse any run of three
+or more consecutive newline characters (` {3,}`) into exactly two newline characters (`
+`), effectively reducing excessive blank lines
+while preserving single blank-line paragraph breaks. - Strips leading/trailing whitespace from the
+result (`.strip()`). - Appends a single trailing newline character to the final output. - Returns
+the resulting string.
+- In this fallback path,
+  `opts` is accepted as a parameter for interface compatibility but is not actually used.
+Notes on intent: - The purpose is to provide best-effort Markdown formatting:
+prefer the full-featured `mdformat` library
+when installed (respecting a configurable print/wrap width), but still offer a minimal,
+dependency-free normalization (collapsing excess blank lines and ensuring trailing newline)
+when `mdformat` is not available,
+so calling code can rely on a consistent `format(text, opts)` interface regardless of environment. -
+Keep the same function name (`format`)
+and signature (`text, opts`) in both branches so callers don't need to know
+which implementation is active. ---

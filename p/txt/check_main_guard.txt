@@ -1,0 +1,1 @@
+Inspect .py files in the current folder and report ones missing the main guard.

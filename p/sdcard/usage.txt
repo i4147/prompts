@@ -1,0 +1,10 @@
+Write a Python script that uses the `svgo` package to optimize an SVG string.
+The script should import the `optimize` function from `svgo`,
+call it with a sample SVG string (e.g., `"<svg>...</svg>"`) as the first argument,
+and pass a configuration dictionary as the second argument containing
+`"plugins": ["preset-default"]` to enable the default optimization preset,
+and `"floatPrecision": 2` to limit numeric precision to 2 decimal places.
+The function should return a result object (dictionary) containing the optimized SVG data under the
+key `"data"`.
+The script should then print the value of `result["data"]` to the console,
+displaying the optimized SVG markup. ---

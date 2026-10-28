@@ -1,0 +1,1 @@
+Button that copies contents of QTextEdit to the clipboard.

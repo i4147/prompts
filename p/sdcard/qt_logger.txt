@@ -1,0 +1,3 @@
+Qt Logging module.
+Copied and modified from this post:
+http://plumberjack.blogspot.com/2019/11/a-qt-gui-for-logging.html

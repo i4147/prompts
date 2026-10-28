@@ -1,0 +1,13 @@
+Write a Python package `__init__.py` module (using `from __future__ import annotations`) that serves
+as the public entry point re-exporting the core API of a code-formatting library from an internal
+`.api` submodule.
+Requirements: - Import the following five names from a relative submodule named `api`:
+`check`, `format`, `format_with_cursor`, `get_support_info`,
+and `version`. - Define `__all__` as a list containing exactly these five names, in this order:
+`"format"`, `"check"`, `"format_with_cursor"`, `"get_support_info"`,
+`"version"`. - The module should contain no other logic, classes,
+or functions—purely an import and re-export (facade) layer. - Preserve exact naming (case-sensitive)
+and the relative import style (e.g., `from .api import ...`). - The purpose is to expose a clean,
+stable public interface for consumers of the package,
+so they can do `from package import format, check, format_with_cursor, get_support_info, version`
+without needing to know about the internal `api` module structure. ---

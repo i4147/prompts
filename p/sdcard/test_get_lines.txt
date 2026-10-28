@@ -1,0 +1,27 @@
+Write a Python script that verifies the consistency of a custom file-reading utility against
+standard Python file reading.
+The script should: 1.
+Import three helper functions from a local module named `dh`:
+`get_filez`, `get_lines`, and `is_binary`.
+2. Use `Path.cwd()` to determine the current working directory as the starting point for
+file traversal.
+3. Iterate over all files returned by `get_filez(cwd)`,
+which is expected to recursively (or otherwise) enumerate file paths starting from the
+given directory.
+4. For each file, skip it if `is_binary(path)` returns True (i.e., only process text files).
+5. For each non-binary file: - Read the full file content using `path.read_text()`.
+- Split the content into lines using `splitlines(keepends=True)`, preserving line endings,
+  and store this as the reference result (`linez`). - Call `get_lines(path)` to obtain the list of
+  lines produced by the custom utility function. - Compare the two line lists for exact equality.
+  6.
+Print a status line for each file using only the file's base name (`path.name`):
+- If the two line lists match exactly, print `"{filename} ok"`. - If they differ,
+  print `"{filename} error"`.
+  7.
+Wrap the main logic in an `if __name__ == "__main__":` block so it only runs
+when executed as a script.
+The purpose of this script is to act as a self-test/validation tool that confirms a custom
+line-splitting/reading implementation (`get_lines`) behaves identically to Python's built-in
+`str.splitlines(keepends=True)` method across all text files found in the current directory tree,
+while safely skipping binary files to avoid decoding errors.
+No return value is produced; all output is via printed status messages to standard output. ---

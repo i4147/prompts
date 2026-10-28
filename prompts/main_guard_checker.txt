@@ -1,0 +1,37 @@
+Write a Python script that scans a project directory for Python source files and
+checks whether each file is set up as a runnable entry point, with the option to
+automatically fix the files that are not.
+The tool should accept a root directory path (defaulting to the current working
+directory) and optional arguments to specify additional directory names to
+exclude from scanning, with a sensible default set of excluded folders such as
+version control directories, virtual environments, caches, and build outputs.
+It should recursively discover all Python files outside those excluded
+directories.
+For each discovered file, the script should determine whether it already
+contains a standard "main guard" block (the conditional that runs code only when
+the file is executed directly).
+Detection should be robust: it should tolerate variations in spacing and quote
+style, and it should ideally verify the guard using a structural parse of the
+file rather than relying only on text matching, while gracefully handling files
+that cannot be parsed (for example, due to syntax errors), reporting those
+clearly without crashing.
+The script should support a check mode that reports, for every file, whether it
+has a main guard, and summarizes the totals at the end.
+It should also support a fix mode that, for files lacking a main guard, appends
+a standard template consisting of a simple `main()` entry function containing a
+placeholder body and a guarded call that exits with the function's return value.
+Fix mode must avoid duplicating an existing `main()` function or guard, must not
+modify files that already comply, and should preserve each file's existing
+content and encoding.
+It should handle write errors per file and continue processing the remaining
+files.
+Processing of many files should be able to run in parallel across multiple
+worker processes to speed up large projects, with an option to control the
+number of workers.
+Each file's result should record its status, a descriptive message, and the time
+taken to process it.
+The final output should be a clear, human-readable report listing each file's
+outcome and a summary of counts (scanned, compliant, missing, fixed, errors),
+and the script should exit with a non-zero status code if any file remains
+non-compliant in check mode or if errors occurred, and zero otherwise.
+Include a `--help` option that documents all of the command-line arguments. ---

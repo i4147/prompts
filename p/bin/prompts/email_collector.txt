@@ -1,0 +1,3 @@
+Email crawler – complete rewrite.
+Behaviorally equivalent to the original multi-file package for CLI usage, logging,
+database side-effects, file output, and network requests.

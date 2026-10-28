@@ -1,0 +1,38 @@
+Write a Python script that scans one or more directory trees on the local
+filesystem and identifies duplicate files, reporting them so the user can review
+or clean up wasted disk space.
+The tool should be a command-line utility that accepts one or more root
+directories to scan, along with options to control recursion depth, skip common
+version-control, dependency, and cache folders by default (with the ability to
+include or exclude additional paths or patterns), set a minimum file size
+threshold, and optionally follow or ignore symbolic links.
+The script should work efficiently on large directory trees by first grouping
+files by size, since files of different sizes cannot be identical, and only then
+comparing candidates more deeply.
+For candidates sharing a size, it should use a quick partial comparison (for
+example, hashing a small sample of each file) to eliminate most non-duplicates
+before performing a full content comparison using a fast, non-cryptographic
+hashing algorithm or a byte-by-byte check, reading files in chunks so that
+memory usage stays low regardless of file size.
+The work should be parallelized across multiple threads to speed up I/O-bound
+hashing, with a sensible default worker count that the user can override.
+The output should present each set of duplicate files together, showing the file
+size, the number of copies, the total reclaimable space, and the full paths of
+every copy, ordered so that the largest wasted-space groups appear first.
+The tool should also provide a summary at the end with the total number of files
+scanned, the number of duplicate groups found, the total reclaimable space, and
+the elapsed time.
+Support a machine-readable output format (such as JSON) in addition to
+human-readable text, and optionally write results to a file.
+Include a safe, non-destructive default mode, and an optional mode that
+interactively or via flag removes duplicates while always keeping one designated
+copy per group (for example, the first or oldest one), with a dry-run option
+that shows what would be deleted without changing anything.
+Handle permission errors, unreadable files, broken symbolic links, and files
+that change during the scan gracefully by logging a warning and continuing
+rather than aborting.
+Provide clear error messages for invalid arguments or missing directories, and
+exit with appropriate status codes.
+Ensure the script is robust, cross-platform (Windows, macOS, Linux), and reports
+progress to the user during long scans without cluttering machine-readable
+output. ---

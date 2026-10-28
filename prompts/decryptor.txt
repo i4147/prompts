@@ -1,0 +1,18 @@
+Write a Python script that acts as a command-line file encryption and decryption
+tool.
+It should accept a target file path and an operation mode (encrypt or decrypt)
+from the user, plus an optional key.
+When encrypting, the tool should generate a strong random alphanumeric key of a
+sensible length if none is supplied, apply symmetric block-cipher encryption
+with a randomly generated initialization vector, and write the result back to
+the file so that the original content is replaced by its protected form, with
+the IV stored alongside the ciphertext.
+When decrypting, the tool should read the stored initialization vector and
+ciphertext from the file, reverse the process using the provided key, remove any
+padding, and restore the original plaintext in place.
+The script should validate its inputs, handle missing files, wrong keys, and
+corrupted data gracefully with clear user-facing error messages, and report the
+generated key to the user at encryption time so it can be retained for later
+decryption.
+Include a concise help message describing usage, and ensure the tool works on
+any platform for binary files of arbitrary size. ---

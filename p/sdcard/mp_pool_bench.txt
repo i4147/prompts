@@ -1,0 +1,39 @@
+[Tool: think] Params: {"content":"The user wants only the prompt text output, no code, no preamble.
+I have all the code context needed (though truncated) to write a descriptive prompt.
+This is a single-step text generation task, not a tool-requiring task.
+I should just answer directly with the prompt text."} Write a Python command-line benchmarking
+script that measures
+and compares different multiprocessing dispatch strategies provided by a local `mp_pool` module
+(which exposes `POOL_WORKERS`, `PoolMethod`, and a `run_pool` function) on a real-world
+file-hashing workload.
+Purpose and behavior: - The script should accept command-line arguments via `argparse`:
+a required `--path` (directory to scan for files), `--workers` (number of worker processes),
+`--runs` (number of repetitions per strategy for timing stability),
+and an optional `--chunk-size`
+(bytes read per I/O chunk when hashing, with a sensible default such as 32768). - Use
+`pathlib.Path.rglob` to recursively collect all files under the given `--path`. - Define a
+top-level, picklable worker function `hash_file(path, chunk_size=DEFAULT_CHUNK_SIZE)` that computes
+the `xxhash.xxh64` hex digest of a file's contents by reading it in chunks,
+returning a tuple of `(path, hexdigest)`.
+On any `OSError` during reading, it should catch the exception, log a warning (using `loguru`),
+and return `(path, "")` instead of raising. - Establish a serial (single-process, non-pooled)
+baseline by hashing all collected files sequentially and timing it;
+this baseline's digests serve as the ground truth for correctness verification. - For each available
+dispatch strategy exposed by `run_pool` (e.g., `map`, `starmap`, `imap_unordered`, `apply_async`),
+run the hashing workload across the worker pool,
+trying both single-argument and `star=True` argument-unpacking modes
+where each strategy supports it. - Repeat each strategy `--runs` times,
+recording wall-clock time per run (using `time.perf_counter` or similar),
+and store results using a small `NamedTuple` (e.g., `BenchResult`) holding a label
+and a list of run times,
+with computed properties for the minimum (`best`)
+and mean (`avg`) time. - After each strategy's runs,
+verify that the resulting digests exactly match the serial baseline's digests;
+log an error or raise if any mismatch is detected,
+ensuring correctness is never silently skipped. - Use `loguru` for all logging/reporting:
+log progress as each strategy is benchmarked,
+and print a final summary table/report showing each strategy's label, min time, mean time,
+and speedup factor relative to the serial baseline. - Structure the code with type hints throughout
+(using `from __future__ import annotations`, `Final`, `NamedTuple`, `Callable`,
+`Sequence` from `collections.abc`, etc.), module-level constants for defaults,
+and a clear `main()` entry point guarded by `if __name__ == "__main__":`. ---

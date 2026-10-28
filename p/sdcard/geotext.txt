@@ -1,0 +1,36 @@
+Write a prompt for an AI coding agent to generate a Python utility module that provides helper
+functions for locating
+and parsing simple delimited data files bundled alongside the script
+(in a sibling "data" directory).
+The module should: 1.
+Determine the script's own root directory at runtime
+(using the absolute path of the directory containing the file)
+and expose a helper function `get_data_path(path)` that joins this root directory with a "data"
+subfolder and the given relative `path`, returning the resulting full path.
+This allows other parts of the codebase to reliably locate bundled data files regardless of the
+current working directory.
+2. Provide a function
+`read_table(filename, usecols=(0, 1), sep="\t", comment="#", encoding="utf-8", skip=0)` that reads a
+delimited text file and parses it into a dictionary.
+Specifically it should:
+- Open the file at `filename` using the given `encoding`
+(use `io.open` for Python 2/3 compatibility). - Skip the first `skip` lines of the file before
+parsing. - Ignore (filter out) any line that starts with the `comment` character/string
+(default `#`), treating it as a comment line to be excluded entirely. - Split each remaining line
+using the `sep` delimiter (default tab character). - Use the column indices specified in `usecols`
+(a two-element list/tuple, default `(0, 1)`) to pick which split column becomes the dictionary key
+and which becomes the dictionary value. - Return a dictionary built from all parsed,
+non-comment lines, where keys come from the first index in `usecols`
+and values come from the second index. - Include a clear docstring describing parameters
+(`filename`, `usecols`, `sep`, `comment`, `encoding`, `skip`)
+and the return value (a dictionary with one entry per parsed line).
+3. Import and make available (even if not all are directly used in the shown logic) `namedtuple`,
+`Counter`, `OrderedDict` from the `collections` module, plus the `re`, `os`, and `io` modules,
+since this module is intended to serve as a shared utility/data-loading module for a larger package
+that may rely on these imports.
+4. Use a UTF-8 source encoding declaration at the top of the file (`# -*- coding: utf-8 -*-`).
+The purpose of this module is to centralize file-path resolution for bundled data assets
+and provide a lightweight,
+dependency-free (no pandas/numpy) way to load small two-column (or configurable-column) lookup
+tables (e.g., mappings, dictionaries of codes to names) from tab-separated
+or similarly delimited text files, while gracefully skipping header/comment lines. ---

@@ -1,0 +1,5 @@
+Compression benchmark comparing cramjam vs standard library and 3rd-party libraries.
+Usage: python bench_compression.py <file_or_folder> [--runs N] [--levels L1,L2,...]
+[--algorithms A1,A2,...]
+Examples: python bench_compression.py ./mydata.bin python bench_compression.py ./myfolder --runs 5
+python bench_compression.py ./data --algorithms gzip,zstd,lz4

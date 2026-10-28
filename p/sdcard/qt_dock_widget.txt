@@ -1,0 +1,3 @@
+Docked widget.
+This module is heavily inspired by napari's implementation which minimised size of the title bar
+while making it quite visually appealing.

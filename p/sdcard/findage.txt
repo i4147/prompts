@@ -1,0 +1,23 @@
+Write a Python command-line script that filters lines containing the substring "age" from an input
+text file and writes those matching lines to a new output file.
+Requirements: - Use `from __future__ import annotations` and import `json`, `sys`,
+and `Path` from `pathlib` (even if `json` is not actually used in the logic). - Accept exactly one
+command-line argument:
+the path to the input file,
+retrieved via `sys.argv[1]`
+and converted to a `Path` object. - Implement a function `process_file(path)` that:
+- Opens the given file for reading with UTF-8 encoding. - Reads all lines using `readlines()`. -
+Iterates through each line
+and collects into a list only the lines that contain the substring "age"
+(simple substring check, not case-insensitive, not whole-word). - Opens (or creates) a file named
+"age" in the current working directory for writing (plain `open`, not using `Path`). - Writes each
+collected matching line to this "age" file,
+followed by an extra newline after each line
+(i.e., using an f-string like `f"{k} "`,
+which results in a blank line between entries since the original lines already contain their own
+newline character). - After writing,
+prints `"done."` to standard output. - In the `if __name__ == "__main__":` block,
+read the input file path from `sys.argv[1]`, wrap it in `Path`,
+and call `process_file` with it. - Keep the code simple and minimal,
+with no additional error handling, command-line argument validation,
+or configurability beyond what is described above. ---

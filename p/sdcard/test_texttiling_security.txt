@@ -1,0 +1,11 @@
+Regression tests for ReDoS in TextTilingTokenizer (CWE-1333). ``_mark_paragraph_breaks`` scans the
+input for blank-line paragraph breaks with ``[ \t\r\f\v]* [ \t\r\f\v]* [ \t\r\f\v]*``.
+With the plain greedy ``re`` pattern,
+``finditer`` rescans a long horizontal-whitespace run that has no blank line quadratically,
+so a crafted whitespace blob hangs ``tokenize()``.
+The pattern now uses possessive quantifiers (regex module), making the scan linear.
+The whitespace class does not overlap ``" "``, so the matches are unchanged.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun,
+so a regression to a quadratic regex cannot keep burning CPU for the rest of the suite,
+and any exception in the worker is propagated back to the assertions instead of being swallowed.

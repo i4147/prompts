@@ -1,0 +1,28 @@
+Write a Python script that acts as a command-line tool for auditing the
+third-party dependencies of a Python project.
+The tool should scan one or more Python source files or an entire project
+directory, identify every module the code imports, and determine which of those
+imports are external packages rather than standard library modules or local
+project modules.
+The script should accept input paths and optional flags via the command line,
+including an option to choose the output format (human-readable text and
+machine-readable JSON).
+For each detected external dependency, it should report the package name, the
+files and line numbers where it is imported, and, where feasible, whether the
+package is currently installed in the active environment and its installed
+version.
+Key behaviors to include: - Parse source files safely, skipping or reporting
+files that contain syntax errors without crashing the whole run. - Recognize the
+standard library reliably across supported Python versions, with a sensible
+fallback when the runtime does not expose a standard library listing. - Ignore
+relative imports and imports that resolve to modules within the scanned project.
+- Map common import names to their distribution package names where they differ
+(for example, names that do not match their installable package). - Optionally
+generate a requirements-style list of the detected external packages, with a
+flag to write it to a file. - Optionally check whether the detected packages are
+installed and report any that are missing, using a clear non-zero exit status
+when problems are found. - Handle missing paths, unreadable files, and invalid
+arguments with clear, user-friendly error messages. - Keep the output
+deterministic (sorted and de-duplicated) so results are reproducible across
+runs. - Include a concise help message describing usage, options, and examples.
+---

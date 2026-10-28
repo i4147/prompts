@@ -1,0 +1,36 @@
+Write a Python script that fetches a Wikipedia article (by page title) using the `wikipedia` library
+and generates multiple text summaries of its content using a variety of NLP summarization
+techniques, for comparison purposes.
+The script should: 1.
+Retrieve a Wikipedia page using `wikipedia.page()` with a given article title,
+and extract its full text content via the `.content` attribute.
+2. Load the spaCy English model (`en_core_web_sm`)
+and process the retrieved article content to produce a spaCy `doc` object
+(for potential downstream NLP analysis, e.g., tokenization, entities, etc.).
+3. Use Gensim's `summarize` function (from `gensim.summarization.summarizer`) to generate:
+- A summary based on a specified ratio of the original text length. - A summary based on a specified
+target word count.
+Print each summary clearly labeled (e.g., "Percent summary", "Word count summary").
+4. Use the `sumy` library to generate extractive summaries with four different algorithms,
+each producing a 2-sentence summary: - LexRank (`LexRankSummarizer`)
+- Luhn (`LuhnSummarizer`) - LSA (`LsaSummarizer`) - TextRank (`TextRankSummarizer`) For each
+  algorithm, parse the plain text input using `PlaintextParser.from_string()` with an English
+  `Tokenizer`, run the summarizer on `parser.document` requesting 2 sentences,
+  concatenate the resulting sentences into a single string, and print the result.
+  5.
+Incorporate NLTK-based text processing utilities (`stopwords`, `word_tokenize`, `sent_tokenize`) to
+support keyword/stopword filtering or additional preprocessing of the text as needed.
+6. Optionally use Gensim's `keywords` function (from `gensim.summarization`) to extract key terms
+from the article content.
+Notes on behavior: - The script is exploratory/comparative in nature
+— it is meant to showcase
+and compare different summarization approaches
+(statistical ratio-based, word-count-based, and graph/algorithm-based extractive methods) applied to
+the same source text. - Input: a Wikipedia article title (string) used to fetch content;
+the same raw text is reused across all summarization methods. - Output:
+multiple printed summaries to the console,
+each labeled or distinguishable by the summarization method used,
+allowing side-by-side comparison of summary quality
+and style. - Assume required dependencies
+(`gensim`, `wikipedia`, `spacy` with `en_core_web_sm`, `sumy`, `nltk` with stopwords/punkt data) are
+installed and available in the environment. ---

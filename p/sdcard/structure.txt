@@ -1,0 +1,45 @@
+Write a prompt for an AI coding agent that generates a Python module implementing a "file system
+structure" helper for a project scaffolding/templating tool
+(similar in spirit to PyScaffold's structure module).
+The module should: **Purpose**:
+Provide type definitions and utility functions for representing, manipulating,
+and writing out a nested directory/file "structure" (a dictionary tree) to disk,
+where leaf values describe file contents and/or the file operation to use
+when writing them. **Type aliases to define**
+(using `typing`, `string.Template`, and local imports from sibling modules `templates`,
+`file_system`, `operations`): - `AbstractContent`:
+a "recipe" for file contents — can be a `FileContents` value,
+a callable taking `ScaffoldOpts` and returning `FileContents`,
+or a `string.Template`. - `ResolvedLeaf`:
+a tuple of `(AbstractContent, FileOp)` — full recipe including the file operation. - `ReifiedLeaf`:
+like `ResolvedLeaf` but with content already "reified" into an actual string
+(no lazy callables/templates) — tuple of `(FileContents, FileOp)`. - `Leaf`:
+either an `AbstractContent` directly, or a `ResolvedLeaf` tuple. - `Node`:
+either a `Leaf` or a nested `dict` (representing a subdirectory). - `Structure`:
+`Dict[str, Node]` — the full nested directory tree,
+where keys are path segments and values are nested structures or leaf file definitions.
+Each type alias should have a docstring explaining its meaning,
+formatted with a code block showing the `Union`/`Tuple` signature. **Module-level constants**:
+Create `NO_OVERWRITE` and `SKIP_ON_UPDATE` by calling `no_overwrite()`
+and `skip_on_update()` from the `operations` module,
+to be used as default `FileOp` values. **Imports/dependencies**:
+Use `deepcopy` from `copy`, `Path` from `pathlib`, `Template` from `string`,
+typing utilities (`Callable`, `Dict`, `Optional`, `Tuple`, `Union`, `cast`),
+and project-internal imports:
+`templates` module (and its `get_template` function),
+`create_directory` and `PathLike` from `.file_system`, and `FileContents`, `FileOp`, `ScaffoldOpts`,
+`create`, `no_overwrite`,
+`skip_on_update` from `.operations`. **Expected further functionality**
+(to be implemented in the same module, consistent with the types above):
+functions to merge/update structures,
+resolve leaves into reified content+operation tuples
+(applying templates or calling content-generating functions with `ScaffoldOpts`),
+and recursively write the structure to disk under a given root directory
+— creating directories as needed via `create_directory`
+and writing/creating files via the `create` file operation,
+while respecting file operation semantics like not overwriting existing files (`no_overwrite`)
+or skipping files during an update (`skip_on_update`).
+Ensure all type aliases, constants, and docstrings match exactly as described,
+and that the code is organized as a reusable internal module
+(e.g., part of a scaffolding/project-generation library) with clear separation between type
+definitions and behavior. ---

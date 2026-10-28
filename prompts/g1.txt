@@ -1,0 +1,34 @@
+Write a Python script that acts as a GitHub repository cloning and mirroring
+utility.
+It should accept a GitHub repository reference (SSH URL, HTTPS URL, or
+owner/name shorthand) along with a target directory and optional settings such
+as branch, clone depth, and which backend tool to use for cloning.
+The script should clone the repository into the target location, shallowly by
+default, and resolve the default branch automatically via the GitHub API when no
+branch is specified, falling back to a sensible default if resolution fails.
+The script should support multiple interchangeable cloning backends, selectable
+by name, with a sensible default.
+It should be designed around a common interface so that each backend can be
+swapped without changing the rest of the workflow.
+Where a backend does not support a given operation, the script should degrade
+gracefully or report a clear error.
+Handle submodules: if the repository contains a submodules configuration file,
+the script should detect the submodules and initialize, update, and recursively
+fetch them as needed, with the option to skip this step.
+Include a size-aware behavior: estimate or check the repository size via the
+GitHub API, and when it exceeds a configurable threshold (default 5 MB), switch
+to a lighter-weight strategy such as a shallower or partial clone, and log that
+decision.
+Provide clear logging of each step (resolution, cloning, submodule handling,
+errors), using a structured logging approach.
+Validate inputs up front, normalize URLs, and fail with informative messages
+when the repository is inaccessible, the target already exists in an
+incompatible state, or required external tools are missing.
+Use an optional GitHub access token from the environment for authenticated API
+calls and private repositories, and never print the token.
+Expose all behavior through a command-line interface with help text, sensible
+defaults, and exit codes that indicate success or the category of failure.
+Optionally support a dry-run mode that reports what would be done without
+modifying the filesystem.
+Keep the code modular, well-documented, and suitable for use both as a
+standalone CLI and as an importable module. ---

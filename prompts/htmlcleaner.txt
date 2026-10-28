@@ -1,0 +1,30 @@
+Write a Python script that extracts inline CSS and JavaScript from HTML files
+and moves them into external asset files, so that the HTML pages become cleaner
+and their styling and scripts can be cached and reused separately.
+The tool should be a command-line utility that accepts a target file or
+directory as input.
+When given a directory, it should recursively find all HTML files (common HTML
+extensions) and process each one.
+For every HTML file, it should locate embedded style blocks and inline script
+blocks, write their contents into separate external files organized into
+dedicated CSS and JavaScript subfolders within a common assets directory, and
+replace the original inline content with references pointing to those new files
+using correct relative paths.
+Scripts that already reference an external source should be left untouched, and
+very small or empty blocks may be skipped based on a configurable minimum size
+threshold.
+Key behaviors to include: - Parse the HTML robustly without corrupting the
+surrounding markup, attributes, or character encodings. - Use content-based
+naming or hashing so that identical CSS or JavaScript blocks are deduplicated
+and not written multiple times. - Process files in parallel using a configurable
+number of worker processes to speed up large batches. - Report per-file results,
+including how many CSS and JavaScript blocks were extracted and any errors
+encountered, and print an overall summary at the end. - Handle errors gracefully
+so that one failing file does not stop the processing of the rest. - Provide a
+dry-run option that reports what would be changed without writing any files, and
+an option to set the output or assets location. - Ensure the assets directory is
+created only when needed and that the original HTML files are updated safely
+(for example, by writing to a temporary file and replacing the original).
+The script should be self-contained, use only the Python standard library, run
+on common operating systems, and include clear help text describing its usage.
+---

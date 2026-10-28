@@ -1,0 +1,5 @@
+Extract documentation in Markdown format from: 1.
+Importable Python modules (recursively) 2.
+All .py files found in system + user site-packages Includes: - Module docstring
+- Functions docstrings - Classes docstrings Uses multiprocessing for speed.
+Produces docs.zip at the end.

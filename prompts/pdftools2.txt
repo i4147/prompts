@@ -1,0 +1,28 @@
+Write a Python script that processes PDF files in bulk to reduce their file
+size, using an external optimization tool when available and falling back to
+in-process compression otherwise.
+The script should accept one or more file or directory paths as input,
+recursively discover all PDF files within any provided directories, and skip
+non-PDF inputs.
+It should run from a command-line interface that supports options for choosing
+the output location or overwriting originals, selecting a compression quality or
+level, and controlling parallel processing across multiple files.
+Key behaviors: - Accept mixed inputs (individual PDFs and folders) and gather a
+deduplicated list of PDFs to process. - For each PDF, compress it and report the
+original size, the resulting size, and the percentage saved, using
+human-readable size formatting (bytes, KB, MB, GB, and so on). - Only keep the
+compressed version if it is actually smaller than the original; otherwise leave
+the file unchanged or copy the original, and say so in the report. - Preserve
+PDF validity and content, including pages, text, and embedded images where
+possible, and handle encrypted or corrupted PDFs gracefully by reporting the
+error and continuing with the remaining files. - Support processing files in
+parallel across multiple worker processes, with a sensible default based on the
+machine's CPU count and an option to override it. - Compute and display total
+sizes before and after processing for the whole batch, plus a summary of how
+many files were compressed, skipped, or failed. - Suppress or capture noisy
+subprocess output by default, with an optional verbose mode that echoes the
+commands being run. - Never silently overwrite original files unless the user
+explicitly requests in-place processing, and use safe temporary files so a
+failed run never leaves a partially written PDF behind. - Exit with a non-zero
+status code if any file failed, and print clear, concise progress and error
+messages to the console. ---

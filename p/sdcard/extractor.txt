@@ -1,0 +1,49 @@
+Write a Python command-line script that extracts likely Python code blocks from a text/markdown file
+and prints them to stdout.
+Purpose and behavior:
+- The script reads a file passed as a command-line argument and scans it line by line,
+looking for fenced code blocks delimited by triple backticks
+(```` ``` ````), similar to Markdown code fences (it does not check the language tag,
+just lines starting with
+"```"). - It collects the lines between each pair of opening
+and closing fence markers as a candidate "block". - For each candidate block,
+it must determine whether the block actually looks like valid/likely Python code,
+using a two-stage heuristic: 1.
+Call an external function `heuristic_score(lines)` imported from a module named `cy_heu`,
+which takes the list of lines in the block
+and returns a numeric score indicating how "Python-like" the block is.
+2. If the score is >= 3, immediately consider the block valid Python.
+3. If the score is >= 1 (but < 3),
+additionally verify the block by attempting to tokenize it with Python's built-in `tokenize` module
+(using `tokenize.generate_tokens` on a `StringIO` wrapping the joined block text).
+If tokenization succeeds without raising an exception, consider it valid Python;
+if tokenization raises any exception,
+treat it as invalid (catch all exceptions silently and return False).
+4. If the score is 0 (or negative),
+the block is considered not Python. - Only blocks classified as valid Python should be kept;
+invalid blocks are discarded (represented as empty string). - To speed up processing
+when there are many code blocks,
+the script should process blocks concurrently using a multiprocessing pool sized to the number of
+CPU cores (`multiprocessing.Pool` with `cpu_count()` workers).
+Each extracted block should be submitted asynchronously to the pool for analysis,
+and results should be collected afterward in the original order
+and written to standard output
+(only non-empty results, i.e., blocks confirmed as Python, should be written,
+concatenated as-is without extra separators). - Input:
+a single required command-line argument — the path to the input file to scan (UTF-8 encoded text).
+If no filename argument is provided,
+the script should print a usage message ("Usage: extractor.py <filename>")
+and exit with a non-zero status code. - Output:
+the concatenated text of all code blocks identified as valid Python,
+written directly to standard output,
+preserving original formatting/newlines of each block. - The script should be structured with a
+`main()` entry point guarded by the standard `if __name__ == "__main__":` idiom,
+and should import `sys`, `tokenize`, `StringIO` from `io`,
+`Pool` and `cpu_count` from `multiprocessing`,
+and `heuristic_score` from a local module `cy_heu`. - Include helper functions:
+one to check tokenizer validity of a block of text,
+one to decide if a given list of lines constitutes a Python block
+(combining the heuristic score and tokenizer check as described),
+one to analyze a single block and return its text if valid or an empty string otherwise,
+and one that performs the full file scanning, fence detection, multiprocessing dispatch,
+and output-writing logic. ---

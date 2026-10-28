@@ -5,10 +5,8 @@ pkg name should be svgo too, with same cli flags and usage
 1. use pathlib for file system traverse
 2.use multoprocessing wherever possible(cf.ProcessPoolExecutor with fixed 4 workers)
 3. cli  script must accept one or more files or dirs as input,if no input is provided, cli script must process .svg files found under current dir recursively inplace
-
 ## Objective
 Implement a faithful, working reimplementation of the svgo in Python 3.11+, on Linux
-
 ## Naming and CLI contract (HARD)
 - The user-facing command name MUST be exactly `svgo` — same string as the
   original. No `-py`, `-python`, `-impl`, or any other suffix in:
@@ -30,7 +28,6 @@ Implement a faithful, working reimplementation of the svgo in Python 3.11+, on L
   match the reference or hand-roll parsing so stderr text and exit codes match.
 - `--help` and `--version` output MUST match the reference byte-for-byte (modulo
   formatting of the program name, which is the same string).
-
 ## Flags — ALL of them (HARD)
 - Enumerate every flag the reference version accepts for the target binaries
   (from `--help`, the man page, and the info manual).
@@ -44,7 +41,6 @@ Implement a faithful, working reimplementation of the svgo in Python 3.11+, on L
   expected to work correctly.
 - Every supported flag must appear in `tests/matrix.py` (see below) and be
   exercised by at least one unit test and one integration-test invocation.
-
 ## Hard constraints (apply always)
 - Language: Python 3.11+.
 - **Standard library only.** No `pip install`, no `requirements.txt`, no third-party
@@ -64,10 +60,8 @@ Implement a faithful, working reimplementation of the svgo in Python 3.11+, on L
   or to any external helper that would trivially solve the task.
 - If you believe a third-party package is unavoidable, STOP and justify it in your
   initial reply before adding it.
-
 ## Functional requirements
 error handling must be done & edge cases MUST be handled correctly.
-
 ### Byte-exact compatibility
 - `svgo --help` and `svgo --version` must match the reference output
   byte-for-byte (modulo the program name, which is identical). Check in the expected
@@ -78,7 +72,6 @@ error handling must be done & edge cases MUST be handled correctly.
 - Produce an explicit exit-code table in `README.md` (0, 1, 2, others). Every
   documented exit code must be exercised by at least one integration test.
 - Exit codes must match the reference byte-for-byte for every documented error class.
-
 ### Robustness
 - **SIGPIPE:** `svgo ... | head -1` must exit with the reference's code, no
   traceback, no stderr noise. Python raises `BrokenPipeError` — catch it and exit
@@ -93,7 +86,6 @@ error handling must be done & edge cases MUST be handled correctly.
   target that reports peak RSS via `/usr/bin/time -v`.
 - **FD leaks:** FD count in `/proc/<pid>/fd` must be stable across 10,000 iterations
   of the command. Add a test that loops and compares.
-
 ### Differential testing
 - Ship `scripts/difftest.sh` that, when the reference binary is on `$PATH`, runs
   both on the same fixture and diffs stdout, stderr, and exit code byte-for-byte.
@@ -101,12 +93,10 @@ error handling must be done & edge cases MUST be handled correctly.
   reference is absent.
 - Ship `scripts/grade.sh` that runs the differential harness end-to-end and prints
   a pass/fail table. It must be runnable by a reviewer with one command.
-
 ### Test matrix
 - Ship `tests/matrix.py` listing every supported flag and the name of the test that
   exercises it. A test asserting "every flag in the matrix has at least one passing
   test" must exist. No supported flag may be tested zero times.
-
 ### Hidden sanity fixture
 - Ship `tests/fixtures/sanity/` containing:
     - one empty directory,
@@ -117,7 +107,6 @@ error handling must be done & edge cases MUST be handled correctly.
   Integration tests must exercise all five cases against the installed `svgo`
   entry point. Do NOT modify this fixture from the implementation side — treat it
   as read-only.
-
 ## Quality bar (apply always)
 - Package layout: `svgo/__init__.py`, `svgo/core.py` (logic),
   `svgo/cli.py` (entry point). Core logic importable and unit-testable.
@@ -131,7 +120,6 @@ error handling must be done & edge cases MUST be handled correctly.
   library code (only in `svgo/cli.py`).
 - Every integration test creates a fresh `tempfile.mkdtemp`, `chdir`s into it, and
   cleans up. No test depends on order or on the host `$HOME`.
-
 ## Deliverables (apply always)
 1. Full source tree + `pyproject.toml` with
    `[project.scripts] svgo = "svgo.cli:main"` and `dependencies = []`.
@@ -148,7 +136,6 @@ error handling must be done & edge cases MUST be handled correctly.
 4. `scripts/difftest.sh` and `scripts/grade.sh` as specified above.
 5. Final message: what you implemented, every omitted flag with reason, any
    third-party packages used and why, known limitations.
-
 ## Reporting back (before you write any code)
 Reply with:
   1. The reference version you are targeting and where you got its flag list.

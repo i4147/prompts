@@ -1,0 +1,1 @@
+Convert a ClickHouse-style JSON export into a list of {project: download_count} objects, in place.

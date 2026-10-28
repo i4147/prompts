@@ -1,0 +1,22 @@
+Write a Python script that acts as a Python package inspection
+and metadata-extraction tool for built distributions and source projects.
+It should accept a path to a project directory, a source distribution, a wheel, or an archive,
+and analyze its contents to report key packaging information:
+the package name and version, declared metadata (such as author, license, summary, and classifiers),
+declared dependencies and entry points, README content,
+and the presence of compiled binary extensions.
+The tool should gracefully handle archives and directories alike,
+read common packaging configuration files
+(such as setup configuration, pyproject, and package metadata files),
+and tolerate missing or malformed files without crashing.
+The script should provide a command-line interface with options to select the output format
+(human-readable text and JSON at minimum), control which sections are displayed,
+and optionally write generated scaffolding or metadata files into a target location,
+refusing to overwrite existing files unless an explicit force flag is given.
+It should report clear,
+user-friendly error messages to standard error for invalid inputs and return meaningful exit codes.
+Where optional parsing capabilities are unavailable in the environment,
+the tool should degrade gracefully and inform the user rather than failing.
+Prioritize robustness, clean structured output, and a well-organized design,
+and make all implementation choices (libraries, internal structure, and naming) freely at your
+discretion. ---

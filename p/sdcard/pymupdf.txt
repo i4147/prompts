@@ -1,0 +1,39 @@
+Create a Python build-automation script (intended to run inside a Google Colab / Linux environment)
+that cross-compiles the PyMuPDF (fitz) Python package for Android (ARM architecture) using the
+Android NDK.
+The script should: 1.
+Use `from __future__ import annotations` and import standard libraries:
+`os`, `subprocess`, `sys`, `time`, and `pathlib.Path`.
+2. Define module-level configuration constants:
+- `ANDROID_API = 24` - `ARCH = "arm"` - `PYMUPDF_VERSION = "1.23.26"` -
+`WORK_DIR = "/content/pymupdf-build"` - `NDK_VERSION = "r23b"` 3.
+Implement a helper function `run_cmd(cmd, cwd=None, check=True)` that:
+- Prints the command before executing it (e.g., prefixed with `>>>`). - Runs the command via
+`subprocess.run` with `shell=True`, capturing stdout/stderr as text. - Prints stdout if present,
+and prints stderr if present and `check` is True. - If `check` is True
+and the return code is non-zero,
+raises an `Exception` including the exit code. - Returns the completed process result object.
+4. Implement a `setup_environment()` function that:
+- Prints a clear step header ("STEP 1: Installing build tools...") using a line of `=` characters
+for visual separation. - Creates the working directory (`WORK_DIR`) if it doesn't exist
+and changes into it. - Installs required system packages via `apt-get update`
+and `apt-get install` (wget, git, cmake, swig, python3-dev, python3-pip). - Installs Python packages
+`crossenv` and `wheel` via pip.
+5. Implement a `setup_ndk()` function that:
+- Prints a step header ("STEP 2: Setting up Android NDK..."). - Downloads the Android NDK zip
+(`android-ndk-{NDK_VERSION}-linux.zip`) from Google's official download URL
+(`https://dl.google.com/android/repository/...`) only if it isn't already present. - Unzips the NDK
+archive and renames the extracted folder to `android-ndk` only if it hasn't already been set up. -
+Sets an `NDK` environment variable pointing to the extracted NDK path (`{WORK_DIR}/android-ndk`) for
+use in subsequent build steps.
+6. Follow a clear, sequential,
+idempotent step-based structure (each function corresponds to one build stage),
+using descriptive print statements with `"=" * 60` separators to delineate progress through the
+overall PyMuPDF-for-Android cross-compilation pipeline
+(later steps, implied by the pattern, would include creating a cross-compilation Python environment,
+configuring toolchain/environment variables for the NDK,
+building/cross-compiling PyMuPDF and its dependencies such as MuPDF,
+and packaging the resulting wheel/output for Android).
+7. Ensure all shell commands are executed quietly
+where reasonable (using flags like `-q` or `-qq`) to keep build logs concise,
+and that failures during critical steps raise exceptions that stop the build process. ---

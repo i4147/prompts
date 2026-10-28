@@ -1,0 +1,24 @@
+Write a Python script that acts as a command-line spell checker for plain-text
+files, with an optional automatic correction mode.
+The tool should accept one or more input file paths (or read from standard input
+when none are given) and an option to enable autofix.
+It should scan each line of text, identify words made of alphabetic characters
+(ignoring tokens containing digits or other symbols, and handling apostrophes
+within words sensibly), and check each word against a standard English
+dictionary using a spell-checking engine that supports suggestions.
+Key behaviors: - Report every misspelled word with its line number and offer the
+top suggested correction(s) for each. - When autofix is enabled, replace
+misspelled words with the best suggestion while preserving the original
+capitalization style (title case, all uppercase, or lowercase), and write the
+corrected text to an output file or standard output rather than silently
+overwriting the input unless explicitly requested. - Print a summary at the end
+showing the total number of misspelled words found and, if autofix was used, the
+number corrected. - Process lines in parallel across multiple CPU cores to
+handle large files efficiently, combining results from all workers in the
+original line order. - Make the dictionary and affix file locations configurable
+via command-line arguments, with sensible defaults for a standard Linux
+installation. - Handle missing files, unreadable input, and missing dictionary
+files with clear error messages and non-zero exit codes. - Keep the
+spell-checker resources initialized efficiently so they are not reloaded
+unnecessarily for every line. - Provide a help message describing all options
+and usage examples. ---

@@ -1,0 +1,14 @@
+Write a Python script that creates a starter HTML page file from a built-in
+template.
+The script should accept an optional output file name as a command-line argument
+and write a minimal HTML5 boilerplate document to that file, using UTF-8
+encoding.
+The template should include a document title of "html template", a link to an
+external stylesheet named "style.css", a script reference to "script.js" loaded
+in the head, and a body containing a simple container with a second-level
+heading reading "Heading2".
+The script should be runnable directly from the command line and intended as a
+quick scaffolding tool for new web projects.
+Ensure it handles the case where no file name is supplied by falling back to a
+sensible default file name of "index.html", and keep the implementation simple,
+self-contained, and free of external dependencies. ---

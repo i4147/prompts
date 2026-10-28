@@ -1,0 +1,45 @@
+Write a Python module that implements a character-based feature extraction system for sequence
+labeling tasks (such as word segmentation or character-level tagging), consisting of three classes:
+1. **TemplateGenerator**:
+A class that generates position-offset range templates relative to a current character index,
+intended for use in feature extraction (similar to templates used in CRF-based taggers). -
+Constructor parameters:
+`begin` (default -2), `end` (default 2), `min_range_length` (default 2),
+`max_range_length` (default 5), `remove_partial` (default False). - On initialization,
+it generates all valid `(b, e)` offset pairs
+where `b` ranges from `begin` to `end` (exclusive of `end`)
+and `e` ranges from `b` to `end` (inclusive), subject to these filters: - The range length (`e
+- b + 1`) must be between `min_range_length` and `max_range_length` inclusive. - Skip pairs where `b
+  * e > 0` (i.e., both offsets strictly positive or both strictly negative,
+  meaning the range doesn't straddle or touch the center position). - If `remove_partial` is True,
+  also skip pairs where `b * e == 0` (i.e., one of the offsets is exactly zero). - Store the
+  resulting list of `(b, e)` tuples as `self.templates`. - Support iteration directly over the
+  generator object (`__iter__`) to yield each template tuple. - Provide a `tolist()` method that
+  returns the full list of templates.
+  2. **CharacterFeatureTransformer**:
+  A class that uses templates produced by `TemplateGenerator` to extract character n-gram/window
+  features from a sequence of characters. - Constructor takes a `templates` argument
+  (list or iterable of `(b, e)` tuples). - Callable interface `__call__(self, chars, tags=None)`:
+  given a sequence of characters (`chars`)
+  and optional `tags` (unused in the core logic but accepted as a parameter),
+  for each character position `i` in the sequence:
+  - For each template `(t[0], t[1])`,
+  compute the absolute window boundaries `b = i + t[0]`
+  and `e = i + t[1] + 1`. - Skip the template if the window goes out of bounds
+  (`b < 0` or `e > len(chars)`). - Otherwise,
+  append a tuple consisting of a feature name string formatted as `"X[b,e]"`
+  (using the original relative offsets `t[0]` and `t[1]`)
+  and the substring/subsequence `chars[b:e]`. - Collect all valid feature tuples for position `i`
+  into a list, and collect these per-position lists into a final list `x`, which is returned.
+  3. **Sentence**: A helper class for converting sentence-level text into character-tag pairs,
+  beginning with a method `sent_to_chartags(self, sent, nonspace=0, s...)` that converts a
+  (possibly space-delimited, e.g. word-segmented) sentence into a list of (character, tag) pairs,
+  where tags typically indicate boundary information
+  (such as beginning-of-word vs. non-boundary/nonspace markers) derived from the spacing in the
+  input sentence.
+Include appropriate default parameter values
+and internal logic consistent with standard character-tagging conventions for word segmentation
+(e.g., assigning a distinct tag to characters immediately following a space versus other
+characters).
+Ensure the generated code preserves the exact logic, parameter names, default values,
+and method signatures described above. ---

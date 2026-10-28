@@ -1,0 +1,16 @@
+Write a Python script that inspects the packages installed in the current Python
+environment and reports each installed distribution along with the other
+packages it declares as dependencies.
+The tool should locate the active site-packages directory, scan the installed
+distribution metadata, extract the declared dependency requirements for each
+package (ignoring environment markers or extras as appropriate and stripping
+version constraints to show clean package names), and produce a structured
+summary mapping each package to its dependencies.
+If the site-packages directory cannot be found, the script should fail
+gracefully with a clear, human-readable message rather than crashing.
+Ensure the output is easy to read and also available in a machine-readable form
+so it can be consumed by other tools.
+Handle malformed or unreadable metadata files without stopping the overall scan,
+and skip packages that have no declared dependencies or cannot be parsed.
+The script should be runnable directly from the command line and print its
+results to standard output. ---

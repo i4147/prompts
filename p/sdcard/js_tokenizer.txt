@@ -1,0 +1,6 @@
+A small ECMAScript / TypeScript tokenizer (standard library only).
+Produces a flat list of ``(kind, value)`` tokens.
+It is designed to be robust on real-world code
+(handles comments, template strings with ``${...}`` nesting, regex literals heuristically, numbers,
+and multi-character operators) and deliberately does *not* attempt to be a full parser
+— the formatter built on top of it is best-effort.

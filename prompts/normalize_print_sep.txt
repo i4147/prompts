@@ -1,0 +1,26 @@
+Write a Python script that scans one or more files or directories for Python
+source files and normalizes hard-coded separator lines in print statements.
+The tool should accept a list of paths on the command line (files or folders,
+with folders searched recursively for Python files), plus an option that enables
+autofix mode.
+Without autofix, it should only report how many matching separator statements
+each file contains.
+With autofix enabled, it should rewrite each affected file in place, replacing
+any print or cprint call that prints a single repeated character multiplied by a
+number (for example, a call that outputs a line of dashes, equals signs, or
+similar characters repeated a given number of times, possibly with extra
+trailing arguments) with a standardized call that prints a line of 42 hyphens.
+The script should process files in parallel to handle large codebases
+efficiently, using a pool of worker processes and a sensible default worker
+count.
+Each file should be read and written as UTF-8 text.
+Errors on individual files (such as unreadable files or encoding problems) must
+not stop processing of the remaining files; they should be captured and reported
+at the end.
+The output should be a clear summary: for each file, the number of replacements
+found or made, and any errors encountered, followed by overall totals of files
+scanned, files modified, total replacements, and total errors.
+The script should exit with a non-zero status code if any errors occurred, and
+zero otherwise.
+Include a help message describing the purpose and options, and handle a missing
+or empty path list gracefully with a helpful message rather than a crash. ---

@@ -1,0 +1,32 @@
+Write a Python module that implements an `Activity` class representing an Android Activity within
+the Termux:GUI plugin framework (as part of a `termuxgui` Python library/binding).
+The class must: - Be constructed with a required `Connection` object (from `termuxgui.connection`)
+and the following optional parameters:
+`tid` (an existing Task ID to attach the activity to, as a string),
+`dialog` (bool, whether the activity is a dialog),
+`pip` (bool, default `False`, picture-in-picture mode), `overlay` (bool, overlay window mode),
+`lockscreen` (bool, show above lockscreen),
+`canceloutside` (bool, default `True`, whether tapping outside a dialog/overlay cancels it),
+and `intercept` (bool, default `False`, whether to intercept back button presses). - In `__init__`,
+build a `params` dict always containing `canceloutside` and `intercept`,
+and conditionally add `dialog`, `tid`, `pip`, `overlay`,
+and `lockscreen` to the dict only
+when they are not `None`. - Send a `newActivity` RPC method call via the connection's
+`send_read_msg`, passing the constructed params. - If `tid` was not provided by the caller,
+expect the RPC response to be a tuple/list of `(aid, tid)`
+(since a new Task is created along with the activity) and unpack both;
+if `tid` was provided,
+expect the response to be just the `aid` value. - Store the connection on `self.c`,
+create a `Task` object (from `termuxgui.task`) using the connection and the resolved `tid`,
+storing it on `self.t`. - Raise a `RuntimeError` with an appropriate message if the returned
+activity ID (`aid`) equals `-1`,
+indicating the activity could not be created. - Include a class-level docstring explaining that this
+represents an Android Activity,
+and that `a.c` gives access to the Activity's `Connection`
+and `a.t` gives access to its `Task`. - Implement a `finish()` method that sends a `finishActivity`
+RPC call (via `send_msg`, not `send_read_msg`) with the activity's `aid` as a parameter,
+to close/finish the Activity.
+Include a docstring stating it finishes the Activity.
+Use type hints (`Optional`, `Literal` imported from `typing`) consistent with the described
+parameter types, and keep the implementation concise and consistent with a plugin-binding style
+where all actual GUI operations are delegated to RPC calls over the `Connection` object. ---

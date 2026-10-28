@@ -1,0 +1,3 @@
+Utility function to construct a loky.ReusableExecutor with custom pickler.
+This module provides efficient ways of working with data stored in shared memory with numpy.memmap
+arrays without inducing any memory copy between the parent and child processes.

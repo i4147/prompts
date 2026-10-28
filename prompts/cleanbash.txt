@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree for Bash shell scripts and
+strips out their comments while preserving the scripts' executable behavior,
+writing the cleaned results back to disk.
+The tool should accept a root path (a single file or a directory) as its main
+input, plus command-line options controlling behavior such as whether to modify
+files in place, write to an output location, or run a dry-run that only reports
+what would change.
+It should identify Bash scripts by either their file extension (such as `.sh` or
+`.bash`) or by a recognized shebang line at the top of the file (covering bash,
+sh, zsh, and env-based variants), and skip everything else.
+For each Bash script, the tool should parse the source with a proper Bash
+grammar so that it accurately locates comment regions.
+It must not remove text that merely looks like a comment but actually sits
+inside a string literal, heredoc, or other quoted context, and it must keep
+shebang lines intact.
+After removing comments, it should collapse excessive runs of blank lines so the
+output stays tidy without altering any code tokens.
+Processing should be parallelized across multiple CPU cores when handling many
+files, with a sensible default worker count that the user can override.
+Errors on individual files (unreadable files, parse failures, permission
+problems) should be reported clearly without aborting the whole run, and the
+script should finish with a summary of how many files were scanned, modified,
+skipped, and failed.
+Exit codes should reflect whether any failures occurred.
+The output should be human-readable progress and summary messages on the
+console, with an optional verbose mode that lists each file processed.
+The script should be safe by default: it must never overwrite a file unless the
+user explicitly requests in-place modification, and it should verify that the
+cleaned code still parses successfully before committing any change. ---

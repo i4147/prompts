@@ -1,0 +1,4 @@
+Fast, conservative Python comment/docstring/type-annotation stripper.
+LibCST is used so formatting is retained and transformed files remain valid Python.
+The program intentionally parses every input file;
+it has no textual early-out based on '#', triple-single-quotes, or triple-double-quotes.

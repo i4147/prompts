@@ -1,0 +1,2 @@
+timg - Terminal Image Viewer Displays images in the terminal using various methods
+(kitty, iterm2, sixel, or ASCII art)

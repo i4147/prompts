@@ -1,0 +1,32 @@
+Write a Python module that provides mock/stub implementations of cryptographic primitives mimicking
+a subset of the `cryptography` library's symmetric encryption API
+(such as `cryptography.hazmat.primitives.ciphers`),
+intended for testing or development purposes without performing real encryption.
+The module must define the following classes: 1. **`AES`**:
+Represents an AES algorithm object. - Constructor takes a `key` (bytes)
+and stores it. - Method `key_size()`:
+returns the size of the key in bits (length of the key in bytes multiplied by 8).
+2. **`Cipher`**: Represents a cipher object combining an algorithm
+and a mode of operation. - Constructor takes `algorithm`, `mode`,
+and an optional `backend` parameter (accepted for API compatibility but not used internally). -
+Stores `algorithm` and `mode` as instance attributes. - Method `encryptor()`:
+returns a new instance of `MockEncryptor`. - Method `decryptor()`:
+returns a new instance of `MockDecryptor`.
+3. **`MockEncryptor`**:
+A stand-in encryptor that performs no actual encryption. - Method `update(data)`:
+returns the input `data` unchanged (pass-through). - Method `finalize()`:
+returns an empty bytes object (`b""`).
+4. **`MockDecryptor`**:
+A stand-in decryptor that performs no actual decryption. - Method `update(data)`:
+returns the input `data` unchanged (pass-through). - Method `finalize()`:
+returns an empty bytes object (`b""`).
+Notable behavior/design notes: - This is a fake/mock implementation:
+no real cryptographic transformation is performed anywhere;
+`update` simply echoes back whatever data it receives,
+and `finalize` always returns empty bytes. - The class
+and method signatures should closely mirror the real `cryptography` library's
+`Cipher`/`encryptor`/`decryptor` interface so it can be used as a drop-in replacement in tests
+or mocked environments. - No external dependencies (e.g., the actual `cryptography` package) should
+be required—this module is self-contained. - No error handling, validation,
+or real security guarantees should be implemented;
+the focus is purely on API-compatible mocking. ---

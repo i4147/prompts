@@ -1,0 +1,40 @@
+Write a Python async function named `identify` that authenticates a user based on an OIDC bearer
+token and returns a populated identity context object.
+The function should use dependency injection
+(via an `@inject` decorator
+and `Annotated`/`Depends` patterns from an `ab_core.dependency` framework) to automatically
+construct and inject two async client dependencies: 1.
+A `TokenValidatorClient` (from `ab_client.token_validator`),
+loaded via an `ObjectLoaderEnvironment` configured with the environment variable prefix
+`TOKEN_VALIDATOR_CLIENT`, persisted across calls.
+2. A `UserClient` (from `ab_client.user`),
+loaded via an `ObjectLoaderEnvironment` configured with the environment variable prefix
+`USER_CLIENT`, persisted across calls.
+Main input: - `token: str` — the raw bearer/OIDC token string to validate.
+Main output: - Returns an `IdentityContext` instance (defined in a local `.models` module)
+representing the identified/provisioned user.
+Notable behavior: - Step 1:
+Call the token validator client's `validate_token_validate_post` method,
+passing a `ValidateTokenRequest(token=token)` payload,
+to obtain decoded token claims
+(expected to include fields like `sub`, `email`, `given_name`, `name`, `nickname`). - Wrap this call
+in a try/except block;
+if it raises any exception,
+catch it and re-raise it as a custom `IdentificationError`
+(imported from a local `.exceptions` module) with the message "Token validation failed",
+chaining the original exception as the cause. - Step 2:
+Using the claims obtained from validation,
+call the user client's `upsert_user_by_oidc_user_oidc_put` method with an `UpsertByOIDCRequest`
+payload that performs an upsert (create-or-update) of the user record keyed by `oidc_sub`
+(from `claims.sub`), including:
+- `email` from `claims.email` - `display_name` derived with fallback priority:
+`claims.given_name` → `claims.name` → `claims.nickname` - `preferred_username` derived with fallback
+priority: `claims.nickname` → `claims.name` → `claims.given_name` - This second call should also be
+wrapped in a try/except block to handle upsert failures gracefully
+(following the same pattern of raising a contextual error),
+and ultimately the function should construct
+and return an `IdentityContext` built from the upserted user data (and/or claims). - Use
+`pydanticize_type` to wrap the client types for the dependency loader environments,
+ensuring proper type validation/generation for the injected dependencies. - The code should use
+fully qualified, realistic method names matching an OpenAPI-generated client convention
+(e.g., `validate_token_validate_post`, `upsert_user_by_oidc_user_oidc_put`). ---

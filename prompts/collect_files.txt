@@ -1,0 +1,21 @@
+Write a Python script that recursively scans the current working directory for
+files with a user-specified extension (for example, "txt", "pdf", or "jpg") and
+collects copies of all matching files into a single folder named after that
+extension, created inside the current directory if it does not already exist.
+The script should accept the target extension as a command-line argument,
+tolerate a leading dot in the argument, and exit with a clear usage message when
+the argument is missing.
+Key behaviors: - Search all subdirectories of the current working directory,
+including nested ones, for matching files. - Skip any files that already reside
+inside the destination folder, so previously collected files are not copied
+again. - Preserve each file's original metadata such as timestamps and
+permissions when copying. - Never overwrite existing files in the destination.
+If a filename collision occurs, append an incrementing numeric suffix before the
+extension (for example, "report_1.txt", "report_2.txt") until a free name is
+found. - Print a line for each successful copy showing the original source path
+and the new destination path. - Handle errors on individual files gracefully:
+report the failing file and continue processing the rest instead of aborting the
+whole run. - At the end, print a summary stating how many files were
+successfully copied.
+The output is a self-contained, runnable script that performs this collection
+reliably and safely, with clear console feedback for the user. ---

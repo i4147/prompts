@@ -1,0 +1,9 @@
+Regression tests for the untrusted-search-path fix in ReppTokenizer (CWE-426).
+``find_repptokenizer`` used ``os.path.exists(repp_dirname)`` to accept a directory as-is.
+For a *relative* ``repp_dirname`` that resolves against the current working directory
+and is checked *before* the ``REPP_TOKENIZER`` environment variable,
+so an attacker who can write a ``./<name>/src/repp`` executable into the CWD could have it run
+(the command path contains a separator, so ``subprocess`` executes it directly)
+-- overriding a trusted ``REPP_TOKENIZER``.
+Only an explicit *absolute* directory is now taken as-is;
+a relative name is resolved through ``REPP_TOKENIZER``.

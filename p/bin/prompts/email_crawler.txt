@@ -1,0 +1,2 @@
+Email Crawler – single-file consolidated version Original multi-file package
+(ColorStreamHandler + database + email_crawler + settings)

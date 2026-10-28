@@ -8,7 +8,7 @@ Write the prompt so the agent can rebuild the script from scratch.
 Cover: - **Purpose:** A parallel, in-place PNG optimizer wrapping the `optipng`
 binary, designed to run on Termux (Android) with a Termux-style shebang line. -
 **Inputs:** A directory (defaults to the current directory) to scan recursively;
-command-line options for optimization level (integer 1–7, default 7), number of
+command-line options for optimization level (integer 1â€“7, default 7), number of
 worker processes (default 8), per-file timeout in seconds (default 300), and a
 dry-run or similar mode if applicable; plus any flags for passing extra
 arguments to optipng.

@@ -1,0 +1,54 @@
+Write a prompt for an AI coding agent to generate a Python module that parses archive files
+(.zip, .tar, .7z, .rar) containing documents,
+as part of a larger document-parsing library/plugin system.
+The module should: 1.
+Be structured as a plugin for a document parser registry,
+importing `Block` and `Document` models from a sibling `..model` module
+and a `register` decorator from a sibling `..registry` module.
+2. Implement a shared internal helper function `_parse_archive(path, list_members, extract_member)`
+that contains the common logic for processing any archive type:
+- Accepts the archive's file path,
+  a callable `list_members` that returns a list of member filenames inside the archive,
+  and a callable `extract_member` that extracts a given member to a temporary directory
+  and returns the extracted file's path. - Creates a temporary directory
+  (using `tempfile.TemporaryDirectory`) to extract files into,
+  ensuring cleanup after processing. - Iterates over all members returned by `list_members()`,
+  skipping entries that represent directories (names ending with "/"). - For each file member,
+  inserts a `Block` of kind "heading" with the member's base filename as text and heading level 2,
+  to visually separate each nested document in the output. - Extracts the member using
+  `extract_member`, catching exceptions during extraction
+  and inserting a `Block` of kind "raw" with a message like "(failed to extract: {error})" if it
+  fails, then continues to the next member. - Recursively parses the extracted file using the main
+  `parse` function imported from the sibling `..api` module
+  (import it locally inside the function to avoid circular imports). - Appends all blocks from the
+  recursively parsed inner `Document` into the outer blocks list. - Catches exceptions during this
+  recursive parsing too, inserting a `Block` of kind "raw" with a message like "(failed to parse:
+{error})" if it fails. - Returns a `Document` object with the original archive `path`,
+`format="archive"`, and the accumulated list of blocks.
+3. Implement one parser function per archive format,
+each decorated with the `register` decorator (imported from `..registry`) mapping the appropriate
+file extension(s) and a short format name string (e.g., `@register([".zip"], "zip")`),
+and each delegating to `_parse_archive` by supplying format-specific `list_members`
+and `extract_member` closures:
+- `parse_zip` for `.zip` files,
+using the `zipfile` module (`zipfile.ZipFile`) to list namelist entries
+and extract individual members to the temp directory. - `parse_tar` for `.tar`
+(and related tar variants) files,
+using the `tarfile` module to list member names
+and extract individual members to the temp directory. - `parse_7z` for `.7z` files,
+using the `py7zr` module to list archive contents
+and extract individual members to the temp directory. - `parse_rar` for `.rar` files,
+using the `rarfile` module to list namelist entries
+and extract individual members to the temp directory.
+4. Include a module-level docstring describing the module's purpose:
+handling archive files (.zip, .tar, .7z, .rar) that contain documents,
+so that files within them can be parsed too.
+5. Use `from __future__ import annotations`
+and include all necessary imports
+(`tarfile`, `tempfile`, `zipfile`, `py7zr`, `rarfile`, `pathlib.Path`,
+plus the sibling module imports).
+Each extraction closure should extract only the specified single member into the temporary root
+directory and return the resulting extracted file's `Path`,
+handling each archive library's specific API for single-member extraction
+(e.g., `ZipFile.extract`, `TarFile.extract`/`extractfile`,
+`py7zr.SevenZipFile.extract` with targets, `RarFile.extract`). ---

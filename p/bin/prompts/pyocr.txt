@@ -1,0 +1,26 @@
+Write a Python script that acts as a lightweight OCR (optical character recognition) wrapper around
+locally installed OCR engines, such as Tesseract,
+so that users can extract text from images and scanned documents with a simple,
+consistent interface.
+The tool should detect which OCR backends are available on the system,
+let the user choose a backend and language(s),
+and accept image files (common raster formats such as PNG, JPEG, TIFF, BMP) as input,
+returning the recognized text as output.
+It should support plain-text output and, where the backend allows,
+richer structured output such as HTML/XHTML with text positions or word-level bounding boxes,
+and it should allow writing results to a file or printing them to standard output.
+Key behaviors to include:
+- Verify that the required external OCR program is installed and report a clear,
+descriptive error if it is missing or fails. - Allow selection of recognition language(s)
+and page segmentation or layout options,
+with sensible defaults. - Handle encoding correctly so that non-ASCII text
+(including multilingual content) is produced reliably. - Support processing of multi-page
+or multi-image input where feasible,
+and provide per-file error handling so one failure does not stop a batch. - Provide a command-line
+interface with options for input path(s), output destination, backend and language choice,
+output format, and verbosity/logging level,
+along with a version flag and help text. - Expose the core functionality as importable functions
+and error classes so the OCR capability can be reused by other Python programs. - Clean up any
+temporary files created during processing,
+even when errors occur. - Use Python's standard library wherever practical,
+keeping the script self-contained and compatible with Python 3.4 and later. ---

@@ -1,0 +1,37 @@
+Write a Python module (using `from __future__ import annotations`) that implements parsers for three
+vector graphics formats ã `.svg`, `.drawio` (and `.dio`),
+and `.excalidraw` ã extracting their embedded text content into a common document model for a
+document-parsing framework.
+Requirements: - Import `Block` and `Document` from a sibling `..model` module,
+a `register` decorator from `..registry`, and a `read_text` helper from `.._util`.
+- Each parser function must be decorated with `@register([...extensions...], "format_name")`
+  and accept a single `path: Path` argument,
+  returning a `Document` instance. - Include a module-level docstring:
+  `""".svg .drawio .excalidraw -- vector graphics with text content."""`.
+Behavior for each format:
+1. **SVG parser** (`parse_svg`, registered for `.svg`, format name `"svg"`):
+- Parse the file as XML using `xml.etree.ElementTree`,
+reading raw text via `read_text`. - Use the SVG namespace `"{http://www.w3.org/2000/svg}"`. - For
+every `<title>` element with non-empty stripped text,
+create a `Block(kind="heading", text=..., level=1)`. - For every `<text>` element,
+concatenate all inner text (`"".join(el.itertext())`), strip it,
+and if non-empty create a `Block(kind="paragraph", text=...)`. - Return
+`Document(path=path, format="svg", blocks=blocks)`.
+2. **drawio parser** (`parse_drawio`, registered for `.drawio` and `.dio`, format name `"drawio"`):
+- Parse the file as XML using `ElementTree`. - Iterate over all `<mxCell>` elements;
+for each, read its `value` attribute (default to empty string if missing), strip it. - If non-empty,
+create a `Block(kind="paragraph", text=value, meta={"cell_id": cell.get("id")})` to preserve the
+cell's id in metadata. - Return `Document(path=path, format="drawio", blocks=blocks)`.
+3. **Excalidraw parser**
+(`parse_excalidraw`, registered for `.excalidraw`, format name `"excalidraw"`):
+- Parse the file as JSON (via `json.loads` on `read_text` output) since Excalidraw scenes are JSON.
+- Iterate over the `"elements"` list in the parsed data (default to empty list if missing). - For
+each element, check if its `"type"` is `"text"`;
+if so, extract its `"text"` field and, if non-empty after stripping,
+create a `Block(kind="paragraph", text=...)`
+(optionally attaching relevant metadata such as element id). - Return
+`Document(path=path, format="excalidraw", blocks=blocks)`.
+Keep each function short,
+include a concise one-line docstring explaining the extraction strategy for that format,
+and ensure all text extraction is defensive against missing/empty attusingor so malformed
+or sparse files don't raise errors. ---

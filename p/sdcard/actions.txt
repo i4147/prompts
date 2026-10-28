@@ -1,0 +1,63 @@
+Create a Python module that implements the **core action pipeline engine for PyScaffold**
+(a Python project scaffolding tool).
+The script defines the extensible mechanism by
+which project generation steps ("actions") are discovered, ordered, registered, invoked,
+and executed to build up a project's in-memory file structure
+and options before writing it to disk. **Purpose:** Provide the central orchestration logic that: 1.
+Maintains a default,
+ordered list of built-in actions representing the standard PyScaffold project-creation workflow
+(e.g., verifying options, loading the git repository, applying default structure,
+creating the file structure, initializing version control, and reporting the final log).
+2. Allows third-party or built-in extensions to inject, remove,
+or reorder actions in this pipeline
+(insert before/after a given action, register a new action, or unregister an existing one),
+using a deterministic activation order for extensions.
+3. Executes the final pipeline by threading a shared `(Structure, ScaffoldOpts)` state through each
+action in sequence, where `Structure` represents the nested dict describing files/folders to be
+created and `ScaffoldOpts` is a dict of scaffolding options. **Key type aliases/concepts to
+define:** - `ScaffoldOpts`: a `Dict[str, Any]` holding PyScaffold options. - `Action`:
+a `Callable` with signature `(Structure, ScaffoldOpts) -> Tuple[Structure, ScaffoldOpts]`,
+documented as treating inputs as immutable
+and returning a (possibly updated) copy. - `ActionParams`:
+the `Tuple[Structure, ScaffoldOpts]` type used both as the argument and return type of an action,
+enabling actions to be chained in a pipeline. **Main functions to implement:** -
+`discover(extensions)`:
+Given an iterable of `Extension` objects, start from a `DEFAULT` list of built-in actions,
+sort the extensions deterministically,
+and apply each extension's activation function via `reduce` to produce the final customized list
+of actions.
+Returns `List[Action]`. - `build_default_actions(struct, opts)`
+(or equivalently named default first action):
+initializes/validates options
+(e.g., project name validity, checking for existing/nested directories, dirty git workspace,
+invalid identifiers)
+and produces the initial structure. - Helper/registration functions to insert a new action before
+or after another action identified by name/module, register an action at the end,
+or remove (unregister) an action by name
+â€” raising `ActionNotFound`
+when the target action cannot be located. - `execute(actions, struct, opts)` (or similarly named):
+runs the ordered list of actions sequentially,
+feeding the output of each action as input to the next,
+returning the final `(Structure, opts)`. **Expected inputs/outputs:** - Inputs:
+an iterable of extension objects (each capable of activating/modifying the action list),
+plus a dict of scaffold options
+and an initial `Structure` (nested dict representing the target project layout). - Outputs:
+a final `List[Action]` pipeline (from `discover`),
+and ultimately a fully resolved `Structure`
+and `ScaffoldOpts` after running all actions (from execution),
+which downstream code uses to physically create files/directories on disk via the `repo`
+and `structure` modules. **Notable behavior:** - Extensions are applied in a deterministic sort
+order (via `deterministic_sort`) so that the final pipeline is reproducible regardless of input
+ordering. - Actions identify each other by name (typically derived from function `__name__`/module),
+enabling insertion relative to existing actions. - Raises custom exceptions including
+`ActionNotFound`, `DirectoryAlreadyExists`, `DirectoryDoesNotExist`, `GitDirtyWorkspace`,
+`InvalidIdentifier`,
+and `NestedRepository` to signal invalid states during pipeline construction
+or execution. - Integrates with sibling modules:
+`info` (option/metadata gathering), `repo` (git repository handling),
+`identification` (name/identifier validation and deterministic ordering utilities),
+`structure` (building/creating the file structure), `update` (version migration logic),
+and `log` (logging the outcome). - Uses `TYPE_CHECKING` to avoid circular imports with the
+`Extension` type, which is only used for type hints. - All functions
+and type aliases should include clear docstrings describing their role in the PyScaffold
+extension/action architecture. ---

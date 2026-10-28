@@ -1,0 +1,58 @@
+Create a Python module that validates the integrity of various compressed archive files without
+fully extracting them,
+to detect corrupted or truncated downloads/artifacts before further processing.
+Main requirements: 1. **Primary public function**:
+`is_valid_archive(path: str | Path) -> bool` - Returns `False` immediately if the path is not a file
+or the file is empty (size 0). - Dispatches validation logic based on the file's extension
+(case-insensitive), supporting at least:
+- `.zip`, `.whl` → validate as ZIP archive - `.tar` → validate as plain tar - `.tar.gz`,
+`.tgz` → validate as gzip-compressed tar - `.tar.xz`,
+`.txz` → validate as xz-compressed tar - `.tar.bz2`, `.tbz2`,
+`.tbz` → validate as bz2-compressed tar - `.tar.br` → validate as brotli-compressed tar
+(manual decompression + tar check, since tarfile has no native brotli support) - `.tar.zst` →
+validate as zstd-compressed tar (using `zstandard` library's `ZstdDecompressionReader`) - `.tar.lz4`
+→ validate as lz4-compressed tar (using `lz4.frame.LZ4FrameDecompressor`) - `.tar.lzma` → validate
+as lzma-compressed tar - `.br` (standalone, not tar) → validate as a standalone brotli-compressed
+file - `.zst` (standalone, not tar) → validate as a standalone zstd-compressed file - `.7z` →
+validate as a 7-Zip archive (using `py7zr`) - any other/unknown extension → treat as invalid
+(or fall back to a generic check),
+and log appropriately - Catches all exceptions during validation
+(corrupt files, decompression errors, missing central directory, CRC errors, etc.)
+and returns `False` instead of raising, logging a warning/debug message with the error.
+2. **Internal helper functions**, one per format family,
+each performing a lightweight integrity check (not full extraction when avoidable): - `_check_zip`:
+open with `zipfile.ZipFile`
+and run `testzip()` (or iterate entries) to detect bad CRCs/corruption. - `_check_tar`:
+open with `tarfile.open(path, mode=...)` for the given mode (`r:`, `r:gz`, `r:xz`, `r:bz2`)
+and iterate/read members to confirm the tar structure is readable. - `_check_tar_with_brotli`,
+`_check_tar_with_zstd`, `_check_tar_with_lz4`, `_check_tar_with_lzma`:
+since Python's `tarfile` doesn't natively support these compression codecs,
+each should decompress the file
+(streaming, e.g., via a temporary file or in-memory buffered stream using `brotli`,
+`zstandard.ZstdDecompressionReader`, `lz4.frame.LZ4FrameDecompressor`,
+or `lzma` respectively)
+and then open/validate the decompressed stream as a plain tar (`mode="r:"`). - `_check_brotli_file`:
+decompress the standalone `.br` file fully
+or in chunks using the `brotli` module to confirm it decompresses without error. -
+`_check_zstd_file`: decompress the standalone `.zst` file using `ZstdDecompressionReader` to confirm
+it decompresses without error. - A helper for `.7z` validation using `py7zr.SevenZipFile`,
+testing the archive (e.g. via `testzip()` or by reading entries).
+3. **Implementation notes**:
+- Use `from __future__ import annotations`
+and type hints (`str | Path` style unions). - Use the `logging` module
+(`logger = logging.getLogger(__name__)`) for warnings/errors instead of printing. - Use `tempfile`
+and `shutil`/`subprocess` as needed for staging decompressed data
+when a library requires a real file path
+(e.g., feeding decompressed brotli/zstd/lz4/lzma streams into `tarfile`,
+which needs a file-like
+or path input). - Define module-level constants `_HASH_TABLE_SIZE = 1 << 14`,
+`_MAX_OFFSET_1 = 2047`,
+`_MAX_OFFSET_2 = 65535`
+(reserved/used for any custom lightweight compression-format sniffing or hashing logic,
+if implemented alongside the main checks). - Keep each check function narrowly scoped,
+raising on failure internally so the top-level `is_valid_archive` can uniformly catch
+and convert to `False`. - The function should be safe to call on arbitrary,
+potentially malicious or malformed files without crashing the calling process.
+Output: a boolean indicating whether the given archive file is structurally valid and not corrupted,
+usable as a pre-flight check before extracting, uploading,
+or further processing archive files in a pipeline. ---

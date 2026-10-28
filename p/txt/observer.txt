@@ -1,0 +1,5 @@
+observe_return_types.py Run a Python module,
+observe the actual runtime return types of its functions via sys.settrace,
+and rewrite the source to add `-> T` annotations for functions that currently lack one.
+Usage: python observe_return_types.py path/to/module.py # print to stdout python
+observe_return_types.py path/to/module.py --write # modify in place

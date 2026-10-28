@@ -1,0 +1,39 @@
+Write a Python module that provides utility functions for computing hash digests of files
+and in-memory data, intended as part of a larger package
+(uses relative imports from sibling modules `.const` for a `CHUNK_SIZE` constant
+and `.fileutils` for a `runcmd` helper that runs shell commands).
+The module should use `from __future__ import annotations` and import `Path` from `pathlib`.
+It must define three functions: 1. `get_openssl_hash(path, alg)`:
+Computes a hash digest of the file at `path` by invoking the external `openssl dgst`
+command-line tool.
+Parameters: - `path`: path to the file to hash. - `alg`:
+the digest algorithm name (e.g., "sha1", "md5").
+If the algorithm string does not already start with a dash,
+prepend one (so "sha1" becomes "-sha1") since openssl expects it as a flag.
+Behavior: - Build the command as a list:
+`["openssl", "dgst", "-hex", "-r", alg, str(path)]`. - Execute it using the `runcmd` helper
+(imported from `.fileutils`), which returns a tuple;
+capture the second element as the command's stdout output. - If the output is `None`,
+return an empty string. - Otherwise, use a regular expression to extract the hash value,
+which appears at the start of the output followed by a space (pattern like `^(\S+) `). - If the
+regex matches, return the matched hash string; otherwise return an empty string.
+- Import the `re` module's `match` function locally inside the function.
+  2.
+`content_hash(data: bytes) -> str`:
+Computes the SHA-256 hex digest of in-memory data. - If `data` is not already of type `bytes`,
+encode it as UTF-8 first. - Import `sha256` from `hashlib` locally inside the function. - Return the
+hex digest string.
+3. `get_sha256(path: str | Path) -> str`:
+Computes the SHA-256 hex digest of a file's contents,
+reading it in chunks for memory efficiency. - Import `sha256` from `hashlib` locally inside the
+function. - Convert `path` to a `Path` object. - If the path does not exist,
+or if its file size is zero/falsy, return an empty string immediately. - Otherwise,
+open the file in binary read mode
+and read it incrementally using a buffer size defined by the `CHUNK_SIZE` constant
+(imported from `.const`),
+updating the SHA-256 hash object with each chunk
+until EOF. - Return the final hex digest. - Wrap the file reading logic in a try block that catches
+`OSError` and `IOError`, returning an empty string if either exception occurs.
+Keep the functions small, self-contained,
+and consistent with typical file-hashing utility patterns in a Python package,
+with no module-level docstrings or extra logic beyond what is described. ---

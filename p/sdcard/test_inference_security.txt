@@ -1,0 +1,22 @@
+Regression tests for unbounded proof search in NLTK's in-process first-order theorem provers
+``ResolutionProver`` and ``TableauProver`` (CWE-400 / CWE-674).
+Both provers expose a public ``prove()`` that historically ran the search with *no* resource bound:
+* ``ResolutionProver`` saturates an ever-growing clause list;
+for a satisfiable goal (one that does not follow) the loop derives resolvents forever
+and pins a CPU core -- ``prove()`` never returns.
+The cost of a single unification grows as clauses accumulate literals,
+so a clause/step count does not bound the wall time;
+the search is now bounded by a configurable wall-clock ``TIMEOUT``
+(mirroring ``nltk.inference.Prover9``),
+returning ``False`` when it elapses. * ``TableauProver`` expands an infinite tableau for a serial
+relation such as ``all x.exists y.succ(x,y)``;
+because ``_assume_false`` is ``False`` the resulting ``RecursionError`` was re-raised straight out
+of ``prove()`` and crashed the caller.
+Expansion depth is now bounded by ``MAX_TABLEAU_DEPTH``
+(kept below Python's recursion limit, so the branch is simply reported unclosed),
+with a wall-clock ``TIMEOUT`` as a backstop for tableaux that fan out without growing deep.
+The "must terminate" tests run the malicious proof in a separate process (spawn) with a hard
+deadline and ``terminate()`` on overrun,
+so a regression to an unbounded search cannot keep burning CPU for the rest of the suite,
+and any exception in the worker (e.g. a re-raised ``RecursionError``) is propagated back to the
+assertions instead of crashing the runner.

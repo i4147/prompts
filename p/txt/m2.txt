@@ -1,0 +1,3 @@
+Repository inventory / per-file summary.
+Merges the original shell pipeline (ls / find / git / du / awk / two inline python heredocs) into a
+single Python script.

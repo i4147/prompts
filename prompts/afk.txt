@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line code analysis and cleanup tool
+for Python source files.
+It should accept one or more file or directory paths (recursively discovering
+`.py` files while skipping common virtual environment, cache, and
+version-control folders), along with options that control whether it reports
+issues only or applies fixes in place, and an option to restrict analysis to
+certain file patterns or exclusions.
+The tool should parse each Python file and detect a set of code quality
+problems, including overly long lines beyond a configurable limit, unused or
+duplicate imports, unnecessary or sloppy exception handling (such as bare or
+overly broad excepts and empty handlers), and other common style or correctness
+smells that can be determined statically.
+For each issue it finds, it should record the file, line number, a short rule
+identifier, and a human-readable message.
+Where a safe automatic fix is possible, the tool should be able to apply it, and
+it should always preserve the original meaning and syntax of the code.
+It should also offer a dry-run or diff mode that shows proposed changes in
+unified diff form without modifying files.
+Files that cannot be parsed, are binary, or exceed a reasonable size limit
+should be skipped gracefully with a warning rather than crashing the run.
+The script should support processing many files efficiently, optionally in
+parallel across CPU cores, and should be able to read input from standard input
+for stdin-based workflows.
+It should also be able to inspect the contents of compressed or archived sources
+(such as gzip, bz2, lzma, zip, or tar archives) and report on the Python files
+within them without extracting them to disk permanently.
+Output should be available in a human-readable text format by default, with an
+option for machine-readable JSON output.
+The tool should set a meaningful exit status: zero when no issues are found, and
+a non-zero code when issues remain or when errors occurred.
+It should include clear `--help` documentation with usage examples, validate its
+arguments, and handle keyboard interrupts and I/O errors cleanly. ---

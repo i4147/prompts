@@ -1,0 +1,3 @@
+Probe every installed tree_sitter_* binding: - import the module - obtain a
+Language (tries `language()`, `Language`, `LANGUAGE`, etc.) - parse a small
+language-specific sample - report OK / FAIL with full traceback

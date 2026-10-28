@@ -1,0 +1,27 @@
+Write a Python script that scans files and directories to detect whether their
+text content is written in a language other than English, and reports the
+results.
+The tool should accept one or more file or directory paths from the command
+line, defaulting to the current directory when none are given.
+When a directory is provided, it should recursively walk through it,
+automatically skipping common version-control folders, virtual environments,
+dependency caches, and IDE configuration directories.
+Only text-based files should be examined; binary files should be recognized and
+ignored.
+The script should let the user choose among several language-detection backends
+from the command line, with one serving as the default, and should allow the
+user to tune the scanning behavior, such as how much of each file is sampled for
+detection, how many worker processes run in parallel, and the minimum amount of
+alphabetic content required before a file is judged.
+Files that contain too little meaningful text should be excluded from detection
+rather than producing unreliable results.
+For each file, the tool should determine the detected language and a confidence
+indication, then decide whether the file is non-English.
+The output should clearly list the files flagged as non-English, along with
+their detected language, and provide a concise summary at the end, including
+counts of files scanned, files flagged, and files skipped.
+Errors such as unreadable files, unsupported encodings, or a missing detection
+backend should be handled gracefully with informative log messages that do not
+stop the overall scan.
+The script should be runnable as a command-line program with a clear help
+message describing all of its options. ---

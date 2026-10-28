@@ -1,0 +1,1 @@
+Helpers for expanding CLI paths into a stream of files to check.

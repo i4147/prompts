@@ -1,0 +1,50 @@
+Write a Python module that implements a `Notification` class for building
+and managing Android notifications within the Termux:GUI framework (termuxgui library),
+communicating with the Termux:GUI plugin/app over an established `Connection` object using a
+JSON-based remote procedure call protocol (`connection.send_msg`).
+The class should be designed as follows: 1. **Imports**:
+Use `base64` for encoding binary data, `typing.Literal` and `typing.List` for type hints,
+and import `RemoteViews` from `termuxgui.remoteviews` and `Connection` from `termuxgui.connection`.
+2. **Class docstring**: Briefly state that the class represents a notification.
+3. **Constructor** `__init__(self, connection: Connection, channel: str, importance:
+Literal[0, 1, 2, 3, 4])`:
+- Store the connection object, channel name,
+and importance level as instance attributes. - Initialize an `id` attribute to `None`
+(will later hold the notification's identifier once created/sent). - Initialize an `ongoing` flag to
+`False` (whether the notification is persistent/non-dismissible). - Initialize placeholders for
+custom layouts: `layout`, `expandedlayout`, and `hudlayout`,
+all set to `None` (these would later accept `RemoteViews` objects for custom notification
+appearances in collapsed, expanded,
+and heads-up states). - Initialize `title`
+and `content` attributes to `None` for the notification's basic text. - Initialize `largeimage`
+and `largetext` to `None`,
+and `largeimageasthumbnail` to `False`
+(supporting expanded notification styles with a large image or large text,
+with an option to show the large image as a small thumbnail instead). - Initialize `icon` to `None`
+(will later store a base64-encoded icon). - Initialize `alertonce` to `True`
+(controls whether the notification alerts the user only once,
+suppressing sound/vibration on subsequent updates). - Initialize `showtimestamp` to `True`
+and `timestamp` to `None` (controls whether and what timestamp is displayed). - Initialize `actions`
+to `None` (will later hold a list of notification action buttons).
+4. **Method `createchannel(self)`**:
+- Docstring noting that it creates the notification channel for the notification,
+and that this is called automatically
+when `notify` is invoked (even though `notify` itself is not part of this snippet). - Sends a
+message via `self.c.send_msg` with method `"createNotificationChannel"`
+and params containing `id` (the channel name), `importance`,
+and `name` (also set to the channel name).
+5. **Method `seticon(self, icon: bytes)`**:
+- Docstring explaining that it sets the notification's icon,
+and that the `icon` argument must be a `bytes` object containing image data in PNG
+or JPEG format. - Encodes the bytes using `base64.standard_b64encode`
+and decodes the result to an ASCII string, storing it in `self.icon`.
+6. **Method `settitle(self, title: str)`**:
+- Docstring explaining that it sets the notification's title,
+and that doing so removes any previously set custom layout. - Stores the given string in
+`self.title`.
+Ensure the code is clean, uses type hints matching the signatures described,
+and follows a style consistent with a larger library of notification-related methods that would be
+built on top of this foundation
+(e.g., methods for setting content, layouts, large image/text, actions,
+and sending/updating the notification would naturally extend this class,
+though only the constructor and the three methods above need to be included). ---

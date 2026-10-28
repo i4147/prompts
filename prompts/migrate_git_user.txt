@@ -1,0 +1,39 @@
+Write a Python script that migrates a developer's local machine from one
+Git/GitHub identity to another.
+The script should be a cross-platform command-line tool that performs the
+following high-level workflow: 1. **Global Git identity update**: Set the user's
+global Git username and email to new values, replacing the previously configured
+identity. 2. **SSH key regeneration**: Generate a fresh Ed25519 SSH key pair in
+the user's home SSH directory, using a new key name, and make sure the SSH
+directory exists with appropriate permissions.
+Handle the case where a key already exists (for example, by backing it up or
+overwriting it safely) and provide the user with the public key so it can be
+added to their Git hosting account. 3. **Project-wide identity replacement**:
+Recursively scan a user-specified or default root directory (such as the home
+folder) for text-based configuration and project files (for example, packaging
+manifests, Markdown, plain text, YAML, TOML, INI, CFG, and JSON files).
+Within those files, find every occurrence of the old username and old email
+address and replace them with the new ones.
+Use whole-word and case-aware matching where appropriate so that unrelated text
+is not corrupted. 4. **Exclusions and safety**: Skip dependency, cache, virtual
+environment, build, and version-control directories (such as `.git`,
+`node_modules`, virtual environments, `__pycache__`, `site-packages`, and tool
+caches).
+Skip binary files and files that cannot be decoded as text.
+Never follow symbolic links out of the scan root. 5. **Reporting**: Print clear,
+human-readable progress output showing which global settings were changed, where
+the new SSH key was created, and a summary listing every file that was modified
+along with the number of replacements made per file.
+Handle errors gracefully: a failure on one file or one step should be reported
+without aborting the entire run, and the script should exit with a meaningful
+status code. 6. **Safety features**: Provide a dry-run mode that reports what
+would change without writing anything, and ask for confirmation before making
+destructive changes such as overwriting SSH keys or rewriting many files.
+Create backups of any file before modifying it so changes can be reverted. 7.
+**User experience**: Accept the old and new identity values, the scan root, and
+the dry-run flag as command-line arguments, with sensible defaults for the
+values shown in the original script.
+Include a clear help message describing each option.
+The script should be well-structured, documented with docstrings, robust against
+missing tools (such as Git or the SSH client not being installed), and runnable
+on Linux, macOS, and Windows. ---

@@ -1,0 +1,30 @@
+Write a Python script that scans a project directory tree for Python packaging
+and project metadata files (such as setup.py, setup.cfg, pyproject.toml,
+MANIFEST.in, tox.ini, and Pipfile) and updates the author-related fields in
+those files using a personal information profile stored as JSON in the user's
+home directory.
+The script should be a command-line tool that: - Reads a profile file containing
+the user's name, email address, and GitHub username.
+It should validate that these required fields are present and non-empty, and
+that the GitHub username contains only safe characters (letters, digits,
+underscores, dots, and hyphens).
+It should exit with a clear error message when the profile is missing,
+malformed, or invalid, and allow the user to specify a different profile
+location, defaulting to a hidden file in the home directory. - Recursively walks
+a target directory (defaulting to the current working directory) to locate the
+supported packaging files, while skipping common non-source directories such as
+version control folders, virtual environments, build outputs, caches, dependency
+folders, and editor configuration folders. - For each matching file, detects
+author, maintainer, email, and URL-style fields (including those that embed a
+GitHub URL) and proposes replacements using the profile data, leaving unrelated
+content untouched. - Supports a dry-run mode that displays a unified diff of
+every proposed change without modifying any files, and an apply mode that writes
+the changes to disk after showing what will change. - Reports a clear summary at
+the end: the number of files scanned, files changed, and files left unchanged,
+plus any files that could not be processed, with appropriate exit codes
+indicating success, validation errors, or partial failures. - Handles encoding
+issues and unreadable files gracefully, never crashing on a single bad file, and
+writes changes atomically so a failure mid-run does not corrupt existing files.
+Focus on producing a clean, safe, and user-friendly tool that a developer could
+run before publishing a Python project to fill in consistent authorship and
+contact information across all packaging files. ---

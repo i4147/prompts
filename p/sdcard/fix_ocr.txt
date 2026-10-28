@@ -1,0 +1,23 @@
+Write a Python script that cleans up OCR-extracted text stored in a JSON file.
+The script should: - Define a function `clean_ocr_text(text)` that normalizes whitespace
+and punctuation spacing artifacts commonly produced by OCR, specifically:
+- Collapse any sequence of whitespace characters into a single space. - Remove extra whitespace that
+appears before punctuation marks such as `,`, `.`, `;`, `:`, `!`,
+`?` (so there's no space before them). - Remove extra whitespace immediately before an opening quote
+character (`'` or `"`). - Remove extra whitespace immediately after a quote character (`'` or `"`).
+- Strip leading and trailing whitespace from the final result. - Read input data from a file named
+`quotes.json` (UTF-8 encoded), which contains a JSON array of objects/entries.
+Each entry may optionally have a `"quote"` field
+and/or an `"author"` field (both strings). - Iterate over every entry in the loaded data:
+if the entry has a `"quote"` key,
+overwrite its value with the cleaned version produced by `clean_ocr_text`;
+if it has an `"author"` key, do the same for that field.
+Leave any other fields/entries untouched. - Write the resulting cleaned data to a new file named
+`quotes_cleaned.json`, UTF-8 encoded, formatted with an indent of 2 spaces,
+and with `ensure_ascii=False` so non-ASCII characters are preserved as-is rather than escaped. - Use
+`from __future__ import annotations` at the top of the script,
+and rely only on Python's built-in `json`
+and `re` modules (no external dependencies). - The script should run top-to-bottom as a simple
+procedural script (no command-line arguments, no function wrapping the file I/O,
+no `if __name__ == "__main__"` guard needed) — it should just execute the read, clean,
+and write steps directly when run. ---

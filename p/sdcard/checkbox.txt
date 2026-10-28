@@ -1,0 +1,24 @@
+Write a Python module for a Termux:GUI object-oriented wrapper library that defines a `Checkbox`
+class representing a checkable checkbox widget in a Termux:GUI activity.
+The class should: - Be named `Checkbox`
+and inherit from both a base `View` class
+(from an internal `view` module, representing a generic GUI view/widget with shared view behavior)
+and `tg.Checkbox` (the underlying checkbox widget implementation from the `termuxgui` library). -
+Include a class-level docstring describing it as representing a CheckBox. - Implement an `__init__`
+method with the following parameters: - `activity`:
+a `tg.Activity` instance the checkbox belongs to (required). - `text`:
+a string label displayed next to the checkbox (required). - `parent`:
+an optional `View` instance representing the parent view/container (defaults to `None`). -
+`checked`: a boolean indicating the initial checked state (defaults to `False`). - `visibility`:
+an optional literal value restricted to `0`, `1`,
+or `2` representing the widget's visibility state (defaults to `None`). - In `__init__`,
+first call `tg.Checkbox.__init__` passing `activity`, `text`, `parent`, `checked`,
+and `visibility` to properly initialize the underlying native checkbox widget. - Then call
+`View.__init__` passing `activity`, `self.id`,
+and `parent` to properly initialize the shared view wrapper functionality using the ID assigned by
+the native widget initialization.
+Use type hints throughout, including `Optional` and `Literal` from the `typing` module.
+Import `termuxgui` as `tg` and import `View` from the internal `termuxgui.oo.view` module.
+The code should follow the same structural pattern as other wrapped view classes in this library,
+where initialization of the native widget happens before initialization of the shared view
+base class. ---

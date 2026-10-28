@@ -1,0 +1,31 @@
+Write a Python script that acts as a file-type detection and classification tool
+for a directory tree or a set of files.
+Given one or more paths (files, directories, or archives), the tool should walk
+the contents, determine the true content type of each file, and report or
+organize results accordingly.
+Key requirements: - **Inputs:** Accept file and directory paths from the command
+line, with options to control recursion depth, include or exclude patterns,
+whether to inspect inside archives (zip, tar, tgz), and a parallelism level for
+speeding up large scans.
+Support a verbose or logging mode and a dry-run mode. - **Detection strategy:**
+Identify each file's type using multiple signals a fallback order: file
+extension (with normalization ofar.gz), magic-ines for scripts, and content
+heuristics for text versus binary.
+Use whichever optional detection backends are available in the environment, and
+degrade gracefully when they are not installed.
+Detect mismatches where the extension disagrees with the detected content and
+flag them. - **Text analysis:** For text-based source files such as Python,
+tokenize or otherwise parse the content safely to identify language and basic
+structure, handling encoding errors without crashing. - **Outputs:** Produce a
+structured report (human-readable table or summary plus a machine-readable
+format such as JSON) listing each file's path, declared extension, detected MIME
+type or language, binary/text classification, size, and any anomalies or
+mismatches.
+Optionally, support copying or moving files into folders grouped by detected
+type, respecting dry-run. - **Behavior:** Handle permissions errors, broken
+symlinks, and unreadable archives gracefully, logging problems and continuing.
+Never modify source files unless an explicit organize action is requested.
+Exit with a meaningful status code reflecting whether any errors or mismatches
+were found. - **Constraints:** Keep the tool self-contained and cross-platform,
+with clear help text describing every option and a concise summary printed at
+the end of each run. ---

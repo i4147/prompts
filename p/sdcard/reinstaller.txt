@@ -1,0 +1,36 @@
+[Tool: generate_document] Title: placeholder I apologize for that erroneous action.
+Here is the prompt text you requested:
+Create a Python 3 command-line script (intended to be run in a Termux environment on Android) that
+automates batch installation of a list of apt packages with resumable progress tracking.
+The script should: - Accept a path to a text file containing package names
+(one per line, blank lines and lines starting with "#" ignored as comments) as the main input. - Use
+a helper module `dh` (specifically a `runcmd` function) to execute shell/apt install commands for
+each package. - Maintain a progress JSON file
+(using a `.progress` suffix convention relative to the input file or a related path) that records
+three things: a list of successfully completed packages, a list of failed packages,
+and the package currently being processed ("current"). - On startup,
+load this progress file if it exists;
+if it's missing, corrupted, or unreadable (JSON decode error or OS error),
+print a warning and start fresh with an empty progress state instead of crashing. - Save progress
+safely after each package is processed by writing to a temporary file first
+and then atomically replacing the real progress file (to avoid corruption if interrupted). - Skip
+packages that are already marked as completed in the progress file,
+so the script can be re-run safely after interruption (resumable behavior). - For each package,
+mark it as "current" before attempting installation,
+then move it to "completed" or "failed" depending on the outcome,
+and clear "current" afterward. - Include a cleanup function that removes downloaded `.deb` archive
+files for a given package from the Termux apt cache directory
+(`/data/data/com.termux/cache/apt/archives`),
+matching multiple filename patterns (e.g., `pkg_*.deb`, `pkg-*.deb`, `pkg.deb`) using glob,
+to free up storage after installation;
+handle file removal errors gracefully without crashing,
+and track/report which files were removed. - Print clear status messages to stdout as it works
+through the package list (e.g., which package it's installing, success/failure, warnings). - Use
+`pathlib.Path` for file path handling where appropriate,
+and standard library modules only (os, sys, json, glob, pathlib) besides the custom `dh` module. -
+Be structured as a script runnable directly via `python3 script.py <args>`
+(with the shebang `#!/usr/bin/env python3`),
+suitable for unattended or semi-automated package installation workflows
+where interruptions (e.g., low storage, connectivity
+issues) are expected and recovery should not require restarting from scratch.
+---

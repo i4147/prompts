@@ -1,0 +1,1 @@
+Constants for task state icons and colors.

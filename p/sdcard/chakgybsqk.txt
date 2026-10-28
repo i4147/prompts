@@ -1,0 +1,39 @@
+Write a command-line tool module (`cli.py`) that serves as the entry point for a spell-checking
+application for source code and documentation files,
+int (using relative imports from sibling modules `checker`, `dictionary`, and `files`).
+The script should: 1. **Build a command-line argument parser** (using `argparse`) with the program
+name `pycspell` and description "Spell-check source code and documentation."
+It must define the following arguments: - `paths`:
+one or more positional arguments representing files
+or directories to check (required, accepts multiple values). - `--dictionary` / `-d`:
+a repeatable option (can be specified multiple times, collected into a list) pointing to a file
+containing one custom word per line;
+defaults to an empty list. - `--word` / `-w`:
+a repeatable option (collected into a list) to add individual accepted words;
+defaults to an empty list. - `--format`:
+choice between `"text"` and `"json"` output formats, defaulting to `"text"`. - `--no-suggestions`:
+a boolean flag to disable spelling suggestions in the output.
+2. **Provide a `main` function** that:
+- Accepts an optional list of argument strings (`argv`),
+defaulting to `None` (so it falls back to `sys.argv` when run as a script),
+and returns an integer exit code. - Parses the arguments using the parser built above. - Constructs
+a `Dictionary` object using the custom words
+and dictionary files provided via the CLI arguments. - Constructs a `SpellChecker` object using the
+dictionary, enabling suggestions
+unless `--no-suggestions` was passed. - Iterates over all files discovered by
+`iter_files(args.paths)` (a helper that expands the given paths into individual file paths),
+and for each file: - Calls `checker.check_file(filename)` to collect spelling issues,
+extending a running list of issues. - Gracefully handles `UnicodeDecodeError` exceptions that may
+occur when reading non-text/binary files
+(e.g., by printing a warning message and continuing rather than crashing).
+3. Use standard library imports only:
+`argparse`, `json`, `sys`, and `pathlib.Path`,
+along with `from __future__ import annotations` for forward-compatible type hints.
+Theall behavior should resemble a linter-style CLI:
+it sc specified pa spelling errors in text/code files, supports custom dictionaries and word lists,
+allows toggling suggestions,
+and will ultimately report issues either as formatted text
+or as JSON (with the exit code reflecting whether issues were found,
+following typical CLI tool conventions).
+Ensure the code is structured so `main()` can be invoked both programmatically
+and via a console script entry point. ---

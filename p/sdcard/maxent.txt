@@ -1,0 +1,28 @@
+A classifier model based on maximum entropy modeling framework.
+This framework considers all of the probability distributions that are empirically consistent with
+the training data; and chooses the distribution with the highest entropy.
+A probability distribution is "empirically consistent" with a set of training data if its estimated
+frequency with which a class
+and a feature vector value co-occur is equal to the actual frequency in the data.
+Terminology: 'feature' ====================== The term *feature* is usually used to refer to some
+property of an unlabeled token.
+For example, when performing word sense disambiguation,
+we might define a ``'prevword'`` feature whose value is the word preceding the target word.
+However, in the context of maxent modeling,
+the term *feature* is typically used to refer to a property of a "labeled" token.
+In order to prevent confusion,
+we will introduce two distinct terms to disambiguate these two different concepts:
+- An "input-feature" is a property of an unlabeled token. - A "joint-feature" is a property of a
+labeled token.
+In the rest of the ``nltk.classify`` module,
+the term "features" is used to refer to what we will call "input-features" in this module.
+In literature that describes and discusses maximum entropy models,
+input-features are typically called "contexts",
+and joint-features are simply referred to as "features".
+Converting Input-Features to Joint-Features ------------------------------------------- In maximum
+entropy models, joint-features are required to have numeric values.
+Typically, each input-feature ``input_feat`` is mapped to a set of joint-features of the form:
+| joint_feat(token, label) =
+{ 1 if input_feat(token) == feat_val | {
+and label == some_label | { | { 0 otherwise For all values of ``feat_val`` and ``some_label``.
+This mapping is performed by classes that implement the ``MaxentFeatureEncodingI`` interface.

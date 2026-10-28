@@ -1,0 +1,19 @@
+Write a Python script that fetches the latest package updates from the PyPI RSS
+feed (https://pypi.org/rss/packages.xml), parses the feed, and presents the
+newly published or recently updated Python packages in a clear, readable form.
+The script should retrieve the feed over the network with a sensible timeout,
+handle connection and HTTP errors gracefully by reporting them to the error
+stream and exiting cleanly without crashing, and validate that the received
+content is a well-formed RSS document with a channel and items.
+For each package entry, extract its title (package name and version), link to
+the PyPI project page, description summary, and publication date, using sensible
+defaults such as "Unknown" or "No description" when fields are missing.
+Normalize the publication dates so they can be displayed consistently and sorted
+from most recent to oldest.
+Output the results to standard output as a formatted list or table that a user
+can scan quickly, optionally limiting the number of entries shown through a
+command-line argument, and optionally allowing the user to filter packages by a
+keyword matched against names or descriptions.
+Ensure the script runs as a standalone command-line tool, includes helpful usage
+information, and handles malformed or unexpected feed entries without
+interrupting the overall output. ---

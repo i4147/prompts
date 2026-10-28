@@ -1,0 +1,30 @@
+Write a Python module that defines an object-oriented wrapper class `NestedScrollView` for the
+Termux:GUI library, extending both `FrameLayout` (from `termuxgui.oo.framelayout`)
+and the raw `tg.NestedScrollView` widget class (from `termuxgui`),
+so it combines the layout/container behavior of a FrameLayout with the native NestedScrollView
+widget functionality.
+Requirements: - Import `Optional`
+and `Literal` from `typing`. - Import the `termuxgui` package as `tg`. - Import `View` from
+`termuxgui.view`, `Activity` from `termuxgui.activity`,
+`FrameLayout` from `termuxgui.oo.framelayout`,
+and `ViewGroup` from `termuxgui.oo.viewgroup`. - Define class
+`NestedScrollView(FrameLayout, tg.NestedScrollView)` with a docstring:
+"This represents a NestedScrollView." - Implement `__init__` with the signature:
+- `activity: Activity` (required) - `parent: Optional[View] = None` - `fillviewport: bool = False` -
+`snapping: bool = False` - `nobar: bool = False`
+- `visibility: Optional[Literal[0, 1, 2]] = None` - Inside `__init__`:
+  - Call `tg.NestedScrollView.__init__(self, activity, parent, fillviewport, snapping, nobar,
+  visibility)` to initialize the underlying native widget with the activity, parent,
+  viewport-fill flag, snapping flag, scrollbar-hiding flag,
+  and visibility state. - Call `ViewGroup.__init__(self, activity, self.id, parent)` to properly
+  initialize the view group behavior using the id assigned by the native widget initialization.
+Notable behavior/purpose:
+- This class acts as a bridge/mixin combining Termux:GUI's low-level native NestedScrollView API
+with the higher-level object-oriented FrameLayout/ViewGroup abstraction used elsewhere in the
+library, enabling it to behave as both a scrollable native view
+and an OO-style view group container (so child views can be added to it using the OO API). -
+`fillviewport` controls whether the content should stretch to fill the viewport
+when smaller than it. - `snapping` enables scroll snapping behavior. - `nobar` hides the scrollbar.
+- `visibility` controls the initial visibility state of the view
+(using the standard 0/1/2 literal values matching Android-style visibility constants). - No return
+value; the constructor only sets up instance state via the two parent initializations. ---

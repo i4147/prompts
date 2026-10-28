@@ -1,0 +1,30 @@
+Design a shared Python data model module (using `dataclasses`, `pathlib.Path`, and `typing`) that
+defines the common structures used by every document parser in a larger parsing system.
+The module should be self-contained, use `from __future__ import annotations`,
+and expose two dataclasses:
+1. **`Block`** – represents a single logical unit of parsed content, with fields: - `kind` (str):
+one of `"paragraph"`, `"heading"`, `"code"`, `"list"`, `"table"`, `"image"`, `"quote"`, `"raw"`,
+`"meta"`. - `text` (str):
+plain-text, Markdown-friendly representation of the block. - `level` (Optional[int], default None):
+heading level (1–6) when `kind="heading"`,
+otherwise `None`. - `meta` (Dict[str, Any], default empty dict via `field(default_factory=dict)`):
+format-specific extra data (e.g. image path, code language, table rows).
+2. **`Document`** – represents the result of parsing one file, with fields: - `path` (Path):
+the file path that was parsed. - `format` (str):
+canonical format name (e.g. `"pdf"`). - `blocks`
+(List[Block], default empty list via `field(default_factory=list)`):
+ordered list of parsed blocks. - `metadata` (Dict[str, Any], default empty dict):
+arbitrary document-level metadata (may include a `"title"` key). - `warnings`
+(List[str], default empty list):
+non-fatal issues encountered while parsing. - `raw_bytes` (Optional[bytes], default None):
+original raw bytes, retained only if the parser explicitly sets it. `Document` should also expose
+two convenience read-only properties: - `text`:
+returns the plain text of the document by joining the `text` of all blocks (skipping empty ones)
+with blank lines (`"
+"`). - `title`: returns the text of the first block whose `kind ==
+"heading"`; if none exists, falls back to `metadata.get("title")` (or `None` if not present).
+Include proper docstrings on the module, both dataclasses, and their attributes,
+matching the style of a shared internal data model intended to be imported by multiple parser
+implementations.
+Import `asdict` from `dataclasses` even if not directly used in the shown logic,
+to support potential serialization needs elsewhere in the codebase. ---

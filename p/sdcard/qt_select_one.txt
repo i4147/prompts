@@ -1,0 +1,1 @@
+Simple dialog to select between two options.

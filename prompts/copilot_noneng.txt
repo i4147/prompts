@@ -1,0 +1,31 @@
+Write a Python script that scans one or more file or directory paths supplied on
+the command line and identifies the natural language of the text content found
+in each non-binary file.
+The tool should accept a list of files and/or directories, expand user home
+paths, skip symbolic links, and recursively discover regular text files inside
+any directories given, while ignoring binary files.
+For each text file, the script should read its contents robustly across common
+text encodings, falling back gracefully when a file cannot be decoded cleanly.
+It should then determine the dominant language of the text using multiple
+language-detection approaches, combining or comparing their outputs to produce a
+reasonable result with confidence information where available.
+Short or empty files should be handled sensibly, reporting an undetermined
+language rather than failing.
+The script should process files concurrently to handle large numbers of files
+efficiently, using a worker-based approach that keeps output clean and
+thread-safe.
+Results should be collected for every processed file and then presented in a
+structured, human-readable summary showing each file path, its detected
+language(s), and confidence scores, along with an overall tally of languages
+found across the scanned set.
+It should also offer an option to export the results in machine-readable JSON
+format to a specified output file or to standard output.
+Include command-line options for specifying input paths, choosing the number of
+parallel workers, setting a minimum text length threshold for analysis,
+selecting the output format, and enabling a verbose mode that reports progress
+and errors without interrupting the run.
+The script should handle missing paths, permission errors, and decoding problems
+gracefully, continuing to process remaining files and reporting any failures at
+the end.
+Ensure deterministic results across runs so the same input always yields the
+same output. ---

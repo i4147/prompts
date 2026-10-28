@@ -1,0 +1,28 @@
+Write a Python script that scans the packages installed in the current Python
+environment, works out which installed packages depend on which other installed
+packages, and produces a readable dependency report as an HTML file.
+The tool should: - Discover every distribution installed in the current
+environment and build a case-insensitive, normalized index of package names so
+that differently spelled names (underscores, dots, hyphens, mixed case) resolve
+to the same package. - For each installed package, read its declared
+requirements and extract only the bare package names, ignoring version
+specifiers, environment markers, and extras.
+Keep only dependencies that are actually installed in the environment, and
+remove duplicates. - Process the packages in parallel to keep the scan fast on
+large environments, and print simple progress messages while doing so. - Build a
+reverse index so that, for each package, the report can show both what it
+depends on and what depends on it. - Compute the full transitive closure of
+dependencies for each package so the report can show every package that is
+ultimately pulled in, not just direct requirements. - Accept command-line
+arguments for the output file path (with a sensible default), and optionally a
+single package name to focus the report on, in which case only that package's
+direct and transitive relationships are included. - Generate a self-contained
+HTML report that lists each package with its direct dependencies, reverse
+dependencies (dependents), and transitive dependencies, with clear sections,
+escaped content for safety, and a summary of the total number of packages
+scanned and the number of relationships found. - Handle packages with missing or
+malformed metadata gracefully, without crashing the whole scan. - Print the path
+of the generated report when finished.
+The output should be a clean, well-structured, single-file script that a user
+can run directly from the terminal to audit the dependency tree of their Python
+environment. ---

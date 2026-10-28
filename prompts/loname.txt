@@ -1,0 +1,22 @@
+Write a Python script that renames files in the current working directory to
+lowercase names.
+It should run from the command line and accept an optional argument: when no
+arguments are given, only the files directly inside the current directory are
+processed; when any argument is given, the script should recursively process all
+files and folders beneath the current directory, skipping anything inside a
+version-control metadata folder (named ".git") and skipping symbolic links.
+For each item, the script should check that it exists, and if the given path
+does not exist, it should try again with an all-lowercase version of that path
+before giving up silently.
+If the item's name is already entirely lowercase, leave it unchanged.
+Otherwise, rename it in place to its lowercase name.
+If a file with the lowercase name already exists in the same location, generate
+a unique alternative name so that no existing file is overwritten.
+After each successful rename, print a concise message showing the old name and
+the new name.
+Process the collected items using a parallel or batched mapping mechanism that
+applies the renaming routine to every item, relying on helper utilities for
+multiprocessing-style execution and unique path generation.
+The script should handle the case where a rename target would collide with an
+existing entry, avoid crashing on missing or already-renamed items, and produce
+no output for items that need no change. ---

@@ -1,0 +1,47 @@
+Write a Python module that implements a self-contained,
+dependency-free version of the "docopt" command-line argument parser
+(the library that parses CLI usage from a POSIX/docopt-style usage string docstring).
+The script should: - Define custom exception types:
+`DocoptLanguageError` (raised when the usage/options description string itself is malformed)
+and `DocoptExit` (a `SystemExit` subclass raised
+when the provided command-line arguments don't match the usage pattern;
+it should format a user-facing message followed by the usage string,
+and expose a class-level `usage` attribute that can be set by the parser). - Use `dataclasses`
+(with `slots=True` where applicable)
+and `typing` (`Any`, `ClassVar`) to build a small pattern-matching object model representing docopt
+grammar elements, including at least:
+- A base `Pattern` class providing structural equality (`__eq__`)
+and hashing (`__hash__`) based on each node's `repr()`, plus pattern-fixing logic: - `fix()`:
+calls `fix_identities()` then `fix_repeating_arguments()`
+and returns self. - `fix_identities(uniq=None)`:
+for composite patterns (those having a `children` attribute),
+deduplicates/unifies identical leaf nodes across the whole tree so that equal leaves become the same
+object instance; recurses into composite children. - `fix_repeating_arguments()`:
+inspects the pattern's top-level `either` alternation, and for each alternative branch,
+finds elements that repeat more than once within that branch;
+using structural pattern matching (`match`/`case`),
+if the repeated element is an `Argument` or a single-argcount `Option`,
+it coerces its `value` into a list
+(initializing to `[]` if `None`, or splitting a string value into a list of words if it's a string)
+so repeated occurrences accumulate into a list;
+if the repeated element is a `Command` or a flag-style `Option`,
+it similarly normalizes its count/value to support counting repeated occurrences. - Subclasses/leaf
+pattern types referenced by this logic such as `Argument`, `Command`,
+and `Option` (with an `argcount` attribute distinguishing flags from value-taking options,
+and a `value` attribute),
+plus composite pattern types including an `either` alternation construct
+whose `children` are the alternative branches
+(themselves composite patterns with their own `children`). - Import `re`
+and `sys` for later use in usage-string parsing, tokenization,
+and CLI argument handling
+(e.g., reading `sys.argv`, regex-based parsing of the usage/options sections).
+Notable behavior/design points to preserve:
+- Equality/hashing of pattern nodes is purely structural (based on `repr()`), not identity-based,
+until `fix_identities` normalizes the tree to share identical leaf instances. - The
+repeating-arguments fix only considers repetition *within* each branch of the top-level `either`
+alternation (patterns in different alternative branches are treated independently). - Use Python
+3.10+ structural pattern matching (`match ... case Argument() | Option(argcount=1): ...`) to branch
+behavior by pattern subtype
+when fixing repeated arguments. - Keep the module self-contained
+(no external dependencies beyond the standard library),
+consistent with implementing a docopt-style parser from scratch. ---

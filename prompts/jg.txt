@@ -1,0 +1,23 @@
+Write a Python script that recursively scans the current working directory for
+any Git repositories (directories containing a `.git` folder) and, for each
+repository root found, deletes everything in that root except the `.git` folder
+itself.
+The script should remove all files and subdirectories directly inside each
+repository root (leaving the `.git` directory intact), so that only the Git
+metadata remains.
+It should treat any directory containing a `.git` folder as a target, including
+nested repositories found deeper in the tree, and skip directories that do not
+contain a `.git` folder.
+Key behaviors: - Start scanning from the directory where the script is executed,
+searching all subdirectories recursively. - For each directory identified as a
+Git repository root, clear its contents while preserving the `.git` directory. -
+Report or return whether each repository was processed successfully. - Do not
+modify any directory that is not a Git repository root. - After processing,
+print the names of the top-level items remaining in the starting directory,
+displayed relative to that directory. - The script should run as a standalone
+command-line program with no required arguments.
+Inputs: the current working directory on the filesystem (no user-supplied
+arguments needed).
+Outputs: deletion of the non-`.git` contents of every discovered repository,
+followed by a printed listing of the remaining top-level entries in the starting
+directory. ---

@@ -1,0 +1,18 @@
+Write a Python script that acts as a command-line helper for working with Git
+repositories.
+The tool should verify it is running inside a Git repository, determine the
+currently checked-out branch, and identify the repository's default (main)
+branch by querying the configured remote named "origin".
+It should run Git commands safely, reporting clearly when a command fails
+(including the failing command and any error output) without crashing, and
+return a usable result or a clear "unavailable" indicator when information
+cannot be obtained.
+The script should be structured so that these Git utilities can be reused by
+other parts of a workflow, such as automating branch switching, syncing with the
+main branch, or preparing a feature branch before committing.
+Include a simple entry point that prints the repository status summary
+(repository detected, current branch, default branch) in a readable format, and
+exits with an appropriate status code when not run inside a Git repository or
+when required information is missing.
+Prioritize robustness, clear error messages, and graceful handling of
+repositories with no remote configured or with a detached HEAD state. ---

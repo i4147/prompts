@@ -1,0 +1,3 @@
+Extract Python code blocks from HTML files with support for local files, URLs, and Canvas.
+Saves each code block to a separate file with intelligent naming.
+Includes multiprocessing for faster extraction from multiple files.

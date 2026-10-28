@@ -1,0 +1,22 @@
+Write a Python script that process files to remove ordinary comments while
+preserving documentation comments.
+The tool should accept a directory or a set of file paths as input, recursively
+discover Lua files, and rewrite each file in place (or to an output location, if
+specified) with allular comments stripped out.
+Comments beginning with a triple-dash marker, which conventionally denote
+documentation annotations, must be kept intact.
+The script should parse each Lua file with a syntax-aware parser so that comment
+removal is accurate and never affects string literals or code that merely looks
+like a comment.
+Byte offsets of the removed comment ranges should be computed from the parse
+tree and applied to the original content so that all other text, including
+whitespace and formatting, remains unchanged.
+Key behaviors to support: - Accept command-line arguments for the target
+path(s), an optional output directory, and a flag for a dry run that reports
+what would change without writing files. - Process multiple files in parallel to
+speed up large codebases, with a configurable number of workers. - Log progress
+and errors clearly, continuing with remaining files if one file fails to parse
+or write. - Report a summary at the end listing the number of files processed,
+files modified, and comments removed. - Handle file encoding robustly, treating
+the content as bytes where needed so byte offsets stay correct. - Reuse the
+parser instance within each worker rather than recreating it for every file. ---

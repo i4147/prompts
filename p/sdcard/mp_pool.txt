@@ -1,0 +1,70 @@
+Write a Python module that provides a reusable helper for running CPU-bound work across a fixed-size
+multiprocessing pool, with pluggable dispatch strategies.
+Requirements: 1.
+Module docstring explaining it's a "Reusable multiprocessing pool helper" that exposes a single
+entry point `run_pool`,
+which dispatches work across a fixed 8-worker `multiprocessing.Pool` using one of four selectable
+strategies: `map`, `starmap`, `imap_unordered`, or `apply_async`.
+The strategy is selectable via a `--pool-method` CLI flag registered by a companion function
+`add_pool_method_arg`.
+Include a usage example in the docstring showing:
+- importing `add_pool_method_arg`
+and `run_pool` from a module named `mp_pool` - a `square(x)` function
+and an `add(a, b)` function - calling `run_pool(square, [1, 2, 3, 4])` for the default single-arg
+map behavior - calling `run_pool(add, [(1, 2), (3, 4)], star=True)` to unpack tuple items as
+multiple positional args - calling `run_pool(add, [(1, 2), (3, 4)], method="starmap", star=True)` as
+an equivalent alternative using the starmap strategy explicitly 2.
+Use `from __future__ import annotations` and import only from the standard library:
+`argparse`, `collections.abc` (`Callable`, `Sequence`), `functools.partial`,
+`multiprocessing.pool` (`AsyncResult`, `Pool`), and `typing` (`Any`, `Final`, `Literal`, `TypeVar`).
+3. Define module-level exports via `__all__` containing exactly:
+`"POOL_METHODS"`, `"POOL_WORKERS"`, `"PoolMethod"`, `"add_pool_method_arg"`, `"run_pool"`.
+4. Define constants:
+- `POOL_WORKERS: Final[int] = 8`
+— the fixed number of worker processes always used by the pool. -
+`POOL_METHODS: Final[tuple[str, ...]] = ("map", "starmap", "imap_unordered", "apply_async")`
+— the ordered tuple of valid dispatch strategy names. -
+`PoolMethod = Literal["map", "starmap", "imap_unordered", "apply_async"]`
+— a type alias constraining the method argument to the four valid strings. - `T = TypeVar("T")`
+— generic type variable used for typing the callable's return value.
+5. Define a module-level helper function `_star_unpack` (generic over `T`) that takes a callable
+`func` and a sequence `item`, and returns `func(*item)` — i.e.,
+it unpacks the sequence into positional arguments and calls the function.
+Document that it must be defined at module level (not nested/local) so that `functools.partial`
+wrapping it remains picklable for multiprocessing,
+since nested or lambda functions can't be pickled and would break worker dispatch.
+6. Define `add_pool_method_arg(parser)` that registers a `--pool-method` argument on a given
+`argparse.ArgumentParser` (or subparser), with:
+- `choices` restricted to `POOL_METHODS` - a sensible default (`"map"`) - help text describing the
+available dispatch strategies This lets any CLI script opt into letting users choose the pool
+dispatch strategy.
+7. Define the main function
+`run_pool(func, items, *, method="map", star=False, chunksize=None, workers=POOL_WORKERS, ...)` with
+behavior: - Always creates a `multiprocessing.Pool` with a fixed number of workers
+(default `POOL_WORKERS`, i.e., 8). - `func`: the callable to apply to each item. `items`:
+a sequence of inputs (either single values or tuples of args per item). - `star`:
+when `True`, each item is treated as a sequence of positional arguments to unpack
+and pass to `func` (via the `_star_unpack` helper combined with `functools.partial` so it stays
+picklable); when `False`, each item is passed as a single argument to `func`. - `method`:
+one of the four strategies in `POOL_METHODS`, controlling how work is dispatched to the pool:
+- `"map"`: use `Pool.map`
+(or `Pool.starmap` internally if `star=True` and method resolves accordingly) to apply the function
+over all items and return results in input order as a list. - `"starmap"`:
+use `Pool.starmap` directly,
+expecting each item to already be an iterable of positional arguments
+(works naturally with `star=True` semantics). - `"imap_unordered"`:
+use `Pool.imap_unordered` to apply the function lazily and collect results as they complete,
+in completion order (not necessarily input order), returned as a list. - `"apply_async"`:
+submit each item individually via `Pool.apply_async`, collect the resulting `AsyncResult` objects,
+then call `.get()` on each in original input order to build the final results list. - Supports an
+optional `chunksize` parameter forwarded to the underlying pool method
+where applicable (`map`/`starmap`/`imap_unordered`). - Validates that `method` is one of
+`POOL_METHODS`, raising a clear error (e.g., `ValueError`) if not. - Returns a list of results.
+For `map`, `starmap`, and `apply_async`, results preserve the original input order;
+for `imap_unordered`,
+results are returned in completion order as documented by that method's semantics. - Ensures the
+pool is properly closed and joined (e.g., via context manager) after work completes,
+including on normal completion.
+Include type hints throughout,
+consistent with the generic `TypeVar("T")` for the callable's return type,
+and keep the code self-contained with no third-party dependencies. ---

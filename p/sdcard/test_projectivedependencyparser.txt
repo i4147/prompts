@@ -1,0 +1,10 @@
+Regression tests for the quadratic-memory / cubic-time DoS in
+``nltk.parse.projectivedependencyparser`` (CWE-407).
+Both ``ProjectiveDependencyParser``
+and ``ProbabilisticProjectiveDependencyParser`` eagerly build a dense ``(n+1)x(n+1)`` chart
+(O(n^2) memory) and run an unconditional triple loop over it (O(n^3) time),
+regardless of the grammar
+-- so a short list of a few hundred/thousand tokens pins a CPU core
+and exhausts memory. ``parse`` now refuses with a ``ValueError`` once the token count exceeds the
+configurable ``MAX_TOKENS``, before any chart is allocated;
+ordinary sentence-length parses are unchanged.

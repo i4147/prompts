@@ -1,0 +1,10 @@
+Scan Python files for top-level public definitions.
+Accepts one or more files or directories.
+With no arguments, processes '.' recursively.
+Skips symlinks and common non-source directories (.git, __pycache__, .venv,
+node_modules, build, dist, ...).
+For each file, lists public functions (including async), classes, and
+module-level constants.
+When a file lives in a package (i.e. a sibling __init__.py exists), also flags
+definitions that are not exported from __init__.py, and can autofix them with
+-a.

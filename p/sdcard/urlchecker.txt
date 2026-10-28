@@ -1,0 +1,55 @@
+Write a Python command-line automation tool for discovering
+and validating "open redirect" vulnerability URLs at scale, with the following characteristics:
+**Purpose**: The script takes a list of base URLs
+(candidate domains/endpoints suspected of containing redirect parameters),
+injects a configurable redirect-payload (e.g., pointing to an attacker-controlled callback URL) into
+common open-redirect parameter names,
+launches real browser instances (via Selenium) to visit each crafted URL,
+tracks the final landing URL after any redirects/JS navigation,
+and uses a regex-based URL extractor plus a helper module (`urlchecker`) to determine whether the
+browser actually ended up on the attacker-controlled host
+— flagging confirmed open-redirect vulnerabilities. **Main inputs**:
+- A text/CSV file of target base URLs (one per line or column).
+- A "callback"/"target" domain
+  or URL that the payload should redirect to (used to verify success). - A list
+  (built-in or user-supplied) of common open-redirect parameter names
+  (e.g., `redirect`, `url`, `next`, `return`, `dest`, `continue`, etc.) to try as query-string
+  injection points. - Command-line arguments (via `argparse`) controlling:
+  input file path, output file path, number of concurrent worker processes/threads,
+  request/page-load timeout, headless browser mode,
+  user-agent behavior (random via `fake_useragent`), and verbosity/logging level.
+- Optional local HTTP server (via `http.server`/`socketserver`) that can be spun up on a background
+  thread to serve as a local callback target for verifying redirects without relying on external
+  services. **Main outputs**:
+  - A log stream (via `loguru`) reporting progress, errors, timeouts,
+  and discovered vulnerabilities in real time. - A results file (e.g., CSV) listing each tested URL,
+  the constructed payload URL, the final resolved/landing URL,
+  and a verdict (vulnerable / not vulnerable / error/timeout). **Notable behavior**:
+  - Uses `multiprocessing` (and/or `threading`) to parallelize testing across many URLs/payloads for
+  speed, with a configurable worker pool size. - For each base URL,
+  iterates through the parameter name list
+  and generates several candidate payload URLs using `itertools`/string formatting,
+  randomly selecting a few variants if the full combinatorial set would be too large
+  (`random.choice`). - Rotates/randomizes the `User-Agent` header per request using
+  `fake_useragent.UserAgent` to reduce fingerprinting/blocking. - Drives a real browser via Selenium
+  `webdriver` (e.g., headless Chrome/Firefox) to load each crafted URL,
+  waiting for navigation/JS redirects to settle, and captures `driver.current_url` as the final URL;
+  wraps page loads with a timeout
+  and catches `selenium.common.exceptions.TimeoutException` to skip hung pages gracefully. - Also
+  supports a lightweight HTTP-only check path using the `requests` library (following redirects) for
+  faster/non-JS validation before falling back to full browser rendering. - Contains a large regex
+  (`FINAL_REGEX`) for robustly extracting/matching URLs (including bare domains with common TLDs)
+  from text/HTML/headers,
+  used to find redirect targets
+  or confirm the final destination contains the attacker's callback domain. - Calls into a custom
+  `urlchecker` module to perform the actual "is this URL the one we expect" comparison logic
+  (e.g., normalizing domains, stripping schemes/ports, handling www variants). - Handles graceful
+  shutdown on interrupt signals (`signal`, e.g., `SIGINT`) to cleanly terminate worker
+  processes/threads and the local HTTP server. - Uses `tempfile` for any temporary files/profiles
+  needed by the browser instances
+  (e.g., isolated Chrome user-data directories per worker to allow safe parallel execution). -
+  Implements retry/backoff behavior (via `time.sleep`) for transient network errors. - Supports
+  filtering/matching of input URLs
+  or result rows using `fnmatch` glob-style patterns. - Designed to run cross-platform
+  but assumes a working Selenium WebDriver (e.g., chromedriver) is installed
+  and accessible on the system PATH. ---

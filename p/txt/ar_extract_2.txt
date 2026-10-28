@@ -1,0 +1,49 @@
+Design an AI agent prompt for a Python utility that performs **bulk,
+parallel extraction of compressed archive files using native command-line tools**.
+The script should: **Purpose:** Recursively scan a target directory for archive files of many
+formats (.7z, .zip, .rar, .tar, .tar.gz, .tgz, .tar.bz2, .tbz2, .tar.xz, .txz, .gz, .bz2, .xz, .lz4,
+.lzma, .zst, .cab, .arj, .ace, etc.), extract each one into an organized output location,
+collect statistics on the operation,
+and report a clear summary
+— all while leveraging multiprocessing for speed
+and using external CLI tools
+(7z, unzip, unrar, tar, gunzip, bunzip2, unxz, lz4, unlzma, unzstd, cabextract, arj, unace, etc.)
+rather than Python-native extraction libraries. **Main inputs:** - A source directory path
+(or list of archive file paths) to scan/process. - Optional output directory
+where extracted contents should be placed
+(default: alongside the archive or in a subfolder named after the archive stem). - Optional number
+of parallel worker processes (defaults to CPU count or a sensible value). - Optional flags for
+overwriting existing output, deleting archives after successful extraction,
+filtering by specific extensions,
+and dry-run mode. **Main outputs:** - Extracted file contents written to disk in per-archive output
+folders. - Console/log output (via loguru) reporting progress per archive:
+an icon indicating success (✓), failure (✗), or skipped/pending (○) status, the archive name,
+its size in MB, extraction time in seconds, number of files extracted,
+and the destination folder name. - A final aggregated summary
+(total archives processed, successes, failures, total time, total size) and, for failures,
+the captured error message. - Return/exposed data structure (e.g., a dataclass `ExtractionStats`)
+holding per-archive results:
+archive path, status, output directory, extracted file count, error message, original size,
+and extraction time — suitable for further programmatic inspection. **Notable
+behavior/requirements:** - Maintain a mapping (dictionary) from file extension to the exact external
+command/arguments needed to extract it
+(e.g., `7z x -y -o`, `unzip -o`, `unrar x -y`, `tar -xzf`, `gunzip -f`, `unzstd -f`, `cabextract`,
+`arj x -y`, `unace x`, etc.),
+correctly handling multi-suffix extensions like `.tar.gz`/`.tgz` vs single-suffix ones. - Detect the
+correct archive type even
+when extensions are compound (e.g., distinguish `.tar.gz` from `.gz`). - Verify that the required
+extraction binary is available on the system (check via `shutil.which` or similar) before attempting
+extraction, and gracefully skip/report an error if the tool is missing. - Use `subprocess` to invoke
+the external extraction command, capturing stdout/stderr, timing the operation with `time`,
+and robustly catching
+and recording any failure (non-zero exit code, missing tool, corrupt archive, timeout, etc.) in the
+stats object's error message rather than crashing the whole run. - Use `multiprocessing.Pool` to
+process multiple archives concurrently, with each worker returning an `ExtractionStats` instance;
+aggregate all results back in the main process. - After extraction,
+count the number of files produced in the output directory to populate `extracted_files`. - Log each
+step and the final summary clearly and in a human-readable,
+color/icon-enhanced format using loguru. - Be resilient to partial failures:
+one archive failing to extract should not stop processing of the others. - Support being run as a
+standalone script (e.g., via a CLI entry point or `if __name__ == "__main__":` block) accepting
+command-line arguments for the directory, output path, worker count,
+and other optional flags described above.

@@ -1,0 +1,10 @@
+Code for extracting relational triples from the ieer and conll2002 corpora.
+Relations are stored internally as dictionaries ('reldicts').
+The two serialization outputs are "rtuple"
+and "clause". - An rtuple is a tuple of the form ``(subj, filler, obj)``,
+where ``subj`` and ``obj`` are pairs of Named Entity mentions,
+and ``filler`` is the string of words occurring between ``sub``
+and ``obj`` (with no intervening NEs).
+Strings are printed via ``repr()`` to circumvent locale variations in rendering utf-8 encoded
+strings. - A clause is an atom of the form ``relsym(subjsym, objsym)``, where the relation,
+subject and object have been canonicalized to single strings.

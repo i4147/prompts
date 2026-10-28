@@ -1,0 +1,32 @@
+Write a Python script that scans a directory tree and automatically grants
+execute permissions to files that should be executable, using parallel
+processing to speed up the work.
+The script should accept a root directory path as input (defaulting to the
+current directory if none is given), recursively walk through all files beneath
+it, and decide for each file whether it should be made executable based on the
+following heuristics: the file begins with a shebang line (`#!`), the file
+resides in a conventional binary directory such as `bin`, `sbin`, or `.bin`, the
+file name matches a shared-library pattern (such as `.so` or versioned variants
+like `.so.1.2`), or the file has no extension and appears to be a binary
+(contains null bytes in its initial content).
+Files with common script or text extensions such as `.py`, `.sh`, `.bash`,
+`.pl`, `.rb`, `.pyw`, and `.txt` should be considered candidates for the same
+treatment where appropriate, so the behavior should be clearly defined and
+consistent.
+For each file that qualifies and is not already executable by its owner, the
+script should add the owner, group, and other execute bits without disturbing
+the existing permission bits.
+Use a pool of worker processes (around eight) to evaluate and update files
+concurrently, so large trees are processed efficiently.
+The script must handle unreadable files, missing paths, and permission err
+skipping problematic entries without crashing the whole run.
+Once processing finishes, the script should print a concise summary to the
+console showing how many files were examined, how many had their permissions
+changed, and how many were skipped or failed, along with a list of the files
+that were modified.
+It should also support a dry-run option that reports which files would be
+changed without actually modifying anything, and a verbose option that logs each
+decision with its reason.
+Include clear command-line help describing the usage and options, and ensure the
+script exits with a non-zero status code if fatal errors occur, such as an
+invalid root path. ---

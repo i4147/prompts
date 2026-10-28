@@ -1,0 +1,18 @@
+Write a Python script that extracts text from a PDF file and writes it to an
+output text file.
+The tool should accept a path to an input PDF and a destination path for the
+resulting text, along with options to choose which PDF text-extraction backend
+to use (PyPDF2 or pdfplumber) and to specify the text encoding.
+It should process the document page by page, producing text for each page and
+handling pages with no extractable text gracefully by treating them as empty
+rather than failing.
+The output should be a plain text file containing the extracted content of all
+pages in order, with pages clearly separated so the boundaries remain
+identifiable.
+The tool should validate its inputs up front, report a clear error and exit with
+a non-zero status if the input file is missing, the chosen engine is
+unsupported, or the extraction fails, and it should use a command-line interface
+that prints concise status information on success.
+Design the script so that additional extraction backends could be added with
+minimal changes, and keep the overall behavior robust for multi-page documents
+of any reasonable size. ---

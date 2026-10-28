@@ -1,0 +1,3 @@
+Termux-friendly C / C++ runner using the `sh` library.
+Usage: cpprun <file.c|file.cpp|file.cc> [args...]
+Install: pip install sh

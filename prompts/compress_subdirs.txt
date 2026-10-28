@@ -1,0 +1,19 @@
+Write a Python script that creates compressed archives of one or more files or
+directories, supporting multiple compression formats (xz, gzip, bzip2,
+zstandard, and lz4) selectable from the command line.
+The tool should accept one or more source paths and an output location, package
+the contents into a single tar-based archive, and compress it using the chosen
+algorithm, automatically appending the standard file extension for that format.
+It should allow the user to pick the compression method, and optionally adjust
+the compression level or preset where the format supports it, favoring maximum
+compression by default.
+Where practical, it should use parallelism to speed up compression of large
+inputs, and it should handle missing paths, unsupported formats, and existing
+output files gracefully with clear error messages and sensible exit codes.
+The script should report progress or a summary of what was archived, including
+the output file path and resulting size, and it should clean up partial output
+if an operation fails.
+Ensure that optional dependencies (such as the lz4 library) are only required
+when that format is selected, and provide helpful guidance if they are missing.
+Include a clear command-line interface with help text, and make the tool work
+reliably across major operating systems. ---

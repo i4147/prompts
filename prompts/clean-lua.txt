@@ -1,0 +1,30 @@
+Write a Python script that removes comments from Lua source files in a directory
+tree, safely and in parallel, while preserving the code itself.
+The tool should accept a root directory (or file path) as input, recursively
+discover Lua files, and skip common non-source directories such as version
+control folders, virtual environments, dependency folders, IDE settings folders,
+caches, and build output folders.
+For each Lua file, the script should parse the source with a proper Lua syntax
+parser so that only true comments are identified (not text inside string
+literals), and then strip those comments while leaving all executable code,
+string contents, and meaningful layout intact as much as practical.
+Files that contain syntax errors should be left unchanged and reported as
+skipped rather than corrupted.
+Empty files should be handled gracefully.
+Files that have no comments should be left as they are.
+The tool should support a dry-run mode that shows a unified diff of the proposed
+changes without writing anything, and an option to write changes in place.
+When writing, it should create a backup copy of each modified file (or a
+configurable backup location) before overwriting it, so the operation is
+reversible.
+Provide a summary at the end reporting how many files were scanned, modified,
+skipped due to errors, and unchanged, along with the number of comments removed.
+Processing should use multiple worker processes to speed up large codebases,
+with the worker count defaulting to the number of available CPU cores and
+overridable from the command line.
+The script should be robust: a failure in one file must not abort processing of
+the others, and per-file errors should be reported clearly.
+Provide a clean command-line interface with help text, sensible defaults, and a
+non-zero exit status when errors occur.
+Optionally, it should allow restricting processing to specific file extensions
+or excluding paths matching given patterns. ---

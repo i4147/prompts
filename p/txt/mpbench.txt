@@ -1,0 +1,2 @@
+Benchmark suite comparing parallelism libraries for recursive file hashing.
+Tests joblib, multiprocessing.Pool, and concurrent.futures executors.

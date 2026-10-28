@@ -1,0 +1,1 @@
+Core hashing, identification and lookup logic.

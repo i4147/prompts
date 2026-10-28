@@ -1,0 +1,1 @@
+PySide6 port of the QtMultiMedia camera example from Qt v6.x

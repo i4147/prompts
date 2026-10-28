@@ -1,0 +1,42 @@
+Write a prompt for an AI coding agent to generate a Python module that implements an "interactive"
+extension/action for a PyScaffold-like project scaffolding CLI tool.
+The module should: - Be part of a larger scaffolding framework,
+importing shared utilities from sibling packages/modules such as `api`, `cli`, `file_system`,
+`shell`, `templates`, an `actions` module (with `ScaffoldOpts` and `get_default_options`),
+and a local `Extension` base class plus a helper `list_from_entry_points`
+(aliased as `list_all_extensions`) for discovering installed extensions. - Define a module-level
+constant `INDENT_LEVEL` (e.g., 4) used for formatting indented text blocks,
+and load a `HEADER` string/template via `templates.get_template("header_interactive")`. - Define a
+`CONFIG_KEY` constant (e.g., `"interactive"`)
+and a `CONFIG` dict that classifies command-line options not tied to any specific extension class
+into categories: - `"ignore"`:
+a list of long-form argparse option strings (like `"--help"`, `"--version"`) that should be excluded
+entirely when generating usage examples.
+- `"comment"`: a list of long-form argparse option strings (like `"--verbose"`, `"--very-verbose"`)
+  that should appear commented-out in generated examples even if present in the original
+  command-line arguments. - Include a docstring explaining this structure,
+  that extension classes/instances can define their own `interactive` attribute with a
+  similarly-shaped dict to contribute additional ignore/comment options,
+  and that keys must be among the configurable categories.
+- Implement a cached function `get_config(kind: str) -> Set[str]` (using `functools.lru_cache`)
+  that: - Validates `kind` is one of the configurable keys in `CONFIG` (asserts membership). -
+  Starts from the base `CONFIG[kind]` values as a set. - Merges in additional values contributed by
+  every installed extension (discovered via the entry-points listing helper) that defines a matching
+  `interactive` config dict for that `kind`,
+  accumulating them with something like a `reduce`/`functools.reduce` over the extension list using
+  an internal merge helper function. - Returns the final merged set of option strings for
+  that `kind`.
+The purpose of this module is to support an interactive mode for the scaffolding CLI:
+after a project is generated,
+it should be able to build an illustrative "next steps" / example usage block
+(using the header template, indentation constant, and the ignore/comment configuration) showing the
+user commands they could run next,
+filtering out irrelevant options and commenting out verbose/debug-type flags,
+while allowing extensions to customize which of their own options are treated this way.
+Include necessary imports
+(`os`, `shlex`, `textwrap`, `argparse.Action`/`ArgumentParser`, `collections.abc`,
+`functools.lru_cache`/`reduce`, `itertools.chain`,
+`typing` helpers) consistent with building argument-parsing introspection, text wrapping,
+and shell-quoting logic for the example commands.
+Produce the complete, working Python source code implementing this behavior,
+matching the structure and intent described above. ---

@@ -1,0 +1,23 @@
+Write a Python script that scans one or more directory trees and reports groups
+of duplicate files based on content.
+The tool should accept a root directory path from the command line, walk through
+its subdirectories while ignoring version-control metadata folders (such as
+`.git`), and avoid following symbolic links.
+It should guard against excessively deep directory nesting and tolerate
+unreadable directories or files without crashing.
+For each regular file found, the script should compute a fast, non-cryptographic
+content fingerprint by reading the file in fixed-size chunks so that large files
+do not exhaust memory.
+Files should first be grouped by size so that only candidates with identical
+sizes are fimizing unnecessary disk reads.
+The fingerprinting work should be parallelized across multiple worker processes
+to speed up scanning of large trees.
+The final output should list every set of two or more files that have identical
+content, showing each group's file size and the paths of its members, ordered in
+a readable way (for example, largest groups or largest files first).
+Optionally, the tool should support a summary mode that reports the total number
+of duplicate files and the reclaimable disk space.
+Provide clear command-line options for the root path, worker count, and output
+format, with helpful usage messages and graceful handling of errors such as
+missing paths or permission problems.
+Exit with a non-zero status code on fatal errors and zero otherwise. ---

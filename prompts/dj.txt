@@ -1,0 +1,25 @@
+Write a Python script that acts as a command-line cleanup utility for the
+current working directory.
+It should recursively scan the directory tree starting from where it is run and
+handle files according to command-line flags.
+Behavior requirements: - Operate on the current working directory and everything
+beneath it, but skip any path that lies inside version-control or build-artifact
+folders such as `.git` and `var`. - Support an "empty" mode, enabled by passing
+`-e`, in which matching text-like files (such as `.txt` and `.md`) are not
+deleted but instead truncated to zero bytes, with any write errors reported to
+standard error without stopping the run. - Support a "remove" mode, enabled by
+passing `-r`, in which matching files and directories are deleted, including
+full recursive removal of directories when applicable, again reporting failures
+to standard error and continuing processing. - Identify junk files by their
+extensions (such as `.tmp`, `.bak`, `.log`, and `.pyc`), and treat files with
+multiple suffixes (e.g., `archive.tar.gz`, `notes.final.txt`) and files whose
+names match junk or temporary-file patterns as candidates for handling, with the
+handling depending on the active mode. - When no flags are given, the script
+should run safely in a report-only fashion, listing what would be affected
+without modifying anything. - Print a clear summary at the end showing the
+number of items affected and the mode used. - Handle permission and filesystem
+errors gracefully so that one failing item does not abort the entire operation.
+- Use clear, user-friendly console output that describes each action taken or
+proposed, with relative paths shown for readability. - Keep the script
+self-contained, runnable directly from the command line, and easy to extend with
+additional file extension rules. ---

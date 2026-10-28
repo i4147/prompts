@@ -1,0 +1,45 @@
+Write a Python command-line utility script that scans a given directory for all `.txt` files,
+heuristically detects and extracts Python code blocks embedded within each file's text content,
+and writes all extracted code blocks into a single consolidated output `.py` file.
+The script must include:
+1. **A regex-based heuristic (`CODE_LINE_RE`)** that recognizes a line as likely Python code if it
+matches patterns such as:
+Python keywords (`import`, `from`, `def`, `class`, `@`, `if`, `elif`, `else`, `for`, `while`, `try`,
+`except`, `finally`, `with`, `return`, `yield`, `raise`, `assert`, `break`, `continue`, `pass`,
+`del`, `global`, `nonlocal`, `lambda`, `True`, `False`, `None`, `print`),
+variable assignments (`x = ...`), function/method calls (`foo(...)`), attribute access (`obj.attr`),
+indexing (`obj[...]`), dict/annotation syntax (`key:` or `{`),
+lines consisting only of closing brackets/whitespace,
+lines starting with operators (`+ - * / % < > ! =`), comments (`#`),
+or triple-quoted string delimiters (`"""` / `'''`).
+2. **A function `is_code_line(line: str) -> bool`** that returns `False` for blank lines,
+`True` for any indented line
+(starts with space or tab, since indentation strongly implies it's part of a code block),
+and otherwise checks the line against the regex above.
+3. **A generator function `extract_python_code(text: str) -> Iterator[str]`** that splits input text
+into lines, groups consecutive lines identified as code
+(including blank lines that occur inside an already-started code block) into blocks,
+and yields each block as a single string
+(joined by newlines, stripped of leading/trailing newline characters) once the block ends
+(i.e., a non-code, non-blank line is encountered or the text ends).
+4. **A function `extract_code_from_files(directory: str, output_file:
+str = "extracted_code.py") ->
+None`** that: - Takes a directory path
+and an output file path (default `"extracted_code.py"`). - Iterates over all `*.txt` files in that
+directory in sorted order. - For each file, prints a progress message (`"Processing: <filename>"`),
+reads its content as UTF-8 text (ignoring decode errors),
+and runs `extract_python_code` on it. - Collects all non-trivial extracted code blocks
+(filtering out empty/whitespace-only ones) into a list,
+keeping track of which source file each block came from. - Writes/appends all collected code blocks
+into the specified output file,
+separated by clear delimiters/comments indicating the source filename for traceability,
+so the final output is a single `.py` file aggregating all detected code snippets from every `.txt`
+file in the directory.
+The script should be runnable from the command line
+(using `sys.argv` and/or `pathlib.Path` for path handling),
+be robust to encoding issues and missing/empty files,
+and print simple progress/status messages to stdout as it processes each file.
+The primary input is a directory containing `.txt` files with mixed text/code content
+(e.g., exported chat logs or notes containing embedded code snippets);
+the primary output is a single `.py` file containing all the heuristically-extracted Python code
+blocks found across those files. ---

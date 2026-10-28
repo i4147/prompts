@@ -1,0 +1,23 @@
+Write a Python script that removes type annotations from Python source files,
+producing untyped versions of the code while preserving everything else about
+the program's behavior and formatting as much as possible.
+The tool should accept a file path or a directory as input, recursively discover
+Python source files within a directory (skipping cache directories such as
+`__pycache__`), and process them in parallel using multiple worker processes to
+speed up large codebases.
+For each file, it should strip parameter annotations, function return
+annotations, class-level and variable annotations, and generic type parameter
+declarations, while leaving the executable logic, comments, and docstrings
+intact.
+Files should be rewritten in place by default, with an option to write results
+to a separate output location instead, and the tool should report which files
+were changed, which were skipped, and any files that failed to parse, without
+stopping the entire batch on a single error.
+The script should verify that each transformed file remains syntactically valid
+Python before saving it, and should leave files unchanged if the transformation
+would produce invalid output.
+Include a command-line interface with options for the target path, output
+location, number of workers, and a dry-run mode that previews which files would
+be modified without writing anything.
+Provide a concise summary at the end of the run showing counts of processed,
+modified, unchanged, and failed files. ---

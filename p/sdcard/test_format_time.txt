@@ -1,0 +1,20 @@
+Write a Python script that demonstrates
+and verifies the behavior of a `format_time` utility function imported from a local module
+named `dh`.
+The script should use the `loguru` library for logging output instead of built-in print statements.
+The main logic must execute only
+when the script is run directly (i.e., inside an `if __name__ == "__main__":` block).
+Behavior requirements:
+- Iterate over a range of integer values representing seconds,
+starting at 1 and going up to (but not including) the total number of seconds in 30 days
+(60 * 60 * 24 * 30), incrementing by 1000 on each step. - For each integer value `k` in that range,
+call `format_time(k)` to convert the raw seconds value into a formatted time string. - Log an
+info-level message using `loguru`'s `logger.info`,
+with the message formatted as `"{k}: {formatted_result}"`,
+where `k` is the raw integer and `formatted_result` is the string returned by `format_time(k)`.
+No other inputs are required (the script takes no command-line arguments or external input),
+and there is no return value
+— the only output is the sequence of log lines printed via loguru to the console
+(or wherever loguru is configured to output).
+The purpose is primarily a quick manual/visual test to inspect how `format_time` formats a wide
+range of second values from small numbers up to roughly a month's worth of seconds. ---

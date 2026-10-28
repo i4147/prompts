@@ -1,0 +1,9 @@
+Language detection benchmark:
+lingua, fast_langdetect, cld-cffi/pycld2, langid, langdetect, and fasttext.
+Usage: python bench_langdetect.py /path/to/file_or_folder python bench_langdetect.py /path/to/folder
+--ext .txt .md python bench_langdetect.py /path/to/folder --manifest truth.json python
+bench_langdetect.py /path/to/folder --repeat 3 --csv results.csv Ground truth resolution
+(first match wins): 1. --manifest JSON: {"path/rel/to/file.txt": "en", ...} 2.
+Filename prefix: "en_article.txt" -> en 3.
+Filename suffix: "article.fr.txt" -> fr 4.
+None: prediction is recorded but not scored.

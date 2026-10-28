@@ -1,0 +1,29 @@
+Write a Python script that demonstrates the usage of two file-discovery utility functions,
+`get_files` and `get_pyfiles`, imported from a module named `dh`.
+The script should: 1.
+Call `get_files(".", ext=[".py"])` to recursively search the current directory (".") for all files
+with the ".py" extension,
+then iterate over the returned paths and print each one followed by a comma
+and a space (using `print(path, end=", ")`),
+with a final `print()` call afterward to move to a new line once all paths have been printed.
+2. Call `get_pyfiles(".")` to retrieve Python files from the current directory using this presumably
+more specific/convenience function,
+then iterate over the returned paths
+and print each one in the same comma-separated inline format (`print(path, end=", ")`),
+followed by a final `print()` to end the line.
+Main inputs: the current directory path (".")
+and an extension filter list (`[".py"]`) for the first function call;
+no explicit extension argument needed for the second function since `get_pyfiles` presumably
+defaults to Python files.
+Main outputs: two lines printed to standard output,
+each listing file paths (as returned by the respective function) separated by ", ",
+one line for the result of `get_files` and one line for the result of `get_pyfiles`.
+Notable behavior: the script relies entirely on the external `dh` module for the file-search logic
+itself (no manual directory walking is implemented in this script);
+both functions are expected to return iterables of file path strings (or path-like objects) that can
+be printed directly;
+the printing style keeps each result on a single line with trailing comma-space separators
+(including after the last item) rather than using a clean join with a separator;
+the purpose is likely to compare
+or verify the output of the two different file-listing functions against each other for the same
+directory. ---

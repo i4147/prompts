@@ -1,0 +1,47 @@
+Write a Python module that implements a best-effort,
+dependency-free JavaScript/TypeScript code formatter based on token-stream processing rather than
+full AST parsing.
+The module should: 1.
+Import a shared `Options` type from a relative `..api` module,
+and a `lex` tokenizer function from a sibling `.js_tokenizer` module.
+It uses these tokens to drive formatting logic instead of parsing a full syntax tree.
+2. Define formatting rules and lookup tables/sets to drive the token-stream printer, including:
+- A set of "object triggers"
+â€” tokens after which an opening brace should be interpreted as starting an object literal
+(e.g. `=`, `(`, `[`, `,`, `:`, `return`, `import`, `export`, `const`, `let`, `var`, `=>`). - A set
+of keywords that require a space after them
+(e.g. `if`, `for`, `while`, `switch`, `catch`, `with`, `return`, `throw`, `case`, `typeof`, `void`,
+`do`, `else`, `try`, `finally`, `class`, `function`, `new`, `export`, `import`, `extends`, `delete`,
+`in`, `of`, `instanceof`, `as`, `from`, `yield`, `await`, `const`, `let`, `var`, `infer`, `async`,
+`get`, `set`, `this`, `true`, `false`, `null`).
+- A set of "glue" keywords (`else`, `catch`, `finally`, `while`) that should attach to a preceding
+  closing brace on the same line (e.g. `} else {`, `} catch {`, `} finally {`). - A set of operator
+  characters used for detecting
+  and normalizing operator spacing. - Any additional keyword sets needed to correctly distinguish
+  contexts (e.g. keywords that can precede a block vs. an expression).
+3. Implement the core formatting engine that:
+- Tokenizes the input source using `lex`. - Reconstructs the source with correct indentation for
+nested blocks (braces, brackets, parentheses),
+respecting the configured indentation style. - Places `} else {`, `} catch {`,
+`} finally {` on a single line rather than splitting them. - Decides whether object literals,
+array literals, and function argument lists should be printed inline on one line
+or broken across multiple lines,
+based on whether they fit within a configurable `print_width`. - Normalizes spacing around operators
+and after keywords according to the rules above. - Supports configurable formatting options via the
+`Options` object, including:
+`single_quote` (quote style preference), `semi` (whether to enforce semicolons),
+`trailing_comma` (whether to add trailing commas in multi-line literals/argument lists),
+`use_tabs` (tabs vs. spaces for indentation),
+and `tab_width` (indentation width). - Ensures the output file ends with exactly one trailing
+newline. - Is idempotent for typical/common JavaScript and TypeScript code â€” i.e.,
+running the formatter again on already-formatted output should not change it.
+4. Document clearly (e.g., in the module docstring) that this is a best-effort,
+dependency-free formatter â€” a token-stream printer rather than a full AST-based printer
+â€” and that certain exotic
+or edge-case syntax (such as regex literal source text, complex destructuring patterns,
+very deeply nested expressions,
+and indentation of `case` labels inside `switch` statements) is only approximated
+and may not be handled with full correctness.
+The primary input is JavaScript/TypeScript source code (as a string) plus an `Options` configuration
+object; the primary output is the reformatted source code as a string,
+following the style rules and constructs described above. ---

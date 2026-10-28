@@ -1,0 +1,37 @@
+Write a Python script that implements a custom JSON encoder using the Visitor design pattern.
+The script should define: 1.
+A generic `Visitor` base class that dynamically dispatches a `visit` method call based on the
+runtime type (or MRO, for support of class objects) of the input node.
+It should look up a method named `visit_<ClassName>` on the visitor instance for each class in the
+node's method resolution order (MRO), calling the first matching method found.
+If no matching method exists,
+it should raise a `NotImplementedError` with a message indicating the missing visitation
+method name.
+2. A `JsonEncoder` class that subclasses `Visitor`
+and converts Python data structures (lists, strings, integers, booleans, and dictionaries) into a
+pretty-printed, indented JSON string,
+implemented via `visit_<type>` methods for each supported type: - `visit_list`:
+Serializes a list into a multi-line JSON array, increasing the indentation level for nested items,
+with each item placed on its own line separated by commas,
+and closing bracket aligned with the opening context's indentation. - `visit_str`:
+Serializes a string into a double-quoted JSON string,
+escaping backslashes and double quotes. - `visit_int`:
+Serializes an integer by converting it to its string representation. - `visit_bool`:
+Serializes a boolean as the JSON literals `true`
+or `false` (note: since `bool` is a subclass of `int` in Python,
+the MRO-based dispatch must ensure `visit_bool` takes precedence over `visit_int` for boolean
+values). - `visit_dict`:
+Serializes a dictionary into a multi-line JSON object, with each key-value pair on its own line,
+keys as quoted strings followed by `: `, values recursively encoded,
+increasing indentation for nested content, and proper comma separation between pairs,
+with the closing brace aligned with the opening context's indentation.
+The encoder should maintain internal state for the current indentation level (starting at 0)
+and use a configurable indent string (default two spaces) that is repeated according to the current
+nesting depth to produce properly formatted, human-readable JSON output.
+Use Python type hints throughout,
+including a `NodeType` type alias (a `Union` of `list`, `str`, `int`, `bool`, and `dict`) for the
+types of nodes the visitor can process,
+and use `from __future__ import annotations` for forward-compatible annotation handling.
+The `Any` type hint should be used for the return type of the `visit` method since different node
+types produce different return types internally,
+though the `JsonEncoder`'s visit methods consistently return strings. ---

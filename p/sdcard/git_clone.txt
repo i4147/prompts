@@ -1,0 +1,36 @@
+Write a Python script that replicates a simplified version of the `git clone` command-line interface
+using the `docopt` library for argument parsing.
+The script must contain a module-level docstring written in docopt format that defines the usage
+pattern and options for a `git clone` command, including: - **Usage line**:
+`git clone [options] [--] <repo> [<dir>]` - **Positional arguments**:
+`<repo>` (the repository to clone) and an optional `<dir>` (the target directory) - **Options**,
+each with a short description:
+- `-v, --verbose` ‚Äî be more verbose - `-q, --quiet` ‚Äî be more quiet - `--progress`
+‚Äî force progress reporting - `-n, --no-checkout` ‚Äî don't create a checkout - `--bare`
+‚Äî create a bare repository - `--mirror` ‚Äî create a mirror repository (implies bare) - `-l, --local`
+‚Äî to clone from a local repository - `--no-hardlinks` ‚Äî don't use local hardlinks,
+always copy - `-s, --shared` ‚Äî setup as shared repository - `--recursive`
+‚Äî initialize submodules in the clone
+- `--recurse-submodules` ‚Äî initialize submodules in the clone - `--template <template-directory>`
+  ‚Äî directory from which templates will be used - `--reference <repo>`
+  ‚Äî reference repository - `-o, --origin <branch>`
+  ‚Äî use `<branch>` instead of 'origin' to track upstream - `-b, --branch <branch>`
+  ‚Äî checkout `<branch>` instead of the remote's HEAD - `-u, --upload-pack <path>`
+  ‚Äî path to git-upload-pack on the remote - `--depth <depth>`
+  ‚Äî create a shallow clone of that depth The script should import `docopt` from the `docopt` module.
+In the `if __name__ == "__main__":` block,
+it should call `docopt(__doc__)` to parse the command-line arguments
+(using the module docstring as the usage/options pattern)
+and print the resulting dictionary of parsed arguments
+and their values to standard output. **Input**:
+command-line arguments passed
+when running the script
+(e.g., flags, options with values, the `<repo>` and optional `<dir>` positional arguments).
+**Output**: a printed Python dictionary showing each defined option/argument as a key with its
+parsed value (boolean for flags, string for options with values, `None` if not provided). **Notable
+behavior**: The script relies entirely on `docopt`'s automatic parsing based on the docstring's
+usage/options syntax ‚Äî there is no manual argument-parsing logic.
+If the arguments don't match the usage pattern,
+`docopt` will automatically print a usage/help message and exit.
+No actual git cloning functionality is implemented;
+this is purely an argument-parsing demonstration/scaffold. ---

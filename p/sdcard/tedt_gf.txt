@@ -1,0 +1,35 @@
+Write a Python module that implements
+and tests a utility function for recursively discovering files within a directory tree,
+optionally filtered by file extension.
+The core function, `get_files(directory: Path, extensions: list[str] | None = None) -> list[Path]`,
+should: - Accept a `directory` (a `Path` object) to search and an optional `extensions` parameter,
+which is a list of extension strings (e.g., `["txt", ".log", ""]`). - Recursively scan all files
+and subdirectories under `directory` (using something like `rglob`). - When `extensions` is `None`
+or an empty list, return all files found in the directory tree (recursively),
+excluding symlinks. - When `extensions` is provided:
+- Support extensions specified with
+or without a leading dot (e.g., both `"txt"` and `".txt"` should work and be normalized to `.txt`).
+- Support an empty string `""` in the extensions list to specifically match files that have no
+extension at all (i.e., `item.suffix == ""`). - For each extension in the list,
+find all matching files recursively. - Exclude symlinks from the results. - Avoid duplicate entries
+in the result list even if a file could match multiple criteria. - Return the result as a list of
+`Path` objects (order doesn't need to be strictly guaranteed, but all matches must be included).
+Additionally, write pytest-based unit tests for this function using a `setup_test_directory` fixture
+that: - Uses pytest's built-in `tmp_path` fixture to create a temporary directory structure for
+isolated testing. - Creates a base directory (e.g., `test_root`) containing a mix of files with
+various extensions (`.txt`, `.log`, `.py`, `.json`, `.zip`)
+and files with no extension (e.g., `document`, `config_file`). - Creates at least one nested
+subdirectory (e.g., `subdir1`) containing additional files,
+including files with extensions and files without extensions,
+to verify recursive behavior. - Returns a dictionary from the fixture containing the base directory
+path and/or lists of expected files, so that test functions can use this data to make assertions.
+The test suite (not fully shown but implied) should verify behaviors such as:
+- Retrieving all files
+when no extension filter is given. - Filtering by a single extension. - Filtering by multiple
+extensions simultaneously. - Correctly matching files with no extension
+when `""` is included in the extensions list. - Correct recursive traversal into subdirectories. -
+Proper exclusion of symlinks.
+- No duplicate results. - Correct handling of extensions specified with or without a leading dot.
+Ensure the code uses type hints throughout
+(e.g., `Path`, `list[str] | None`, `dict[str, Path | list[Path]]`)
+and follows modern Python conventions compatible with Python 3.10+. ---

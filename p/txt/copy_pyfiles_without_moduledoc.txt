@@ -1,0 +1,1 @@
+Copy .py files without module docstrings to ~/tmp/notannotated.

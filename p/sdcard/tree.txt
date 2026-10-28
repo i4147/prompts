@@ -1,0 +1,2 @@
+Class for representing hierarchical language structures,
+such as syntax trees and morphological trees.

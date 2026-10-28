@@ -1,0 +1,7 @@
+GOAL: <what the code should do>
+SYMPTOM: <error msg / slowness / wrong output / "just review">
+PYTHON: 3.12.x
+DEPS: <pip/pkg list or "stdlib only">
+CONSTRAINTS: <latency, memory, must stay sync, etc. or "none">
+===CODE===
+<PASTE CODE HERE>

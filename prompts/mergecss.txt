@@ -1,0 +1,9 @@
+Write a Python script that runs the external CSS minification tool "cleancss" on
+all CSS files in the current directory, using aggressive level-2 optimization
+with duplicate-rule removal enabled, and writes the combined, optimized output
+to a single file named "merged.css".
+The script should execute the command through a small command-runner helper,
+display the tool's output in the console while it runs, and exit cleanly once
+the merged stylesheet has been produced.
+Keep the script minimal and self-contained, with a clear entry point that runs
+only when the file is executed directly. ---

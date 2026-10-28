@@ -1,0 +1,29 @@
+Write a Python script that converts text files from Windows-style line endings
+(CRLF) to Unix-style line endings (LF), operating on files supplied as
+command-line arguments.
+Each argument may be either a file or a directory; when a directory is given,
+the script should recursively process all files within it.
+If no arguments are provided, the script should default to processing the
+current working directory recursively.
+The tool should: - Accept one or more file directory paths as input, expanding
+user home shortcuts and resolving them to absolute paths. - Automatically skip
+binary files and any files matching a project-defined exclusion rule, so that
+only plain text files are considered. - Detect whether each file contains CRLF
+line endings.
+Files without CRLF should be left untouched and reported as unchanged. - For
+files containing CRLF sequences, replace every CRLF with LF and write the result
+back to the original file.
+The conversion should be safe: write through a temporary file and atomically
+replace the original so that a failed write never leaves a corrupted or
+partially written file. - Process files in parallel using a pool of worker
+processes (around 8 workers) with batched task distribution for efficiency. -
+Handle file system errors such as permission problems or read/write failures
+gracefully: record the error for the affected file, continue processing the
+remaining files, and never crash the whole run because of a single file. -
+Report a summary at the end, including the number of files scanned, the number
+converted, the number skipped as unchanged, and a list of any files that failed
+with their error messages.
+Output should be clear, concise, and suitable for terminal use. - Exit with a
+non-zero status code if any file failed to convert, and zero otherwise.
+Keep the implementation self-contained in a single script with a clear `main`
+entry point, and ensure it is safe to run on large directory trees. ---

@@ -1,0 +1,48 @@
+Write a Python module that implements concrete dataset-loading classes extending a common base class
+`LoadDataset` (imported from `.load_train_dataset`),
+used to load various structured data formats (JSON, JSON Lines, CSV/Excel) into a unified
+train/valid/test dataset structure for downstream NLP/ML tasks. **Purpose:** Each class should
+handle a specific input file format
+and datase it into a normalized in-memory structure keyed by split names
+(e.g., "train", "valid", "test"),
+automatically perform a random train/valid split when the source data isn't pre-split,
+and finally delegate to the base class's `generate_datasets` method to produce the final dataset
+objects. **Main class:
+`LoadJson`** - Inherit from `LoadDataset`. - Implement a classmethod `load_dataset` with parameters:
+`path`, `task`, `split=0.5`, `sep=" "`, `dataset="dataset"`, `train="train"`, `valid="valid"`,
+`test="test"`, `text="text"`,
+`label="label"`. - Use `read_json` (from `..utils.json_ops`) to load the JSON file at `path`. -
+Support two input shapes: 1.
+Already split: `{"train": {"text": [...], "label": [...]}, "valid": {...}, ...}` 2.
+Not split: `{"text": [...], "label": [...]}`
+— a flat dict of parallel lists. - Check whether the loaded JSON is already split using a
+`has_split` method (assumed to exist on the base class or instance). - If not split:
+build a new dict with `train` and `valid` keys (each a `defaultdict(list)`),
+iterate over the zipped values of all keys in the flat dict,
+and for each record randomly assign it to the train
+or valid split based on comparing `random.random()` against the `split` probability threshold,
+appending each field value to the corresponding key list. - After ensuring the data is split
+(either originally or newly split),
+call `cls().generate_datasets(js, task, train, valid, test, text, label, sep, False)`
+and return its result. - Include a docstring explaining the two supported input formats
+and that `split` controls the random train/valid partition ratio
+when the data is not already split. **Additional class:
+`LoadJson2`** - Also inherits from `LoadDataset`
+and defines a similar classmethod `load_dataset` signature
+(same parameters: `path`, `task`, `split=0.5`, `sep=" "`, `dataset="dataset"`, `train`, etc.),
+intended to handle a related
+but distinct JSON data layout/format variant
+(the class is a counterpart to `LoadJson` for a different structural convention of the input data,
+following the same overall pattern of reading, conditionally splitting,
+and delegating to `generate_datasets`). **Imports/dependencies to include:** - `defaultdict`,
+`Counter` from `collections` - `read_json`,
+`read_jsonL` from `..utils.json_ops` - `txt_generator` from `..utils.txt_ops` - `random` module
+(uses `random.random()`) - `pandas as pd` (uses `pd.read_csv()`, `pd.read_excel()`) - `numpy as np`
+(uses `np.isnan()`) - `LoadDataset` from `.load_train_dataset` **Notable behavior:** - Randomization
+for splitting is non-deterministic (no fixed seed shown),
+based on comparing `random.random()` to the `split` threshold per record. - The design anticipates
+multiple loader subclasses
+(e.g., `LoadJson`, `LoadJson2`, and potentially others using `read_jsonL`, `pd.read_csv`,
+`pd.read_excel` for different file formats) sharing the same base class interface
+and `generate_datasets` delegation pattern,
+keeping the public `load_dataset` signature consistent across loaders for interchangeable use. ---

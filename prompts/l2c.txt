@@ -1,0 +1,15 @@
+Write a Python script that runs from the command line and copies a single line
+of a text file to the Android clipboard, intended for use in the Termux terminal
+environment.
+The script should accept two command-line arguments: the path to a text file and
+the zero-based index of the line to copy.
+It should read the file using UTF-8 encoding, select the requested line, remove
+leading and trailing whitespace from it, and send the resulting text to the
+system clipboard using Termux's clipboard utility.
+The tool should handle invalid or missing arguments gracefully, report clear
+error messages when the file cannot be read or the requested line index is out
+of range, and exit with a non-zero status code on failure and zero on success.
+It should also surface a helpful message if the clipboard utility is not
+available on the system.
+Keep the script simple, dependency-free, and suitable for quick use from a
+shell. ---

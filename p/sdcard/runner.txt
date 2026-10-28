@@ -1,0 +1,65 @@
+Generate a Python module that implements a multiprocessing-based batch runner for a TOML
+formatting/linting tool,
+where each file to be processed is handled by a separate worker process and results are collected
+and reported by the parent process.
+The module should use `from __future__ import annotations`, and import `difflib`,
+`multiprocessing as mp`, `sys`, `dataclasses` (`dataclass`, `field`), `pathlib.Path`,
+and `loguru.logger`.
+It should also import from sibling modules within the same package:
+`FmtOptions` and `format_document` from `.formatter`, `Issue` and `lint_source` from `.linter`,
+and `TaploError`, `line_col`, `normalize`, `parse_document` from `.parser`.
+Expose the following public names via `__all__`:
+`Task`, `Result`, `process_file`, `run_pool`, `bytes_note`.
+Requirements for each component: 1. **`bytes_note(delta: int) -> str`**:
+A helper that takes the difference in byte size (original minus new, or similar convention)
+and returns a human-readable note:
+`"reduced {delta} bytes"` if positive, `"added {-delta} bytes"` if negative,
+and `"no byte change"` if zero.
+2. **`Task` dataclass**: Represents a unit of work for a worker, with fields:
+   - `path: Path` â€” the file to process - `mode: str` â€” one of `"format"`, `"check"`, `"diff"`,
+   `"lint"` - `opts: FmtOptions` â€” formatting options to apply 3.
+**`Result` dataclass**: Represents the outcome of processing one file, with fields:
+- `path: Path` - `status: str` â€” one of `"formatted"`, `"unchanged"`, `"would-reformat"`, `"ok"`,
+`"error"` - `orig_bytes: int = 0` - `new_bytes: int = 0` -
+`issues: list = field(default_factory=list)` â€” linter issues found - `error: str = ""`
+â€” error message if status is `"error"` - `diff: str = ""`
+â€” unified diff text when applicable 4. **`process_file(task: Task) -> Result`**:
+The worker function executed inside a multiprocessing pool worker.
+It must: - Read the file at `task.path` as bytes, then decode as UTF-8;
+on `UnicodeDecodeError` return a `Result` with status `"error"`
+and an error message like `"not valid UTF-8: {exc}"`;
+on `OSError` return a `Result` with status `"error"`
+and the OS error message. - If `task.mode == "lint"`,
+run `lint_source` on the text and return a `Result` with status `"ok"`
+and the collected issues (no parsing/formatting involved). - Otherwise,
+parse the text into a document via `parse_document`,
+then format it via `format_document` using `task.opts`. - Handle parsing errors (`TaploError`)
+gracefully by capturing line/column info via `line_col`
+and returning a `Result` with status `"error"`
+and a descriptive error message. - Depending on `task.mode` (`"format"`, `"check"`, or `"diff"`),
+compare original vs. formatted text (using `normalize` for comparison where appropriate) to
+determine whether the content changed,
+and set the result status accordingly
+(`"formatted"` for mode `"format"` when changes were written, `"unchanged"` when no changes,
+`"would-reformat"` for `"check"`/`"diff"` mode when changes would occur). - For `"format"` mode,
+actually write the formatted content back to disk
+when it differs from the original. - For `"diff"` mode,
+generate a unified diff (using `difflib`) between the original and formatted text
+and store it in the `diff` field. - Track `orig_bytes`
+and `new_bytes` (byte sizes) in the result for reporting purposes.
+5. **`run_pool(...)`**: A parent-side orchestration function that:
+   - Creates a `multiprocessing.Pool` (or similar) to distribute a list of `Task` objects across
+   worker processes, invoking `process_file` for each. - Collects all `Result` objects as workers
+   complete. - Uses `loguru.logger` to log progress, warnings,
+   and errors (e.g., per-file status, error messages). - Aggregates
+   and reports overall summary information
+   (e.g., counts of formatted/unchanged/would-reformat/ok/error files) suitable for determining the
+   process's exit code (e.g., via `sys.exit`),
+   reflecting typical CLI tool semantics where "would-reformat"
+   or "error" results should affect the exit status
+   (similar to tools like `black --check` or `taplo`).
+Ensure the code is well-structured, uses type hints throughout,
+includes a module-level docstring describing it as a "Multiprocessing runner:
+one worker per file,
+results reported by the parent," and follows idiomatic Python conventions for dataclasses
+and multiprocessing worker patterns. ---

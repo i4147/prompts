@@ -1,0 +1,12 @@
+Write a Python script that scans a single, fixed cache directory on an Android
+device's shared storage, identifies the largest regular file in that directory
+(ignoring subdirectories), copies its contents into a new file placed in a
+public downloads folder, and reports the copied file's name and its size in
+megabytes.
+The destination file should have a randomly generated, short, lowercase
+alphabetic name with a video container extension.
+If the directory contains no regular files, the script should complete without
+creating anything or printing a result.
+The script should be runnable directly as a standalone program, with the source
+and destination locations and the naming behavior defined in a way that a
+developer could easily adjust. ---

@@ -1,0 +1,17 @@
+Write a Python script that implements a simple terminal-based text editor
+application with a full-screen interactive interface.
+The editor should open a text file given as an optional command-line argument
+(or start with an empty buffer if none is provided), display its contents in an
+editable text area, and show a header and footer with keyboard shortcuts for
+opening a file, saving the current file, and quitting.
+Include a status area that reports messages to the user, such as successful
+saves, file load results, errors, and unsaved-change indicators.
+Track whether the buffer has been modified since the last save, and reflect that
+state in the interface.
+The application should also support tab-based autocompletion for Python
+identifiers within the input area, using the standard interactive completion
+facilities available in the environment.
+Handle file-related errors gracefully (missing files, permission issues,
+encoding problems) by reporting them in the status area rather than crashing.
+Design the program so that keyboard-driven navigation and editing feel
+responsive, and ensure the file is written with UTF-8 encoding when saved. ---

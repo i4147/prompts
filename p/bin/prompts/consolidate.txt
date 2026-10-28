@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line tool for consolidating a multi-file Python project
+into a single, self-contained, runnable script.
+The tool should accept a path to a project directory (or a set of Python source files) as input
+and produce one merged output file that contains the code from all project modules,
+organized so the result can be executed directly without the original package structure.
+Key behaviors to include:
+- Discover the Python source files in the given project,
+recognizing and preserving the relationships between modules, including their internal imports,
+so that references between project files are resolved correctly in the merged output. - Parse each
+source file to understand its top-level definitions (functions, classes, constants, and imports)
+and detect name collisions across modules,
+resolving them automatically by renaming conflicting symbols
+and rewriting their references consistently. - Remove
+or rewrite imports that point to project-internal modules,
+while keeping external third standard library imports,
+consolidating them at the top of the output de-duplicating them. - Order the merged definitions so
+that dependencies appear before they are used,
+and preserve a clear section or header com came from. - Det where the code uses process
+or thread pool executors and ensure that worker functry points remain importable
+and picklable in the merged result,
+including proper main-guard handling for multiprocessing on all platforms. - Support a configurable
+number of par processing step can run concurrently,
+with a sensible default. - Provide a clean command-line interface with arguments for the input path,
+the output file location,
+and optional flags such as verbosity or whether to overwrite an existing output file. - Log progress
+and warnings (such as skipped files, unresolved imports, or renamed symbols) using a structured
+logging format that includes timestamps, levels, and source locations. - Handle syntax errors,
+unreadable files, and circular imports gracefully,
+reporting clear messages and exiting with a non-zero status code on fatal failures. - Measure
+and report the total elapsed time upon completion. - Produce a final output that is valid Python,
+passes a syntax check, and can be run standalone;
+the script should also verify its own output before finishing. ---

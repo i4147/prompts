@@ -1,31 +1,23 @@
 ## Role
 You are an expert Python 3.12+ developer specialising in `libcst`, static analysis, and high-performance CLI tooling.
-
 ## Objective
 Produce a single-file, production-ready, memory-efficient CLI utility that strips comments, docstrings, and (optionally) type annotations from Python source files **in place**. The tool must be safe, idempotent, fully typed, and fast enough for very large codebases.
-
 ## Deliverable / Output Constraints
 - Return **one complete Python script**, runnable as `python script.py [paths...] [options]`.
 - No placeholders, no TODOs, no truncated sections.
 - Every public and private function, class, and method must carry a docstring and full PEP 484 type annotations.
 - Explain the libcst transformer logic in docstrings, including why each `leave_*` / `visit_*` hook exists.
-
 ---
-
 ## 1. CLI Interface
-
 ```
 usage: strip_tool [paths ...] [-c] [-d] [-a] [-n] [--dry-run] [--diff]
                   [--backup] [--backup-dir DIR] [--workers N]
                   [--pool-method METHOD] [-q] [-v] [--include GLOB] [--exclude GLOB]
 ```
-
 - **Positional `paths`**: files and/or directories. Directories are walked recursively. If omitted, default to the current working directory.
 - **Files without extensions must be processed** (a `.py` suffix is not required). Non-parseable files are skipped gracefully.
 - All path handling via `pathlib.Path`. No `os.path` string juggling.
-
 ### Flag semantics
-
 | Flag | Effect |
 |---|---|
 | *(no flags)* | **Default: remove only inline / trailing comments** (comments that follow code on the same line). Standalone comment lines are left untouched. |
@@ -40,65 +32,44 @@ usage: strip_tool [paths ...] [-c] [-d] [-a] [-n] [--dry-run] [--diff]
 | `--workers N` | Pool size (default **4**). |
 | `--pool-method` | One of `apply_async` (default), `apply`, `map`, `imap`, `imap_unordered`, `starmap`. |
 | `-q`, `--quiet` / `-v`, `--verbose` | Control loguru level. |
-
 `-c` and `-d` compose. `-a` is the only mode that discards preservation rules and annotations.
-
 ---
-
 ## 2. Preservation Rules (apply to `-c` and `-d`, **not** to `-a`)
-
 1. **Shebang**: a `#!` line on line 1 of the file is preserved verbatim.
 2. **Module-level docstring**: always preserved by `-d`; removed only by `-a`.
 3. **Directive comments**: any comment whose text begins with `# type:` or `# fmt:` is preserved.
 4. **Commented-out code**: see §3 — this is a first-class feature, not an accident.
 5. **Encoding cookies** (`# -*- coding: ... -*-`) must never be removed.
-
 ---
-
 ## 3. Commented-Out Code Detection
-
 When removing comments (`-c`), do **not** blindly delete comment blocks that developers left behind as code. Instead:
-
 1. Group consecutive standalone comment lines (same indentation, no blank-line break beyond a small tolerance) into a candidate block.
 2. Strip the leading `#` from each line, normalise the indentation of the block relative to its original column, and attempt `ast.parse()` on the result.
 3. **If it parses as valid Python**, preserve the entire block verbatim, including the original `#` characters and spacing.
 4. If it does not parse, remove the block.
 5. Apply the same single-line test to trailing/inline comments before deleting them.
-
 This must be implemented as a bounded, non-recursive check so it never fails on pathological input.
-
 ---
-
 ## 4. Docstring Removal & Syntactic Correctness
-
 - With `-d`: remove docstrings from `FunctionDef`, `AsyncFunctionDef`, and `ClassDef` bodies.
 - **Edge case**: if the docstring is the *only* statement in a body, replace it with `pass`. Never emit an empty suite.
 - With `-a`: the module docstring is removed too. An emptied module body is legal and requires no `pass`.
 - Never remove a string expression that is not in a docstring position.
 - Under `-a`, `AnnAssign` with a value becomes a plain `Assign`; a bare annotation with no value is dropped entirely; annotated `self`/params/returns lose their annotations.
-
 ---
-
 ## 5. Validation Before Writing
-
 - Re-parse the generated source with `ast.parse(generated, filename=..., feature_version=(3, 12))`.
 - Only write if validation succeeds **and** the new source differs from the original.
 - On failure: log the error with the file path, leave the original untouched, and continue.
 - Writes must be **atomic**: write to a temp file in the same directory, `fsync`, then `os.replace`. Preserve the original file mode and, where possible, ownership.
-
 ---
-
 ## 6. Encoding Handling
-
 - Read the file as bytes, then decode: try `utf-8`; on `UnicodeDecodeError` try `cp1252`; if both fail, log and skip the file.
 - Remember which encoding succeeded and write back with the same one.
 - Preserve the original newline convention and trailing-newline presence.
 - Handle `PermissionError`, `IsADirectoryError`, `OSError`, and symlink loops without crashing the run.
-
 ---
-
 ## 7. Concurrency & Performance
-
 - Use `multiprocessing.Pool` with a default of **4** workers.
 - Every pool method must funnel into the same `process_file(path, options) -> FileResult` worker so results are identical regardless of `--pool-method`. The flag exists for benchmarking and scheduling-behaviour comparison.
 - For `apply_async`: collect `AsyncResult` handles, then reap them — do not block per-file.
@@ -106,40 +77,28 @@ This must be implemented as a bounded, non-recursive check so it never fails on 
 - Workers must never raise; they return a failed `FileResult`.
 - Optimise for low memory: stream file contents, avoid holding more than one file's source per worker, and consider `maxtasksperchild` for very large trees.
 - Keep the design extensible (a `ProcessingOptions` frozen dataclass passed to workers).
-
 ---
-
 ## 8. Reporting
-
 - **Default mode**: per-file bytes reduced and a final total (e.g. `1.24 MiB saved across 812 files, 3.4% reduction`), using human-readable units.
 - **`-n` / `--stats`**: per-file count of comments removed and docstrings removed, plus aggregate totals.
 - **`--diff`**: unified diff (`difflib.unified_diff`) per modified file.
 - **`--dry-run`**: the normal report, but with an explicit "no files were modified" banner.
 - End-of-run summary: files scanned, modified, skipped, failed.
 - Exit codes: `0` success, `1` completed with per-file errors, `2` fatal error.
-
 ---
-
 ## 9. Logging
-
 - Use `loguru` for all operational and error logging.
 - Errors are per-file and non-fatal; they never abort the pool run.
 - `-q` suppresses info-level output; `-v` enables debug traces (including which transformer hook fired).
-
 ---
-
 ## 10. Quality Requirements
-
 - Strict PEP 484 typing throughout; `from __future__ import annotations` not required on 3.12 but full annotations are.
 - Clean architecture: separate concerns into `Options`, `Transformers` (comments, docstrings, annotations), `IO`, `Pool`, `Reporting`.
 - Idiomatic Python 3.12+: `match` where it clarifies, `slots=True` dataclasses, `pathlib`, `Enum` for pool methods.
 - No mutable module-level state.
 - Deterministic output ordering: sort results by path before reporting so runs are reproducible.
-
 ---
-
 ## 11. Edge-Case Checklist (must all be handled)
-
 - File with no extension; empty file; file that is only a shebang; file that is only a module docstring.
 - Function/class whose body is only a docstring.
 - Commented-out code that is actually valid Python (must survive `-c`).
@@ -149,6 +108,3 @@ This must be implemented as a bounded, non-recursive check so it never fails on 
 - Read-only files, files in read-only directories, broken symlinks.
 - Files that are syntactically invalid to begin with (skip with a logged error, never rewrite).
 - Re-running the tool on its own output must produce no further changes (idempotency).
-
-
-

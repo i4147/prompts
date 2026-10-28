@@ -1,0 +1,54 @@
+Create a command-line Python script for training/fine-tuning a Chinese BERT Masked Language Model
+(MLM) with whole-word (whole-phrase) masking using the Hugging Face Transformers
+and Datasets libraries.
+The script's main purpose is to take raw Chinese text training and validation files,
+tokenize them using a custom Jieba-based word segmentation pre-tokenizer
+(loaded from a user-supplied Jieba vocabulary file),
+convert the segmented text into model input tensors,
+and then train a BERT-based MLM model using whole word masking adapted for Chinese
+(via a custom `DataCollatorForZHWholeWordMask` collator
+and a custom `BertMLM` model wrapper from the local `envText.models` package).
+Key requirements: 1. **Command-line arguments** (via `argparse`): - `-m` / `--model`:
+pretrained model name or path (default `"hfl/chinese-bert-wwm-ext"`).
+- `--train`: path to the training data file (plain text, one sample per line). - `--valid`:
+  path to the validation data file (plain text, one sample per line). - `-s` / `--save_path`:
+  output directory to save the final trained model (default `"whole_phrase_model"`). - `-c` /
+  `--checkpoint_path`:
+  directory for saving training checkpoints (default `"env_phrase_checkpoint"`). - `-v` /
+  `--jieba_vocab`: path to a custom Jieba user dictionary file for word segmentation
+  (default `"../files/env_vocab.jieba.txt"`). - `-l` / `--logging_dir`:
+  directory for training logs (default `"runs"`).
+  2. **Model initialization**:
+  Load a custom `BertMLM` wrapper (imported from `envText.models`) using the specified pretrained
+  model name, with `tokenize_chinese_char=False` so that whole-word/phrase masking can work properly
+  instead of character-level tokenization.
+  3. **Custom pre-tokenizer function**:
+  Define a function that uses `jieba` to segment Chinese text into words/phrases,
+  loading the user-supplied Jieba vocabulary via `jieba.load_usrdict()` before performing
+  `jieba.lcut()` on the input text.
+Mention in a comment that swapping this tokenizer allows training other types of models.
+4. **Input file validation**:
+Before processing, check that both the `--train`
+and `--valid` file paths exist using `os.path.exists()`;
+if either path is invalid,
+abort immediately with an assertion error showing a Chinese message telling the user to provide a
+correct dataset path.
+5. **Data loading and tokenization**:
+- Print Chinese progress messages (surrounded by rows of `"*"`) indicating stages:
+reading data, tokenizing the training set,
+tokenizing the validation set. - Define a generator function `txt_generator(path)` that opens the
+file, iterates over its lines, strips each line,
+and yields the result of applying the Jieba pre-tokenizer to it. - Build token lists for train
+and validation data, then use the model's tokenizer to encode them with `max_length=512`,
+`padding="max_length"`, `truncation=True`, and `return_tensors="pt"`,
+extracting the `"input_ids"` tensor. - Delete intermediate raw text variables after tokenization to
+free memory.
+6. **Imports**: Include imports for `BertForMaskedLM`, `BertConfig`, `Trainer`,
+`TrainingArguments` from `transformers`; `Dataset` from `datasets`;
+`DataCollatorForZHWholeWordMask` from the relative `..data` module;
+plus `math`, `argparse`, and `os`.
+The script should be structured as a standalone CLI training pipeline
+(to be continued with building `Dataset` objects,
+setting up `DataCollatorForZHWholeWordMaskuring `TrainingArguments`/`Trainer`, running training,
+evaluating perplexity via `math.exp(eval_loss)`, and saving the model to `save_path`),
+following the same coding style, argument names, and Chinese print/error messages shown. ---

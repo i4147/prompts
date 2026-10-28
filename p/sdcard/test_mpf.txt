@@ -1,0 +1,33 @@
+Write a Python benchmarking script that compares the performance of multiple
+multiprocessing/parallel-execution strategies when computing SHA256 checksums for a batch of files.
+The script should: - Import helper utilities from a local module named `dh`, including:
+`get_files` (to collect a list of file paths from a directory),
+`get_sha256` (to compute a file's SHA256 hash), and several parallel-execution wrapper functions:
+`mpf_async`, `mpf_imap`, `mpf_imap2`, `mpf_joblib`, `mpf_map`, `mpf_starmap`, `mpf_starmap2`.
+Each of these wrapper functions should accept a worker function and a list of files,
+and internally handle running that function across the files using a different parallelization
+approach (e.g., multiprocessing map, imap, starmap, joblib, async, etc.). - Use `loguru` for logging
+and `time.perf_counter` for high-precision timing. - Define a module-level constant
+`MAX_WORKERS = 4` (even if not directly referenced elsewhere,
+it should be present as a configuration constant). - Define a `process_file(fp)` function that
+simply computes and returns the SHA256 hash of a given file path using `get_sha256`. - Define a
+`measure_time(func_to_process, filez)` function that:
+- Records the start time,
+calls the given parallel-execution function passing in `process_file` and the list of files,
+records the end time. - Computes the elapsed duration,
+logs it via `loguru` with the function's string representation
+and the duration formatted to 3 decimal places. - Returns the elapsed duration as a float. - Define
+a `main()` function that:
+- Sets a working directory to `~/tmp/0` (using `pathlib.Path.home()`). - Retrieves the list of files
+in that directory via `get_files`. - Builds a list of all the parallel-execution functions to
+benchmark (`mpf_map`, `mpf_async`, `mpf_imap`, `mpf_imap2`, `mpf_joblib`, `mpf_starmap`,
+`mpf_starmap2`). - Runs 3 repetitions (an outer loop from 1 to 3) over all these functions,
+each time calling `measure_time` and storing results in a dictionary keyed by function,
+with each value being a list of the timing results across repetitions. - After all repetitions
+complete, prints out each function alongside its list of recorded timings. - Follow the standard
+`if __name__ == "__main__": sys.exit(main())` entry-point pattern, with `main()` returning `None`.
+The purpose of the script is to empirically compare the relative speed/overhead of different Python
+parallel-processing APIs (standard multiprocessing map/starmap/imap variants, async, and joblib)
+when performing a real I/O+CPU-bound task (hashing files), repeating the benchmark multiple times to
+observe variance, then reporting all collected timing results for comparison.
+---

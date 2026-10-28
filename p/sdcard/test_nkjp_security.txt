@@ -1,0 +1,11 @@
+Regression tests for path traversal in NKJPCorpusReader (CWE-22).
+The NKJP views build file paths from the caller-supplied ``fileids``
+and read them with the builtin ``open()``,
+bypassing the ``CorpusReader.open()`` / ``nltk.pathsec`` sandbox.
+A ``..`` sequence, an absolute path,
+or an in-root symlink in ``fileids`` must not be allowed to escape the corpus root.
+The containment check is symlink-aware
+(``nltk.pathsec.validate_path`` resolves the path before comparing),
+so ``os.path.abspath`` is not enough to fool it.
+The paths below are built with ``os.sep`` / ``os.path.join`` / ``os.pardir`` so the tests behave
+identically on POSIX and Windows.

@@ -1,0 +1,18 @@
+Write a Python script that runs from the command line and processes a text file
+line by line, based on a chosen mode and a user-supplied delimiter character.
+The script should accept three arguments: a mode flag, the path to an input text
+file, and a single target character or delimiter.
+The mode flag selects one of two behaviors: in the first mode, each non-empty
+line is trimmed of surrounding whitespace and, if it contains the delimiter,
+only the portion before the first occurrence of the delimiter is kept; in the
+second mode, each non-empty line is trimmed and, if it contains the delimiter,
+only the portion after the first occurrence of the delimiter is kept.
+Lines that do not contain the delimiter should be kept in full after trimming.
+Lines that become empty as a result of processing should be discarded.
+The script should read the file using UTF-8 encoding, handle the file's lines
+robustly, and collect all non-empty results.
+The final output should be the collected results printed to standard output, one
+result per line, preserving their original order.
+The script should be a simple, self-contained tool with a clear invocation
+pattern and should handle missing or malformed arguments gracefully by showing a
+brief usage message rather than crashing. ---

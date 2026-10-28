@@ -1,0 +1,12 @@
+ARLSTem2 Arabic Light Stemmer The details about the implementation of this algorithm are described
+in: K. Abainia and H. Rebbani,
+Comparing the Effectiveness of the Improved ARLSTem Algorithm with Existing Arabic Light Stemmers,
+International Conference on Theoretical and Applicative Aspects of Computer Science (ICTAACS'19),
+Skikda, Algeria, December 15-16, 2019.
+ARLSTem2 is an Arabic light stemmer based on removing the affixes from the words
+(i.e. prefixes, suffixes and infixes).
+It is an improvement of the previous Arabic light stemmer (ARLSTem).
+The new version was compared to the original algorithm and several existing Arabic light stemmers,
+where the results showed that the new version considerably improves the under-stemming errors that
+are common to light stemmers.
+Both ARLSTem and ARLSTem2 can be run online and do not use any dictionary.

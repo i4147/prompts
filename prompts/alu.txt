@@ -1,0 +1,18 @@
+Write a Python script that checks the system's package manager for software
+packages that have available updates, extracts just the package names from the
+results, saves that list to a text file at a fixed location on an Android-style
+storage path, and prints each package name to the console as a bullet-pointed
+list.
+Requirements: - Run the system's package listing command for upgradable
+packages, suppressing its raw output, and capture the text result. - Process the
+output line by line: for lines that contain a package identifier with a source
+suffix (separated by a slash), keep only the portion before that separator; for
+other non-empty lines that are not header or status messages (such as lines
+mentioning "Listing"), keep the whole trimmed line. - Ignore blank lines and
+skip informational header text. - If at least one package name was collected,
+write all names to the target file as UTF-8 text, one name per line, overwriting
+any previous content. - Display each collected name on the console, prefixed by
+an indented dash, so the user sees the same list that was saved. - If no
+packages are found, do not create or modify the output file and print nothing
+extra. - The script should run as a standalone program using a conventional main
+entry point. ---

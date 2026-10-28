@@ -1,0 +1,29 @@
+Write a Python module providing small,
+shared utility functions intended to be reused across multiple file-parsing modules in a
+larger codebase.
+The module should use `from __future__ import annotations` and rely only on `pathlib.Path`
+and `typing` (Iterable, List, Optional) for type hints — no third-party dependencies.
+Implement exactly four standalone functions:
+1. `read_bytes(path: Path) -> bytes`
+— Reads the entire file at `path` into memory and returns its raw bytes.
+Should coerce `path` to a `Path` before reading.
+Intended as a basic building block for parsers that need to load whole files.
+2. `read_text(path: Path, encodings: Iterable[str] = ("utf-8", "latin-1")) -> str`
+— Reads the file's bytes (via `read_bytes`)
+  and attempts to decode them using each encoding in `encodings`, in order.
+Returns the result of the first encoding that succeeds.
+If all encodings fail with a `UnicodeDecodeError`,
+re-raises the last encountered `UnicodeDecodeError`
+(if for some reason none was captured,
+raise a fallback `UnicodeDecodeError` with placeholder arguments rather than silently failing).
+3. `is_texty(path: Path, sample: int = 1024) -> bool`
+— A heuristic to guess whether a file is text-based (as opposed to binary).
+Opens the file in binary mode, reads the first `sample` bytes,
+and returns `True` if no NUL byte (`\x00`) is found in that sample, `False` otherwise.
+4. `split_paragraphs(text: str) -> List[str]`
+— Splits `text` into paragraphs separated by blank lines.
+Should normalize Windows-style line endings (`\r `) to ` ` first, then split on double newlines (`
+`), strip whitespace from each resulting chunk, and drop any empty strings from the final list.
+Include a concise module-level docstring describing it as small shared helpers used by multiple
+parsers, and a brief docstring for each function explaining its specific behavior as
+described above. ---

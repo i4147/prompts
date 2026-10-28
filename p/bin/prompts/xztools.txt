@@ -1,0 +1,20 @@
+Write a Python script that compresses and archives files
+and directories into a single compressed tarball using LZMA-based compression,
+with optional multi-threaded or multi-process acceleration when available and graceful fallbacks
+when optional compression backends or logging libraries are not installed.
+The tool should be runnable from the command line and accept one
+or more source paths (files or directories) plus an output archive path,
+along with options that control the compression level or preset, the number of worker processes,
+whether to include hidden files, and whether to overwrite an existing archive.
+It should walk directory trees recursively, preserve relative paths inside the archive,
+and skip or safely handle unreadable
+or broken files by reporting warnings without aborting the entire job.
+Where possible, it should parallelize the compression work across CPU cores to reduce total runtime,
+and it should report progress and a final summary, including the number of files processed,
+total original size, compressed size, compression ratio, and elapsed time.
+Logging should use a clear, configurable output with informational, warning, error,
+and success messages,
+falling back to plain console output if a richer logging library is unavailable.
+The script should validate its inputs before starting, return meaningful exit codes for success,
+partial failure, and fatal errors,
+and clean up any incomplete output files if the operation is interrupted or fails midway. ---

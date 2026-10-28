@@ -1,0 +1,37 @@
+Write a Python module that defines a single constant dictionary for mapping shebang interpreter
+names to their conventional file extensions.
+Requirements and behavior:
+- Start the file with the statement `from __future__ import annotations`. - Define a module-level
+constant named `SHEBANG_MAP` with an explicit type annotation `dict[str, str]`. - The dictionary's
+keys should be strings representing interpreter
+or program names as they commonly appear in a script's shebang line
+(e.g., the program invoked after `#!/usr/bin/env` or `#!/usr/bin/`),
+covering a broad range of scripting languages, shells, compilers, and build tools.
+Include entries such as:
+`python`, `python2`, `python3`, `bash`, `sh`, `zsh`, `fish`, `dash`, `ksh`, `tcsh`, `csh`, `perl`,
+`perl5`, `ruby`, `lua`, `tcl`, `expect`, `awk`, `gawk`, `nawk`, `sed`, `make`, `gmake`, `node`,
+`nodejs`, `deno`, `php`, `php-cgi`, `racket`, `guile`, `clisp`, `sbcl`, `ccl`, `octave`, `Rscript`,
+`R`, `swipl`, `yap`, `ghc`, `runghc`, `erlc`, `escript`, `elixir`, `mix`, `scala`, `kotlin`, `dart`,
+`crystal`, `nim`, `zig`, `v`, `go`, `rustc`, `cargo`, `julia`, `coffee`, `csharp`, `dotnet`,
+`fsharp`, `groovy`, `gradle`, `haxe`, `neko`, `valac`, `genie`, `meson`, `ninja`, `cmake`, `qmake`,
+`scons`, `waf`, `autoconf`, `automake`, `m4`, `bison`,
+and other similarly common interpreters
+or build-related executables. - The dictionary's values should be the corresponding conventional
+file extension strings,
+including the leading dot
+(e.g., `.py` for all Python variants,
+`.sh` for all shell variants like bash/zsh/fish/dash/ksh/tcsh/csh, `.pl` for Perl variants,
+`.rb` for Ruby, `.lua` for Lua, `.tcl` for Tcl/Expect, `.awk` for awk variants,
+`.js` for Node/Deno JavaScript runtimes, `.php` for PHP variants, `.R` for R/Rscript,
+`.hs` for Haskell (ghc/runghc), `.erl` for Erlang (erlc/escript), `.ex` for Elixir/mix,
+`.rs` for Rust (rustc/cargo), `.go` for Go,
+and appropriate extensions for the remaining languages
+and build tools (e.g., `.scala`, `.kt`, `.dart`, `.cr`, `.nim`, `.zig`, `.v`, `.jl`, `.coffee`,
+`.cs`, `.fs`, `.groovy`, `.hx`, `.vala`, Makefile-style tools mapped to a sensible extension,
+etc.). - Multiple related interpreter names that share the same underlying language
+or tool (e.g., `python`/`python2`/`python3`, or `node`/`nodejs`) must map to the same file
+extension. - The module should contain only this import
+and the dictionary definition (plus the dictionary's inline content) — no additional functions,
+classes, or executable logic beyond the constant declaration. - Ensure the dictionary is
+syntactically valid, internally consistent,
+and provides full one-to-one key-to-value string mappings for every listed interpreter name. ---

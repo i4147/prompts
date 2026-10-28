@@ -1,0 +1,32 @@
+Write a Python command-line script that defines the CLI interface
+and behavior of a simplified `git checkout` command using the `docopt` library for argument parsing.
+The script's purpose is to parse command-line arguments according to a usage specification written
+as a docstring, then print the resulting parsed arguments dictionary to standard output.
+Main inputs: - Command-line arguments passed when invoking the script,
+following one of these usage patterns:
+- `git checkout [options] <branch>` - `git checkout [options] <branch> -- <file>...` - Supported
+options: - `-q, --quiet`: suppress progress reporting - `-b <branch>`:
+create and checkout a new branch - `-B <branch>`: create/reset and checkout a branch - `-l`:
+create reflog for new branch - `-t, --track`:
+set upstream info for new branch - `--orphan <new branch>`: new unparented branch - `-2, --ours`:
+checkout our version for unmerged files - `-3, --theirs`:
+checkout their version for unmerged files - `-f, --force`:
+force checkout (throw away local modifications) - `-m, --merge`:
+perform a 3-way merge with the new branch - `--conflict <style>`:
+conflict style (merge or diff3) - `-p, --patch`: select hunks interactively Main output:
+a dictionary (printed to stdout) mapping each defined option
+and positional argument to its parsed value
+(e.g., booleans for flags, strings for options taking values,
+lists for repeated/variadic arguments like `<file>...`), as produced by `docopt`.
+Notable behavior: - The entire usage
+and options specification must be written as the module-level docstring,
+since `docopt` parses this docstring directly to build the argument parser
+and derive the help/usage text. - The script must import `docopt` from the `docopt` package
+and call it with `__doc__` as the pattern source. - The parsing
+and printing logic should only execute
+when the script is run directly (guarded by `if __name__ == "__main__":`). - If the provided
+command-line arguments do not match the usage patterns,
+`docopt` should handle printing the usage/help message and exiting, as per its default behavior.
+- The script does not implement actual git checkout functionality;
+  it only demonstrates/exposes the argument-parsing structure for this specific git subcommand
+  interface. ---

@@ -1,0 +1,53 @@
+Build a command-line Python utility that finds
+and reports near-duplicate (fuzzy-matched) quotes stored across one or more JSON files.
+Purpose: - Scan a given set of file
+or directory paths for `.json` files (recursively for directories),
+load each file's content
+(expecting each JSON file to contain a list of quote records,
+where each record is a dict with at least a "quote" key),
+and detect both exact
+and near-duplicate quotes using fuzzy string similarity
+(Levenshtein distance via the `rapidfuzz` library).
+Main inputs: - A list of file system paths (files and/or directories) passed as
+command-line arguments.
+If no paths are given,
+default to the current directory ("."). - A similarity/edit-distance threshold value used to decide
+whether two quotes are considered duplicates.
+Main outputs: - A report
+(e.g., printed to stdout
+and/or written to a uniquely-named output file via a helper like `unique_path`) listing groups
+or pairs of duplicate/near-duplicate quotes,
+including enough context (e.g., source file, quote text) to let a user review and resolve them.
+Notable behavior and implementation details to include: 1. `read_json_file(file_path)`:
+Safely reads a JSON file expected to contain a list;
+returns an empty list on JSON decode errors or I/O errors,
+and returns an empty list if the parsed content is not a list.
+2. `get_json_files(paths)`:
+Resolves the input paths into a deduplicated list of `Path` objects pointing to `.json` files
+— if a path is a file with `.json` suffix, include it directly;
+if a path is a directory, recursively glob all `.json` files inside it.
+3. `deduplicate_quotes(quotes)`:
+Removes exact duplicate quotes
+(case-insensitive, whitespace-trimmed comparison on the "quote" field)
+while preserving the first occurrence, using a seen-set for O(1) lookups.
+4. `compare_quote_pair(args)`:
+A worker function (designed to be used with multiprocessing, e.g., `ProcessPoolExecutor`) that takes
+a tuple of `(index_i, index_j, quote1, quote2, threshold)`, lowercases both quote texts,
+applies an early-exit optimization to skip comparison if the length difference between the two
+quotes exceeds 50% of the longer quote's length (to save computation),
+short-circuits with a perfect match if the texts are exactly equal,
+and otherwise computes a fuzzy similarity/distance score
+(using `Levenshtein` from `rapidfuzz.distance`) to determine if the pair exceeds the duplicate
+threshold — returning `None` when the pair should be skipped/not considered a duplicate,
+or a tuple with the indices, computed score, and both quote dicts when it is a candidate duplicate.
+5. The script should leverage parallelism for performance:
+use `ProcessPoolExecutor` for CPU-bound pairwise fuzzy comparisons across potentially large quote
+sets, and/or `ThreadPoolExecutor` for I/O-bound tasks like reading multiple JSON files concurrently.
+6. The script should be runnable directly as a standalone CLI tool
+(shebang `#!/usr/bin/env python3`, uses `sys.argv` or similar for argument handling,
+and `from __future__ import annotations` for forward-compatible type hints).
+7. Use type hints throughout (`Any`, `Dict`, `List`, `Optional`, `Set`, `Tuple`) for clarity
+and maintainability.
+8. Depends on an internal/local helper module `dh` providing a `unique_path` function
+(used to generate a non-colliding output file path for results),
+and the external `rapidfuzz` library for fuzzy string distance calculations. ---

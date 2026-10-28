@@ -1,0 +1,47 @@
+Design a Python command-line utility class called `ImageDimensionRenamer` that automatically renames
+image files by appending their pixel dimensions (width x height) to their filenames. **Purpose:**
+The script recursively scans a given root directory for image files,
+reads each image's dimensions using OpenCV,
+and renames the file to include its resolution (e.g., `photo.jpg` → `photo_1920x1080.jpg`),
+unless the filename already contains dimension-like information. **Main Inputs:** - `root_dir`:
+the directory to scan (defaults to the current directory `"."`). - `separator`:
+the string used to join the original filename
+and the dimension string (defaults to `"_"`). - Supported image formats:
+`.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`, `.gif`,
+`.webp` (case-insensitive). **Main Outputs:** - Image files on disk are renamed in-place to include
+their width and height (format like `WIDTHxHEIGHT`) inserted before the file extension,
+using the configured separator. - Console output logging each step of the process
+(initialization info, scanning progress, found files, renaming actions, skipped files, errors,
+and a final summary with counts of renamed/skipped/failed files). **Notable Behavior /
+Requirements:** 1.
+On initialization, print a formatted header and configuration info:
+resolved root directory path, separator used,
+and number of available CPU cores (via `multiprocessing.cpu_count()`).
+2. Implement a method to recursively scan the root directory (using `Path.rglob`) for all files
+matching the supported extensions, checking both lowercase and uppercase variants,
+deduplicating results, and returning a sorted list of file paths.
+Log the count found and print a short sample
+(first 3 paths relative to root dir, plus a count of remaining files if more than 3).
+3. Implement a static helper method `has_dimensions_in_name(filename)` that uses a regular
+expression (pattern like `\d+[xX]\d+`) to detect whether a filename already contains a
+dimension-like substring (e.g., "1920x1080"),
+to avoid re-processing/double-renaming already-processed files.
+4. Implement a method to read image dimensions using `cv2.imread` (OpenCV)
+and extract width/height from the resulting array shape;
+handle unreadable/corrupt images gracefully (skip with an error message rather than crashing).
+5. Implement a renaming method that constructs the new filename by inserting the dimension string
+(`{width}x{height}`) joined via the separator before the file extension,
+skips files that already have dimensions in their name (per the detection method),
+skips if the target filename already exists, and renames the file using `Path.rename`.
+6. Use `multiprocessing.Pool` to process images in parallel (leveraging multiple CPU cores) for
+improved performance on large directories,
+and use `tqdm` to display a progress bar during processing.
+7. Collect and report final statistics at the end:
+total files found, number successfully renamed,
+number skipped (already had dimensions or target name conflict),
+and number that failed (e.g., unreadable images), printed in a clear summary format.
+8. Handle errors gracefully at every stage (scanning, reading, renaming) without crashing the whole
+script; log meaningful error messages per file.
+9. Structure the script to be runnable from the command line
+(e.g., via `sys.argv` for optional root directory argument) with sensible defaults if no arguments
+are provided.

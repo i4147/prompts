@@ -1,0 +1,15 @@
+Write a Python script that serves as an entry-point wrapper for invoking a CLI tool from the
+`prettierpy` package.
+Requirements: - Include `from __future__ import annotations` at the top of the file. - Define a
+single function named `run` that takes no arguments
+and returns `None` (annotated with `-> None`). - Inside the `run` function,
+perform a local import of `main` from the `prettierpy.cli` module
+(the import must happen inside the function body, not at module level). - Call `main()` immediately
+after importing it. - The function should have no other logic, side effects,
+or print statements — it should simply delegate execution to `prettierpy.cli.main`. - Do not include
+any `if __name__ == "__main__":` block
+or additional code outside the `run` function definition. - The purpose of this script is to act as
+a thin wrapper/entry point
+(e.g., for use in a packaging `console_scripts` entry point or similar launcher mechanism) that
+defers importing the CLI module until `run` is actually called,
+avoiding import overhead or side effects at module load time. ---

@@ -1,0 +1,24 @@
+Write a Python tool that batch-processes a directory tree of web and image
+assets, offering a command-line interface to optimize, convert, resize, upscale,
+and embed resources for lightweight distribution.
+The tool should accept a root folder (or a single file) as input, walk it
+recursively with optional include/exclude patterns, and apply only the
+operations the user enables via flags, such as converting raster images to PNG
+or WebP, shrinking images beyond a maximum dimension while preserving aspect
+ratio, upscaling small images to a minimum size, and inlining referenced
+stylesheets, scripts, and images into HTML documents as base64 data URIs.
+Processing should be parallelizable across files using a configurable worker
+count, with progress reporting that uses a progress bar when available and falls
+back to plain status messages otherwise.
+Originals should be preserved by default, with an option to write results to a
+separate output directory or overwrite in place with a backup.
+The tool must skip files it cannot process, log each failure without stopping
+the batch, and finish with a summary of processed, skipped, and failed counts
+plus total bytes saved.
+Support a dry-run mode that reports planned actions without modifying any files.
+Handle external image tools gracefully: if an optional external converter is
+missing, fall back to a pure-Python approach or skip the operation with a clear
+warning.
+Validate all arguments up front and print helpful usage errors.
+The output should be a deterministic, well-documented script with a `--help`
+menu that explains every option. ---

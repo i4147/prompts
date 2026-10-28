@@ -1,0 +1,23 @@
+Write a Python command-line script that recursively scans a given directory for all `.py` files
+and removes unused imports from each file using the `autoflake` tool
+(invoked via `subprocess.run` with the `--remove-unused-imports` and `--in-place` flags).
+The script should: - Accept the target directory path as input
+(e.g., via `argparse`, as a command-line argument). - Walk through the directory tree using
+`os.walk` to find all Python files. - For each `.py` file found,
+run `autoflake` on it in-place to strip out unused imports. - Parse autoflake's output to detect how
+many lines were removed from each file
+(look for lines containing the word "Removed" and extract the number following it). - Print a
+per-file message: if lines were removed, print how many lines were removed and from which file;
+if none were removed,
+print a message indicating no unused imports were found in that file. - Keep a running total of all
+lines removed across all processed files. - Handle errors gracefully:
+- If `autoflake` fails on a specific file (raises `CalledProcessError`),
+catch the exception and print an error message with the file path and error details,
+then continue processing other files. - If `autoflake` is not installed/found on the system
+(`FileNotFoundError`),
+print an instructive error message telling the user to install it via `pip install autoflake`,
+and stop execution. - Define the core logic in a function (e.g., `remove_unused_imports(directory)`)
+that returns nothing,
+and wrap the directory traversal
+and processing logic as described. - Include a standard `if __name__ == "__main__":` entry point
+that parses the directory argument and invokes the function.

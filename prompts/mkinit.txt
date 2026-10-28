@@ -1,0 +1,33 @@
+Write a Python script that scans a given root directory of a Python project and
+produces a summary report of its public API surface, without executing any of
+the scanned code.
+The tool should accept a directory path as its main input and walk through the
+package structure to find two kinds of entries: standalone Python module files
+and subpackages (directories that are proper packages).
+Skip any files or folders whose names begin with an underscore, treating these
+as private, and ignore non-Python files.
+Only consider a directory a valid subpackage if it contains an initialization
+file.
+For each discovered module, read its source as UTF-8 text and analyze it
+statically by parsing it into a syntax tree rather than importing or running it.
+Modules that cannot be read or that contain syntax errors should be skipped
+gracefully without stopping the overall scan.
+From each parsed module, collect the names of top-level public functions (both
+synchronous and asynchronous), excluding any names starting with an underscore
+and excluding the conventional entry point named `main`.
+Similarly gather public top-level classes and any public constants or
+module-level variables if they are reasonably identifiable.
+Be sure to also capture the first line of each public item's docstring when
+available.
+The output should be a clear, human-readable report (plain text or Markdown)
+grouped by package and module, listing each module's relative path followed by
+its public functions, classes, and their brief descriptions.
+Modules with no public members should either be omitted or noted as empty.
+At the end, provide summary totals of packages, modules scanned, and public
+symbols found, along with a count of files skipped due to errors.
+Include a command-line interface that accepts the root path as an argument, an
+optional flag to write the report to a file instead of standard output, and a
+helpful error message if the path does not exist or is not a directory.
+The script should be robust, run efficiently on large projects, and produce
+deterministic, alphabetically sorted output so results are reproducible across
+runs. ---

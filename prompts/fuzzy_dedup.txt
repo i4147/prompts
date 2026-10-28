@@ -1,0 +1,30 @@
+Write a Python script that scans a directory tree and identifies duplicate and
+near-duplicate files, producing a clear report of the matches and optionally
+acting on them.
+The tool should accept a root directory path as its main input, along with
+options to control the scan, such as ignoring certain directory names (with
+sensible defaults for version control and dependency folders), following or
+skipping hidden files, setting a minimum file size, and choosing whether to
+include near-duplicates based on fuzzy similarity hashing in addition to exact
+duplicates identified by a fast non-cryptographic content hash.
+The user should be able to specify the similarity threshold for near-duplicate
+detection.
+The script should first group files by size to avoid unnecessary hashing, then
+compute content hashes for candidate files, and finally compare fuzzy hashes
+where requested.
+It should handle large directory trees efficiently, stream file contents rather
+than loading whole files into memory, and gracefully skip unreadable files or
+permission errors while reporting them.
+Outputs should include a human-readable summary printed to the console, with
+groups of duplicate files listed together along with their sizes and similarity
+scores where applicable.
+The tool should also support exporting results to a machine-readable format such
+as JSON or CSV, selected via a command-line option.
+An optional mode should allow moving or deleting redundant copies while always
+keeping one designated original per group, with a dry-run option that previews
+actions without modifying anything.
+Progress feedback should be shown during long scans when a terminal is attached,
+and the script should degrade gracefully if optional display libraries are
+unavailable.
+Required dependencies that are missing should produce a clear installation
+message and exit cleanly. ---

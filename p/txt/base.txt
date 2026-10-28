@@ -1,0 +1,3 @@
+Base classes for progress reporting.
+Custom progress classes should inherit from these classes.
+They can also be used as dummy progress classes which simply do nothing.

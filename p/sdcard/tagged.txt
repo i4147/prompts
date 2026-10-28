@@ -1,0 +1,1 @@
+A reader for corpora whose documents contain part-of-speech-tagged words.

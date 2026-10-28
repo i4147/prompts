@@ -1,0 +1,66 @@
+I'll create a prompt that describes this Python script based on the code shown.
+[Tool: think] Params:
+{"content":"The code appears to be cut off, but I have enough to understand the purpose:
+it's a script that scans files in a folder, reads their contents,
+optionally compresses them using 7z compression (via py7zr) and base64 encoding,
+and stores them in an SQLite database table named after the folder.
+Let me analyze the visible functions:\n\n1. get_current_folder_name() - gets current working
+directory name\n2. get_user_folder_name(default_name) - prompts user for folder name with
+default\n3. folder_exists_in_db(cursor, folder_name) - checks if table exists in sqlite_master\n4.
+create_folder_table(cursor, folder_name) - creates table with columns:
+id, filename, file_contents (BLOB), compressed (BOOLEAN), original_size,
+compressed_size\n5. compress_data(data_bytes) - compresses bytes using py7zr into a 7z archive in
+memory, then base64 encodes it\n6. read_file_contents(path) - reads file, tries multiple encodings,
+checks file size (10MB threshold) - likely to decide whether to treat as text or binary,
+or whether to compress\n\nThis is a tool for archiving/backing up files from a folder into an SQLite
+database, with large files handled specially (compression),
+text files tried with multiple encodings for proper decoding,
+binary fallback likely.\n\nI don't need more tools - I just need to write the prompt describing this
+script's purpose, inputs/outputs,
+and notable behavior."} Create a Python command-line utility script that imports folder contents
+(files) into a SQLite database, storing each file's data as a BLOB column,
+with optional 7z-based compression for large or text-heavy content.
+Main requirements and behavior: 1. **Purpose**:
+The script scans a folder's files
+and stores their contents (and metadata) into a SQLite database table named after the folder,
+enabling file archiving/backup directly inside a `.db` file.
+2. **Folder name handling**: - `get_current_folder_name()`:
+returns the name of the current working directory (using `Path.cwd().name`). -
+`get_user_folder_name(default_name)`:
+prompts the user via `input()` to enter a folder/table name,
+showing the current folder name as the default;
+if the user presses Enter without typing anything, the default is used.
+3. **Database table management**: - `folder_exists_in_db(cursor, folder_name)`:
+checks `sqlite_master` to see if a table with that name already exists,
+returning True/False. - `create_folder_table(cursor, folder_name)`:
+creates a table (if it doesn't exist) named after the folder, with columns:
+- `id` (INTEGER PRIMARY KEY AUTOINCREMENT) - `filename` (TEXT NOT NULL) - `file_contents` (BLOB) -
+`compressed` (BOOLEAN, default 0) - `original_size` (INTEGER, default 0) - `compressed_size`
+(INTEGER, default 0) - Table name must be safely quoted/escaped in the SQL statement since it comes
+from user input.
+4. **Compression**: - `compress_data(data_bytes)`:
+compresses raw bytes using `py7zr` (writing the data into an in-memory 7z archive via `io.BytesIO`),
+then base64-encodes the resulting compressed bytes into an ASCII string for storage in the database.
+Returns `None` if input is empty,
+and gracefully handles/logs exceptions during compression without crashing.
+5. **File reading**: - `read_file_contents(path)`:
+reads a file's raw contents,
+attempting multiple text encodings (`utf-8`, `latin-1`, `cp1252`, `iso-8859-1`) as fallback options
+for text decoding.
+It should first check the file size (using `Path(path).stat().st_size`),
+and if the file exceeds 10 MB,
+apply special handling (e.g., read as binary and/or compress rather than attempting text decoding)
+to avoid excessive memory use or encoding errors.
+6. **Dependencies**:
+Uses `sqlite3` for database operations, `py7zr` for 7-zip compression,
+`base64` for encoding compressed binary data to text, `pathlib.Path` for filesystem operations,
+and standard `os`/`sys`/`io` modules for supporting operations.
+7. **Overall flow** (expected in the main execution section, even though not fully shown):
+The script should determine the target folder (current directory by default, or user-specified),
+connect to/create a SQLite database file,
+create a table for that folder if it doesn't already exist, iterate over files in the folder,
+read each file's contents, optionally compress them,
+and insert a row per file into the table recording the filename,
+contents (raw or compressed+base64-encoded), compression flag, and original/compressed sizes.
+The script should print progress/status messages (e.g., compression errors) to the console during
+processing.

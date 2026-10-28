@@ -1,0 +1,57 @@
+I need the complete code to generate an accurate prompt, but based on what's visible,
+I'll construct a comprehensive prompt describing the script's purpose
+and behavior based on the full context shown.
+Write a prompt for a Python command-line script that runs multiple static analysis/linting tools
+(specifically `ty`, `ruff`, `pyright`, and `pylint`) against a Python codebase
+and aggregates their results into a unified report.
+The prompt should specify: **Purpose**:
+Create a developer utility script that acts as a unified linter runner,
+executing one or more configured Python static-analysis tools against the current project,
+parsing/aggregating their outputs
+(includinging a consolidated, readable summary report to the console. **Main inputs**:
+- Command-line arguments (via `argparse`) allowing the user to select
+which tools to run (from the supported set: `ty`, `ruff`, `pyright`, `pylint`),
+with a default enabled subset (e.g., only `ty` enabled by default). - The current working directory
+(resathlib.Path.cwd()`) is used as the root path for running the tools
+and as the `cwd` for subprocess execution. - Implicit inputs:
+the project's Python source files that the external tools scan. **Main outputs**:
+- A textual report printed to stdout summarizing each tool's result:
+a status (ok/error/timeout), an issue count,
+and the raw/cleaned textual output of each tool. - Non-zero process exit code if any tool reports
+issues or errors, suitable for CI integration. **Notable behavior/requirements**:
+- Use a `dataclass` named `ToolResult` holding `count` (int, default 0), `text` (str, default ""),
+and `status` (str, default "ok") to represent each tool's outcome.
+- Run each enabled tool as an external subprocess using `subprocess.run`,
+  capturing both stdout and stderr merged together (`stderr=subprocess.STDOUT`),
+  with `stdin` set to `DEVNULL`, text-mode decoding using UTF-8 with `errors="replace"`,
+  and a configurable timeout (default 120 seconds via a `COMMAND_TIMEOUT` constant). - Set
+  environment variables for subprocesses to disable colored output (`NO_COLOR=1`)
+  and force a wide terminal width (`COLUMNS=200`) to get consistent,
+  parseable text output. - Handle `subprocess.TimeoutExpired` gracefully,
+  capturing any partial output collected before the timeout
+  and marking that tool's result status as "timeout" rather than crashing. - Strip ANSI escape/color
+  codes from captured output using a regex helper function (e.g., `_ansi_strip`). - Truncate
+  excessively long tool output to a maximum character limit (e.g., `MAX_OUTPUT_CHARS = 200_000`),
+  appending a `"...[output truncated]"` marker when truncation occurs,
+  after first stripping leading/trailing whitespace. - Maintain a set of excluded directory names
+  (e.g., `.git`, `.venv`, `venv`, `env`, `node_modules`, `__pycache__`, `.mypy_cache`,
+  `.ruff_cache`, `.pytest_cache`, `.pyright`, `site-packages`,
+  etc.) to skip when walking the filesystem for files to lint,
+  if the script performs manual file discovery. - Maintain a set/collection of import names
+  considered false positives to ignore for certain tools
+  (e.g., an internal/local package name such as `dh` that should not be flagged as an unresolved
+  or unused import). - Import
+  and use a module/helper named `mpf3` from a local package `dh` for some auxiliary functionality
+  (e.g., multi-processing, formatting,
+  or path/file utilities
+  — the exact purpose should be inferred from how it's used in the implementation). - The script
+  should use `from __future__ import annotations` for forward-compatible type hint syntax,
+  and rely on standard library modules:
+  `argparse`, `os`, `re`, `shutil`, `subprocess`, `sys`, `dataclasses.dataclass`,
+  `datetime.datetime`,
+  and `pathlib.Path`. - Design the tool-running logic to be extensible so additional static analysis
+  tools could be added to the `TOOLS` tuple
+  and wired into the execution/aggregation flow with minimal changes. - Ensure robust error handling
+  so that a failure, crash,
+  or missing executable for one tool does not prevent the other enabled tools from running
+  and reporting results.

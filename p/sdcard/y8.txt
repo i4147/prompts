@@ -1,0 +1,40 @@
+Write a Python module that streams through a tar archive,
+applies a user-supplied transformation function to the contents of every regular file inside it,
+and writes the result out to a new tar archive,
+supporting transparent compression on both the input and output sides.
+Requirements: - Implement a function
+`process_tar_archive(src_path: str, process_func, dst_path: str = None)`. - `src_path`:
+path to the source tar archive (optionally compressed, e.g. `.gz`, `.bz2`, `.xz`, etc.). -
+`process_func`: a callable that takes the raw bytes content of a file entry
+and returns the new (processed) bytes content. - `dst_path`: optional path for the output archive;
+if not provided, default it to `src_path + ".processed"`. - Returns the `dst_path` used for the
+output. - Behavior: - Detect compression type of both the source
+and destination paths based on file extension (via a helper `_get_compression_ext`),
+and open the appropriate compressed stream reader/writer for that compression type;
+if no recognized compression extension is found,
+open the file as a plain binary stream. - Open the source stream as a streaming tar archive in read
+mode (`"r|"`) and the destination stream as a streaming tar archive in write mode (`"w|"`),
+so the whole archive is processed sequentially without loading it fully into memory. - Iterate over
+each member of the source tar archive:
+- If the member is a regular file, extract its content,
+pass it through `process_func` to get new content,
+then create a new `TarInfo` entry with the same name, preserving the original `mtime` and `mode`,
+but updating `size` to match the length of the new content,
+and write this new entry with the new content into the output archive. - If the member is not a
+regular file (e.g. a directory, symlink, etc.),
+copy it through to the output archive unchanged (using `addfile` without new content). - Ensure both
+the source and destination streams are properly closed at the end,
+even if an error occurs during processing (use a try/finally). - Dependencies/structure:
+- Use Python's built-in `tarfile`
+and `io` modules. - Rely on two helper functions imported from a local `.compression` module:
+`open_stream_reader(path, ext)` and `open_stream_writer(path, ext)`,
+which return file-like objects for reading/writing compressed streams given a path
+and a compression extension. - Assume a helper function `_get_compression_ext(path)` exists
+(either locally defined or imported) that inspects a file path's extension
+and returns the corresponding compression extension/identifier,
+or a falsy value if the path has no recognized compression extension.
+The main purpose of this script is to provide a memory-efficient,
+streaming way to transform the contents of files inside a (possibly compressed) tar archive
+and produce a new (possibly compressed) tar archive with the transformed contents,
+while preserving archive structure and metadata for non-file entries
+and for file timestamps/permissions. ---

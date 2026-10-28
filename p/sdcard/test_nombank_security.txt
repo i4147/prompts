@@ -1,0 +1,9 @@
+Regression tests for uncaught crashes on a malformed line in the NomBank instance parser
+(CWE-248 uncaught exception). ``NombankInstance.parse`` converted the sentence/word-number fields
+with ``int(...)`` and split the predicate and each argument on ``-`` without validating them,
+so a malformed corpus line raised a cryptic,
+uncaught ``ValueError`` (``invalid literal for int()`` / ``not enough values to unpack``). ``parse``
+is called by ``NombankCorpusReader.instances()`` via ``_read_instance_block`` with no surrounding
+handler, so one bad line aborted iteration over the whole corpus.
+It now fails with the same clear ``"Badly formatted nombank line"`` ``ValueError`` the parser
+already raises for other malformed lines; valid lines are unchanged.

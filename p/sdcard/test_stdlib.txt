@@ -1,0 +1,19 @@
+Write a Python script that imports two collections named `STDLIB`
+and `STDLIB2` from a local module called `dh`
+(these represent lists of standard library package/module names, e.g.,
+for two different Python versions or environments).
+The script should: 1.
+Print the total number of entries in `STDLIB`.
+2. Compute and print the number of unique entries in `STDLIB` (after deduplication via a set).
+3. Print the total number of entries in `STDLIB2`.
+4. Compute the difference: find all entries present in `STDLIB` but NOT present in `STDLIB2`.
+5. Write each of these differing entries to a text file named `std_diff`, one entry per line.
+Notable behavior/requirements:
+- Use simple `print()` statements for the counts,
+with the uniqueness count formatted as `"uniq :{count}"`. - The difference list must preserve the
+order of `STDLIB` (do not sort or deduplicate it)
+and should be computed via a list comprehension checking membership against `STDLIB2`. - Open the
+output file in write mode (`"w"`)
+and use `writelines` with a generator expression that appends a newline (` `) after each entry. -
+Keep the implementation minimal and straightforward—no additional error handling, logging,
+or command-line arguments are required. ---

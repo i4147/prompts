@@ -1,0 +1,27 @@
+Write a Python script that acts as a command-line utility for processing large
+text or data files efficiently.
+The tool should accept one or more input file paths and an output location as
+arguments, along with optional settings for character encoding, chunk size for
+batch processing, and the number of parallel workers.
+It should read input files robustly, including very large files, by choosing an
+efficient reading strategy based on file size so that memory usage stays
+bounded.
+The script should handle missing or unreadable files gracefully, reporting
+informational messages, warnings, and errors clearly to the user on the console,
+with errors going to the error stream.
+The core behavior is to process the input line by line or in chunks, optionally
+skipping empty lines, and to aggregate results such as line counts, word
+frequencies, or the most common tokens, using parallel processing where it helps
+throughput.
+Results should be written to the specified output in a structured,
+machine-readable format such as JSON, with a timestamp recording when the run
+occurred and a summary of the statistics gathered.
+The script should safely write output by using a temporary file and replacing
+the destination only upon successful completion, so partial results never
+corrupt an existing file.
+It should validate user-supplied arguments, provide helpful usage messages, and
+return meaningful exit codes indicating success, invalid input, or runtime
+failure.
+Design the solution so it is readable, modular, and easy to extend with
+additional analysis options, and include a clear command-line help description
+that explains each option. ---

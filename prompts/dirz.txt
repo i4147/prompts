@@ -1,0 +1,24 @@
+Write a Python script that recursively scans a user-specified root directory and
+reports disk usage statistics for the files it contains, skipping
+version-control metadata and symbolic links.
+The tool should accept the target directory from the command line (ensible
+default of the current directory) and produce a human-readable summary showing
+total file count and total size, along with a breakdown of size by top-level
+subdirectory so the user can quickly see which parts of the tree consume the
+most space.
+Key requirements: - Traverse the directory tree efficiently, handling large
+trees without exhausting memory, and gracefully skipping any directories or
+files that cannot be accessed due to permission errors, reporting them without
+aborting the scan. - Ignore any `.git` directories entirely and do not follow
+symbolic links, so the scan never loops or escapes the chosen root. - Attribute
+each file's size to the top-level subdirectory it belongs to, with files located
+directly in the root grouped under a clearly labeled entry. - Display sizes in
+human-friendly units (bytes through petabytes) with appropriate precision, and
+present results sorted from largest to smallest contributor. - Optionally allow
+the user to limit output to the N largest entries and to emit results in a
+machine-readable format such as JSON. - Provide clear, concise terminal output,
+a helpful `--help` message, and a non-zero exit code with a meaningful error
+message if the provided path does not exist or is not a directory. - Keep the
+implementation self-contained, cross-platform (Windows, macOS, Linux), and
+written with clean, well-documented code suitable for use as a standalone
+command-line utility. ---

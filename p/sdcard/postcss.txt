@@ -1,0 +1,19 @@
+Write a Python script that provides CSS code formatting functionality with a graceful
+fallback mechanism.
+The script should attempt to import the `cssbeautifier` library.
+If the import succeeds, define a function named `format` that accepts two parameters:
+`text` (a string containing CSS code to be formatted)
+and `opts` (a dictionary of formatting options).
+Inside this function:
+- Create a default options object using `cssbeautifier.default_options()`. - Set the `indent_size`
+attribute of this options object from `opts.get("tabWidth", 2)`, defaulting to 2 if not provided.
+- Set the `indent_with_tabs` attribute from `opts.get("useTabs", False)`,
+  defaulting to False if not provided. - Call `cssbeautifier.beautify(text, o)` with the input text
+  and the configured options object, and return the result.
+If the import of `cssbeautifier` fails (raises `ImportError`),
+define an alternative `format` function with the same signature (`text`, `opts`) that simply returns
+the input `text` unchanged,
+acting as a no-op fallback so the script doesn't crash when the dependency is missing.
+The main purpose is to expose a consistent `format(text, opts)` interface for CSS beautification
+that depends on an optional third-party library,
+degrading safely to a pass-through behavior when that library is not installed. ---

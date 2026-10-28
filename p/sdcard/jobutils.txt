@@ -1,0 +1,44 @@
+Write a Python module that provides a small collection of reusable multiprocessing helper functions
+for parallelizing the execution of a given function over a list of items
+(e.g., file paths or other data), intended to speed up batch/file-processing workloads.
+Requirements: - Use `from __future__ import annotations` and import `Callable`, `Iterable`,
+`Iterator` from `collections.abc`, plus `List`, `Any` from `typing`.
+- Import `Pool` and `get_context` from `multiprocessing`,
+  and `Path` from `pathlib`. - Define a module-level constant `MAX_WORKERS = 8` controlling the
+  default number of worker processes. - Create a module-level multiprocessing context using
+  `get_context("spawn")` stored in a variable,
+  to ensure consistent process-start behavior across platforms. - Implement a private helper
+  `_get_pool(workers: int = MAX_WORKERS)` that returns a `Pool` created from the spawn context with
+  the given number of workers. - Implement
+  `mpf3(process_function: Callable, files: list[Path], **kwargs: Any) -> list[Any]`:
+  uses `joblib`'s `Parallel`
+  and `delayed` (imported locally inside the function) with `n_jobs=MAX_WORKERS` to run
+  `process_function` on each file (converted to its string path) in parallel,
+  forwarding any additional keyword arguments to `process_function`.
+Wrap this function with `# fmt: off` / `# fmt: on` comments to preserve its formatting. - Implement
+`mpf_map(func: Callable, items: Iterable) -> list`:
+converts `items` to a list, returns an empty list immediately if empty,
+otherwise opens a pool via `_get_pool()` (as a context manager)
+and uses `pool.map` to apply `func` to each item,
+returning the results. - Implement
+`mpf_async(func: Callable, items: Iterable, timeout: int = 30) -> list`:
+converts `items` to a list, returns an empty list if empty.
+Otherwise opens a pool via `_get_pool()`, submits each item asynchronously using `apply_async`,
+then iterates through the async results collecting each one with `.get(timeout=timeout)`.
+If any individual result raises an exception (including timeout), catch it,
+print an error message including the item's index and the exception,
+append `None` for that item instead of failing the whole batch,
+and continue processing the rest. - Implement `mpf(func: Callable, items: Iterable) -> list`:
+converts `items` to a list, returns an empty list if empty.
+Otherwise builds a list of single-element argument tuples for each item,
+opens a pool via `_get_pool(8)`, and uses `pool.starmap` to apply `func` with those argument tuples,
+returning the results. - The module should be left open for additional similarly-named
+multiprocessing helper functions
+(e.g., a function whose name begins with `mpf_` that is incomplete/cut off),
+implying this is a utility library in progress with a consistent naming convention
+(`mpf`, `mpf_map`, `mpf_async`, `mpf3`, etc.) for different parallel-execution strategies
+(synchronous map, async with per-item error handling, star-mapped single-argument calls,
+and joblib-based parallelism for file processing). - All functions should gracefully handle empty
+input (return `[]`) and use context managers (`with ... as ...`) for pool lifecycle management
+except where joblib manages it internally. - Preserve consistent typing annotations throughout
+matching the style shown (using `Callable`, `Iterable`, `list[Any]`, `list[Path]`, etc.). ---

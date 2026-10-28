@@ -1,0 +1,33 @@
+Write a Python script that acts as a source-code compressor for Python projects.
+It should take a Python source file (or a directory of Python files) as input
+and produce a single, reduced output file that is functionally equivalent but
+substantially smaller in size.
+The tool should be designed to run its per-file work in parallel across multiple
+worker processes to speed up processing of large codebases.
+Key behaviors to implement: - Accept input via command-line arguments, including
+the path to the source to compress and an optional output path, with a sensible
+default output filename when none is given. - Parse each Python file
+structurally so that transformations are safe: strip comments and unnecessary
+whitespace, remove docstrings where they are not needed for runtime behavior,
+and consolidate formatting while preserving valid syntax. - Remove imports of
+standard library modules from the compressed output, while keeping any
+third-party or project-local dependencies intact, and prepend a clear note in
+the output explaining that the code has been compressed and that standard
+library imports were removed. - Shorten local identifiers (variables, functions,
+and parameters) to short generated names to reduce size, but never rename names
+that are Python keywords, built-in names, dunder/protected special methods and
+attributes, `self`/`cls`, module-level public API names that must remain stable,
+or names that are accessed dynamically through strings.
+Maintain consistent renaming within each scope so that the code still runs
+identically. - Avoid collisions when generating short names, and ensure the set
+of generated names does not clash with existing identifiers or reserved words. -
+Use a protected-names list and a builtins-aware check so that the renaming logic
+is conservative and safe rather than aggressive. - Process multiple files
+concurrently using a configurable number of worker processes (defaulting to a
+modest number such as eight), and merge or write results deterministically. -
+Report progress and a summary at the end, including original versus compressed
+size and the percentage reduction. - Handle errors gracefully: skip or report
+files that fail to parse, and never silently produce corrupted output.
+Validate that the compressed output is syntactically valid Python before writing
+it. - Keep the overall tool self-contained, readable, and robust, with clear
+usage help available through the command line. ---

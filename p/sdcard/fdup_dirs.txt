@@ -1,0 +1,27 @@
+Write a Python script that scans a directory tree to find duplicate folders based on their
+content hash.
+The script should: 1.
+Import a `hash_folder` function from a module named `folder_hasher`
+(assume this module exists and provides a function that takes a folder path
+and returns a hash object with a `.hex()` method representing the folder's content).
+2. Define a function `find_duplicate_folders(root_dir)` that:
+- Recursively walks through `root_dir` using `os.walk`. - For every subdirectory encountered,
+computes its hash by calling `hash_folder(dir_path)`
+and converts it to a hex string. - Groups folder paths by their resulting hash value using a
+`defaultdict(list)`. - Wraps the hashing call in a try/except block so that if hashing a particular
+folder raises an exception,
+it prints an error message (including the folder path and the exception) to `stderr`
+and continues processing instead of crashing. - Returns only the groups
+where more than one folder shares the same hash (i.e., actual duplicates),
+as a dictionary mapping hash -> list of folder paths.
+3. In the `if __name__ == "__main__":` block:
+- Use the current working directory (`os.getcwd()`) as the root directory to scan. - Call
+`find_duplicate_folders` on it. - If duplicates are found,
+print "Duplicate folders found:" followed by each hash
+and the list of folder paths that share that hash (indented with a leading dash). - If no duplicates
+are found, print "No duplicate folders found."
+The purpose of the script is to help identify redundant/duplicate folders
+(e.g., copies of the same directory structure and content) within a given directory tree by
+comparing content-based hashes rather than folder names, so it can
+detect duplicates even if folders have different names but identical contents.
+---

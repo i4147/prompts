@@ -1,0 +1,22 @@
+Write a Python module that defines a `Button` class representing a clickable button widget within a
+Termux:GUI application, built on top of the `termuxgui` library.
+The class must: - Be named `Button` and inherit from both `View` (imported from `termuxgui.oo.view`)
+and `tg.Button` (from the `termuxgui` package, where `termuxgui` is imported as `tg`). - Include a
+class-level docstring briefly describing it as representing a Button. - Implement an `__init__`
+method with the following parameters: - `activity`:
+an `Activity` instance (imported from `termuxgui.activity`) that the button belongs to. - `text`:
+a string for the button's label text. - `parent`:
+an optional `View` instance representing the parent view, defaulting to `None`. - `allcaps`:
+a boolean indicating whether the button text should be displayed in all caps,
+defaulting to `False`. - `visibility`:
+an optional literal value restricted to `0`, `1`, or `2`, defaulting to `None`,
+representing the view's visibility state. - Inside `__init__`,
+first call `tg.Button.__init__` passing `activity`, `text`, `parent`, `allcaps`,
+and `visibility` to properly initialize the underlying GUI button. - Then call `View.__init__`
+passing `activity`, `self.id`,
+and `parent` to initialize the base view behavior using the id assigned by the button
+initialization.
+Use proper type hints throughout, importing `Optional` and `Literal` from the `typing` module.
+The code should follow a clean,
+minimal object-oriented style consistent with wrapping a lower-level GUI toolkit class with a
+higher-level, more Pythonic interface. ---

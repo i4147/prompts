@@ -1,0 +1,36 @@
+Write a Python script that scans a project directory (or a single Python file)
+and produces a list of third-party packages the code depends on, so that a user
+can install or document them.
+The tool should work as a command-line utility with clear options for the target
+path, output format, and behavior controls.
+Key requirements: - **Purpose:** Discover the external (non-standard-library)
+modules imported by Python source files, map each import name to its
+corresponding PyPI distribution name, and report the resulting package list. -
+**Inputs:** A file or directory path given on the command line.
+The tool should accept options such as excluding common virtual-environment,
+cache, and build directories by default, adding custom exclusion patterns,
+optionally including optional or guarded imports (for example, imports wrapped
+in try/except ImportError blocks), and choosing the output style. - **Outputs:**
+A deduplicated, sorted list of detected package names printed to standard
+output, with support for plain-text lines and a machine-readable JSON format.
+Optionally, the tool can write a requirements-style file.
+Informational and warning messages should go to standard error or a logger,
+controlled by verbosity flags. - **Import resolution:** Recognize both `import
+x` and `from x import y` forms, ignore relative imports and standard-library
+modules, and treat locally defined top-level modules in the project as internal
+rather than external.
+Handle files that fail to parse gracefully by reporting them and continuing. -
+**Name mapping:** Translate import names to PyPI distribution names using a
+known mapping table where available, falling back to a lookup against the PyPI
+metadata service with local caching.
+Cached results should expire after a configurable time-to-live.
+Network failures must not crash the tool; unresolved names should be reported
+as-is. - **Performance and robustness:** Scan files concurrently when there are
+many of them, and keep the tool resilient to permission errors, encoding issues,
+and unreachable network services. - **Exit behavior:** Return a zero exit status
+on success and a non-zero status for invalid arguments or fatal errors.
+Print a concise summary of how many files were scanned and how many packages
+were found when run in verbose mode.
+The result should be a self-contained, well-structured command-line tool that a
+user can run against any Python project to quickly generate its third-party
+dependency list. ---

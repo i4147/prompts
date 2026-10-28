@@ -1,0 +1,3 @@
+Provides scoring functions for a number of association measures through a generic,
+abstract implementation in ``NgramAssocMeasures``,
+and n-specific ``BigramAssocMeasures`` and ``TrigramAssocMeasures``.

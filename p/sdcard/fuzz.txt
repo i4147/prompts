@@ -1,0 +1,75 @@
+1. Purpose: a fuzzing tool that generates random Python source code
+and uses it to find crashes/bugs in the `ty` type checker and `ruff` linter,
+then minimizes the crashing input to produce a minimal reproducible example 2.
+Inputs: paths to ty and ruff executables, possibly seed values, number of iterations,
+parallelism settings 3.
+Outputs: minimized source code that triggers bugs, exit codes, seed used 4.
+Notable behavior:
+ - Uses external libraries:
+   pysource_codegen for random code generation, pysource_minimize for minimization
+ - Runs tools as subprocesses with specific flags
+   (--python-version 3.9, --python-platform linux for ty;
+specific lint config for ruff)
+ - Considers a \"bug\" when exit code is outside expected set {0,1,2} for ty
+   (indicating crash vs normal success/lint-failure)
+- Uses concurrent.futures for parallel fuzzing across seeds
+ - CLI built with argparse + rich_argparse for colored help
+ - Uses termcolor for colored terminal output
+ - Defines custom types via NewType for clarity (MinimizedSourceCode, Seed, ExitCode)
+ - Handles exhaustiveness checking with assert_never
+ - Uses dataclass with KW_ONLY for structured config/results
+I should write this as an instructive prompt for an AI agent to produce this code. "} Create a
+prompt describing a Python command-line fuzzing tool that automates bug discovery in the `ty` type
+checker and/or `ruff` linter by generating random Python source code,
+detecting crashes/anomalous behavior,
+and automatically minimizing any reproducing failing input into a minimal code snippet.
+The script should: - Accept command-line arguments
+(via `argparse` with a rich/colored help formatter) allowing the user to specify at least:
+the path to the `ty` executable,
+the path to the `ruff` executable (or select which tool(s) to fuzz),
+the number of random seeds/iterations to try,
+and the degree of parallelism (number of worker processes/threads) for running fuzzing attempts
+concurrently. - Use the `pysource_codegen` library to generate syntactically valid random Python
+source code from a given integer seed. - Define a "bug oracle" per target tool: - For `ty`:
+run `ty check <generated_file> --python-version 3.9 --python-platform linux` as a subprocess on the
+generated code written to a temporary file,
+and consider it a bug if the process's exit code is NOT one of the expected codes (0, 1, or 2)
+— i.e., any unexpected/abnormal exit code (e.g., a crash or panic) signals a bug. - For `ruff`:
+run `ruff check` with linting rules disabled (an empty `lint.select` config) as a subprocess against
+the generated code, applying a similar "unexpected exit code/crash" style oracle to detect internal
+errors in ruff itself (rather than normal lint findings). - Use `concurrent.futures` to run many
+random-seed trials in parallel across multiple seeds,
+searching for the first (or several) seeds that trigger a bug in the target tool. -
+When a bug-triggering seed is found,
+use the `pysource_minimize` library (`minimize` function) to shrink/minimize the failing random
+source code into the smallest possible reproducing snippet,
+handling the case where minimization fails by catching `CouldNotMinimize`
+and falling back gracefully (e.g., reporting the original unminimized code or an error). - Print
+results to the console using `termcolor` for colored,
+readable output (e.g., highlighting found bugs, seeds,
+and minimized reproducers in distinct colors),
+and use `rich_argparse`'s `RawDescriptionRichHelpFormatter` for nicely formatted `--help` output
+that preserves description formatting. - Define small typed wrapper types using `typing.NewType` for
+clarity (e.g., a `Seed` type wrapping `int`, a `MinimizedSourceCode` type wrapping `str`,
+and an `ExitCode` type wrapping `int`) to make the code's intent self-documenting
+and reduce accidental misuse of plain ints/strings. - Use `dataclasses`
+(potentially with `KW_ONLY` fields) to represent structured results of a fuzzing attempt
+(e.g., seed used, whether a bug was found, the minimized/original source code,
+and any captured subprocess output). - Use an `enum.Enum` to represent the target tool being fuzzed
+(e.g., `TY` and `RUFF`) or to represent the outcome/status of a fuzzing attempt,
+and use `typing.assert_never` in an exhaustiveness check
+(e.g., in a match/if-elif chain over the enum) to ensure all enum cases are handled at type-check
+time. - Define module-level constants marked `Final`,
+such as the target platform string used for `ty` (`"linux"`)
+and the oldest supported Python version string (`"3.9"`),
+which are passed to the `ty` subprocess invocation. - On completion,
+the script should exit with an appropriate process exit code
+(`NoReturn`-typed function for the final exit path is acceptable) reflecting whether any
+bug-triggering, minimized reproducer was found,
+and print the minimized source code
+and seed information for any discovered bug so a developer can manually inspect
+and report it upstream. - Ensure temporary files used to feed source code to the subprocesses are
+created and cleaned up safely using `tempfile.TemporaryDirectory`.
+The overall goal is to provide a reusable differential/crash-oracle fuzzing harness for Python
+static analysis tools, producing minimal,
+human-readable repro cases for any discovered internal crashes or unexpected exit codes. ---

@@ -1,0 +1,32 @@
+Write a Python script that acts as a command-line tool for preparing and
+fetching GitHub repository content.
+The tool should accept a repository reference in either short form (owner/name)
+or as a full GitHub URL, normalize it into a canonical form, and validate that
+it is well-formed, rejecting malformed input with a clear error message.
+The script should optionally read a GitHub access token from the environment or
+from a local `.env` file in the user's home directory, and use it to
+authenticate requests so that private repositories and higher API rate limits
+are supported.
+If no token is available, it should still work for public repositories.
+Its main purpose is to retrieve the contents of a target repository (or a
+specified branch, tag, or subdirectory) and save them to a local output location
+chosen by the user via command-line arguments.
+It should support selecting a fetch backend, with a sensible default that uses a
+system command-line git client, and allow the user to switch to an alternative
+backend that talks to the GitHub API directly.
+The tool should handle large files gracefully, for example by skipping or
+warning about files above a size threshold of roughly 5 MB unless the user
+explicitly opts in.
+Key behaviors: - Parse and validate command-line arguments, including the
+repository, optional ref, destination path, backend choice, token override, and
+any filtering or size-limit options, with helpful `--help` output. - Show
+progress or status messages to the user while working, and report a concise
+summary at the end (files written, files skipped, total size). - Fail with
+non-zero exit codes and readable error messages for invalid input, network or
+authentication failures, missing tools, and existing non-empty destinations
+(unless an overwrite option is given). - Avoid leaking the access token in logs
+or error output. - Be safe with file paths: prevent writing outside the chosen
+destination directory, even if repository contents contain unusual paths. - Keep
+the implementation self-contained, cross-platform (Linux, macOS, Windows), and
+easy to run with a standard Python 3 interpreter, with optional dependencies
+handled gracefully when missing. ---

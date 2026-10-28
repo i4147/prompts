@@ -1,0 +1,45 @@
+Write a Python module that provides helper utilities for performing common Git operations
+programmatically, intended to be used as part of a larger CLI/toolkit package
+(e.g., a project scaffolding tool).
+The module should rely on internal package helpers:
+a `shell` module for running git commands (e.g., `shell.git(...)`),
+a `ShellCommandException` from an `exceptions` module,
+a `chdir` context manager
+and `PathLike` type from a `file_system` module
+(for temporarily changing the working directory,
+with support for a `pretend` mode that simulates actions without executing them),
+and a `logger` from a `log` module that has a `report(action, message)` method for printing
+progress/status messages.
+The module must implement the following functions: 1. `git_tree_add(struct, prefix="", **kwargs)`:
+Recursively walks a nested dictionary representing a file/directory tree structure
+and stages each entry with `git add`.
+Dictionary values that are themselves dictionaries represent subdirectories
+and should be recursed into (building up a path prefix).
+Values that are `None` or strings represent files to be added via `git add <path>`.
+Any other value type should raise a `TypeError` indicating the content type is not understood.
+Any extra `**kwargs` should be passed through to the underlying `shell.git` call(s).
+2. `add_tag(project, tag_name, message=None, **kwargs)`:
+Changes into the given project directory and creates a git tag with the given name.
+If `message` is provided, create an annotated tag using `git tag -a <tag_name> -m <message>`;
+otherwise create a lightweight tag using `git tag <tag_name>`.
+Pass through `**kwargs` to the shell call.
+3. `init_commit_repo(project, struct, **kwargs)`:
+Logs a message reporting that it is initializing a git repo at the given project path.
+Changes into the project directory (respecting a `pretend` flag taken from `kwargs`),
+runs `git init`, stages the given tree structure using `git_tree_add`,
+and then creates an initial commit with the message "Initial commit".
+Passes `**kwargs` through to all shell calls.
+4. `is_git_repo(path)`:
+Logs a message reporting that it is checking whether the given path is already a git repo.
+Returns `False` immediately if the path is not an existing directory.
+Otherwise, changes into that directory and attempts to run `git rev-parse --git-dir`;
+returns `True` if the command succeeds, and `False` if it raises a `ShellCommandException`.
+5. `get_git_root(...)`:
+A function (signature and body not fully shown but implied to continue the pattern) that determines
+and returns the root directory of a git repository,
+likely by running a git command such as `git rev-parse --show-toplevel` from within a given path,
+following the same logging/chdir/shell-call conventions as the other functions.
+Use type hints throughout (including `Optional`, `Union`, and `TypeVar` where appropriate),
+accept `PathLike` objects for paths, convert them to `Path` objects as needed,
+and ensure all functions are designed to integrate consistently with the shared `shell`, `chdir`,
+`logger`, and `ShellCommandException` utilities described above. ---

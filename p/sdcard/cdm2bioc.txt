@@ -1,0 +1,2 @@
+Convert OMOP CDM NOTE table (.csv) file to the BioC collection.
+Usage: cdm2bioc [options] -i FILE -o FILE Options: -i FILE -o FILE --overwrite

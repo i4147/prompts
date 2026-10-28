@@ -1,0 +1,38 @@
+Write a Python script that acts as a command-line LZ4 compression tool for files
+and directory trees, designed to compress content efficiently and safely while
+preserving the original data structure.
+The tool should accept a source path (single file or directory) and an output
+destination, and produce LZ4-compressed output that can be fully restored to the
+original contents.
+Key requirements: - **Inputs:** A source file or directory, an output location,
+and optional settings controlling compression level (with a sensible default
+around level 3), LZ4 block size (choosing the largest supported size by
+default), whether to include content checksums, the number of parallel worker
+processes (default around 8), and the minimum file size worth compressing
+(default around 1 KB). - **Outputs:** Compressed LZ4 files for eligible content,
+and for directory inputs, a well-organized archive or mirrored structure that
+retains relative paths.
+The tool should report progress and a concise summary of results, including
+original size, compressed size, and compression ratio, formatted in
+human-readable units (B, KB, MB, GB, TB). - **Selective compression:** Skip
+files that are already compressed (such as .gz, .br, .xz, .zst, .bz2, .zip,
+.whl, .lz4, .7z, .rar) and files below the minimum size threshold, copying them
+through unchanged when appropriate.
+Allow the user to extend or override the skip list. - **Large file handling:**
+For files above a configurable chunk threshold (default around 512 KB), split
+the content into fixed-size chunks (default around 32 KB) and compress them in
+parallel across worker processes, then combine the results into a valid output.
+The output must remain decompressible by standard LZ4 frame tools. -
+**Decompression support:** Provide a mode that reverses the process, restoring
+original files and directory structure exactly, verifying integrity where
+checksums are present. - **Robustness:** Handle missing paths, permission
+errors, unreadable files, and interrupted runs gracefully with clear error
+messages and non-zero exit codes on failure.
+Avoid overwriting existing outputs unless explicitly allowed, and optionally
+support a dry-run mode that reports what would be done without writing anything.
+- **Usability:** Provide a clear command-line interface with help text, sensible
+defaults, and validation of numeric arguments (level, worker count, block size,
+chunk sizes) with informative errors for out-of-range values. -
+**Cross-platform:** Work reliably on Linux, macOS, and Windows, including
+correct handling of path separators and safe use of multiprocessing with proper
+entry-point guarding. ---

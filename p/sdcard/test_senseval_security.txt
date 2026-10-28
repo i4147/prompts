@@ -1,0 +1,11 @@
+Regression tests for ReDoS in SensevalCorpusReader (CWE-1333). ``_fixXML`` normalises Senseval
+pseudo-XML before parsing.
+Two of its substitutions used plain ``re`` patterns whose lazy/greedy whitespace
+and token runs rescan a long token / whitespace run that lacks the trailing ``<p="..."/>`` tag
+quadratically, so a crafted instance body hangs the reader.
+The patterns now use possessive quantifiers (regex module), making the scan linear.
+The token class ``[^<>\s]`` cannot cross its separators and ``\s`` cannot cross the literal ``"``,
+so the substitutions are unchanged.
+The "must not hang" tests run the work in a separate process (spawn) with a hard timeout
+and ``terminate()`` on overrun, so a regression cannot keep burning CPU for the rest of the suite,
+and any exception in the worker is propagated back to the assertions instead of being swallowed.

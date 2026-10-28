@@ -1,0 +1,4 @@
+Unified QR Code Reader and Extractor.
+Usage Examples: python merged.py read qrcode.png # Original qrcode_reader.py behavior
+(metadata + first result) python merged.py extract qrcode.png # Original qrcoder.py behavior
+(RGB conversion + list format)

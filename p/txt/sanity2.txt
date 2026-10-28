@@ -1,0 +1,2 @@
+Package Sanity Check Tool Audits all installed packages for importability and generates reports.
+Uses multiprocessing for parallel auditing.

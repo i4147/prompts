@@ -1,0 +1,49 @@
+Design a Python command-line utility script that performs file type identification using the
+system's `libmagic` shared library via direct `ctypes` bindings
+(i.e., a lightweight custom wrapper around libmagic instead of relying on the
+`python-magic` package).
+The script's purpose and required behavior: **Purpose**:
+Identify and print the file type / MIME information of one
+or more files specified on the command line,
+by loading `libmagic.so` dynamically
+and calling its native C functions through `ctypes`. **Library loading behavior**:
+- Attempt to load `libmagic.so` from a prioritized list of candidate paths,
+specifically including a plain `"libmagic.so"` (relying on the system library search path)
+and a Termux-specific path constructed from the `PREFIX` environment variable
+(defaulting to `/data/data/com.termux/files/usr`),
+pointing to `lib/libmagic.so`. - Iterate through the candidate paths,
+trying to load each with `CDLL`, catching `OSError` on failure,
+and stopping at the first successful load. - Print a message to stderr indicating
+which path was successfully loaded.
+- If none of the paths succeed,
+  print an error message to stderr instructing the user to install the library
+  (e.g., via `pkg install file` for Termux),
+  and exit the program with a non-zero status code. **Flags**:
+  Define a class (e.g., `MagicFlags`) that mirrors the standard libmagic flag constants as class
+  attributes (NONE, DEBUG, SYMLINK, COMPRESS, DEVICES, MIME_TYPE, CONTINUE, CHECK, PRESERVE_ATIME,
+  RAW, ERROR, MIME_ENCODING, MIME as a combination of MIME_TYPE and MIME_ENCODING,
+  NO_CHECK_COMPRESS, NO_CHECK_TAR, NO_CHECK_SOFT, NO_CHECK_APPTYPE, NO_CHECK_ELF, NO_CHECK_ASCII,
+  NO_CHECK_TOKENS), using their correct standard integer values. **Function signature setup**:
+  - Define a dictionary mapping the libmagic C function names needed
+  (`magic_open`, `magic_close`, `magic_file`, `magic_descriptor`, `magic_buffer`, `magic_error`,
+  `magic_setflags`, `magic_load`, `magic_compile`, `magic_check`,
+  `magic_errno`) to their `argtypes`/`restype` ctypes signatures,
+  matching the real libmagic C API
+  (using `c_void_p`, `c_char_p`, `c_int`, `c_size_t` as appropriate). - Implement a setup function
+  that applies these `argtypes`/`restype` definitions onto the loaded `libmagic` CDLL object so each
+  function can be called correctly
+  and safely from Python. **Expected overall functionality**
+  (to be built on top of this foundation):
+  open a magic cookie via `magic_open` with appropriate flags (e.g., MIME type detection),
+  load the default magic database via `magic_load`,
+  then for each file path provided as a command-line argument,
+  call `magic_file` to get its type/MIME description,
+  print the result (filename paired with detected type) to stdout,
+  handle and report errors via `magic_error`/`magic_errno` if a lookup fails,
+  and finally close the magic cookie with `magic_close` before exiting. **Imports/dependencies**:
+  Uses only `sys`, `os`, `pathlib.Path`,
+  and `ctypes` (`CDLL`, `c_void_p`, `c_char_p`, `c_int`, `c_size_t`)
+  â€” no third-party Python packages
+  â€” making it suitable for minimal environments like Termux on Android
+  where installing compiled Python extension packages may be difficult,
+  but the native `file`/`libmagic` package is available. ---

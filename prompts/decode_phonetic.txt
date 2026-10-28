@@ -1,0 +1,8 @@
+Write a Python script that takes a single file path from the command line, reads
+that file as UTF-8 text (tolerating invalid byte sequences without crashing),
+converts all HTML character entities in the content (such as named entities like
+&amp; or &lt; and numeric entities) back into their literal characters, and
+overwrites the same file with the decoded result, saved as UTF-8.
+The script should run as a standalone command-line tool, exit cleanly on
+success, and be designed so it can be invoked directly from a terminal with the
+target file as its only argument. ---

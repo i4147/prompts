@@ -1,0 +1,38 @@
+Write a Python utility module (using `from __future__ import annotations`) that provides safe,
+reusable file-system helper functions for copying, moving, and iterating over files,
+with built-in protection against accidentally overwriting existing files.
+Core requirements: 1. **Safe copy function** (`_safe_cp`):
+- Accepts `src` and `dest` as either `Path`
+or `str`. - Accepts a `no_clobber` boolean flag (default `True`). - Verifies the source path exists;
+if not, prints an error to `stderr` (via `sys.stderr`)
+and returns `False`. - If `dest` is an existing directory,
+appends the source filename to it. - If `no_clobber` is `True`
+and the resolved destination already exists, generates a unique,
+non-conflicting path (via a helper function `unique_path`) before copying. - Uses `shutil.copy2` to
+perform the copy (preserving metadata), importing it locally inside the function. - On success,
+prints a confirmation message in the form `copied 'src' -> 'dest'`
+and returns `True`. - On failure (exception during copy),
+prints an error message to `stderr` and returns `False`.
+2. **Safe move function** (`_safe_mv`):
+- Mirrors `_safe_cp` in structure and behavior,
+but uses `shutil.move` instead of `shutil.copy2`. - Prints a confirmation message in the form
+`Moved 'src' -> 'dest'` on success. - Same error handling, no-clobber/unique-path logic,
+and directory-destination handling as `_safe_cp`. - Imports `shutil.move` locally inside
+the function.
+3. General conventions:
+- Use local imports (inside functions) for standard library utilities like `shutil.copy2`,
+`shutil.move`, and `sys.stderr` rather than top-level imports. - Use `pathlib.Path` for all path
+manipulations. - Functions should return booleans indicating success/failure,
+suitable for use in scripts
+or chained logic. - Include type hints using the `Path | str` union syntax for path-like parameters.
+- The module should also import `contextlib`, `re`, `Generator` (from `collections.abc`),
+and `os.scandir` (aliased as `os_scandir`) for use in other related helper functions in the same
+module (e.g., a directory-scanning generator and a `unique_path` function that are implied
+but not fully shown),
+plus a `cpf` function (likely a public-facing wrapper around `_safe_cp` accepting string arguments)
+that continues the module's public API for copying files safely from a simple
+string-based interface.
+Ensure the generated code is consistent with a larger module of file-management utilities
+where `_safe_cp` and `_safe_mv` serve as the internal,
+safety-checked primitives used by higher-level public functions like `cpf`, `mvf`,
+or similar convenience wrappers. ---

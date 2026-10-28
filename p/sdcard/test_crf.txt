@@ -1,0 +1,1 @@
+Regression tests for ``nltk.tag.crf.CRFTagger``.

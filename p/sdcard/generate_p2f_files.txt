@@ -1,0 +1,23 @@
+Write a Python command-line script that reverses a Finglish-to-Persian dictionary file into a
+Persian-to-Finglish dictionary file.
+The script should define a function `reverse_dict(input_file, output_file)` that:
+- Opens the input file (UTF-8 encoded) and reads it line by line,
+skipping empty/blank lines. - Each non-empty line is expected to contain a Finglish word/phrase
+followed by a space and its corresponding Persian translation
+(split only on the first space, since the Persian side may contain spaces). - Builds a dictionary
+(`reverse`) keyed by the Persian term, where each value is a list of Finglish terms that map to it.
+When processing each line, strip whitespace from both the Finglish and Persian parts,
+initialize an empty list for a Persian key if not already present,
+and append the Finglish term to that list only if it isn't already in the list
+(avoiding duplicates while preserving first-seen order). - Writes the output file (UTF-8 encoded)
+with one line per Persian entry, sorted alphabetically by the Persian key.
+Each line should contain the Persian term followed by a space-separated list of all its associated
+Finglish terms, separated by a single space, ending with a newline. - After writing,
+prints a confirmation message to stdout in the form:
+`Created {output_file} with {N} entries`, where N is the number of unique Persian keys.
+In the `if __name__ == "__main__":` block, call `reverse_dict` with hardcoded default filenames:
+input file `"f2p-dict.txt"` and output file `"p2f-dict.txt"`.
+Include a `#!/usr/bin/env python3` shebang line at the top of the script.
+The script should have no external dependencies beyond the Python standard library,
+and should not use any command-line argument parsing
+— the filenames are fixed in the `__main__` block. ---

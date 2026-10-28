@@ -1,0 +1,26 @@
+Write a Python script that removes comments from Rust source files in bulk,
+using a syntax-aware parser so that comment-like text inside string literals,
+raw strings, and character literals is preserved.
+The tool should accept a directory (or a single file) as input, recursively
+locate all Rust source files, and process them in parallel across multiple
+worker processes to maximize throughput on large codebases.
+For each Rust file, the script should strip line comments, block comments
+(including nested block comments as Rust allows), and doc comments, while
+keeping the surrounding code layout intact as far as practical so the output
+remains valid, compilable Rust.
+Code outside comments must be reproduced exactly, including whitespace and
+formatting that is not part of a removed comment.
+The script should overwrite files in place by default, but also offer an option
+to write results to a separate output directory that mirrors the original
+structure, and a dry-run mode that reports which files would change without
+modifying anything.
+It should print a clear summary at the end, including the number of files
+scanned, files modified, files skipped or failed, and total processing time.
+Errors on individual files (unreadable files, encoding issues, parse problems)
+must be reported without halting the entire batch.
+The tool must check at startup that its required parsing dependencies are
+available, and if they are missing, display a concise installation hint and exit
+with a non-zero status.
+It should also support a configurable number of worker processes with a sensible
+default, and handle keyboard interruption gracefully by stopping workers cleanly
+and reporting partial progress. ---

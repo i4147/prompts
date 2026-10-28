@@ -1,0 +1,4 @@
+Unified Comment Out CLI Consolidates functionality for commenting out ranges of lines in files.
+Supports in-memory processing for small files and chunked processing for large files.
+Usage Examples: python merged.py comment script.py 10 20 --in-memory --add-space python merged.py
+comment large_script.sql 500 --chunk-size 5000

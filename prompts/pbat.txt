@@ -1,0 +1,29 @@
+Write a Python script that acts as a terminal-based syntax-highlighting file
+viewer, similar to the `bat` command-line tool.
+The script should accept one or more file paths (or read from standard input
+when no file is given) and display their contents in the terminal with color
+syntax highlighting appropriate to each file's language.
+It should automatically detect the language from the file name or content, while
+allowing the user to explicitly override the language and choose from a set of
+color themes.
+Key behaviors to include: - Present output with optional line numbers, a
+decorative header showing each file's name, and a grid or border framing that
+makes the output easy to read. - Support viewing multiple files in one run,
+separating them clearly with headers. - Offer options to show or hide individual
+decorations such as line numbers, headers, grid lines, and non-printable
+characters, and to choose a plain-text mode that disables coloring entirely. -
+Allow the user to list available languages and available themes and exit. -
+Optionally highlight specific line ranges or a specific line number, and support
+pager-style output for long files when running in an interactive terminal,
+falling back to direct printing when output is piped. - Optionally display
+git-style change markers (added, modified, removed lines) relative to the
+repository state when the file is inside a git repository. - Detect and respect
+terminal capabilities, choosing between 256-color and true-color output as
+appropriate, and degrade gracefully when color is unsupported or disabled by
+environment settings. - Handle errors gracefully: report missing files,
+unreadable files, binary content, and unknown languages or themes with clear
+messages, and continue processing remaining files where possible. - Provide a
+command-line interface with `--help` documentation, and return a meaningful exit
+status indicating success or failure.
+The output should be a polished, readable terminal rendering that a developer
+could use as a daily replacement for `cat` with syntax awareness. ---

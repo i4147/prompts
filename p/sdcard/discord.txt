@@ -1,0 +1,4 @@
+Sends updates to a Discord bot.
+Usage: >>> from tqdm.contrib.discord import tqdm,
+trange >>> for i in trange(10, token='{token}', channel_id='{channel_id}'):
+... ... ![screenshot](https://tqdm.github.io/img/screenshot-discord.png)

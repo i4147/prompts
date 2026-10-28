@@ -1,0 +1,4 @@
+Decorator module by Michele Simionato <michelesimionato@libero.it> Copyright Michele Simionato,
+distributed under the terms of the BSD License (see below).
+http://www.phyast.pitt.edu/~micheles/python/documentation.html Included in NLTK for its support of a
+nice memoization decorator.

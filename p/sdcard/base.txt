@@ -1,0 +1,46 @@
+Create a Python module (intended as part of python-apt-style libraries) that defines base/skeleton
+classes for apt_pkg progress reporting callbacks,
+meant to be subclassed by applications that need to hook into package acquisition, CD-ROM scanning,
+package installation, and generic operation progress events.
+The module should use `from __future__ import annotations`
+and import low-level utilities needed for non-blocking subprocess I/O and apt integration:
+`errno`, `fcntl`, `io`, `os`, `re`, `select`, `sys`, and `apt_pkg`.
+It must define exactly four public classes,
+exposed via `__all__ = ["AcquireProgress", "CdromProgress", "InstallProgress", "OpProgress"]`:
+1. **AcquireProgress** — a base class for tracking package download/acquisition progress.
+It should maintain class-level numeric attributes for metrics such as `current_bytes`,
+`current_cps`, `fetched_bytes`, `last_bytes`,
+`total_bytes` (floats defaulting to 0.0) and `current_items`, `elapsed_time`,
+`total_items` (ints defaulting to 0).
+It should define empty hook methods
+(each accepting `self` and relevant parameters like an `apt_pkg.AcquireItemDesc` item,
+typed with annotations, and doing nothing but `pass` by default) for:
+`done(item)`, `fail(item)`, `fetch(item)`, `ims_hit(item)`,
+`media_change(media, drive)` returning a bool, `pulse(owner)` returning a bool, `start()`,
+and `stop()`.
+These mirror the callback interface expected by apt_pkg's Acquire process so subclasses can override
+only what they need.
+2. **CdromProgress** — a base class for CD-ROM scanning progress callbacks,
+with empty/default hook methods `ask_cdrom_name()` (returning something like an optional string),
+`change_cdrom()` (prompting for disc change, returning a bool),
+and `update(text, current)` (reporting progress text and current item count),
+all as no-op placeholders for subclasses to override.
+3. **InstallProgress** — a base class managing the state of a package installation subprocess.
+It should track attributes like `pid` (child process id), `status`, `percent`,
+and timeout-related state.
+It should implement the logic to fork/exec or run a dpkg-like install command,
+set up non-blocking I/O monitoring of the child process's status file descriptor(s) using `fcntl`
+(e.g., setting `O_NONBLOCK`) and `select` (polling with a timeout loop),
+parsing status lines (possibly with `re`) to update progress/percent/status,
+and provide hook methods such as `status_change`, `error`, `conffile`,
+plus lifecycle methods like `fork()`, `update_interface()`, `wait_child()`,
+and `run()` that subclasses can override or call to drive the install process
+and report child exit status.
+4. **OpProgress** — a minimal base class for generic/non-download operation progress reporting
+(e.g., cache opening, rebuilding), with simple no-op hook methods like `update(percent)`, `done()`,
+and `subprogress(...)` for subclasses to override.
+All classes should contain only skeleton/placeholder logic
+(attributes with sensible defaults and methods that do nothing or return trivial defaults)
+— the purpose is to define the interface/contract that real application subclasses will implement,
+not to provide functional business logic.
+Include appropriate type hints throughout, consistent with modern python-apt style code. ---

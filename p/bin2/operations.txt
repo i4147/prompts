@@ -1,0 +1,1 @@
+Write-ahead journal, no-clobber publication, and conservative rollback.

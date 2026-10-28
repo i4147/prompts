@@ -1,0 +1,40 @@
+Write a Python script that translates the text content of a file (or a directory of files) from a
+source language to a target language,
+processing large documents in manageable chunks and producing a translated output
+while preserving the original structure as closely as possible.
+The tool should accept command-line arguments that specify the input path, the output location,
+the source language (with support for an automatic detection option), and the target language.
+Language codes should be handled flexibly,
+tolerating common variations such as underscores versus hyphens, letter case differences,
+and regional subtags
+(for example, treating simplified and traditional Chinese variants appropriately
+and recognizing that a bare base language code should match its regional forms).
+Core behaviors to include:
+- Split long input text into chunks that respect natural boundaries
+(such as paragraphs, lines, or sentences)
+and stay within a safe size limit for translation services,
+then reassemble the translated chunks in the original order. - Support multiple translation
+backends, so that the user can select which service to use,
+and fall back gracefully to an alternative backend if the primary one fails
+or is unavailable. - Run translation requests concurrently to speed up processing of many chunks,
+while respecting rate limits:
+enforce a configurable minimum delay between requests,
+and serialize access to backends that are not thread-safe. - Retry failed chunk translations a
+limited number of times with increasing backoff,
+and report clearly any chunks that could not be translated rather than silently dropping content. -
+Preserve line breaks, blank lines,
+and simple formatting markers so the translated document keeps the layout of the original. - Provide
+a progress indication to the user during long runs,
+and allow the user to control verbosity. - Record detailed diagnostic information
+(such as per-chunk timing, errors, and backend choices) to a rotating log file,
+while showing only serious errors on the console. - Write output to a new file
+or directory without overwriting the source,
+and handle encoding correctly (UTF-8 by default) for both reading
+and writing. - Validate inputs up front, giving friendly error messages for missing files,
+unsupported language codes, or unavailable backends,
+and exit with a meaningful non-zero status code on fatal failure. - Use temporary files safely
+when writing intermediate results, so that a crash does not leave a corrupted final output.
+The script should be runnable from the command line,
+print a concise summary at the end (number of chunks, successes, failures, and elapsed time), and be
+organized so that new translation backends can be added with minimal changes.
+---

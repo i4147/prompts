@@ -1,0 +1,2 @@
+Convert a ClickHouse-style JSON export into a list of {project: download_count} objects,
+one record per line, in place.

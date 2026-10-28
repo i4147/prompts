@@ -1,0 +1,52 @@
+[Tool: generate_document] Title:
+AI Agent Prompt for Unused Imports Scanner Script Design a Python 3 command-line tool that performs
+static analysis on Python source code to detect unused import statements,
+intended to help developers clean up dead imports across a codebase. **Purpose**:
+The script should use the `ast` module to parse Python files
+and identify imports
+(`import x`, `from x import y`, aliased imports via `as`,
+and imports inside `if TYPE_CHECKING:` blocks) that are never referenced elsewhere in the module.
+**Inputs**: - Accept one or more paths via `argparse` on the command line
+— these can be individual `.py` files, directories (walked recursively to find all `.py` files),
+or archive files. - Support reading Python files directly from inside `.zip` archives
+(via `zipfile`) and `.tar`/`.tar.gz`/`.tgz` archives (via `tarfile`),
+extracting file contents in-memory using `io` rather than writing to disk. - Optionally support
+zstandard-compressed tarballs if the third-party `zstandard` package is installed;
+wrap this import in a try/except
+and expose a `HAS_ZSTD` boolean flag so the feature degrades gracefully (with a clear message)
+when the dependency is missing. - Support analyzing multiple files in parallel using
+`multiprocessing.Pool` to speed up scanning of large codebases. **Core logic**:
+- For each Python source file, parse it into an AST and walk the tree to collect:
+all `ast.Import`/`ast.ImportFrom` nodes, all name/attribute usages (`ast.Name`, `ast.Attribute`),
+references inside string-based type annotations,
+and names listed in `__all__` assignments (list or tuple). - Cross-reference imported names against
+used names to determine
+which imports are unused. - Correctly handle `if TYPE_CHECKING:` guarded blocks by collecting their
+line ranges so imports inside them are evaluated properly rather than always being flagged. - Treat
+names exported via `__all__` as used,
+even if not referenced elsewhere in the file. - Represent each unused import finding with a
+dataclass capturing details such as the module/name, alias, and line number,
+and represent per-file results with a dataclass holding the list of findings plus an optional error
+message (e.g., for syntax errors or unreadable content). **Output**:
+- Print a clear, human-readable report to the terminal,
+colorized with ANSI escape codes via small helper functions
+(e.g., for bold, cyan, yellow, red, green, dim text),
+controlled by a global flag that can disable coloring (for non-TTY output or a `--no-color` option).
+- For each scanned file, list unused imports with their line numbers,
+visually distinguishing filenames, line numbers, and warnings;
+show parsing/reading errors distinctly (e.g., in red) without stopping the overall scan. - Print a
+final summary showing totals:
+files scanned, unused imports found,
+and errors encountered. - Exit with a non-zero status code when unused imports
+or errors are found (CI-friendly),
+and zero when the codebase is clean. **Notable behaviors/edge cases**:
+- Must not produce false positives for imports only referenced in string-quoted type annotations
+or in `__all__`. - Must continue scanning remaining files even if one file has a syntax error,
+recording the error against that specific file. - Should support regex-based (`re` module)
+filtering, such as excluding files/paths matching certain patterns. - Should use `pathlib.Path`
+throughout for cross-platform path handling. - Should be implemented using only the standard library
+plus the optional `zstandard` package,
+with the zstandard-related code paths cleanly isolated behind the `HAS_ZSTD` check.
+Implement this as a complete, runnable, well-organized Python 3 script with type hints, docstrings,
+clearly separated functions/classes for archive handling, AST analysis, and report formatting,
+and a `main()` function guarded by `if __name__ == "__main__":`.

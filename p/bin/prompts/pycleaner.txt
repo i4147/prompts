@@ -1,0 +1,26 @@
+Write a Python script that acts as a command-line tool for analyzing
+and comparing the contents of two software artifacts, such as source distributions, wheels,
+archives, or directory trees, and reports their differences in a clear,
+color-highlighted terminal output.
+The tool should accept one or more file
+or directory paths (including compressed archives like zip, tar,
+and optionally zstandard-compressed tarballs) and be able to walk into nested archives
+and directories to enumerate their members.
+It should support comparing members between two sources, identifying files that are added, removed,
+or modified, and producing unified-style text diffs for changed text files
+while summarizing binary changes.
+It should be able to optionally analyze Python source files to highlight structural changes such as
+added, removed, or altered top-level definitions (functions, classes, imports) rather than only raw
+text differences.
+Use multiple worker processes when processing a large number of files to keep it fast.
+The output should be human-readable with optional color that can be disabled,
+include a concise summary of statistics
+(counts of added, removed, changed files and total lines changed),
+and allow filtering results by file pattern or extension.
+Provide a command-line interface with clear options for these behaviors, sensible defaults,
+helpful usage messages,
+and a non-zero exit status
+when differences are found so the tool can be used in continuous integration pipelines.
+Handle unreadable files, missing paths,
+and corrupted archives gracefully by reporting a clear error message without crashing the
+whole run. ---

@@ -1,0 +1,38 @@
+Write a Python script that compresses a directory tree or a set of files into 7z
+archives, with configurable compression levels and automatic handling of
+already-compressed content.
+The tool should be a command-line utility that accepts a source path (file or
+folder), an output archive location, and options that control compression
+strength, the choice of compression method, and whether to perform a fast or
+thorough ("full") compression mode.
+Core behavior to implement: - Accept a file or directory as input and produce a
+7z archive at the specified output path.
+Preserve the relative directory structure inside the archive. - Skip files whose
+extensions indicate they are already compressed or archival (for example,
+existing archives, compressed streams, and package wheels), so they are stored
+rather than recompressed.
+Support a basic skip list and an extended ("full") skip list that also covers
+additional formats, selectable via a command-line flag. - Provide a named-method
+option allowing the user to choose among common 7z compression methods (such as
+LZMA2, LZMA, or PPMd), with a sensible default. - Offer a "full"
+high-compression mode that applies strong, solid-archive settings with a large
+dictionary and block size, intended for maximum compression of large trees. -
+Use parallel processing to speed up compression of many files where safe, and
+fall back gracefully to single-process operation when parallelism is not
+beneficial or not supported. - Use memory-efficient reading for large files
+where appropriate. - Provide a logging system that reports progress and warnings
+to the console.
+Use a richer logging library when available, and fall back to the standard
+logging facility otherwise. - Handle errors robustly: report missing paths,
+permission problems, unreadable files, and corrupt or incompatible inputs with
+clear messages, and exit with a non-zero status on failure.
+Clean up temporary files and partial outputs on failure. - Support temporary
+working directories for intermediate staging, removed automatically at the end.
+- Optionally support tar-based intermediate packaging when it helps preserve
+metadata such as permissions and timestamps. - Print a concise summary at the
+end: number of files processed, number skipped, original versus compressed size,
+compression ratio, and elapsed time. - Validate arguments before doing any work
+(for example, refusing to overwrite an existing output without an explicit flag,
+and checking that the chosen method and level are valid). - Keep the
+command-line interface self-documenting with help text, and make the script
+runnable directly as a standalone program. ---

@@ -1,0 +1,58 @@
+Write a Python demonstration/test script that showcases the capabilities of a custom module/library
+called `fopen` (imported with the alias `wo`),
+which appears to be a lightweight file-based data storage and console/display utility toolkit.
+The script should be a standalone `main()`-driven program (invoked via `if __name__ == "__main__":`)
+that sequentially exercises the following features of the `fopen` module,
+printing descriptive labeled output for each step so the console log clearly documents the demo
+flow: 1. **1D data storage**:
+Remove any existing file named "demo_1d" (silently, without display),
+write a 1D list of strings (e.g. `["alpha", "beta", "gamma"]`) to it using a write function (`w`)
+with an `is2d=False` flag, read the full contents back (`r`),
+read a single entry by index (`r` with an `index` parameter),
+then append additional items (`a`) to the 1D file and re-read/print the updated contents.
+2. **2D data storage**:
+Remove any existing file named "demo_2d",
+write a 2D list of rows (e.g. name/age pairs like `[["alice", 30], ["bob", 25], ["carol", 40]]`)
+using the write function with `is2d=True`, read and print it,
+then append a new row and print the updated 2D data.
+3. **Row deletion**:
+Delete a row from the 2D file by matching a value (e.g. "bob") at a specific column index,
+using a delete function (`d`) that takes `del_list` and `index` parameters
+and returns a tuple of (number of rows removed, remaining data) — print both.
+4. **Backup and snapshot**:
+Call a `backup` function on the 1D file with `display=True`,
+and a `snapshot` function that takes the filename, a tag/label (e.g. "s"),
+and a small numeric interval/delay value (e.g. `0.0001`), also with `display=True`.
+5. **File listing and metadata**:
+Call a `listdir` function (with `display=False`) to list managed files and print the result;
+call an `info` function on the 1D file (with `display=False`) to retrieve metadata/payload
+and print it.
+6. **Console/alert utilities**:
+Call a `consoles` function on the 1D file with `multiple=False` and `alert=False`;
+call a `warning` function passing `True`;
+call a `backdate` function on the 1D file with the tag "s" and `gap=0`,
+printing its returned marker/value.
+7. **Misc utility helpers**:
+Call and print the results of a `loop_progress` function (e.g. with current step 3 and total 10) to
+show progress calculation;
+a `future_datetime` function (e.g. 5 minutes ahead, passing "m" as the unit) to compute a future
+timestamp; an `align_text` function (e.g. aligning the string "centered" using "center" alignment)
+and print its `repr()`;
+and a `stylize` function (e.g. styling "bold text" with `bold=True`) to apply text
+formatting/ANSI styling.
+8. **Screen buffer feature**:
+Instantiate a `ScreenBuffer` class with `wait=True`,
+use its `put` method to add multiple log lines
+(including at least one with a `level=1` parameter to indicate a warning-level message),
+then call its `format_text_for_display` method and iterate over/print each formatted row.
+9. **Cleanup**: At the end,
+remove both the "demo_1d"
+and "demo_2d" files (silently, without display) to leave no residual state.
+The script should begin by printing a header line (e.g. "=== WithOpen Demo ===") to clearly mark the
+start of the demo, use straightforward `print()` statements with short descriptive labels before
+each result (e.g. "1D read:", "2D after append:", "Removed X row(s);
+remaining:", "Progress:", "Future time:", "Align:", "Styled:"),
+and run top-to-bottom without exception handling,
+assuming the `fopen` module is available on the Python path.
+Include the necessary imports (`importlib`, `sys`, and `fopen as wo`) even if not all are strictly
+required by the demo logic. ---

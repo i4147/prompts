@@ -1,0 +1,2 @@
+Collapsible widget.
+Taken from: https://github.dev/napari/superqt/blob/f4d9881b0c64c0419fa2da182a1c403a01bd084f/src/superqt/collapsible/_collapsible.py

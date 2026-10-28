@@ -1,0 +1,29 @@
+Write a Python script that acts as a type-annotation assistant for existing
+Python source files.
+The tool should take one or more Python files or directories as input, analyze
+their function and method signatures, and automatically add or refine type
+annotations so the code is more explicit about the types it accepts and returns.
+Key requirements: - **Purpose:** Infer missing parameter and return type
+annotations for functions in the target code, using a stub or type-inference
+source where available, and write the improved code back without changing its
+runtime behavior. - **Inputs:** A path (file or directory) containing Python
+source, plus command-line options such as whether to modify files in place,
+whether to preview changes, and which stub or type-information sources to use. -
+**Outputs:** Updated Python files with annotations inserted, or a unified diff
+preview showing exactly what would change.
+The tool should report a summary of how many annotations were added and which
+files were skipped or failed. - **Safety behaviors:** Preserve original
+formatting and comments as much as possible.
+Never alter function bodies or logic.
+Validate that each modified file still parses correctly before saving, and leave
+the original file untouched if the transformation fails. - **Stub cleanup:**
+When type information comes from typeshed-style stub files, sanitize references
+to private or stub-only modules (such as the `_typeshed` module) so the output
+imports only standard, runnable names from `typing` or the standard library. -
+**Robustness:** Handle large codebases by processing files independently, so
+that one failing file does not stop the whole run.
+Allow a configurable degree of parallelism and a timeout per file. -
+**Command-line interface:** Provide clear help text, sensible defaults, and
+meaningful exit codes that indicate success, partial failure, or a usage error.
+- **Logging:** Give concise progress output, with a verbose mode for detailed
+diagnostics about which functions were annotated and why any were skipped. ---

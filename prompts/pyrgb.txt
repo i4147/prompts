@@ -1,0 +1,1 @@
+Show the color of an RGB triple, or browse all colors page by page.

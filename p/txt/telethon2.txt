@@ -1,0 +1,32 @@
+Write a Python script that uses the Telethon library to connect to a Telegram account
+and extract URLs/links from recent messages in a specific Telegram channel.
+Requirements and behavior: 1. **Authentication/Setup**: - Define Telegram API credentials:
+`API_ID` (integer) and `API_HASH` (string),
+obtained from my.telegram.org. - Define a `phone` variable holding the phone number
+(in international format, e.g., "+countrycodeXXXXXXXXXX") associated with the Telegram account used
+for login. - Create a `TelegramClient` instance using a local session file named `"session_name"`,
+authenticating with the API ID and API hash.
+2. **Target chann a holding the username (string.
+3. **URL extic**: - Define (asw string) capable of matching `http://` and `https://` URLs,
+including common URL characters
+(alphanumeric characters,
+and special characters like `$-_@.&+!*(),` and percent-encoded sequences like `%XX`).
+4. **Main function** named `extract_links()`:
+- Instantiate the `TelegramClient` using the session name, API ID,
+and API hash. - Use the client as a context manager (`with client:`) to handle connection/login
+automatically. - Retrieve the channel entity using `client.get_entity()` with the
+`channel_username`. - Iterate over the most recent messages in the channel using
+`client.iter_messages()`, limited to the last 100 messages. - For each message that contains text,
+apply the regex pattern to find all URLs in the message text using `re.findall()`. - If any links
+are found in a message, print the message's ID (formatted as `"Message ID: {id}"`),
+followed by each extracted link on its own line, indented and prefixed with `" - "`.
+5. **Entry point**: - Use ==
+"__main__":` guard to call `extract_links()` when the script is run directly.
+Notes: - The script relies on the `telethon` library
+(specifically `telethon.sync` for synchronous usage)
+and Python's built-in `re` module. - No explicit output file is produced;
+all results (message IDs and extracted links) are printed directly to standard output/console. - The
+script assumes a valid,
+already-authorized Telegram session
+or will prompt for login (code/password) interactively on first run since it uses a persistent
+session file.

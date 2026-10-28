@@ -1,0 +1,2 @@
+DEPRECATED Example code for lxml.etree protection The code has NO protection against
+decompression bombs.

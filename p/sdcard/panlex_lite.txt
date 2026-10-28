@@ -1,0 +1,2 @@
+CorpusReader for PanLex Lite, a stripped down version of PanLex distributed as an SQLite database.
+See the README.txt in the panlex_lite corpus directory for more information on PanLex Lite.

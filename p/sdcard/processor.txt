@@ -1,0 +1,34 @@
+Write a Python module that performs concurrent code formatting for multiple files using the
+`multiprocessing.Pool` module.
+The module should expose: 1.
+A module-level constant `WORKERS = 8` defining a fixed default pool size for parallel processing.
+2. A `FormatResult` class representing the outcome of formatting a single file:
+- Use `__slots__` for memory efficiency, storing `path`, `parser`, `original`,
+and `formatted`. - The constructor accepts `path`, `parser`, `original`, and `formatted`,
+converting `path` to a `pathlib.Path`. - A `changed` property that returns `True` if `original`
+differs from `formatted`. - A `__repr__` method showing the path and whether it changed,
+e.g. `<FormatResult {path} changed={changed}>`.
+3. A module-level worker function `_submit_batch(batch, options)` that serves as the entry point for
+worker processes (it must be defined at module level so it can be pickled for multiprocessing).
+It receives a `batch`, which is a list of `(path_string, parser, content)` tuples,
+and an `options` object.
+For each item in the batch,
+it calls a `format(content, options, path=path)` function
+(imported from a local `.api` module, along with an `Options` type)
+and returns a list of `(path_string, formatted)` tuples.
+4. A main function `format_files(paths, options=None, workers=WORKERS)` that formats a collection of
+file paths (accepting `os.PathLike`/`Path` objects) without writing results back to disk.
+Notable behavior: - If only one file is given,
+it should be formatted directly in the current process (no multiprocessing overhead). - If two
+or more files are given,
+the work should be distributed across a fixed-size pool of worker processes (default 8) using
+`Pool.apply_async`, splitting the files into batches that are dispatched to workers;
+each worker processes its batch via `_submit_batch`
+and returns a list of `(path, formatted)` results back to the parent process,
+which then reassembles them (e.g., into `FormatResult` instances or similar). - The function should
+read each file's content, determine/pass along its parser,
+and use the shared `Options` type for formatting configuration.
+Include proper type hints (using `from __future__ import annotations`),
+docstrings explaining the module's purpose and each function/class's behavior,
+and keep the implementation idiomatic Python using `pathlib.Path`
+and the standard `multiprocessing` module. ---

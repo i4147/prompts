@@ -1,0 +1,16 @@
+Notifications.
+Environment variable QTEXTRA_NOTIFICATION_EXIT_ON_ERROR:
+0 (default) or 1, whether to exit on error instead of showing a notification.
+QTEXTRA_NOTIFICATION_CATCH_ERROR:
+0 (default) or 1, whether to catch error
+and show notification instead of calling the original except hook.
+QTEXTRA_NOTIFICATION_HOOKS_ENABLED:
+0 (default) or 1, whether to send error information to telemetry instead of showing a notification.
+QTEXTRA_NOTIFICATION_AUTO_EXPAND:
+0 (default) or 1, whether to auto expand the notification when a new notification is received.
+QTEXTRA_NOTIFICATION_DISMISS_TIME:
+5000 (default) or int, time in milliseconds after which the notification is automatically dismissed.
+0 to disable.
+QTEXTRA_NOTIFICATION_LEVEL:
+"WARNING" (default) or str, minimum severity level to show in the notification manager.
+One of "NONE", "DEBUG", "INFO", "SUCCESS", "WARNING", "ERROR", "CRITICAL".

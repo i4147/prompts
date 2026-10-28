@@ -1,0 +1,17 @@
+Write a Python module that defines a set of lightweight hash algorithm identifier classes,
+intended to act as simple metadata descriptors (not actual hash implementations) for common
+cryptographic hash functions.
+Requirements: - Define three classes:
+`SHA256`, `SHA1`, and `MD5`. - Each class must have exactly two class-level attributes: - `name`:
+a string containing the lowercase standard name of the hash algorithm
+(`"sha256"`, `"sha1"`, `"md5"` respectively). - `digest_size`:
+an integer representing the output digest size in bytes for that algorithm
+(32 for SHA256, 20 for SHA1, 16 for MD5). - The classes should contain no methods, no constructors,
+and no actual hashing logic
+— they are purely simple data holders/markers exposing identifying metadata about each algorithm. -
+  No imports, no inheritance, no docstrings,
+  and no additional logic are required. - The classes should be defined at module level,
+  in the order SHA256, SHA1, MD5. - The code should be minimal and self-contained,
+  suitable for use as identifiers/constants referenced by other code (e.g., to
+look up algorithm name or digest size without performing any actual hashing).
+---

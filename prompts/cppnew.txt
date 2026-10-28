@@ -1,0 +1,21 @@
+Write a Python script that acts as a command-line helper for quickly scaffolding
+new C++ competitive-programming style source files.
+The tool should take a single filename argument (supporting a leading "~" for
+the home directory) and refuse to overwrite any file that already exists,
+reporting the conflict to the standard error stream and exiting with a non-zero
+status.
+When the file is free to create, it should write a ready-to-use C++ starter
+template containing standard headers, a fast I/O setup, an empty main function
+that returns zero, and a placeholder comment where the user's code belongs.
+After creating the file, it should confirm the creation to the user and then
+open the file in the user's preferred text editor, taken from the EDITOR
+environment variable and falling back to nano when that variable is unset or
+empty.
+If the chosen editor cannot be found, it should print a clear error message to
+standard error and exit with a non-zero status.
+If the user interrupts the session (for example with Ctrl+C), it should exit
+cleanly with the conventional interrupt exit code.
+When invoked without any arguments, the tool should print a short usage message
+explaining the expected syntax and exit with a non-zero status.
+The script's exit status should reflect the success or failure of the overall
+operation. ---

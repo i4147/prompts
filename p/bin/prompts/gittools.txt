@@ -1,0 +1,25 @@
+Write a Python script that acts as a batch Git repository synchronization and reporting tool.
+It should accept a list of local repository paths
+(provided via command-line arguments or a configuration file) and, for each repository,
+determine its current branch, check its working-tree status,
+fetch the latest changes from its remote,
+and report how far the local branch has diverged from its upstream (commits ahead and behind).
+The tool should handle detached HEAD states gracefully,
+reporting them as a distinct condition rather than failing.
+Key behaviors: - Process multiple repositories concurrently to reduce total runtime,
+while keeping the output for each repository clearly separated
+and attributable. - Enforce reasonable timeouts on every external Git operation
+and convert failures (missing Git executable, timeouts, non-repository paths, network errors) into
+clear, human-readable error messages for the affected repository without aborting the processing of
+the others. - Provide an optional mode that performs a safe fast-forward pull only
+when the working tree is clean and the branch is strictly behind its upstream,
+and never overwrites local changes
+or force-pushes. - Optionally post a summary of results to a configurable HTTP webhook endpoint as
+JSON, handling network errors
+and non-success responses gracefully. - Produce a final summary report in either a human-readable
+table or machine-readable JSON format, selectable by a flag,
+and return a non-zero exit code if any repository encountered an error
+or has uncommitted changes. - Validate inputs up front
+(paths exist, are directories, and contain a Git repository)
+and provide helpful usage/help text. - Log actions at configurable verbosity levels,
+and never print credentials or sensitive remote URLs in the output. ---

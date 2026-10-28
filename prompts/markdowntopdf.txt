@@ -1,0 +1,32 @@
+Write a Python script that converts Markdown content into a styled PDF document.
+The tool should accept Markdown input either from a file path or from a raw text
+string, and produce a PDF file at a specified output location.
+Key requirements: - **Inputs:** Markdown content provided via a file or a direct
+string, an output PDF path, an optional custom CSS stylesheet, an optional base
+URL for resolving relative links and assets, and optional additional Markdown
+extensions with configuration options.
+It should also work with a sensible default stylesheet when none is provided. -
+**Markdown processing:** Convert Markdown to HTML with support for common
+extended syntax such as tables, auto-linking, improved emphasis handling, and
+fenced code blocks with syntax-friendly formatting.
+Users should be able to enable further extensions beyond the defaults. -
+**Rendering:** Combine the generated HTML with the chosen stylesheet and render
+it into a high-quality PDF with proper page layout, typography, and handling of
+code blocks, tables, and images. - **Validation:** Reject empty or missing
+Markdown input with a clear, specific error message rather than producing an
+empty PDF.
+Handle missing input files, unreadable paths, and invalid stylesheet references
+gracefully. - **Default stylesheet:** If no CSS is supplied, fall back to a
+bundled default stylesheet that may be stored in compressed form; the tool
+should decompress and apply it transparently. - **Command-line interface:**
+Provide a CLI that accepts the input file or text, output path, stylesheet, base
+URL, and extension options, with helpful `--help` output.
+Support logging with verbosity control, and report the output path and elapsed
+processing time on success. - **Batch capability:** Allow converting multiple
+Markdown files in one run, processing them concurrently to improve throughput,
+with per-file error reporting so one failure does not abort the others. - **Exit
+behavior:** Return a non-zero exit status on failure and zero on full success,
+with errors written to standard error. - **Output:** The result is a valid PDF
+file.
+The script should avoid leaving partial or corrupted output files when rendering
+fails. ---

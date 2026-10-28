@@ -1,0 +1,16 @@
+Write a Python script that scans a given directory (or a set of files) for text
+files and replaces common HTML character entities (such as &lt;, &gt;, &amp;,
+&quot;, &apos;, &nbsp;, &copy;, &reg;, &euro;, &pound;, &yen;, &dollar;, &cent;,
+&sect;, &dagger;, &Dagger;, &hellip;, &mdash;, &ndash;, &lsquo;, &rsquo;,
+&ldquo;, &rdquo;) with their corresponding literal characters.
+The script should process files in parallel to take advantage of multiple CPU
+cores, read and write every file as UTF-8, and only rewrite a file when its
+contents actually change.
+It should accept one or more file paths or directory paths from the command
+line, recursively include files within directories, and report a concise summary
+at the end showing how many files were scanned and how many were modified.
+Handle read or write errors for individual files gracefully so that a failure on
+one file does not stop processing of the others, and print a clear message for
+each file that could not be processed.
+Ensure the script can be run directly from the command line and exits with a
+non-zero status if any file failed to process. ---

@@ -1,0 +1,23 @@
+Write a Python script that scans a directory of Python source files and produces
+a summary of the public API each module exposes, along with an organized copy of
+those modules in a new location.
+The script should accept a source directory and an output directory as inputs.
+It should discover all Python modules in the source directory, skipping package
+initializer files and any files whose names begin with an underscore.
+For each discovered module, it should parse the file safely without executing
+it, and identify every publicly visible function (both regular and asynchronous)
+and class, ignoring any names that begin with an underscore.
+Duplicate names should be removed and the results presented in sorted order.
+If a file cannot be parsed due to syntax errors, the script should emit a clear
+warning to the error stream and continue processing the remaining files rather
+than stopping.
+The script should write a structured report to the output directory listing each
+module and its public names, and copy or organize the processed modules into the
+output location so they can be easily reviewed.
+Processing of multiple modules should be parallelized across available CPU cores
+to improve throughput on large codebases, while still producing deterministic,
+consistently ordered output.
+The tool should be runnable from the command line, provpful usage information,
+handle missing or invalid directory paths gracefully with informative error
+messages, and return a non-zero exit code if a fatal error occurs.
+The output should be easy for both humans and other tools to consume. ---

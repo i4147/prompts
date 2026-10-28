@@ -1,0 +1,29 @@
+Write a Python script that scans a directory tree for text-based source and
+document files, analyzes their contents in parallel, and produces a summary
+report of the codebase.
+The tool should accept a root directory path as its main input, along with
+optional command-line settings for which file extensions to include, which
+directory names to skip (such as version control folders, dependency caches, and
+build output), a maximum file size limit, and the output format and destination.
+For each qualifying file, the script should collect useful metrics, such as
+total line count, non-blank line count, comment-like line count where feasible,
+character and byte counts, and the file's detected type.
+It should gracefully skip binary files, unreadable files, and files that exceed
+the size limit, while recording the reason each file was skipped.
+Processing should be distributed across multiple CPU cores to remain efficient
+on large projects, and the results should be deterministic regardless of
+processing order.
+The aggregated output should include overall totals, a breakdown of metrics by
+file extension or language category, the largest files by line count, and a list
+of any skipped or failed files with their reasons.
+The script should support at least two output formats: a human-readable
+plain-text or table-style report printed to the console, and a structured JSON
+document that can be written to a file or standard output for use by other
+tools.
+It should report a clear error and exit with a non-zero status code when the
+given path does not exist or is not a directory, and it should show a helpful
+message when no matching files are found.
+Keep the design modular, well-documented, and easy to extend with new file types
+or metrics.
+Include a command-line interface with sensible defaults and built-in help text
+so the tool can be used without reading its source. ---

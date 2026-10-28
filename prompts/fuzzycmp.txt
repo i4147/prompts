@@ -1,0 +1,39 @@
+Write a Python script that acts as a text similarity and file comparison
+toolkit.
+It should let a user measure how alike two strings or two text files are, using
+a suite of well-known similarity and distance algorithms, and report the results
+clearly.
+Core purpose and capabilities: - Provide a collection of pluggable similarity
+and distance metrics for comparing texts.
+Cover edit-based measures (such as Levenshtein-style distances, including a
+transposition-aware variant and a longest-common-subsequence measure), token and
+set-based measures (such as Jaccard, Dice, cosine over token counts, and n-gram
+overlap), character-level measures suited to short names (such as Jaro and
+Jaro-Winkler), fuzzy matching measures that handle word reordering and partial
+substrings, Hamming distance for equal-length strings, and locality-sensitive
+hashing approaches for estimating similarity of large documents (such as MinHash
+and SimHash). - Include phonetic comparison options that encode words by how
+they sound (such as Soundex, Metaphone, and NYSIIS) so that spelling variants of
+the same name can be matched. - Offer a common interface so that every metric
+can be applied uniformly, and allow a user to choose one or several metrics at
+run time. - Support text normalization before comparison, including optional
+case folding, whitespace collapsing, punctuation removal, and a default
+word-level tokenizer.
+Inputs: - Command-line usage that accepts either two literal strings or two file
+paths, a choice of metric (or all default metrics), and options such as
+normalization toggles, n-gram size, and other metric parameters. - File
+comparison should read two text files, optionally align them line by line, and
+produce per-line or whole-file results.
+Outputs: - Human-readable console output showing each metric's score for the
+comparison, with clear labeling of whether a higher value means more similar or
+more different. - For file comparison, a summary of similarity plus a line-level
+diff report that marks inserted, deleted, replaced, and unchanged lines. -
+Sensible handling of errors such as missing files, unreadable input, or unknown
+metric names, with informative messages and a non-zero exit status.
+Key behaviors: - Metrics must return consistent, documented ranges where
+possible, and handle edge cases such as empty strings, identical inputs, and
+very long texts without crashing. - Randomized estimators (such as MinHash)
+should accept a seed so results are reproducible. - Provide a help screen
+describing all options and available metrics. - The script should be
+self-contained, runnable directly from the command line, and organized so that
+new metrics can be added easily. ---

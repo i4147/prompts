@@ -1,0 +1,30 @@
+Write a Python command-line script that checks a given
+and optionally remov The script must use the `argparse` module to accept two arguments: 1.
+A required positional argument `file` — the path to the Python file to check.
+2. An optional flag `-a` / `--autofix` (boolean, `action="store_true"`) — when provided,
+automatically removes unused imports instead of just reporting them.
+Core functionality (implemented in a function `check_or_fix_imports(file_path, autofix=False)`):
+- First verify the target file exists using `os.path.exists`;
+if it does not, print an error message in the format:
+`Error: The file \`{file_path}\` does not exist.`
+and return without doing anything else. - Use the external `autoflake` tool via `subprocess.run` to
+detect/remove unused imports.
+Build the command as a list starting with
+`["autoflake", "--remove-all-unused-imports", "--ignore-init-module-imports", file_path]`. - If
+`autofix` is True, append `--in-place` to actually modify the file. - If `autofix` is False,
+append `--check` to only check without modifying anything. - Run the command with
+`capture_output=True, text=True` and inspect the return code: - Return code `0`:
+print `"No unused imports found."` - Return code `1`:
+- If `autofix` is True,
+print `Successfully removed unused imports from \`{file_path}\`.` - If `autofix` is False,
+print `Unused imports found in \`{file_path}\`.
+Run with -a to fix.` - Any other return code: print `An error occurred:
+{result.stderr}` - Wrap the subprocess call in a try/except block catching `FileNotFoundError`
+(raised when `autoflake` is not installed), printing: `Error: \`autoflake\` is not installed.
+Run \`pip install autoflake\`.` In the `if __name__ ==
+"__main__":` block, set up the argument parser with description `"Check
+or fix unused imports in a Python
+file."`, parse the arguments, and call `check_or_fix_imports(args.file, args.autofix)`.
+The script has no other dependencies beyond the standard library (`argparse`, `subprocess`, `os`)
+and the external `autoflake` CLI tool,
+which must be installed separately for the script to function.

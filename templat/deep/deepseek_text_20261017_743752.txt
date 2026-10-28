@@ -1,0 +1,71 @@
+# Task: Implement `mlocate` (`updatedb` + `locate`) in Python
+## Objective
+Reimplement the Linux `mlocate` package as a single Python module with two entry points:
+  1. `updatedb` — walks one or more directory trees and builds a path database.
+  2. `locate`   — queries that database and prints matching absolute paths, one per line.
+The behavior must match GNU `mlocate` for the flags listed below, on Linux.
+## Hard constraints
+- Language: Python 3.11+.
+- **Standard library only.** No third-party packages, no `pip install`, no `requirements.txt`. Use `os`, `sys`, `argparse`, `pathlib`, `stat`, `tempfile`, `re`, `time`, etc.
+- No shelling out to `find`, `updatedb`, `locate`, `grep`, or any external program for the real work.
+- The two commands must be invocable as:
+    - `python -m mlocate.updatedb ...`
+    - `python -m mlocate.locate ...`
+  (i.e., a proper package, not two loose scripts).
+## Must-have functional requirements
+### `updatedb [OPTIONS]`
+- Walk one or more roots. Support `-U PATH` / `--database-root PATH` (repeatable). Require at least one `-U`.
+- Write DB to `-o FILE` / `--output FILE` (default `./mlocate.db`).
+- Do **not** follow symlinked directories by default (GNU behavior). Document it.
+- `-l` / `--one-file-system`: prune mount points on other filesystems (compare `os.stat(...).st_dev`).
+- `--prune-paths FILE`: newline-separated prefixes to skip.
+- Continue past `PermissionError` and other `OSError`s; don't abort. With `-v` / `--verbose`, print counts (indexed, dirs, errors).
+- Store absolute, normalized paths. Deduplicate hardlinks / identical paths.
+- Handle non-UTF-8 filenames: use `os.fsencode` / `os.fsdecode` (or `bytes` paths) end-to-end.
+- Deep trees: iterative walk with `os.scandir`, not recursive `os.walk` (or, if using `os.walk`, set an explicit stack and don't rely on its recursion).
+- Atomic write: write to a `tempfile.NamedTemporaryFile` in the same directory → `os.fsync` → `os.replace` over target.
+### Database format
+- Your design; document it in `README.md` with a byte-level spec.
+- Must include: magic, format version, build timestamp, root list.
+- Must be readable incrementally (a simple line-oriented or chunked format is fine — do not `read()` the whole file into memory for large DBs; iterate).
+- `locate` must validate magic + version, and error clearly on mismatch or truncation.
+### `locate [OPTIONS] PATTERN...`
+- Default: case-sensitive **substring** match on the full path; one match per line to stdout.
+- Flags:
+  - `-i` / `--ignore-case`
+  - `-b` / `--basename`; default is `-w` / `--wholename`
+  - `-r` / `--regexp` — use `re` (documented as Python regex, not POSIX; note the difference in README).
+  - `-l` / `--limit N`
+  - `-c` / `--count`
+  - `-d` / `--database FILE` (default `./mlocate.db`)
+  - `--existing` — only print paths that currently exist
+- No pattern → print everything.
+- Exit codes: 0 on success (including 0 matches); 1 on fatal error.
+## Stretch (only if must-haves are solid)
+- `locate -e` alias for `--existing`.
+- DB compression via `zlib` (stdlib).
+- `updatedb.conf`-style config file.
+- `--max-depth N`.
+## Quality requirements
+- Layout: `mlocate/__init__.py`, `mlocate/db.py` (shared reader/writer), `mlocate/updatedb.py`, `mlocate/locate.py`. Use `argparse` for CLI parsing.
+- Type hints throughout; `mypy --strict` clean is a bonus.
+- Docstrings on every public function/class.
+- Unit tests with `unittest` (stdlib only — no pytest): DB round-trip; matching (substring, `-i`, `-b`, `-r`, `-l`, `-c`); error paths (missing file, corrupt magic, truncated file).
+- Integration test that: creates a temp tree, runs `updatedb`, runs `locate`, asserts on output.
+- A `Makefile` with `build`, `test`, `lint`, `demo` targets is encouraged.
+## Deliverables
+1. Full source tree + `pyproject.toml` (with only stdlib in `dependencies = []`).
+2. `README.md`: design overview, DB format byte spec, supported flags, deviations from GNU `locate`, how to run.
+3. `scripts/demo.sh` (or a `Makefile` target) that:
+   - builds a synthetic tree in `/tmp`,
+   - builds the DB,
+   - runs 5+ representative `locate` queries,
+   - demonstrates permission-denied handling (`chmod 000` on a dir),
+   - demonstrates an interrupted write leaves the old DB intact.
+4. Final message: what you implemented, what you skipped and why, and known limitations.
+## Anticipated pitfalls (handle these)
+- Symlinks: not followed by default; document and test.
+- Hardlinks: deduped.
+- Non-UTF-8 names: preserved via `os.fsencode` / `bytes` paths.
+- Empty DB: `locate` exits 0 silently; `locate -c` prints `0`.
+- Large directory: stream `os.scandir`, don't `list()` it.

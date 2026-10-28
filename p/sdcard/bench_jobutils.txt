@@ -1,0 +1,41 @@
+Create a Python benchmarking CLI script that compares different parallel/serial execution strategies
+across several representative workload scenarios,
+measuring and reporting performance statistics. **Purpose:** The script should benchmark execution
+methods (serial, `multiprocessing.Pool.map`, `imap`, `imap_unordered`, a process pool,
+a thread pool, and joblib-based parallelism) against multiple workload "scenarios" that represent
+different task profiles:
+a CPU-bound task (repeated SHA-256 hashing), an I/O-bound task (sleep-based),
+and a "tiny" task (trivial computation with high call overhead).
+It should import `PoolMethod`
+and a helper function `mpf` from a local module named `jobutils` to abstract/execute the different
+pooling methods. **Main components/inputs:** - Three worker functions: - `cpu_task(n)`:
+performs `n` iterations of SHA-256 hashing on a 64-byte buffer
+and returns a byte of the digest. - `io_task(seconds)`:
+sleeps for the given number of seconds and returns it. - `tiny_task(x)`:
+returns `x + 1` (minimal workload to measure overhead). - A `Scenario` dataclass (frozen) holding:
+scenario name, the worker function,
+a factory function `make_items(n)` that builds the list of inputs for that scenario,
+a default number of items,
+and the tuple of applicable execution methods. - A `Result` dataclass capturing a single benchmark
+run's outcome: scenario name, method, worker count, chunksize, item count, repeat count,
+median/min/stdev execution time in seconds, throughput (items/sec),
+and an optional speedup factor relative to the serial baseline. - A `SCENARIOS` dictionary
+registering three scenarios ("cpu", "io", "tiny"), each with its own task function, item factory,
+default item count, and list of supported methods
+(the "io" and "tiny" scenarios omit some methods like plain `map`/`process_pool` combinations
+differently, reflecting
+which methods make sense for that workload). **Expected behavior/outputs:** - Should be runnable as
+a CLI tool (using `argparse`) allowing the user to select scenario(s), number of items,
+number of worker processes/threads, number of repetitions per measurement, chunksize,
+and output format. - For each selected scenario and method combination,
+the script should run the task multiple times (per the repeat count),
+collect timing statistics (median, min, standard deviation),
+compute throughput and speedup vs. the serial baseline,
+and store results using the `Result` dataclass. - Should support multiprocessing safely
+(e.g., respecting the `if __name__ == "__main__":` guard,
+and considering platform differences via `platform.sys.platform` checks since start methods differ
+between OSes). - Final results should be printed/exported in a structured way
+(e.g., JSON via `dataclasses.asdict`, or a formatted table to stdout),
+making it easy to compare methods side by side. - The script should be cross-platform aware
+(checking `platform` and `sys` for OS-specific multiprocessing behavior)
+and should handle edge cases like single-item lists or zero workers gracefully. ---

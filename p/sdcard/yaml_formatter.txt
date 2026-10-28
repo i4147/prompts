@@ -1,0 +1,55 @@
+Write a prompt for an AI coding agent to generate a Python module implementing a conservative,
+dependency-free, best-effort YAML formatter.
+The module should expose a primary function `format_yaml(text: str, options: Options) -> str`
+(with `Options` imported from a sibling `..api` module) that takes raw YAML source text
+and formatting options, and returns a reformatted YAML string.
+The prompt should specify the following requirements and behaviors: 1. **Purpose**:
+Provide a lightweight,
+idempotent YAML formatter that improves whitespace
+and spacing consistency without altering the semantic structure of the document
+(no key reordering, no comment rewriting, no full re-parsing/re-dumping via PyYAML,
+since that would risk changing semantics or losing formatting/comments).
+2. **Core behaviors**:
+- Strip trailing whitespace from every line. - Normalize spacing around `key: value` pairs
+(e.g., ensure exactly one space after the colon when a value is present,
+and no trailing space when the value is empty
+or the rest of the line is a comment). - Normalize spacing for list items introduced by `- item`
+(dash followed by single space). - Collapse multiple consecutive blank lines into a single blank
+line. - Remove any trailing blank lines at the end of the document,
+then ensure the output ends with exactly one newline character. - Preserve comment-only lines as-is
+except for trailing whitespace stripping (do not attempt to reformat or move comments).
+- Preserve indentation exactly as provided (do not re-indent or adjust indentation levels). - Be
+  conservative: if a line's structure doesn't clearly match a recognizable pattern
+  (scalar key-value or list item), leave it minimally altered (just trailing-whitespace stripped).
+  3. **Idempotency**: Running the formatter twice on already-formatted text should produce identical
+  output (no further changes on a second pass).
+  4. **Optional validation**:
+  If the `PyYAML` library happens to be installed/available,
+  it may be used only to validate that the input/output is syntactically valid YAML,
+  but the actual formatting/transformation logic must remain line-based (regex/string operations)
+  rather than relying on `yaml.load`/`yaml.dump`,
+  so formatting remains stable
+  and comment/structure-preserving regardless of whether PyYAML is present.
+  5.
+**Implementation details to include**:
+- Use `from __future__ import annotations`. - Use the `re` module with a module-level compiled regex
+(e.g., named `_SCALAR_LINE`) to detect lines matching a `key: value` scalar pattern,
+excluding lines starting with `#`. - Implement a private helper function
+(e.g., `_normalize_line(line: str) -> str`) that normalizes a single line:
+detects comment-only lines and returns them with trailing whitespace stripped;
+detects `key: value` lines via the regex
+and reconstructs them with normalized spacing
+(omitting the trailing space entirely when the value is empty or starts with `#`);
+otherwise returns the line with at least trailing whitespace stripped. - In the main `format_yaml`
+function, split the input text into lines,
+iterate through them
+while tracking whether the previous emitted line was blank
+(to collapse consecutive blank lines into one), apply the normalization helper to non-blank lines,
+then after the loop strip trailing blank lines and join the result with newlines,
+returning a string that ends with exactly one trailing newline.
+6. **Docstring/comments**:
+Include a module-level docstring explaining the formatter is "best-effort"
+and "dependency-free," explicitly noting it does not reorder keys or rewrite comments,
+and that even though PyYAML may be used for validation, formatting remains line-based for stability.
+Output only the complete Python module code implementing this behavior,
+matching the structure and logic described above. ---

@@ -1,0 +1,35 @@
+CorpusReader for reviews corpora (syntax based on Customer Review Corpus).
+Customer Review Corpus information ================================== Annotated by:
+Minqing Hu and Bing Liu, 2004.
+Department of Computer Science University of Illinois at Chicago Contact:
+Bing Liu, liub@cs.uic.edu https://www.cs.uic.edu/~liub Distributed with permission.
+The "product_reviews_1"
+and "product_reviews_2" datasets respectively contain annotated customer reviews of 5
+and 9 products from amazon.com.
+Related papers: - Minqing Hu and Bing Liu.
+"Mining and summarizing customer reviews".
+Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery & Data Mining
+(KDD-04), 2004. - Minqing Hu and Bing Liu.
+"Mining Opinion Features in Customer Reviews".
+Proceedings of Nineteeth National Conference on Artificial Intelligence (AAAI-2004),
+2004. - Xiaowen Ding, Bing Liu and Philip S. Yu.
+"A Holistic Lexicon-Based Appraoch to Opinion Mining."
+Proceedings of First ACM International Conference on Web Search and Data Mining (WSDM-2008),
+Feb 11-12, 2008, Stanford University, Stanford, California, USA.
+Symbols used in the annotated reviews: :[t]: the title of the review:
+Each [t] tag starts a review. :xxxx[+|-n]: xxxx is a product feature. :[+n]:
+Positive opinion, n is the opinion strength: 3 strongest, and 1 weakest.
+Note that the strength is quite subjective.
+You may want ignore it, but only considering + and - :[-n]: Negative opinion :##:
+start of each sentence.
+Each line is a sentence. :[u]: feature not appeared in the sentence. :[p]:
+feature not appeared in the sentence.
+Pronoun resolution is needed. :[s]: suggestion or recommendation. :[cc]:
+comparison with a competing product from a different brand. :[cs]:
+comparison with a competing product from the same brand.
+Note: Some of the files (e.g. "ipod.txt", "Canon PowerShot SD500.txt") do not provide separation
+between different reviews.
+This is due to the fact that the dataset was specifically designed for aspect/feature-based
+sentiment analysis, for which sentence-level annotation is sufficient.
+For document- level classification and analysis,
+this peculiarity should be taken into consideration.

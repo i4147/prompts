@@ -1,0 +1,8 @@
+Regression tests for the quadratic time+memory DoS in DRT anaphora resolution
+(CWE-770; CVE-2026-12873). ``nltk.sem.drt.resolve_anaphora`` resolves each pronoun condition by
+scanning every discourse referent on the trail
+and retaining the compatible ones as candidate antecedents.
+A DRS with N referents and N ``PRO`` conditions therefore costs O(N**2) time and retained memory,
+so a small crafted DRS string exhausts the process.
+The total number of (pronoun, referent) examinations is now bounded by ``MAX_ANAPHORA_OPERATIONS``;
+once exceeded, resolution raises ``AnaphoraResolutionException``.

@@ -1,0 +1,32 @@
+Write a Python script that acts as a batch media
+and web-asset optimization tool for a directory tree.
+It should walk through a given input folder
+(recursively, with an option to limit depth or skip hidden paths),
+find image files and text-based web assets (HTML, CSS, JavaScript), and produce an optimized,
+self-contained or lightweight output without modifying the originals unless explicitly requested.
+The tool should accept command-line arguments that control the operation mode and quality settings,
+such as: - An input directory
+and an output directory (or an in-place flag with a safety confirmation). - Options to resize images
+above a maximum dimension, recompress images to a target quality,
+convert raster images to PNG or WebP,
+and upscale small images when requested. - An option to inline or embed referenced stylesheets,
+scripts, and images into HTML files as data URIs, so each page can be shipped as a single file,
+with a size limit above which assets are left external. - Include
+and exclude filters by file extension
+and glob pattern. - A dry-run mode that reports what would change
+and estimated size savings without writing files. - A worker count setting so processing can run in
+parallel, with a progress indicator when available
+and graceful fallback to plain logging if it is not.
+Behavior requirements:
+- Preserve directory structure in the output
+and never overwrite originals by accident. - Skip files that cannot be processed, log the reason,
+and continue the batch rather than aborting. - Use external command-line image utilities
+when they are present on the system for better compression,
+and fall back to a pure-Python approach when they are not,
+reporting which path was used. - Handle encoding issues in text assets gracefully,
+and correctly resolve relative references
+when embedding assets from HTML pages. - Produce a final summary report listing files processed,
+skipped, fail and after, and percentage saved,
+optionally written to a file in a machine-readable format. - Return a non-zero exit code if any file
+failed, and zero otherwise. - Print clear, concise help text describing every option,
+with sensible defaults for all settings. ---

@@ -1,0 +1,29 @@
+Write a Python script that acts as a command-line tool for finding visually
+duplicate or near-duplicate images within one or more folders.
+The tool should scan a target directory (optionally recursively) for image files
+of common formats, including JPEG, PNG, WebP, BMP, TIFF, GIF, HEIC/HEIF, RAW,
+and SVG, and group together images that look alike even when they differ in
+resolution, compression, minor edits, or file format.
+The user should be able to choose among several perceptual comparison methods
+(such as average hashing, perceptual hashing, difference hashing, wavelet-based
+hashing, color-based hashing, crop-resistant hashing, and a weighted combination
+of several hashes), each with a sensible default similarity threshold that the
+user can override from the command line.
+The script should report how many images were scanned, how many duplicate groups
+were found, and the similarity distance behind each match where useful.
+Key behaviors to include: - Accept command-line arguments for the input
+directory or directories, the comparison method, the threshold, recursion, the
+number of worker threads for parallel hashing, and an optional action such as
+listing only, moving duplicates to a review folder, or deleting extras with a
+safety confirmation or dry-run mode. - Keep the original copy in each group (for
+example, the highest-resolution or largest file) and treat the others as
+duplicates to act upon. - Provide clear informational, warning, and error
+messages, and report progress for long scans without flooding the output. -
+Gracefully skip files that cannot be opened or decoded, and clearly tell the
+user when an optional dependency needed for a chosen method or format is
+missing, including a hint about how to install it, rather than crashing. -
+Optionally write a machine-readable report (such as CSV or JSON) listing each
+group, its members, and their scores. - Exit with appropriate status codes: zero
+on success, a non-zero code on invalid arguments or fatal errors, and handle
+keyboard interruption cleanly. - Be efficient on large collections by hashing
+images concurrently and avoiding redundant comparisons. ---

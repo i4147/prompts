@@ -1,0 +1,35 @@
+Write a Python script that uses the NLTK library to perform basic natural language processing on
+user-provided text input, running as an interactive command-line loop.
+The script must include the following functions: 1. `nltkSentTokenizer(sentence, DEBUG=False)`:
+Takes a string input and returns a list of sentences using NLTK's `sent_tokenize` function.
+2. `nltkTokenizer(sentence, DEBUG=False)`:
+Takes a string input, tokenizes it into words using NLTK's `word_tokenize` function,
+then joins the resulting tokens back into a single space-separated string, and returns that string.
+3. `ntlkAnalize(sentence, DEBUG=False)`:
+Takes a string input, tokenizes it into words using `word_tokenize`,
+applies part-of-speech tagging using `nltk.pos_tag`, and returns the list of (word, POS tag) tuples.
+Each function should accept an optional `DEBUG` boolean parameter (default `False`),
+reserved for potential debug output,
+though it does not need to be actively used in the function bodies.
+Main program behavior (under `if __name__ == "__main__":`):
+- Run an infinite loop that repeatedly prompts the user with a Korean-language prompt asking them to
+enter a sentence (e.g., "문장을 입력하세요?: "). - Wrap the input call in a try/except block to catch
+`UnicodeDecodeError`;
+if this error occurs,
+print a Korean message asking the user to re-enter the text (e.g., "다시 입력하세요")
+and continue the loop. - If the user types the exact string "exit",
+terminate the program using `exit(1)`. - Otherwise,
+pass the input text to `nltkTokenizer`
+and print the resulting space-joined token string. - Then pass the same input text to `ntlkAnalize`
+and print the resulting list of POS-tagged tuples. - Include a commented-out example line
+referencing a `twitterStemmer` function call (not implemented) to indicate a potential future
+extension. - Also include commented-out alternative implementations inside `nltkTokenizer` showing
+other ways the tokenization could have been done
+(e.g., using `sent_tokenize`,
+or loading the punkt tokenizer via `nltk.data.load('tokenizers/punkt/english.pickle')`),
+left as inactive reference code.
+The script should import `nltk.data` at the top level,
+and import `sent_tokenize` and `word_tokenize` from `nltk.tokenize`.
+No file I/O or external data output is required beyond printing to the console;
+all output is via `print()` statements displaying the tokenized string
+and the POS-tagged results for each input sentence. ---

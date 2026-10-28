@@ -1,0 +1,3 @@
+Example CLI tool showcasing the usage of click, loglevels and error handling.
+It is designed to be used as a template for creating new DCSimCLI tools
+and see the example function below for more information.

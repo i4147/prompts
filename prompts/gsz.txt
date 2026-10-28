@@ -1,0 +1,15 @@
+Write a Python script that takes a GitHub repository reference from the user and
+reports the repository's size.
+The user can supply the reference either as a full GitHub URL (such as a link to
+the repository's main page) or as a short "owner/repository" pair.
+The script should validate the input format and print a clear error message if
+the reference is malformed.
+It should then look up the repository's metadata through GitHub's public API,
+handle the case where the repository does not exist with a friendly "not found"
+message, and handle network or other API failures gracefully without crashing.
+When the lookup succeeds, the script should display the repository's full name
+in the form owner/repository and its size converted to megabytes, rounded to two
+decimal places.
+The script should be runnable from the command line with the repository
+reference provided as an argument, and it should keep its output concise and
+human-readable. ---

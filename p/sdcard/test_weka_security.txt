@@ -1,0 +1,7 @@
+Regression tests for the unverified-jar / search-path fix in the Weka wrapper. ``config_weka``
+searched for ``weka.jar`` with the current working directory (".") listed first in ``_weka_search``.
+A ``./weka.jar`` planted in the CWD by an attacker would be selected over a system install
+and run via ``java -cp ./weka.jar weka.classifiers.bayes.NaiveBayes ...`` with no integrity check
+-- arbitrary code execution (CWE-494, reachable via an untrusted search path, CWE-426).
+The CWD is no longer searched;
+``WEKAHOME`` or an explicit ``config_weka(classpath=...)`` must be used.

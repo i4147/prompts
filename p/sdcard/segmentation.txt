@@ -1,0 +1,13 @@
+Text Segmentation Metrics 1.
+Windowdiff Pevzner, L., and Hearst, M.,
+A Critique and Improvement of an Evaluation Metric for Text Segmentation,
+Computational Linguistics 28, 19-36 2.
+Generalized Hamming Distance Bookstein A., Kulyukin V.A.,
+Raita T. Generalized Hamming Distance Information Retrieval 5, 2002,
+pp 353-375 Baseline implementation in C++
+http://digital.cs.usu.edu/~vkulyukin/vkweb/software/ghd/ghd.html Study describing benefits of
+Generalized Hamming Distance Versus WindowDiff for evaluating text segmentation tasks Begsten,
+Y. Quel indice pour mesurer l'efficacite en segmentation de textes ?
+TALN 2009 3.
+Pk text segmentation metric Beeferman D., Berger A.,
+Lafferty J. (1999) Statistical Models for Text Segmentation Machine Learning, 34, 177-210

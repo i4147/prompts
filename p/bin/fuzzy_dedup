@@ -38,7 +38,7 @@ Handle ssdeep errors (e.g., empty or too-small files) by skipping fuzzy hashing
 for that file and recording a warning. - Group files by exact hash to find exact
 duplicates.
 Group by fuzzy hash similarity using ssdeep comparison, with a configurable
-similarity threshold (0–100, default around 80); only report fuzzy groups that
+similarity threshold (0â€“100, default around 80); only report fuzzy groups that
 are not already entirely covered by exact duplicates, and avoid reporting the
 same file in multiple groups confusingly. - Sort groups deterministically (e.g.,
 by size descending, then by path). - Provide progress feedback during hashing
@@ -48,7 +48,7 @@ argparse):** - Positional: root directory path (must exist and be a directory;
 otherwise print an error and exit with non-zero status). - Options: `--ignore`
 (repeatable, adds to the default ignored directories), `--follow-symlinks` /
 include-symlinks flag, `--min-size` (int bytes, default small, e.g., 1),
-`--max-size` (optional int bytes), `--threshold` (fuzzy similarity 0–100),
+`--max-size` (optional int bytes), `--threshold` (fuzzy similarity 0â€“100),
 `--format` with choices `text`, `json`, `csv` (default `text`), `--output`
 (optional file path; default stdout), `--no-progress`, `--no-color`.
 **Outputs:** - Text output: human-readable duplicate groups with file paths,
@@ -62,7 +62,7 @@ Errors and warnings go to stderr. **Error handling and edge cases:** - Handle
 `KeyboardInterrupt` gracefully with a clean message and non-zero exit. - Handle
 permission errors, broken symlinks, files disappearing mid-scan, zero-byte files
 (exclude them from fuzzy comparison), and empty directories. - Validate that
-`min_size` ≤ `max_size` and threshold is in range; reject otherwise with a clear
+`min_size` â‰¤ `max_size` and threshold is in range; reject otherwise with a clear
 message. - Do not hash the output file if it lies inside the scanned tree.
 **Execution details:** - Include a `main(argv: Sequence[str] | None = None) ->
 int` function and an `if __name__ == "__main__":` guard that calls

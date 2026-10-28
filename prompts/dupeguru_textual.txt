@@ -1,0 +1,31 @@
+Write a Python script that provides an interactive terminal-based tool for
+finding and managing duplicate files within one or more chosen directories.
+The tool should present a full-screen text user interface where the user can
+browse a directory tree, select folders to scan, and launch a scan that walks
+the selected locations and collects file metadata such as path, size, and
+modification details.
+The scan should identify duplicates in two ways: exact duplicates, where files
+have identical contents (confirmed by comparing content fingerprints, with size
+used as a fast pre-filter), and near-duplicates, where file names are highly
+similar (for example, the same base name with different casing, spacing, or
+numbered suffixes like "copy" or "(1)"), scored by a similarity percentage
+against a configurable threshold.
+Each detected group should record why it was matched and a match score.
+The interface should show progress during scanning, list the duplicate groups in
+a sortable table, and let the user inspect the files within a group.
+For each group, the user should be able to choose which copy to keep, with a
+sensible default (such as keeping the oldest or shortest-path file), and then
+delete the others or move them to a holding folder.
+Provide a summary of how many files and how much disk space would be or was
+reclaimed.
+Destructive actions must require explicit confirmation in a modal dialog, and a
+dry-run mode should be available that reports planned actions without changing
+anything.
+The tool should also allow the user to adjust settings through the interface,
+including the name-similarity threshold, whether to include hidden files,
+minimum file size to consider, and file extensions to include or exclude.
+Handle unreadable files, permission errors, and broken symbolic links gracefully
+by skipping them and reporting them in a log or status area rather than
+crashing.
+Keyboard shortcuts should be displayed in a footer, and the application should
+exit cleanly on request. ---

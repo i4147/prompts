@@ -1,0 +1,4 @@
+Small class-based parallel map for low-memory environments.
+Workers default to 4.
+Process pools always use the spawn start method.
+Chunk size is ``max(1, min(500, ceil(n / (workers * 4))))``.

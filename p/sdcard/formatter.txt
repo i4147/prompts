@@ -1,0 +1,51 @@
+Write a prompt for an AI coding agent to generate a Python module that implements a TOML
+formatter/pretty-printer,
+re-emitting a previously parsed TOML `Document` object into a normalized style similar to
+"taplo" defaults.
+The prompt should request the following:
+**Purpose:** Create a module (e.g., `formatter.py`) that takes a parsed TOML `Document`
+(produced by an existing custom TOML parser module, `.parser`, which defines types such as `Array`,
+`Atom`, `Document`, `Entry`, `InlineTable`, `KeyValue`, `MStr`, `TableHeader`,
+and `Trivia`) and serializes it back into a normalized,
+canonical TOML text string. **Main inputs/outputs:** - Input:
+a `Document` object representing the parsed structure of a TOML file
+(tables, key-value pairs, arrays, inline tables, multi-line strings, comments,
+and trivia/whitespace), plus a configuration object controlling formatting style. - Output:
+a single formatted TOML string (the full re-emitted document text). - Expose a public function
+`format_document(document, options) -> str` (or equivalent) as the primary entry point,
+along with a configuration dataclass `FmtOptions` that exposes at least:
+`indent_string` (default two spaces), `column_width` (default 80),
+`allowed_blank_lines` (default 2), `align_comments` (bool, default True),
+`reorder_keys` (bool, default False), `indent_tables` (bool, default False),
+and `crlf` (bool, default False). - Both `FmtOptions`
+and `format_document` should be exported via `__all__`. **Notable behavior/formatting rules
+(taplo-like defaults) the agent must implement:** 1.
+Use 2-space indentation by default; keys are indented one level under their enclosing table.
+2. Render key-value pairs as `key = value` with exactly one space on each side of `=`.
+3. Preserve comments attached to entries;
+align trailing comments within contiguous groups of lines when `align_comments` is enabled.
+4. Preserve blank lines between entries/tables
+but cap consecutive blank lines at `allowed_blank_lines`.
+5. For arrays: if the original array was written multi-line,
+keep it multi-line with one element per line and a trailing comma after the last element;
+if it was single-line, keep it inline unless the rendered line would exceed `column_width`,
+in which case expand it to multi-line.
+6. Normalize inline tables to the canonical form `{ k = v, ... }` with single spaces after `{`,
+before `}`, and around `=` and commas.
+7. Preserve the verbatim contents of multi-line strings (triple-quoted strings) without reformatting
+their internal text.
+8. Ensure the output ends with exactly one trailing newline, unless `crlf=True`,
+in which case use CRLF line endings throughout the document instead of LF.
+9. Support composite/dotted keys by joining key parts with `.`.
+10. Internally, the implementation should build an intermediate representation of "output lines"
+(e.g., small helper/internal dataclasses representing a normal line with indentation level, text,
+optional trailing comment and padding; a "raw" block of verbatim lines for multi-line string bodies;
+and a blank-line marker) before joining everything into the final string, so that indentation,
+comment alignment, and blank-line capping can be computed consistently across contiguous
+groups of lines.
+11. Include a module-level docstring summarizing the formatter's purpose and the rules above.
+12. Use `from __future__ import annotations` and Python `dataclasses` for configuration
+and internal line representations; keep optional fields typed with `Optional`.
+Request that the agent produce clean, well-structured Python code implementing this formatter,
+consistent with the described parser types and formatting rules,
+without altering the semantic content of the TOML document—only its textual presentation. ---

@@ -1,0 +1,8 @@
+Classes for tagging sentences sequentially, left to right.
+The abstract base class SequentialBackoffTagger serves as the base class for all the taggers in
+this module.
+Tagging of individual words is performed by the method ``choose_tag()``,
+which is defined by subclasses of SequentialBackoffTagger.
+If a tagger is unable to determine a tag for the specified token,
+then its backoff tagger is consulted instead.
+Any SequentialBackoffTagger may serve as a backoff tagger for any other SequentialBackoffTagger.

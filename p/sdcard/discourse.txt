@@ -1,0 +1,21 @@
+Module for incrementally developing simple discourses, and checking for semantic ambiguity,
+consistency and informativeness.
+Many of the ideas are based on the CURT family of programs of Blackburn
+and Bos (see http://homepages.inf.ed.ac.uk/jbos/comsem/book1.html).
+Consistency checking is carried out by using the ``mace`` module to call the Mace4 model builder.
+Informativeness checking is carried out with a call to ``Prover.prove()`` from the ``inference``
+module. ``DiscourseTester`` is a constructor for discourses.
+The basic data structure is a list of sentences, stored as ``self._sentences``.
+Each sentence in the list is assigned a "sentence ID" (``sid``) of the form ``s``\ *i*.
+For example:: s0: A boxer walks s1:
+Every boxer chases a girl Each sentence can be ambiguous between a number of readings,
+each of which receives a "reading ID" (``rid``) of the form ``s``\ *i* -``r``\ *j*.
+For example:: s0 readings: s0-r1: some x.(boxer(x) & walk(x)) s0-r0:
+some x.(boxerdog(x) & walk(x)) A "thread" is a list of readings,
+represented as a list of ``rid``\ s.
+Each thread receives a "thread ID" (``tid``) of the form ``d``\ *i*.
+For example:: d0: ['s0-r0', 's1-r0'] The set of all threads for a discourse is the Cartesian product
+of all the readings of the sequences of sentences.
+(This is not intended to scale beyond very short discourses!)
+The method ``readings(filter=True)`` will only show those threads
+which are consistent (taking into account any background assumptions).

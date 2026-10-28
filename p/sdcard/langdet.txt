@@ -1,0 +1,45 @@
+Write a prompt for an AI coding agent that will generate a complete,
+self-contained Python command-line script implementing a lightweight,
+dependency-free language detector optimized for short text inputs
+where high-confidence results are required.
+The script must define a `LanguageDetector` class with the following characteristics:
+1. **Initialization**:
+Accepts a `confidence_threshold` parameter (default `0.85`) that controls the minimum confidence
+score required before a detection result is returned instead of "unknown"/"undetermined".
+2. **Stopword-based detection data**:
+Include an internal dictionary of common stopwords for multiple languages
+(at minimum English, and ideally additional languages such as Spanish, French, German, etc.),
+keyed by ISO language code (e.g., `"en"`), used as one of the signals for detection.
+3. **Multiple detection strategies**:
+Combine at least two independent signals to improve accuracy on short text, for example:
+- Stopword overlap/frequency matching against the known word lists. - Character/script-based
+heuristics (e.g., detecting non-Latin scripts via Unicode ranges, character n-gram frequency,
+or distinctive diacritics/letter patterns per language).
+The detector should merge
+or weight these signals into a single confidence score per candidate language.
+4. **Confidence thresholding**:
+Only return a detected language if the computed confidence meets or exceeds `confidence_threshold`;
+otherwise return an explicit "undetermined"/`None` result along with the confidence score so callers
+can see why detection was rejected.
+5. **Text normalization**:
+Preprocess input text (lowercasing, punctuation/number stripping, tokenization) before analysis,
+and handle edge cases gracefully
+(empty strings, very short text, text with only numbers/punctuation, mixed-language text).
+6. **Public API**: Expose a clear method (e.g., `detect(text: str) -> dict` or similar) that returns
+structured output containing at least:
+the detected language code (or null/undetermined marker), the confidence score,
+and optionally per-language scores/breakdown.
+In addition to the class, the script must include:
+- A **command-line interface** built with `argparse`,
+allowing the user to pass text directly as an argument and/or read text from stdin,
+and to override the confidence threshold via a CLI flag. - **JSON output** of the detection result
+(using the `json` module) printed to stdout,
+suitable for piping into other tools. - Proper use of `re` for text cleaning/tokenization
+and `typing.Optional` for type hints on functions/methods that may return `None`. - Sensible error
+handling and exit behavior using `sys` (e.g., non-zero exit code on invalid/empty input),
+without crashing on malformed input. - Clean, well-structured,
+PEP8-compliant code with docstrings/comments explaining the detection logic,
+so it can be run directly as a standalone script (`if __name__ == "__main__":`).
+The final script should be fully functional as-is,
+require no external dependencies beyond the Python standard library,
+and be suitable for use as a quick, embeddable short-text language identification utility. ---

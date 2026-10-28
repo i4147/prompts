@@ -1,0 +1,34 @@
+Write a Python module for the Termux:GUI plugin API that defines a `Buffer` class for managing raw
+ARGB888 image buffers shared between a Python client
+and the Termux:GUI Android service (requires Android 8.1+).
+The module should: - Import `mmap` from the `mmap` module, `os`, `Literal` from `typing`,
+and the `termuxgui.msg` module as `msg`. - Define a `Buffer` class with a detailed docstring
+explaining: - It represents a raw ARGB888 image buffer,
+only available on Android 8.1+. - Buffers consume significant memory,
+so unused buffers should be closed/removed promptly. - Recommend using the object as a context
+manager ("with") to automatically manage the underlying shared memory. - The memory object behaves
+like a bytes object or file object
+and is also accessible directly as `b.mem`. - A `RuntimeError` is raised if buffer creation fails. -
+`__init__(self, connection, w: int, h: int, format: Literal["ARGB888"] = "ARGB888")`:
+- Stores the connection object. - Sends a message via `connection.send_msg` with method
+`"addBuffer"` and params containing `w`, `h`,
+and `format`. - Reads the response using `msg.read_msg_fd(self.c._main)`,
+which should return either a single-element result (indicating failure)
+or a tuple/list of `(bid, fd)` on success. - If the returned result has length 1,
+raise `RuntimeError("Could not create Buffer")`. - Otherwise,
+store `self.bid` and `self.fd` from the result. - Create `self.mem` as an `mmap` object wrapping
+`self.fd` with size `w * h * 4` (4 bytes per pixel for ARGB888). - `__enter__(self)`:
+returns `self.mem` so the buffer's shared memory can be used directly inside a `with` block. -
+`__exit__(self, type, value, traceback)`:
+calls `self.remove()` to clean up resources
+and returns `False` (does not suppress exceptions). - `remove(self)`:
+- Documented as removing the buffer
+and freeing its memory. - Sends a message via `connection.send_msg` with method `"deleteBuffer"`
+and params containing `bid`.
+- Closes `self.mem`. - Closes the file descriptor `self.fd` using `os.close`. - `blit(self)`:
+  - Documented as blitting the buffer's contents to the underlying image in the plugin,
+  noting that any ImageViews using this buffer must be refreshed afterward to reflect the update. -
+  Calls `self.mem.flush()` to ensure data is written. - Sends a message via `connection.send_msg`
+  with method `"blit"` (or equivalent) and appropriate params referencing the buffer's `bid`.
+Ensure the code is clean, well-documented with docstrings matching the style shown,
+and follows typical conventions for a low-level IPC/shared-memory binding module. ---

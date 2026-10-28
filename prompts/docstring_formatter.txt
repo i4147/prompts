@@ -1,0 +1,25 @@
+Write a Python script that analyzes the source code of other Python files and
+reformats their docstrings and long comment or text blocks to improve
+readability.
+The tool should accept a file or directory path as input, walk through Python
+source files while skipping common non-source or virtual environment directories
+(such as version control folders, caches, build outputs, and dependency
+folders), and locate string literals that serve as docstrings.
+For each docstring, it should normalize the text by re-wrapping prose so that
+lines do not exceed a configurable maximum width (default 80 characters), while
+preserving the original meaning, paragraph breaks, and the indentation level of
+the enclosing code.
+It should recognize and keep intact list items (numbered, bulleted, or
+bold-labeled entries) by placing them on their own lines, and avoid altering
+code examples or content that must remain verbatim.
+The tool must preserve the file's string prefixes, quote styles, and
+triple-quote delimiters, and must ensure the rewritten file still parses as
+valid Python.
+It should support a dry-run mode that reports which files and docstrings would
+change without writing anything, a mode that writes changes in place, and a
+summary output listing the number of files scanned, files modified, and
+docstrings reformatted.
+Handle encoding errors, unreadable files, and syntax errors gracefully by
+logging a warning and continuing with the remaining files.
+Exit with a non-zero status if any file could not be processed, and zero
+otherwise. ---

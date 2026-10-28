@@ -1,0 +1,33 @@
+Write a Python script that provides a single function named `format(text, opts)` for
+formatting/pretty-printing YAML content.
+Requirements and behavior: 1.
+The function takes two parameters: - `text`:
+a string containing raw YAML content to be parsed and reformatted. - `opts`:
+a dictionary of formatting options
+(e.g., it may contain a `tabWidth` key specifying indentation width).
+2. The script should attempt to use the `ruamel.yaml` library as the primary YAML formatting engine,
+since it better preserves YAML style and supports fine-grained indentation control:
+- Import `YAML` from `ruamel.yaml`
+and the `io` module inside a `try` block. - If the import succeeds,
+define `format(text, opts)` so that it:
+- Creates a `YAML()` instance. - Configures indentation using
+`.indent(mapping=2, sequence=2, offset=2)`. - Loads/parses `text` into a data structure using the
+YAML instance. - Dumps the data structure back into YAML text using an in-memory `io.StringIO()`
+buffer. - Returns the resulting formatted YAML string from the buffer.
+3. If importing `ruamel.yaml` fails (e.g., the library is not installed),
+the script should fall back to using the standard `yaml` library (PyYAML):
+- In the `except` block, define an alternative `format(text, opts)` that:
+- Parses `text` using `yaml.safe_load`. - Dumps the parsed data back to a YAML string using
+`yaml.dump`, with: - `indent` set from `opts.get("tabWidth", 2)`
+(defaulting to 2 spaces if not provided). - `sort_keys=False` to preserve the original key ordering.
+- `allow_unicode=True` to properly output non-ASCII characters. - Returns the formatted YAML string.
+4. The top-level `import yaml` statement should remain outside the try/except block so the PyYAML
+module is always available regardless of which branch is used.
+5. Only one `format` function should be active at runtime
+— whichever is defined based on whether `ruamel.yaml` is successfully imported
+— effectively creating a graceful fallback mechanism for YAML formatting with two
+different backends.
+The overall goal is a robust YAML formatter utility that produces nicely indented,
+readable YAML output,
+preferring `ruamel.yaml` for better fidelity
+but still functioning correctly with only PyYAML installed. ---

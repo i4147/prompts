@@ -1,0 +1,28 @@
+Write a Python script that scans text files to detect lines written in a
+language other than English, and reports the findings.
+The tool should accept one or more file paths (or a directory to search
+recursively) as input, along with configurable options such as a minimum
+confidence threshold, minimum and maximum line length limits, a chunk or batch
+size for processing, and an output format or destination for the report.
+For each file, it should read the content safely with a configurable text
+encoding, skip files that exceed a reasonable size limit, and ignore lines that
+are too short or too long to classify reliably.
+The script should use a language detection library to evaluate each qualifying
+line, and only flag lines whose detected language is not English with sufficient
+confidence.
+Processing should be parallelized across multiple worker processes so large sets
+of files can be handled efficiently, with results gathered and aggregated
+safely.
+The tool should track per-file and overall statistics, including total lines
+examined, number of non-English lines found, and any errors encountered for
+individual files, and it should continue processing the remaining files when one
+fails.
+The final output should be a human-readable report that summarizes the scan,
+lists the flagged lines with truncated previews, the detected language and
+confidence for each, and the file and line number where each was found.
+Include timing information and a clear summary of totals at the end.
+If the required language detection dependency is missing, the script should log
+a helpful installation message and exit gracefully.
+Use logging for progress and error messages, and handle invalid arguments,
+missing paths, and unreadable files with clear user-facing feedback and sensible
+exit codes. ---

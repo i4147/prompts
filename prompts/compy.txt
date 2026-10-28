@@ -1,0 +1,28 @@
+Write a Python script that acts as a source-code compressor for Python files.
+It should take one or more Python source files (or a directory tree of them) as
+input and produce a minified, condensed version of the code intended to reduce
+size while preserving exact runtime behavior.
+The tool should work in parallel across multiple files to speed up processing,
+and write its combined compressed output to a single text file in the current
+working directory.
+Key behaviors to implement: - Remove comments, docstrings, shebang lines, and
+unnecessary whitespace and blank lines, while keeping the code syntactically
+valid and functionally identical. - Rename local identifiers (variables,
+function parameters, and user-defined names inside scopes) to short generated
+names to shrink the output, but never rename Python keywords, built-in names,
+module-level public APIs, attribute names accessed on external objects, or a
+configurable set of protected dunder and conventional names (such as `self`,
+`cls`, `__init__`, `__name__`, and similar special methods and attributes). -
+Preserve string literals and f-string semantics exactly; do not alter their
+contents. - Handle imports correctly so that names used from imported modules
+are not renamed and the code still runs. - Verify that each compressed output
+still parses as valid Python; if a transformation would break a file, fall back
+to a safer, less aggressive compression for that file and report it. - Provide a
+command-line interface with arguments to specify input paths, output file
+location, number of worker processes, and options to toggle individual
+compression stages (comment stripping, renaming, whitespace collapsing). - Print
+a concise summary at the end showing the number of files processed, original
+versus compressed size in bytes, and the percentage reduction achieved, along
+with any files that fell back or failed. - Handle errors gracefully (unreadable
+files, syntax errors in input, encoding issues) by logging the problem and
+continuing with the remaining files rather than aborting the whole run. ---

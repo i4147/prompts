@@ -1,0 +1,15 @@
+Write a Python script that converts image files into colored ASCII art and
+displays them in the terminal.
+The script should accept one or more image file paths as command-line arguments;
+if no arguments are given, it should automatically discover supported image
+files (JPG, PNG, BMP, WEBP) in the current working directory.
+When a single image is provided, render it directly.
+When multiple images are provided, process them concurrently using a parallel
+worker pool so that the conversions run faster, while each rendered result is
+printed to the terminal.
+The ASCII output should fit the width of the current terminal window, with the
+aspect ratio corrected so the art does not look stretched, and it should support
+full-color (non-monochrome) rendering.
+Ensure the script exits cleanly with an appropriate status code when finished,
+and handle common errors such as missing files, unsupported formats, or a
+non-interactive terminal gracefully with clear messages. ---

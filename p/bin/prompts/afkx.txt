@@ -1,0 +1,4 @@
+unused_imports.py – detect and optionally remove unused imports.
+Supports: - plain .py files and directories - .whl
+and .tar.zst archives - built-in AST analyzer (default) - external autoflake mode (--autoflake) for
+higher accuracy

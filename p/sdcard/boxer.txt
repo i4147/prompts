@@ -1,0 +1,6 @@
+An interface to Boxer.
+This interface relies on the latest version of the development (subversion) version of
+C&C and Boxer.
+Usage ===== Set the environment variable CANDC to the bin directory of your CandC installation.
+The models directory should be in the CandC root directory.
+For example:: /path/to/candc/ bin/ candc boxer models/ boxer/

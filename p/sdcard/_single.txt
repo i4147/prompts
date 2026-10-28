@@ -1,0 +1,46 @@
+Write a prompt for an AI coding agent to generate a Python utility module/script with the following
+purpose and characteristics: **Purpose**:
+Build a comprehensive file
+and folder management toolkit that provides utilities for file compression/decompression,
+file/folder inspection, hashing, and general filesystem operations,
+suitable for use as a reusable library or CLI-invoked tool. **Main Requirements**:
+1. **Imports/Setup**:
+Use `pathlib.Path` for path handling, `loguru` for logging,
+`multiprocessing` with a configurable worker count (e.g., `WORKERS = 8`) for potential parallel
+processing, and standard libraries:
+`zipfile`, `tarfile`, `gzip`, `os`, `shutil`, `json`, `csv`, `datetime`, `hashlib`, `fnmatch`,
+and `mimetypes`.
+Include a module-level flag like `HASH_AVAILABLE` to indicate hashing support.
+2. **FileHandler class**:
+   A class representing a single file, with methods to check existence, get the file name,
+   get its parent directory, retrieve metadata (size, extension, MIME type, modification time),
+   compute hash digests (e.g., MD5/SHA256), read/write content, and delete the file.
+   3. **FolderHandler class**:
+   A class representing a directory, with methods to check existence,
+   list files (with an option for recursive listing and optional glob/fnmatch-based filtering),
+   get the parent directory, calculate total folder size, create/delete the folder,
+   and copy/move folder contents.
+   4. **FileCompressor class** (static methods):
+   - `create_zip(source_path, output_path, include_base_dir=True)`:
+Compress a file or folder into a ZIP archive.
+If the source is a folder, recursively add all files,
+preserving relative paths based on whether the base directory should be included in the archive.
+Returns `True`/`False` based on whether the resulting ZIP file was successfully created. -
+`extract_zip(zip_path, extract_path, ...)`:
+Extract the contents of a ZIP archive to a specified directory. - Additional methods to support
+`.tar`, `.tar.gz`, and `.gz` archive creation and extraction,
+mirroring the ZIP behavior (compress/extract with similar return semantics).
+5. **Error Handling**: Raise `FileNotFoundError` when a specified source path does not exist.
+Use `loguru.logger` to log key operations
+(start/success/failure of compression, extraction, hashing, etc.) and exceptions.
+6. **Design Notes**:
+- Favor static/class methods for stateless utility operations
+where appropriate. - Use type hints (`Optional`, `Callable`, `Any`) throughout for clarity. - Return
+boolean success indicators for file operations (e.g., existence checks after compression) rather
+than raising exceptions for expected failure cases. - Support both single-file
+and whole-directory inputs transparently by detecting the path type at runtime. - Keep the module
+self-contained and importable, exposing `FileHandler`, `FolderHandler`,
+and `FileCompressor` as the primary public classes.
+Generate the complete, working Python code implementing this toolkit,
+ensuring all described methods are fully implemented (not stubbed),
+consistent with the behavior described above. ---

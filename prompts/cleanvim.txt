@@ -1,0 +1,18 @@
+Write a Python script that removes comments from Vim script (.vim) files using a
+syntax-tree-based parser, so that only true comment regions are stripped while
+code, strings, and other content remain intact.
+The tool should accept one or more Vim script file paths (or a directory to scan
+recursively) as input and write the cleaned results back to the files in place,
+or to a separate output location if requested.
+It should report, for each file, how many comments were removed, the processing
+time, and any errors encountered, and it should summarize totals across all
+processed files.
+The script should handle many files efficiently, optionally using parallel
+processing across CPU cores, and should continue processing remaining files when
+an individual file fails to parse or write.
+It should preserve file encodings and line endings, avoid corrupting code that
+merely resembles a comment (such as quote characters inside strings), and
+provide a clear command-line interface with options for dry-run preview, output
+directory selection, and verbosity control.
+Include meaningful error messages for missing paths, unreadable files, and
+unsupported input, and exit with a non-zero status code if any file failed. ---

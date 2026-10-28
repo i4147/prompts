@@ -1,0 +1,34 @@
+A wall-clock backstop for NLTK code paths that compile *caller-supplied* regular expressions
+or tag patterns.
+Several public APIs accept a pattern from the caller
+and run it over (possibly attacker-controlled) text:
+* :class:`nltk.tokenize.RegexpTokenizer` / ``regexp_tokenize``
+-- ``pattern`` * :class:`nltk.tag.RegexpTagger`
+-- the ``regexp`` of each ``(regexp, tag)`` pair * :func:`nltk.tgrep.tgrep_compile`
+-- the ``/regex/`` node literal in a query * :class:`nltk.chunk.regexp.RegexpChunkRule`
+and its ``ChunkRule`` / ``StripRule`` / ``UnChunkRule`` / ``MergeRule`` / ``SplitRule`` subclasses
+-- the tag pattern A crafted pattern (e.g. ``(a+)+$`` or ``(a|a)*$``) can trigger catastrophic
+backtracking and pin a CPU core indefinitely -- a denial of service (CWE-1333).
+This module centralises a single, tested defence used by all of those sinks, in two layers:
+1. **Compile with the third-party ``regex`` engine** instead of the stdlib ``re``.
+Its optimiser collapses a large class of catastrophic patterns
+-- notably nested quantifiers over the *same* sub-expression such as ``(a+)+$``
+-- to linear time outright, so those "attacks" finish in microseconds and never reach the timeout.
+2. **Run every match under a wall-clock ``timeout``**.
+The optimiser does *not* cover every shape
+-- an alternation of identical branches such as ``(a|a)*``
+(and the equivalent ``<a|a>*`` chunk tag pattern) still backtracks exponentially in *both* ``re``
+and ``regex``.
+The timeout is therefore a *mandatory* backstop, not a nicety:
+when it trips, an actionable :class:`TimeoutError` is raised instead of hanging the process.
+Rewriting the pattern to be linear (atomic groups / possessive quantifiers) was evaluated
+and rejected: it does *not* defuse the identical-branch alternation,
+and it silently changes match semantics for legitimate greedy patterns such as ``<.*>*<NN>``.
+A bounded timeout is the only defence that is both complete
+and behaviour-preserving for arbitrary caller patterns.
+Usage:: from nltk import redos rx = redos.compile(pattern, flags) # -> a TimedPattern
+rx.findall(text) # runs under DEFAULT_TIMEOUT rx.search(text, timeout=1.0) # per-call override
+``TimedPattern`` quacks like the subset of ``re.Pattern`` these sinks use
+(``findall`` / ``finditer`` / ``split`` / ``search`` / ``match`` / ``fullmatch`` / ``sub`` /
+``subn`` plus attribute access such as ``.pattern`` and ``.flags``),
+so it is a drop-in replacement for a compiled pattern at those call sites.

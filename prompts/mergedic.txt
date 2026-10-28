@@ -1,0 +1,32 @@
+Write a Python script that loads two JSON dictionary files containing
+translation-style key/value pairs, automatically determines which file is the
+English-keyed dictionary and which is the non-English (e.g., Persian) dictionary
+by inspecting the key language, and then merges them into a single bilingual
+output file.
+Requirements: - Accept two input JSON file paths from the command line.
+Each file must contain a top-level JSON object; the script should report a clear
+error and exit if a file is not a valid JSON object, is empty, or cannot be
+read. - Detect each file's direction by examining its keys: if the large
+majority of keys look like plain English words or phrases (letters, spaces,
+hyphens, apostrophes, periods), treat the file as English-keyed; if the large
+majority of keys do not look English, treat it as the other-language file.
+If a file's keys are mixed in a way that makes its language ambiguous, refuse to
+merge that file and explain why. - Reject the operation if both files are
+detected as the same direction, since a meaningful merge requires one
+English-keyed and one non-English-keyed source. - Merge the two dictionaries
+into one output structure in which each English key maps to its corresponding
+translated value from the other file, producing a consistent bilingual mapping.
+Handle keys that appear in only one file gracefully, and record or report them
+rather than silently dropping them. - Detect and report duplicate or conflicting
+entries (such as the same English key appearing with different translations, or
+multiple English keys mapping to the same value) so the user can review them. -
+Write the merged result to a JSON output file using UTF-8 encoding, preserving
+non-ASCII characters readably.
+Choose a sensible default output filename, and generate a random or unique
+filename when none is supplied, avoiding overwriting existing files unless
+explicitly allowed. - Log progress, warnings, and summary statistics (total
+entries processed, merged entries, unmatched keys, conflicts) using a clear
+logging approach, and print a concise summary to the user on completion. - Exit
+with a non-zero status code on fatal errors and zero on success. - Keep the
+script self-contained and readable, with a brief usage message available via a
+help flag. ---

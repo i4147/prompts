@@ -1,0 +1,1 @@
+web2pdf — URL/HTML → PDF via WeasyPrint (Termux/ARM32-friendly).

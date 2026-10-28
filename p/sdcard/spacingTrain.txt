@@ -1,0 +1,64 @@
+manage__outline is unnecessary here since this is a single-step task.
+Let me provide the prompt directly.
+Write a prompt for an AI coding agent to generate a Python script with the following purpose,
+inputs/outputs, and behavior:
+Create a Python 2/3-compatible command-line script named for training a Korean text word-spacing
+(spacing insertion) model using TensorFlow's legacy v1 API (tf.contrib),
+built as a class called `spacingTrain`.
+The script should: Purpose:
+- Train a Bidirectional LSTM (BiRNN) neural network that predicts spacing labels for Korean text
+(a sequence tagging task to decide where spaces should be inserted),
+using character-level or feature-based input vectors.
+Dependencies/Imports: - Standard libs:
+`os`, `sys`, `_pickle as pickle`, `OptionParser` from `optparse`. - Third-party:
+`numpy as np`, `tensorflow as tf` (using the older `tf.contrib.rnn` API such as `LSTMCell`). - A
+custom helper module `spacingUtil` imported from `SmiToText.spacing.spacingUtil`,
+which presumably provides utilities for loading/preprocessing the spacing dataset
+(e.g., converting text to feature vectors and labels, batching, etc.).
+Class structure (`spacingTrain`): - `__init__`:
+initializes an instance with a `VERBOSE` flag (int, default 0) controlling verbose logging/debug
+output, intended to be toggled via a `--verbose` command-line option. -
+`weight_variable(self, shape)`:
+creates a TensorFlow `Variable` for weights initialized via `tf.truncated_normal` with `stddev=0.1`,
+used for building dense/hidden layers. - `bias_variable(self, shape)`:
+creates a TensorFlow `Variable` for biases initialized as a constant `0.1` tensor of the
+given shape.
+- `RNN(self, _X, _istate, _weights, _biases, n_hidden, n_steps, n_input, early_stop)`:
+  builds the core bidirectional RNN computation graph:
+  - Transposes the input tensor `_X` from shape `(batch_size, n_steps, n_input)` to
+  `(n_steps, batch_size, n_input)`. - Reshapes `_X` to `(n_steps*batch_size, n_input)` so it can be
+  passed through the initial hidden linear transformation:
+  `_X = matmul(_X, weights["hidden"]) + biases["hidden"]`. - Defines an LSTM cell via
+  `tf.contrib.rnn.LSTMCell` with `n_hidden` units, `forget_bias=1.0`,
+  and `state_is_tuple=False`. - Splits the reshaped input into `n_steps` separate tensors to feed
+  into the RNN's internal loop (as required by the legacy static RNN API),
+  and is intended to build a bidirectional RNN (forward and backward LSTM cells) with support for an
+  `early_stop` parameter limiting effective sequence length per example,
+  producing per-timestep output logits for spacing classification (e.g., space vs. no-space tags). -
+  Expects `_weights` and `_biases` to be dictionaries containing at least a `"hidden"` entry
+  (and likely an output-layer entry) as TensorFlow Variables created via
+  `weight_variable`/`bias_variable`.
+Overall script behavior to implement beyond the class skeleton:
+- Use `OptionParser` to define and parse command-line arguments for training configuration,
+such as paths to training/input data, model/checkpoint output directory,
+hyperparameters (e.g., learning rate, number of hidden units, number of steps/sequence length,
+batch size, number of training epochs/iterations),
+and a `--verbose` flag that sets `self.VERBOSE`. - Load
+and preprocess the Korean spacing training dataset using `spacingUtil`,
+converting raw text into numeric feature/label sequences suitable for the RNN
+(e.g., one-hot or embedding-like input vectors per character position,
+and binary/multi-class spacing labels per position). - Construct TensorFlow placeholders for input
+sequences, initial RNN state, and target labels,
+then build the bidirectional RNN graph using the `RNN` method,
+define a loss function (e.g., softmax cross-entropy)
+and an optimizer (e.g., Adam or gradient descent) to train the weights/biases. - Run a TensorFlow
+session training loop over the dataset for the specified number of epochs/iterations,
+periodically printing training loss/accuracy (respecting the `VERBOSE` setting) for monitoring
+progress. - Serialize/save trained model artifacts
+(e.g., using `pickle` and/or TensorFlow's model saver) so the trained spacing model can later be
+loaded for inference (predicting where spaces should be inserted in new, unspaced Korean text). -
+Include a `if __name__ == "__main__":` entry point that instantiates `spacingTrain`,
+parses command-line options, and triggers the training process end-to-end.
+Ensure the code is written in Python with a `#!/bin/env python` shebang
+and `# -*- coding: utf8 -*-` encoding declaration,
+matching an older TensorFlow 1.x style API usage throughout (not TensorFlow 2.x idioms). ---

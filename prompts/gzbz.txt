@@ -1,0 +1,29 @@
+Write a Python script that acts as a batch file compression tool for a directory
+tree.
+It should take a source directory (or a set of files) and an output location as
+inputs, walk through the files, and compress each eligible file using one or
+more selectable compression formats such as bzip2, gzip, and a custom-level gzip
+variant, with the compression level configurable by the user.
+The tool should: - Accept command-line options for the input path, output
+destination, compression format, compression level, number of parallel worker
+processes, and the chunk size used when streaming data. - Process files in
+parallel to speed up work on large directories, while keeping the overall
+progress and results reported accurately. - Skip files that are already
+compressed or archived (for example, existing archives and compressed media
+formats) and skip files below a configurable minimum size, since compressing
+them would not help. - Handle small files and large files differently where
+sensible, such as reading small files fully into memory and streaming large
+files in chunks, and use memory mapping for suitable large inputs. - Preserve
+the original directory structure in the output and keep file metadata such as
+modification times where practical. - Optionally bundle results into a single
+tar archive, and optionally delete or keep the originals after successful
+compression. - Only keep the compressed output if it is actually smaller than
+the original; otherwise store the original unchanged and report that. - Write
+each output atomically so that a failed or interrupted run never leaves a
+corrupted file in place of a valid one. - Report progress and a final summary
+showing the number of files processed, skipped, and failed, total bytes before
+and after compression, the overall compression ratio, and elapsed time,
+formatted with human-readable sizes and durations. - Log its activity through a
+logging facility, with a verbosity option, and report per-file errors without
+aborting the whole run. - Exit with a non-zero status code if any file failed,
+and print clear usage help when arguments are invalid. ---

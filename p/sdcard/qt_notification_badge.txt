@@ -1,0 +1,1 @@
+Notification badge widget that can be attached to any Qt widget.

@@ -1,0 +1,65 @@
+Write a prompt describing requirements for an AI agent to generate the following Python script. ---
+Create a Python script that statically analyzes Python source files to detect **potentially
+undefined names** — i.e.,
+identifiers that are used in a module but are not clearly defined through imports, assignments,
+function/class definitions, or built-ins.
+The tool should be usable as a static linting helper to catch missing imports
+or typos in identifier names, especially in codebases that rely on wildcard (`*`) imports,
+where it's hard to know which names come from
+where. **Key functional requirements:** 1. **Custom exception**:
+Define an `ImportParseException` used when an import statement line cannot be parsed as expected.
+2. **Import line parsing**: - `parse_import(line)`:
+Parses a line of the form `from <module> import <symbol1>, <symbol2>, ...`
+and returns the module name and a list of imported symbol names (stripped of whitespace).
+Raise `ImportParseException` if the line doesn't match this pattern
+(e.g., doesn't start with "from"/"import" tokens appropriately). - `parse_splat_import(line)`:
+Parses a plain `import <symbol1>, <symbol2>, ...` statement (multiple comma-separated modules)
+and returns a set of the imported names.
+Raise `ImportParseException` on malformed input.
+3. **Helper data structure**:
+Implement a `DefaultDict` class (subclass of `dict`) that behaves like `collections.defaultdict`,
+but instead of using a factory callable,
+it takes a default **value** which is deep-copied for every new key accessed via `__getitem__`.
+4. **Gathering imports from a block of lines** (`gather_imports(lines)`):
+- Iterate over a list of raw import-statement lines
+(as might appear consecutively at the top of a module, or otherwise supplied). - Support line
+continuations: if a line ends with a backslash (`\`),
+join it with the next line before processing. - Skip blank/whitespace-only lines. - For each line,
+attempt to parse it as a `from ... import ...` statement using `parse_import`.
+On success, record the symbols under their originating module name in a `DefaultDict`
+(module → set of symbol names). - If `parse_import` fails (raises `ImportParseException`),
+fall back to treating the line as a plain `import a, b, c` statement via `parse_splat_import`,
+and accumulate those names into a separate `splats` set
+(names imported directly, or modules imported whose exact submembers aren't tracked individually). -
+Return both the per-module imports mapping
+and the splat-imports set
+(the code is cut off but this is the clear intended behavior based on the variable setup).
+5. **Tokenization-based analysis**:
+The script should use Python's built-in `tokenize` module (via `generate_tokens`)
+and `token.NAME` to scan source code token-by-token,
+identifying `NAME` tokens that represent identifier usages,
+in order to cross-reference them against the gathered imports, assignments, and known definitions,
+and flag names that appear to be used without a corresponding definition
+or import anywhere in scope.
+6. **Parallel processing across files**:
+Use `concurrent.futures.ProcessPoolExecutor`
+and `as_completed` to analyze multiple files concurrently
+— the script should accept one
+or more file paths (via `pathlib.Path`, likely from command-line arguments through `sys.argv`),
+submit each file to the process pool for independent analysis, collect results as they complete,
+and aggregate/report any undefined names found per file.
+7. **Command-line usage**: The script should run as a standalone CLI tool:
+invoked with one or more Python file paths as arguments, it should process each file,
+print or report findings (e.g., file name, line number, and the undefined name),
+and exit with an appropriate status code
+(e.g., non-zero if undefined names were found, to support use in CI pipelines or pre-commit hooks).
+8. **Robustness**: Handle edge cases such as empty files, files with only imports,
+multi-line imports with backslash continuations, and comma-separated multi-symbol import lines.
+Use `itertools.chain`
+where appropriate to flatten iterables
+(e.g., combining symbol lists from multiple import statements). **Inputs**:
+One or more `.py` file paths supplied as command-line arguments. **Outputs**:
+A report (printed to stdout/stderr) listing names used in each file that could not be resolved to
+any import, built-in,
+or local definition — intended to help developers find missing imports or typos,
+particularly in projects with heavy use of `import *`.

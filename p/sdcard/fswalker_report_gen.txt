@@ -1,0 +1,40 @@
+Write a Python demo script that showcases usage of a custom helper module named `dh`,
+specifically its `ReportGenerator` class
+and `get_filez` function
+(along with related types such as `FileWalkerConfig`, `ReportItem`, `Path`,
+and ANSI color constants like `BOLD`, `RESET`, `GREEN`).
+The script should define a single function `example_usage()` that runs three illustrative examples,
+printing a labeled, color-formatted header before each:
+1. **Walk filesystem**:
+   Create a `FileWalkerConfig` that skips directories named `.git` and `__pycache__`
+   and matches files using the pattern `*.py`.
+Use `get_filez` to recursively scan the `/sdcard` directory with this config,
+collect the results into a list, and print how many Python files were found.
+2. **Custom filter**:
+Define a local filter function `large_file_filter(path: Path) -> bool` that returns `True` if a
+file's size exceeds 1024 bytes.
+Call `get_filez` on the directory `/data/data/com.termux/files/home/repos` with no config (`None`)
+but using this custom file filter, then print how many files larger than 1KB were found.
+3. **Generate report**: Create a `ReportGenerator` instance titled "File Analysis Report".
+Add several `ReportItem` entries representing different file processing outcomes
+(e.g., "success", "binary", "error", "warning") with descriptive messages and sample file paths.
+Add summary statistics (e.g., total files, files modified, lines removed) via `add_stat`.
+Print the full report to the console using `print_report(show_all=True)`,
+then export the report to two files — `report.txt` in "text" format and `report.csv` in "csv" format
+— using `export_to_file`.
+Finally, print a success message confirming both reports were exported.
+The script should end with a standard `if __name__ == "__main__":` block that calls
+`example_usage()`.
+Notable behavior/requirements:
+- Assume `dh` is an external/local module providing filesystem-walking utilities
+(`get_filez`, `FileWalkerConfig`) and reporting utilities (`ReportGenerator`, `ReportItem`),
+along with terminal color formatting constants (`BOLD`, `RESET`, `GREEN`)
+— these should be imported
+or assumed available as used in the code. - The filesystem walk in Example 1 should support
+directory exclusion and glob-style file pattern filtering. - The filesystem walk in Example 2 should
+support an optional custom predicate function to filter files based on arbitrary conditions
+(here, file size). - The report generator should support adding categorized items with a status
+label and message, adding arbitrary named statistics, printing a formatted summary report,
+and exporting that report to multiple file formats (plain text and CSV). - Output messages should
+use ANSI/terminal color codes for emphasis (bold headers, green success message). - The code is
+intended as a self-contained, runnable demonstration/example rather than a production utility. ---

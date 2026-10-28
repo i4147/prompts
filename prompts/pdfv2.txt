@@ -1,0 +1,30 @@
+Write a Python script that acts as a terminal-based PDF viewer, rendering the
+pages of a PDF file as images directly inside the terminal window and letting
+the user navigate through them interactively.
+The tool should accept a PDF file path from the command line and take over the
+terminal in a full-screen, alternate-screen mode while running.
+It should render each page by invoking an external PDF rasterization utility,
+convert the resulting image data into pixels, and draw those pixels in the
+terminal using colored half-block characters so that each character cell
+represents two vertical pixels.
+The rendered page should be scaled to fit the current terminal dimensions while
+preserving the page's aspect ratio, and it should adapt when the terminal is
+resized.
+Key behaviors to include: - Determine the total page count of the document and
+display the current page number and total pages in a status bar at the bottom of
+the screen. - Support keyboard navigation: moving forward and backward through
+pages, jumping to the first and last pages, and quitting cleanly.
+Navigation should respond to single keypresses without requiring Enter, and
+arrow keys and common vim-style keys should both work. - Allow the user to zoom
+in and out or fit the page to the screen, and re-render the current page at the
+new scale. - Cache rendered pages so that revisiting a page or changing pages
+back and forth does not require re-rendering from scratch. - Gracefully handle
+invalid input, such as a missing file, a non-PDF file, or a missing rendering
+utility, by printing a clear error message and exiting with a nonzero status. -
+Restore the terminal to its original state (cursor visibility, screen mode, and
+input settings) on exit, including after errors or interruptions. - Provide a
+command-line option to print the document's page count and exit without starting
+the interactive viewer.
+The output should be a single, self-contained script that runs on Unix-like
+systems with a standard terminal supporting 24-bit color and alternate screen
+buffers. ---

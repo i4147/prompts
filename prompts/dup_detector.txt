@@ -1,0 +1,31 @@
+Write a Python script that scans a directory t detects duplicate oritions across
+them, so a developer can find copy-pasted logic that should be consolidated.
+The tool should accept a root directory path as its main input, along with
+optional settings such as a similarity threshold for flagging near forects
+worurse through all subdirectories, skip a conventional and opping the overall
+run.
+From each readable file, the script should identify top-level functions, async
+functions, and classes, and capture each one's name, source location, and
+normalized body text.
+Trivial objects below the size threshold should be excluded from comparison.
+The core behavior is to compare objects pairwise across files and report two
+categories of matches: exact duplicates (identical content after
+normalization,espace and comments differences where feasible) and
+near-duplicates whose fuzzy similarity score meets or exceeds the configured
+threshold.
+Choose a sensible, efficient strategy so that large codebases remain tractable,
+for example by grouping candidates with cheap fingerprints before doing
+expensive similarity checks, and consider using parallel processing where it
+helps.
+The output should be a structured report, available as human-readable text on
+the console and optionally as machine-readable JSON written to a file.
+Each finding should list the matching objects with their file paths, line
+ranges, object types, and the similarity score.
+Results should be sorted so the most significant duplicates appear first, and
+the script should print a concise summary of total files scanned, objects
+analyzed, and duplicate groups found.
+The script should handle missing optional dependencies gracefully by printing a
+clear installation message and exiting with a non-zero status.
+It should provide a command-line interface with helpful usage text, validate its
+inputs, and exit with appropriate status codes for success, invalid arguments,
+and runtime errors. ---

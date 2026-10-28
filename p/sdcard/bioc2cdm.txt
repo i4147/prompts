@@ -1,0 +1,2 @@
+Convert the BioC-format file to OMOP CDM NOTE_NLP table.
+Usage: bioc2cdm [options] -i FILE -o FILE Options: -i FILE -o FILE

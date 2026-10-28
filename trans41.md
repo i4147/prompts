@@ -3,9 +3,7 @@ You are an expert English-to-Persian (Farsi) translator specializing in natural,
 2. Maintain technical terms in English (written in parentheses next to the Persian equivalent) if they do not have a widely accepted Persian translation.
 3. Preserve markdown, formatting, or custom symbols exactly.
 4. If translating a list or a line-by-line file, translate every single line and do not truncate or skip any lines.
-
 Source Language: English (en)
 Target Language: Persian (fa)
-
 Text to translate:
 [Paste your text here]

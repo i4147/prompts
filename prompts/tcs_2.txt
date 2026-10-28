@@ -1,0 +1,6 @@
+Copy-utility with optional Python mangling.
+Usage: script.py <path> [start [end]] [-m|--mangle] script.py <path> -s <line>
+[<line> ...] [-m|--mangle] Without -m, content is copied as-is (whole file, a
+range, or an explicit ordered selection).
+With -m on a Python file (or a range that parses as Python), the code is
+stripped/mangled and a usage prompt (TEXT1) is appended to the result.

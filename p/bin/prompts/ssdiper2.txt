@@ -1,0 +1,28 @@
+Write a Python script that scans a directory tree
+(given as a command-line argument, defaulting to the current directory)
+and identifies files with similar content using fuzzy hashing.
+The tool should collect all regular files beneath the target location,
+compute a fuzzy content hash for each non-empty file,
+and then compare every pair of hashed files to compute a similarity score.
+Only pairs whose similarity meets
+or exceeds a configurable threshold (default 70 on a 0–100 scale) should be reported.
+Key requirements: - **Inputs:** A root directory path supplied from the command line,
+plus an optional similarity threshold argument.
+Support a clear help message describing these options. - **Processing:** Skip empty files
+and files that cannot be read.
+Handle missing files, permission or OS errors,
+and unexpected exceptions gracefully by printing a concise warning
+and continuing rather than crashing the whole run. - **Comparison:** Evaluate each unique pair of
+files once, avoiding self-comparisons and duplicate pairs,
+and compute a similarity percentage for each. - **Output:** Print the matching file pairs with their
+similarity scores, sorted from most to least similar.
+Display file paths relative to the current working directory where practical.
+Optionally support writing the results in a structured format (such as JSON) to a specified output
+file. - **Summary:** At the end, report the total number of files scanned,
+the number of comparisons made, and the number of matches found.
+- **Robustness:** Ensure the script exits with a non-zero status
+  and a clear message if the target directory does not exist
+  or the required fuzzy-hashing capability is unavailable. - **Design freedom:** Choose the internal
+  structure, helper functions, and libraries as you see fit,
+  while keeping the command-line interface simple and the output readable for security analysts
+  or developers looking for near-duplicate or related files. ---

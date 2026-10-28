@@ -1,0 +1,33 @@
+Write a Python module for the `termuxgui` library that defines a `CompoundButton` class,
+serving as a common base class for all compound-button-style widgets
+(such as checkboxes, switches, and toggle buttons) in a Termux:GUI application.
+The class should: - Import `Activity` from `termuxgui.activity`, `Button` from `termuxgui.button`,
+`Event` from `termuxgui.event`,
+and `View` from `termuxgui.view`. - Be named `CompoundButton`
+and inherit from `Button`. - Include a class docstring explaining that it does not correspond to a
+particular View on its own,
+but instead provides common methods shared by all CompoundButton-type widgets.
+Constructor (`__init__`):
+- Accept `self`, `activity` (an `Activity` instance),
+and `id` (an `int`) as parameters. - Call `View.__init__(self, activity, id)` directly
+(bypassing the immediate parent's constructor) to initialize the base view. - Initialize an instance
+attribute `checked` to `False`, representing the initial checked/unchecked state.
+Method `handleevent(self, e: Event)`:
+- Include a docstring instructing that this method should be called with every incoming `Event` so
+the `CompoundButton` can keep track of whether it is checked. - Check if the event's type equals
+`Event.click`, the event's `aid` matches the activity's `aid` (`self.a.aid`),
+and the event's `id` matches `self.id`. - If all three conditions are true,
+update `self.checked` using the `"set"` key from the event's `value` dictionary (`e.value["set"]`).
+- Always call `View.handleevent(self, e)` afterward (outside the conditional),
+delegating to the parent view's event handling logic regardless of whether the click
+condition matched.
+Method `setchecked(self, checked: bool)`:
+- Include a docstring stating that this method explicitly sets the checked status of the
+CompoundButton. - Update `self.checked` to the given `checked` value. - Send a message via
+`self.a.c.send_msg(...)` with a dictionary payload containing: - `"method"`:
+`"setChecked"` - `"params"`:
+a dictionary with `"aid"` set to `self.a.aid`, `"id"` set to `self.id`,
+and `"checked"` set to the `checked` parameter.
+Ensure the code follows the existing conventions of the termuxgui Python library
+(type hints on parameters, docstrings in the same style,
+and consistent message-sending pattern via `self.a.c.send_msg`). ---

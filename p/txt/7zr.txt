@@ -1,0 +1,44 @@
+Design a CLI tool (Python 3, using `argparse` and `asyncio`) that batch compresses
+and decompresses files using the 7-Zip format via the `py7zr` library,
+intended for processing large collections of files (e.g., backups or datasets) in parallel.
+**Purpose:** The script scans a target directory (recursively) for files
+and performs either compression (packing files into individual `.7z` archives)
+or decompression (extracting `.7z` archives back to their original files), depending on a CLI flag.
+It is built for high-throughput batch operations,
+using multi-threading to process multiple files concurrently
+while applying tuned LZMA2 compression settings for strong compression ratios. **Inputs:** - A
+directory path (positional or flag argument) containing the files to process. - A mode flag/argument
+to choose between "compress"
+and "decompress" operations. - Optional settings such as number of worker threads
+(default capped at a small number like 2 to limit memory/CPU usage)
+and chunk size for reading data. - Relies on a helper module (`dh`) providing a `fsz` function
+(human-readable file size formatting)
+and `get_files` function (recursive file listing/filtering). **Outputs:** - For compression:
+for each eligible input file,
+produces a corresponding `.7z` archive
+(using LZMA2 filter, preset 9, large dictionary size ~256MB, solid archive,
+header compression enabled, 4MB block size) written atomically via a temporary file,
+then replaces/removes the original file after successful compression,
+printing a success message showing original size → compressed size (using `fsz` for formatting). -
+For decompression: for each `.7z` file found,
+extracts its single contained file into the same directory (stripping the `.7z` suffix),
+moves it into place, deletes the original archive,
+and prints a success message showing original (archive) size → decompressed size. - Prints clear
+per-file status messages with checkmark (✓) for success
+and cross (✗) with the exception message for failures;
+continues processing other files even if one fails. **Notable behavior:** - Uses a dedicated
+temporary directory (under the system temp folder, e.g. `py7zr_temp`) for intermediate
+extraction/compression work,
+cleaning up temporary files/directories after each operation. - Uses `ThreadPoolExecutor`
+(with `as_completed`) to run compression/decompression tasks concurrently across multiple files,
+bounded by a `MAX_WORKERS` constant (default 2) to avoid overwhelming system resources,
+and integrates with `asyncio` for orchestrating the overall workflow. - Reads files in chunks
+(via a `CHUNK_SIZE` constant, e.g. 512KB) when streaming data such as during in-memory compression,
+to control memory usage for large files. - Skips files that don't match the expected
+suffix/extension for the current mode (e.g., only `.7z` files are considered for decompression). -
+Skips empty files during compression (does not attempt to compress zero-byte files). - Writes
+compressed output to a temporary `.7z` file first,
+ensuring the original file is only removed/replaced after the archive is successfully created,
+to avoid data loss on failure. - Designed to be run as a command-line script
+(`if __name__ == "__main__":` entry point) that parses arguments, validates the directory,
+and dispatches the compress or decompress workflow across all matching files found via `get_files`.
